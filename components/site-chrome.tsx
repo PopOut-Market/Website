@@ -9,6 +9,10 @@ import { SiteShellProvider } from "@/components/site-chrome-context";
 import {
   APP_STORE_BADGE_SRC,
   APP_STORE_URL,
+  FOOTER_CONTACT_EMAIL,
+  FOOTER_SOCIAL_IMG_INSTAGRAM,
+  FOOTER_SOCIAL_IMG_LINKEDIN,
+  FOOTER_SOCIAL_IMG_REDNOTE,
   GOOGLE_PLAY_BADGE_SRC,
   GOOGLE_PLAY_URL,
   INNER_MAX,
@@ -16,9 +20,51 @@ import {
   LOGO_TEXT_SRC,
   RADIUS,
   SHELL_X,
+  SITE_MAIN_SLOT_CLASS,
+  footerSocialUrlInstagram,
+  footerSocialUrlLinkedIn,
+  footerSocialUrlRednote,
 } from "@/lib/site-config";
 import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
+
+function FooterSocialLink({
+  href,
+  ariaLabel,
+  children,
+}: {
+  href: string | null;
+  ariaLabel: string;
+  children: ReactNode;
+}) {
+  const shell =
+    "inline-flex h-10 w-10 items-center justify-center border border-gray-200/90 bg-white p-1.5 shadow-sm transition sm:h-11 sm:w-11";
+  const radiusStyle = { borderRadius: RADIUS.sheet } as const;
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={ariaLabel}
+        style={radiusStyle}
+        className={`${shell} hover:border-gray-300 hover:shadow`}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <span
+      style={radiusStyle}
+      className={`${shell} border-dashed border-gray-300/90`}
+      aria-label={ariaLabel}
+      role="group"
+    >
+      {children}
+    </span>
+  );
+}
 
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -29,7 +75,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const languageModalRef = useRef<HTMLDivElement | null>(null);
   const t = COPY[locale];
   const localeFontClass = LOCALE_FONT_CLASS[locale] ?? fontLatinRounded.className;
-  const isMarket = pathname === "/market";
+  const isMarket = pathname === "/market" || pathname.startsWith("/market/");
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
@@ -94,7 +140,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                     : "border-white/70 bg-white/70 text-gray-800 hover:bg-white/85"
                 }`}
               >
-                Market
+                {t.marketPageTitle}
               </Link>
             </div>
 
@@ -224,7 +270,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         {/* Spacer for fixed top bar: pt-6 + h-14 + pb-4 = 96px */}
         <div className="h-24 shrink-0" aria-hidden />
 
-        {children}
+        <div className={SITE_MAIN_SLOT_CLASS}>{children}</div>
 
         {languageModalOpen ? (
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/25 px-3 py-4 backdrop-blur-[2px] sm:px-4">
@@ -355,6 +401,90 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   </Link>
                 </div>
               </div>
+            </div>
+
+            <div className="border-t border-gray-300 pt-6 sm:pt-8">
+              <div className="flex flex-wrap items-center justify-center gap-4 min-[760px]:justify-start">
+                <FooterSocialLink href={footerSocialUrlRednote()} ariaLabel={t.footerSocialRednoteAria}>
+                  <Image
+                    src={FOOTER_SOCIAL_IMG_REDNOTE}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
+                  />
+                </FooterSocialLink>
+                <FooterSocialLink href={footerSocialUrlInstagram()} ariaLabel={t.footerSocialInstagramAria}>
+                  <Image
+                    src={FOOTER_SOCIAL_IMG_INSTAGRAM}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
+                  />
+                </FooterSocialLink>
+                <FooterSocialLink href={footerSocialUrlLinkedIn()} ariaLabel={t.footerSocialLinkedInAria}>
+                  <Image
+                    src={FOOTER_SOCIAL_IMG_LINKEDIN}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
+                  />
+                </FooterSocialLink>
+              </div>
+
+              <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-gray-600 sm:text-sm min-[760px]:text-left">
+                <p>{t.footerCopyright}</p>
+                <p>{t.footerAbn}</p>
+                <p>
+                  <a
+                    href={`mailto:${FOOTER_CONTACT_EMAIL}`}
+                    className="font-medium text-black underline decoration-gray-400 underline-offset-2 hover:text-black hover:decoration-gray-400"
+                  >
+                    {FOOTER_CONTACT_EMAIL}
+                  </a>
+                </p>
+              </div>
+
+              <nav
+                className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-xs text-black sm:text-sm min-[760px]:justify-start"
+                aria-label={t.footerLegalNavAria}
+              >
+                <Link
+                  href="/about"
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {t.footerNavAbout}
+                </Link>
+                <span className="select-none text-gray-300" aria-hidden>
+                  |
+                </span>
+                <Link
+                  href="/terms"
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {t.footerNavTerms}
+                </Link>
+                <span className="select-none text-gray-300" aria-hidden>
+                  |
+                </span>
+                <Link
+                  href="/privacy"
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {t.footerNavPrivacy}
+                </Link>
+                <span className="select-none text-gray-300" aria-hidden>
+                  |
+                </span>
+                <a
+                  href={`mailto:${FOOTER_CONTACT_EMAIL}`}
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {t.footerNavContact}
+                </a>
+              </nav>
             </div>
           </div>
         </footer>
