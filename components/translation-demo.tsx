@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { SiteCopy } from "@/lib/site-i18n";
 import type { Locale } from "@/lib/site-i18n";
+import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import { useSectionVisible } from "@/lib/use-section-visible";
 
 const LOCALE_FLAG: Record<Locale, string> = {
@@ -109,7 +110,11 @@ function ArrowIcon({ className }: { className?: string }) {
 }
 
 export function TranslationDemo({ t }: { t: SiteCopy }) {
-  const { ref: sectionRef, active } = useSectionVisible(0.4);
+  const { ref: sectionRef, active } = useSectionVisible({
+    startThreshold: 0.16,
+    stopThreshold: 0.05,
+    pauseDelayMs: 1000,
+  });
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
   const cycleRef = useRef<number | null>(null);
@@ -135,6 +140,7 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
   }, [active, clear]);
 
   const pair = CHAT_PAIRS[index]!;
+  const isEnglishTitle = t.translationDemoTitle === "Say it once. Everyone understands.";
 
   return (
     <section
@@ -143,7 +149,15 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
     >
       <div className="max-w-3xl text-center">
         <h2 className="text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl">
-          {t.translationDemoTitle}
+          {isEnglishTitle ? (
+            <>
+              <span>Say it once. </span>
+              <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>Everyone</span>
+              <span> understands.</span>
+            </>
+          ) : (
+            t.translationDemoTitle
+          )}
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-500 sm:text-base">
           {t.translationDemoSubtitle}

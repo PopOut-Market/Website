@@ -20,7 +20,7 @@ export const INNER_MAX = "mx-auto w-full max-w-5xl px-3 sm:px-4 md:px-5";
 export const SITE_MAIN_SLOT_CLASS =
   "flex w-full min-h-[calc(100dvh-6rem)] flex-grow basis-auto shrink-0 flex-col";
 
-/** Hero “Popout Market” and matching accent text (use with `bg-clip-text text-transparent`). */
+/** Hero “PopOut Market” and matching accent text (use with `bg-clip-text text-transparent`). */
 export const POPOUT_BRAND_GRADIENT_TEXT_CLASS =
   "bg-[linear-gradient(to_bottom,#FF0048_0%,#FF154A_24%,#FF314A_45%,#FF4B45_63%,#FF5A33_80%,#FF6600_100%)] bg-clip-text text-transparent";
 

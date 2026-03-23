@@ -25,6 +25,7 @@ import {
   footerSocialUrlLinkedIn,
   footerSocialUrlRednote,
 } from "@/lib/site-config";
+import { readStoredMarketSuburb } from "@/lib/site-suburbs";
 import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
 
@@ -69,6 +70,7 @@ function FooterSocialLink({
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [locale, setLocale] = useState<Locale>("en");
+  const [marketHref, setMarketHref] = useState("/market");
   const [langOpen, setLangOpen] = useState(false);
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
@@ -102,6 +104,15 @@ export function SiteChrome({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  useEffect(() => {
+    const suburb = readStoredMarketSuburb();
+    if (suburb) {
+      setMarketHref(`/market?area=${encodeURIComponent(suburb)}`);
+    } else {
+      setMarketHref("/market");
+    }
+  }, [pathname]);
+
   return (
     <SiteShellProvider
       value={{
@@ -124,7 +135,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               >
                 <Image
                   src={LOGO_TEXT_SRC}
-                  alt="Popout"
+                  alt="PopOut"
                   width={320}
                   height={80}
                   priority
@@ -133,7 +144,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 />
               </Link>
               <Link
-                href="/market"
+                href={marketHref}
                 className={`inline-flex h-9 shrink-0 items-center rounded-[11px] border px-3 text-sm font-semibold backdrop-blur-xl transition ${
                   isMarket
                     ? "border-2 border-white/70 bg-white/70 text-gray-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_4px_12px_rgba(15,23,42,0.14)]"

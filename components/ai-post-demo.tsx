@@ -161,7 +161,11 @@ function AiShimmerCard({
 }
 
 export function AiPostDemo({ t }: { t: SiteCopy }) {
-  const { ref: sectionRef, active } = useSectionVisible(0.4);
+  const { ref: sectionRef, active } = useSectionVisible({
+    startThreshold: 0.14,
+    stopThreshold: 0.04,
+    pauseDelayMs: 1200,
+  });
   const [itemIdx, setItemIdx] = useState(0);
   const [phase, setPhase] = useState(0);
   const timerRef = useRef<number | null>(null);
@@ -217,6 +221,7 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
   }, [active, itemIdx]);
 
   const item = DEMO_ITEMS[itemIdx]!;
+  const isEnglishTitle = t.aiPostDemoTitle === "Snap a photo. AI does the rest.";
   const showCorners = phase >= 1;
   const shimmer = phase >= 3 && phase < 6;
   const vis = (atPhase: number) =>
@@ -281,7 +286,15 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
     >
       <div className="max-w-3xl text-center">
         <h2 className="text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl">
-          {t.aiPostDemoTitle}
+          {isEnglishTitle ? (
+            <>
+              <span>Snap a photo. AI does the </span>
+              <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>rest</span>
+              <span>.</span>
+            </>
+          ) : (
+            t.aiPostDemoTitle
+          )}
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-500 sm:text-base">
           {t.aiPostDemoSubtitle}

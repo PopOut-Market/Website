@@ -9,7 +9,7 @@ export default function AboutPage() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = `${t.aboutPageTitle} · Popout Market`;
+    document.title = `${t.aboutPageTitle} · PopOut Market`;
     return () => {
       document.title = prev;
     };

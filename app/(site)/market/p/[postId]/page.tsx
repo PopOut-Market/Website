@@ -2,8 +2,6 @@
 
 import { MarketPostDetailView } from "@/components/market-post-detail-view";
 import { useSiteShell } from "@/components/site-chrome-context";
-import { haversineMeters } from "@/lib/geo/meetup-point";
-import { formatMarketDistanceKm } from "@/lib/market-distance";
 import { createMockMarketProducts } from "@/lib/market-mock";
 import type { MarketPostDetail } from "@/lib/market-post-detail";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
@@ -14,7 +12,8 @@ import {
   getSupabaseBrowserClient,
   isSupabaseBrowserConfigured,
 } from "@/lib/supabase/browser-client";
-import { useParams } from "next/navigation";
+import { isMarketSuburb, type MarketSuburb } from "@/lib/site-suburbs";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -56,9 +55,14 @@ function demoDetailFromPostId(postId: string, locale: Locale, t: SiteCopy): Mark
 
 export default function MarketPostPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const rawPostId = params.postId;
   const postId = Array.isArray(rawPostId) ? rawPostId[0] : rawPostId;
   const safePostId = typeof postId === "string" ? postId : "";
+  const areaParam = searchParams.get("area");
+  const selectedArea: MarketSuburb | null =
+    areaParam && isMarketSuburb(areaParam) ? areaParam : null;
+  const backHref = selectedArea ? `/market?area=${encodeURIComponent(selectedArea)}` : "/market";
 
   const { locale, t } = useSiteShell();
   const configured = isSupabaseBrowserConfigured();
@@ -66,7 +70,6 @@ export default function MarketPostPage() {
   const [detail, setDetail] = useState<MarketPostDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [fetchFailed, setFetchFailed] = useState(false);
-  const [userGeo, setUserGeo] = useState<{ lat: number; lng: number } | null>(null);
 
   const load = useCallback(async () => {
     if (!safePostId) {
@@ -94,7 +97,7 @@ export default function MarketPostPage() {
         kmSuffix: t.marketKmShort,
       });
       if (err) {
-        console.error("[Popout Market] Post detail failed:", err);
+        console.error("[PopOut Market] Post detail failed:", err);
         setFetchFailed(true);
         setDetail(null);
       } else {
@@ -102,7 +105,7 @@ export default function MarketPostPage() {
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      console.error("[Popout Market] Post detail failed:", msg);
+      console.error("[PopOut Market] Post detail failed:", msg);
       setFetchFailed(true);
       setDetail(null);
     } finally {
@@ -114,55 +117,12 @@ export default function MarketPostPage() {
     void load();
   }, [load]);
 
-  useEffect(() => {
-    if (!configured || typeof window === "undefined") {
-      return;
-    }
-    if (!navigator.geolocation) {
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserGeo({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        });
-      },
-      () => {},
-      { enableHighAccuracy: false, timeout: 15_000, maximumAge: 600_000 },
-    );
-  }, [configured]);
-
-  const distanceLabel = useMemo(() => {
-    if (!detail) {
-      return "";
-    }
-    if (
-      userGeo &&
-      detail.meetupPoint &&
-      Number.isFinite(userGeo.lat) &&
-      Number.isFinite(userGeo.lng) &&
-      Number.isFinite(detail.meetupPoint.lat) &&
-      Number.isFinite(detail.meetupPoint.lng)
-    ) {
-      const m = haversineMeters(
-        userGeo.lat,
-        userGeo.lng,
-        detail.meetupPoint.lat,
-        detail.meetupPoint.lng,
-      );
-      return formatMarketDistanceKm(m, t.marketKmShort);
-    }
-    return detail.distanceLabel;
-  }, [detail, userGeo, t.marketKmShort]);
-
   const detailCopy = useMemo(
     () => ({
       marketPostBack: t.marketPostBack,
       marketPostBackAria: t.marketPostBackAria,
       marketPostListedLabel: t.marketPostListedLabel,
       marketPostAreaLabel: t.marketPostAreaLabel,
-      marketPostDistanceLabel: t.marketPostDistanceLabel,
       marketPostDeliverableBadge: t.marketPostDeliverableBadge,
       marketPostFixedPriceLabel: t.marketPostFixedPriceLabel,
       marketPostDescriptionHeading: t.marketPostDescriptionHeading,
@@ -182,7 +142,7 @@ export default function MarketPostPage() {
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
           <p className="max-w-md text-sm text-gray-700">{t.marketPostNotFoundBody}</p>
           <Link
-            href="/market"
+            href={backHref}
             className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
           >
             {t.marketPostBack}
@@ -230,7 +190,7 @@ export default function MarketPostPage() {
           <h1 className="text-lg font-semibold text-gray-900">{t.marketPostNotFoundTitle}</h1>
           <p className="max-w-md text-sm text-gray-600">{t.marketPostNotFoundBody}</p>
           <Link
-            href="/market"
+            href={backHref}
             className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
           >
             {t.marketPostBack}
@@ -243,7 +203,7 @@ export default function MarketPostPage() {
   return (
     <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
-        <MarketPostDetailView detail={detail} distanceLabel={distanceLabel} copy={detailCopy} />
+        <MarketPostDetailView detail={detail} copy={detailCopy} backHref={backHref} />
       </div>
     </section>
   );

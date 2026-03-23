@@ -1,7 +1,6 @@
 "use client";
 
 import { MarketProductCard } from "@/components/market-product-card";
-import { applyUserGeolocationToProductDistances } from "@/lib/market-distance";
 import { createMockMarketProducts } from "@/lib/market-mock";
 import type { MarketProduct } from "@/lib/market-product";
 import type { Locale, SiteCopy } from "@/lib/site-i18n";
@@ -12,7 +11,7 @@ import {
   isSupabaseBrowserConfigured,
 } from "@/lib/supabase/browser-client";
 import { marketSuburbToSlug } from "@/lib/suburb-slug";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type MarketFeedProps = {
   area: MarketSuburb;
@@ -30,26 +29,15 @@ export function MarketFeed({ area, locale, t }: MarketFeedProps) {
   const [remote, setRemote] = useState<MarketProduct[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchFailed, setFetchFailed] = useState(false);
-  const [userGeo, setUserGeo] = useState<{ lat: number; lng: number } | null>(null);
-  const [geoStatus, setGeoStatus] = useState<"idle" | "pending" | "granted" | "denied" | "unsupported">(
-    "idle",
-  );
-
-  const displayProducts = useMemo(
-    () =>
-      applyUserGeolocationToProductDistances(
-        remote ?? [],
-        userGeo?.lat,
-        userGeo?.lng,
-        t.marketKmShort,
-      ),
-    [remote, userGeo?.lat, userGeo?.lng, t.marketKmShort],
-  );
+  const displayProducts = remote ?? [];
+  /** Avoids a slower CBD request overwriting results after `area` updates (e.g. URL → Southbank). */
+  const fetchGenerationRef = useRef(0);
 
   const runFetch = useCallback(async () => {
     if (!isSupabaseBrowserConfigured()) {
       return;
     }
+    const gen = ++fetchGenerationRef.current;
     setLoading(true);
     setFetchFailed(false);
     setRemote(null);
@@ -63,71 +51,36 @@ export function MarketFeed({ area, locale, t }: MarketFeedProps) {
         sellerFallback: t.marketDemoSeller,
         kmSuffix: t.marketKmShort,
       });
+      if (gen !== fetchGenerationRef.current) {
+        return;
+      }
       if (err) {
-        console.error("[Popout Market] Listings request failed:", err);
+        console.error("[PopOut Market] Listings request failed:", err);
         setFetchFailed(true);
         setRemote([]);
       } else {
         setRemote(products);
       }
     } catch (e) {
+      if (gen !== fetchGenerationRef.current) {
+        return;
+      }
       const msg = e instanceof Error ? e.message : String(e);
-      console.error("[Popout Market] Listings request failed:", msg);
+      console.error("[PopOut Market] Listings request failed:", msg);
       setFetchFailed(true);
       setRemote([]);
     } finally {
-      setLoading(false);
+      if (gen === fetchGenerationRef.current) {
+        setLoading(false);
+      }
     }
   }, [area, locale, t.marketDemoSeller, t.marketKmShort]);
-
-  useEffect(() => {
-    if (!configured || typeof window === "undefined") {
-      return;
-    }
-    if (!navigator.geolocation) {
-      setGeoStatus("unsupported");
-      return;
-    }
-    setGeoStatus("pending");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserGeo({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        });
-        setGeoStatus("granted");
-      },
-      () => setGeoStatus("denied"),
-      { enableHighAccuracy: false, timeout: 15_000, maximumAge: 600_000 },
-    );
-  }, [configured]);
-
-  const retryLocation = useCallback(() => {
-    if (typeof window === "undefined" || !navigator.geolocation) {
-      setGeoStatus("unsupported");
-      return;
-    }
-    setGeoStatus("pending");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserGeo({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        });
-        setGeoStatus("granted");
-      },
-      () => setGeoStatus("denied"),
-      { enableHighAccuracy: false, timeout: 15_000, maximumAge: 600_000 },
-    );
-  }, []);
 
   useEffect(() => {
     if (!configured) {
       setRemote(null);
       setFetchFailed(false);
       setLoading(false);
-      setUserGeo(null);
-      setGeoStatus("idle");
       return;
     }
     void runFetch();
@@ -153,7 +106,7 @@ export function MarketFeed({ area, locale, t }: MarketFeedProps) {
               <MarketProductCard
                 product={product}
                 regionLabel={area}
-                href={`/market/p/${encodeURIComponent(product.id)}`}
+                href={`/market/p/${encodeURIComponent(product.id)}?area=${encodeURIComponent(area)}`}
                 copy={{
                   postNoImageAria: t.marketPostNoImageAria,
                   badgeNew: t.marketBadgeNew,
@@ -210,20 +163,6 @@ export function MarketFeed({ area, locale, t }: MarketFeedProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-3">
-      {geoStatus === "denied" || geoStatus === "unsupported" ? (
-        <div className="mb-3 flex flex-col gap-2 rounded-xl border border-gray-200/90 bg-gray-50/90 px-3 py-2.5 text-left text-xs text-gray-700 sm:text-sm">
-          <p>{geoStatus === "unsupported" ? t.marketLocationUnsupportedHint : t.marketLocationDeniedHint}</p>
-          {geoStatus === "denied" ? (
-            <button
-              type="button"
-              onClick={retryLocation}
-              className="self-start rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-800 transition hover:bg-gray-50 sm:text-sm"
-            >
-              {t.marketLocationRetry}
-            </button>
-          ) : null}
-        </div>
-      ) : null}
       <ul
         className="grid w-full list-none auto-rows-fr gap-3 p-0 [grid-template-columns:repeat(auto-fill,minmax(min(100%,10.25rem),1fr))] sm:gap-3.5 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,12.3rem),1fr))]"
         aria-label={t.marketFeedListAria}
@@ -233,7 +172,7 @@ export function MarketFeed({ area, locale, t }: MarketFeedProps) {
             <MarketProductCard
               product={product}
               regionLabel={area}
-              href={`/market/p/${encodeURIComponent(product.id)}`}
+              href={`/market/p/${encodeURIComponent(product.id)}?area=${encodeURIComponent(area)}`}
               copy={{
                 postNoImageAria: t.marketPostNoImageAria,
                 badgeNew: t.marketBadgeNew,

@@ -1,14 +1,22 @@
 "use client";
 
 import { AiPostDemo } from "@/components/ai-post-demo";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { TranslationDemo } from "@/components/translation-demo";
 import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
-import { useEffect, useRef, useState } from "react";
+import { useSectionVisible } from "@/lib/use-section-visible";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function HomePage() {
   const { t, openLanguageModal } = useSiteShell();
+  const { ref: heroRef, active: heroActive } = useSectionVisible({
+    startThreshold: 0.12,
+    stopThreshold: 0.05,
+    pauseDelayMs: 700,
+  });
   const [locationIndex, setLocationIndex] = useState(0);
   const [locationVisible, setLocationVisible] = useState(true);
   const locationCycleTimerRef = useRef<number | null>(null);
@@ -16,7 +24,23 @@ export default function HomePage() {
 
   const rotatingLocation = MARKET_SUBURBS[locationIndex] ?? "Melbourne";
 
+  const clearLocationTimers = useCallback(() => {
+    if (locationCycleTimerRef.current !== null) {
+      window.clearTimeout(locationCycleTimerRef.current);
+      locationCycleTimerRef.current = null;
+    }
+    if (locationTransitionTimerRef.current !== null) {
+      window.clearTimeout(locationTransitionTimerRef.current);
+      locationTransitionTimerRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
+    if (!heroActive) {
+      clearLocationTimers();
+      return;
+    }
+
     const runCycle = () => {
       setLocationVisible(false);
 
@@ -29,23 +53,19 @@ export default function HomePage() {
 
     locationCycleTimerRef.current = window.setTimeout(runCycle, 3000);
 
-    return () => {
-      if (locationCycleTimerRef.current !== null) {
-        window.clearTimeout(locationCycleTimerRef.current);
-      }
-      if (locationTransitionTimerRef.current !== null) {
-        window.clearTimeout(locationTransitionTimerRef.current);
-      }
-    };
-  }, []);
+    return clearLocationTimers;
+  }, [heroActive, clearLocationTimers]);
 
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="flex flex-col items-center justify-center px-6 pb-16 pt-12 sm:pb-20 sm:pt-16 md:pt-24">
+      <section
+        ref={heroRef as React.RefObject<HTMLElement>}
+        className="flex flex-col items-center justify-center px-6 pb-16 pt-12 sm:pb-20 sm:pt-16 md:pt-24"
+      >
         <div className="flex max-w-4xl flex-col items-center text-center">
           <h1 className="text-balance text-[clamp(1.7rem,4vw,3rem)] font-semibold tracking-tight text-gray-800">
-            <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>Popout Market</span>
+            <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>PopOut Market</span>
             <span>, now in </span>
             <span
               aria-live="polite"
@@ -70,7 +90,20 @@ export default function HomePage() {
             </button>
             .
           </p>
+
         </div>
+
+        {/* ── Showcase carousel ──────────────────────────── */}
+        <div className="mt-10 w-full sm:mt-12">
+          <HeroCarousel />
+        </div>
+
+        <Link
+          href="/market"
+          className="mt-8 inline-flex items-center justify-center rounded-xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-gray-900/20 transition hover:-translate-y-0.5 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/40 focus-visible:ring-offset-2 sm:mt-10 sm:text-base"
+        >
+          {t.heroExploreCta}
+        </Link>
       </section>
 
       {/* ── Translation demo ─────────────────────────────── */}

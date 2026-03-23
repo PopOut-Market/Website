@@ -6,13 +6,32 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import {
   DEFAULT_MARKET_SUBURB,
   MARKET_SUBURBS,
+  isMarketSuburb,
+  readStoredMarketSuburb,
+  writeStoredMarketSuburb,
   type MarketSuburb,
 } from "@/lib/site-suburbs";
-import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export default function MarketPage() {
   const { t, locale } = useSiteShell();
+  const searchParams = useSearchParams();
   const [area, setArea] = useState<MarketSuburb>(DEFAULT_MARKET_SUBURB);
+
+  // URL wins over localStorage; apply before paint where possible so the feed doesn't fetch the wrong suburb first.
+  useLayoutEffect(() => {
+    const areaParam = searchParams.get("area");
+    if (areaParam && isMarketSuburb(areaParam)) {
+      setArea(areaParam);
+      writeStoredMarketSuburb(areaParam);
+      return;
+    }
+    const stored = readStoredMarketSuburb();
+    if (stored) {
+      setArea(stored);
+    }
+  }, [searchParams]);
   const [areaModalOpen, setAreaModalOpen] = useState(false);
   const areaModalRef = useRef<HTMLDivElement | null>(null);
   const areaTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -113,6 +132,7 @@ export default function MarketPage() {
                     type="button"
                     onClick={() => {
                       setArea(name);
+                      writeStoredMarketSuburb(name);
                       setAreaModalOpen(false);
                     }}
                     className={`rounded-2xl border px-3 py-2.5 text-left text-[1rem] font-semibold transition ${

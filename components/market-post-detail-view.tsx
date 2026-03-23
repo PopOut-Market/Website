@@ -11,7 +11,6 @@ type MarketPostDetailViewCopy = {
   marketPostBackAria: string;
   marketPostListedLabel: string;
   marketPostAreaLabel: string;
-  marketPostDistanceLabel: string;
   marketPostDeliverableBadge: string;
   marketPostFixedPriceLabel: string;
   marketPostDescriptionHeading: string;
@@ -25,11 +24,11 @@ type MarketPostDetailViewCopy = {
 
 type MarketPostDetailViewProps = {
   detail: MarketPostDetail;
-  distanceLabel: string;
   copy: MarketPostDetailViewCopy;
+  backHref: string;
 };
 
-export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPostDetailViewProps) {
+export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetailViewProps) {
   const desc = detail.description?.trim() ?? "";
   const [activePhoto, setActivePhoto] = useState(0);
 
@@ -51,7 +50,7 @@ export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPost
     <div className="flex min-h-0 flex-1 flex-col gap-4 pb-5">
       <div className="flex shrink-0 justify-start pt-1">
         <Link
-          href="/market"
+          href={backHref}
           className="inline-flex h-9 max-w-full items-center gap-1.5 rounded-[11px] border border-gray-200 bg-white/90 px-3 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:border-gray-300 hover:bg-white"
           aria-label={copy.marketPostBackAria}
         >
@@ -116,7 +115,7 @@ export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPost
 
         <div className="flex flex-col gap-4 p-5 sm:p-6">
           <section className="rounded-2xl border border-gray-100 bg-white p-3.5 shadow-sm">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               <div className="flex min-w-0 items-center gap-3">
                 <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-gray-100">
                   {detail.sellerAvatarUrl ? (
@@ -143,13 +142,6 @@ export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPost
                   ) : null}
                 </div>
               </div>
-              <svg className="h-4 w-4 shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-                <path
-                  fillRule="evenodd"
-                  d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24a.75.75 0 0 1 0 1.06l-4.24 4.24a.75.75 0 0 1-1.08-.01Z"
-                  clipRule="evenodd"
-                />
-              </svg>
             </div>
           </section>
 
@@ -164,7 +156,7 @@ export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPost
                 {detail.priceLabel}
               </p>
               {detail.offerLabel === "no" ? (
-                <span className="text-base font-semibold text-gray-700 sm:text-lg">
+                <span className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-semibold text-gray-700 sm:text-sm">
                   {copy.marketPostFixedPriceLabel}
                 </span>
               ) : null}
@@ -182,10 +174,6 @@ export function MarketPostDetailView({ detail, distanceLabel, copy }: MarketPost
           </div>
 
           <dl className="grid gap-3 text-sm text-gray-700 sm:grid-cols-1">
-            <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-gray-50 py-2">
-              <dt className="font-medium text-gray-500">{copy.marketPostDistanceLabel}</dt>
-              <dd className="text-right font-semibold tabular-nums text-gray-900">{distanceLabel}</dd>
-            </div>
             {detail.areaLabel ? (
               <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-gray-50 py-2">
                 <dt className="font-medium text-gray-500">{copy.marketPostAreaLabel}</dt>

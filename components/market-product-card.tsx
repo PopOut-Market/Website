@@ -50,15 +50,9 @@ export function MarketProductCard({ product, regionLabel, copy, href }: MarketPr
         <h2 className="line-clamp-2 min-h-[3rem] text-left text-[0.95rem] font-semibold leading-snug text-gray-900 sm:text-base">
           {product.title}
         </h2>
-        <div className="mt-auto flex items-baseline justify-between gap-2">
+        <div className="mt-auto">
           <span className="truncate text-lg font-extrabold tabular-nums text-gray-900">
             {product.priceLabel}
-          </span>
-          <span
-            className="max-w-[45%] shrink-0 truncate text-right text-sm text-gray-600"
-            title={product.distanceLabel}
-          >
-            {product.distanceLabel}
           </span>
         </div>
         <p className="truncate text-sm text-gray-500">{product.sellerLabel}</p>
