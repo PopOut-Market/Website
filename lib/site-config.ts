@@ -42,6 +42,9 @@ export const FOOTER_SOCIAL_IMG_LINKEDIN = "/images/LinkedIn-Icon.svg";
 /** Xiaohongshu (RED) short link — override with `NEXT_PUBLIC_FOOTER_SOCIAL_REDNOTE_URL` if needed. */
 export const FOOTER_SOCIAL_REDNOTE_DEFAULT = "https://xhslink.com/m/7eKhz2OkgbC";
 
+/** Instagram — override with `NEXT_PUBLIC_FOOTER_SOCIAL_INSTAGRAM_URL` (e.g. `/popoutmarket/`). */
+export const FOOTER_SOCIAL_INSTAGRAM_DEFAULT = "https://www.instagram.com/?hl=en";
+
 /** LinkedIn footer link. Admin dashboard URL; use `NEXT_PUBLIC_FOOTER_SOCIAL_LINKEDIN_URL` to override (e.g. public `/company/…/`). */
 export const FOOTER_SOCIAL_LINKEDIN_DEFAULT =
   "https://www.linkedin.com/company/112766074/admin/dashboard/";
@@ -65,8 +68,11 @@ export function footerSocialUrlRednote(): string {
   );
 }
 
-export function footerSocialUrlInstagram(): string | null {
-  return footerSocialUrlFromEnv(process.env.NEXT_PUBLIC_FOOTER_SOCIAL_INSTAGRAM_URL);
+export function footerSocialUrlInstagram(): string {
+  return (
+    footerSocialUrlFromEnv(process.env.NEXT_PUBLIC_FOOTER_SOCIAL_INSTAGRAM_URL) ??
+    FOOTER_SOCIAL_INSTAGRAM_DEFAULT
+  );
 }
 
 export function footerSocialUrlLinkedIn(): string {

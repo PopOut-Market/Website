@@ -417,31 +417,37 @@ export function SiteChrome({ children }: { children: ReactNode }) {
             <div className="border-t border-gray-300 pt-6 sm:pt-8">
               <div className="flex flex-wrap items-center justify-center gap-4 min-[760px]:justify-start">
                 <FooterSocialLink href={footerSocialUrlRednote()} ariaLabel={t.footerSocialRednoteAria}>
-                  <Image
-                    src={FOOTER_SOCIAL_IMG_REDNOTE}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
-                  />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                    <Image
+                      src={FOOTER_SOCIAL_IMG_REDNOTE}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="h-full w-auto max-w-full object-contain"
+                    />
+                  </div>
                 </FooterSocialLink>
                 <FooterSocialLink href={footerSocialUrlInstagram()} ariaLabel={t.footerSocialInstagramAria}>
-                  <Image
-                    src={FOOTER_SOCIAL_IMG_INSTAGRAM}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
-                  />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                    <Image
+                      src={FOOTER_SOCIAL_IMG_INSTAGRAM}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="h-full w-auto max-w-full object-contain"
+                    />
+                  </div>
                 </FooterSocialLink>
                 <FooterSocialLink href={footerSocialUrlLinkedIn()} ariaLabel={t.footerSocialLinkedInAria}>
-                  <Image
-                    src={FOOTER_SOCIAL_IMG_LINKEDIN}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="max-h-8 w-auto max-w-[2.25rem] object-contain"
-                  />
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
+                    <Image
+                      src={FOOTER_SOCIAL_IMG_LINKEDIN}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="h-full w-auto max-w-full object-contain"
+                    />
+                  </div>
                 </FooterSocialLink>
               </div>
 

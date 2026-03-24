@@ -2,7 +2,10 @@
 
 import { AiPostDemo } from "@/components/ai-post-demo";
 import { HeroCarousel } from "@/components/hero-carousel";
+import { ScheduleDemo } from "@/components/schedule-demo";
 import { useSiteShell } from "@/components/site-chrome-context";
+import { SafetyZoneDemo } from "@/components/safety-zone-demo";
+import { StudentVerifyDemo } from "@/components/student-verify-demo";
 import { TranslationDemo } from "@/components/translation-demo";
 import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -111,6 +114,15 @@ export default function HomePage() {
 
       {/* ── AI post demo ─────────────────────────────────── */}
       <AiPostDemo t={t} />
+
+      {/* ── Schedule meetup demo ─────────────────────────── */}
+      <ScheduleDemo t={t} />
+
+      {/* ── Student verification demo ────────────────────── */}
+      <StudentVerifyDemo t={t} />
+
+      {/* ── Safety Zone demo ─────────────────────────────── */}
+      <SafetyZoneDemo t={t} />
     </>
   );
 }
