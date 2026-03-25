@@ -5,7 +5,8 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -18,6 +19,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type LegendPayload,
 } from "recharts";
 
 type Kpis = {
@@ -53,6 +55,65 @@ function todayStart() {
   return d.toISOString();
 }
 
+type TrendSeriesKey = "posts" | "likes" | "dealResults";
+
+function isTrendSeriesKey(k: string): k is TrendSeriesKey {
+  return k === "posts" || k === "likes" || k === "dealResults";
+}
+
+function DailyTrendLegendContent({
+  payload,
+  visibility,
+  onToggle,
+}: {
+  payload?: ReadonlyArray<LegendPayload>;
+  visibility: Record<TrendSeriesKey, boolean>;
+  onToggle: (key: TrendSeriesKey) => void;
+}) {
+  if (!payload?.length) return null;
+  return (
+    <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 pt-2 text-xs">
+      {payload.map((entry, index) => {
+        const raw = entry.dataKey;
+        const key = typeof raw === "string" && isTrendSeriesKey(raw) ? raw : null;
+        if (!key) return null;
+        const on = visibility[key];
+        const color = entry.color ?? "#64748b";
+        const label = entry.value ?? key;
+        return (
+          <li
+            key={`${String(entry.dataKey)}-${index}`}
+            className={`flex items-center gap-2 ${on ? "" : "opacity-45"}`}
+          >
+            <button
+              type="button"
+              role="switch"
+              aria-checked={on}
+              aria-label={on ? `Hide ${label}` : `Show ${label}`}
+              onClick={() => onToggle(key)}
+              className={`flex h-[22px] w-10 shrink-0 items-center rounded-full p-0.5 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 ${
+                on ? "justify-end bg-slate-800" : "justify-start bg-slate-300"
+              }`}
+            >
+              <span className="block h-4 w-4 rounded-full bg-white shadow-sm" />
+            </button>
+            <span className="relative inline-flex h-3 w-7 shrink-0 items-center" aria-hidden>
+              <span className="h-px w-full rounded-full" style={{ backgroundColor: color }} />
+              <span
+                className="absolute left-1/2 top-1/2 box-border h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-white"
+                style={{ borderColor: color }}
+              />
+            </span>
+            <span className="font-medium" style={{ color }}>
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export default function DashboardOverviewPage() {
   const [kpis, setKpis] = useState<Kpis | null>(null);
   const [statusDist, setStatusDist] = useState<StatusSlice[]>([]);
@@ -60,6 +121,36 @@ export default function DashboardOverviewPage() {
   const [range, setRange] = useState<7 | 14 | 30>(30);
   const [loading, setLoading] = useState(true);
   const [loadWarning, setLoadWarning] = useState<string | null>(null);
+  const [seriesVisible, setSeriesVisible] = useState<Record<TrendSeriesKey, boolean>>({
+    posts: true,
+    likes: true,
+    dealResults: true,
+  });
+
+  const toggleSeries = (key: TrendSeriesKey) => {
+    setSeriesVisible((v) => ({ ...v, [key]: !v[key] }));
+  };
+
+  const router = useRouter();
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportStart, setReportStart] = useState("2026-01-01");
+  const [reportEnd, setReportEnd] = useState(() => new Date().toISOString().slice(0, 10));
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!reportOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (reportRef.current && !reportRef.current.contains(e.target as Node)) setReportOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [reportOpen]);
+
+  function goReport(type: "weekly" | "monthly" | "quarterly") {
+    const params = new URLSearchParams({ start: reportStart, end: reportEnd, type });
+    router.push(`/admin-super/dashboard/generate-report?${params.toString()}`);
+    setReportOpen(false);
+  }
 
   useEffect(() => {
     const todayISO = todayStart();
@@ -186,7 +277,69 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Dashboard Overview</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Dashboard Overview</h1>
+        <div className="relative" ref={reportRef}>
+          <button
+            type="button"
+            onClick={() => setReportOpen((v) => !v)}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Generate Report
+          </button>
+          {reportOpen && (
+            <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-xl border border-slate-200 bg-white p-5 shadow-xl">
+              <h3 className="mb-4 text-sm font-semibold text-slate-800">Generate Report</h3>
+              <div className="mb-4 grid grid-cols-2 gap-3">
+                <label className="block">
+                  <span className="mb-1 block text-xs font-medium text-slate-500">Start Date</span>
+                  <input
+                    type="date"
+                    value={reportStart}
+                    onChange={(e) => setReportStart(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-xs font-medium text-slate-500">End Date</span>
+                  <input
+                    type="date"
+                    value={reportEnd}
+                    onChange={(e) => setReportEnd(e.target.value)}
+                    className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 shadow-sm focus:border-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400"
+                  />
+                </label>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => goReport("weekly")}
+                  className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                >
+                  Weekly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goReport("monthly")}
+                  className="flex-1 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700"
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goReport("quarterly")}
+                  className="flex-1 rounded-lg bg-amber-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-amber-700"
+                >
+                  Quarterly
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
       {loadWarning ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
           {loadWarning}
@@ -246,10 +399,37 @@ export default function DashboardOverviewPage() {
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
               <Tooltip />
-              <Legend />
-              <Area type="monotone" dataKey="posts" stroke="#3b82f6" fill="url(#colorPosts)" />
-              <Area type="monotone" dataKey="likes" stroke="#10b981" fill="url(#colorLikes)" />
-              <Area type="monotone" dataKey="dealResults" stroke="#f59e0b" fill="url(#colorTxns)" name="deal results (sold)" />
+              <Legend
+                content={(props) => (
+                  <DailyTrendLegendContent
+                    payload={props.payload}
+                    visibility={seriesVisible}
+                    onToggle={toggleSeries}
+                  />
+                )}
+              />
+              <Area
+                type="monotone"
+                dataKey="posts"
+                stroke="#3b82f6"
+                fill="url(#colorPosts)"
+                hide={!seriesVisible.posts}
+              />
+              <Area
+                type="monotone"
+                dataKey="likes"
+                stroke="#10b981"
+                fill="url(#colorLikes)"
+                hide={!seriesVisible.likes}
+              />
+              <Area
+                type="monotone"
+                dataKey="dealResults"
+                stroke="#f59e0b"
+                fill="url(#colorTxns)"
+                name="deal results (sold)"
+                hide={!seriesVisible.dealResults}
+              />
             </AreaChart>
           </ResponsiveContainer>
         )}

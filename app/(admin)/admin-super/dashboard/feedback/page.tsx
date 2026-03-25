@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 type FeedbackRow = {
   id: string;
+  user_id: string | null;
   content: string | null;
   image_urls: string[] | null;
   created_at: string;
@@ -42,24 +43,46 @@ export default function FeedbackPage() {
       setTotalCount(total ?? 0);
       setTodayCount(today ?? 0);
 
-      const { data } = await sb
+      let mapped: FeedbackRow[] = [];
+
+      const { data, error } = await sb
         .from("feedbacks")
-        .select("id, content, image_urls, created_at, profiles!inner(nickname, avatar_url)")
+        .select("id, user_id, content, image_urls, created_at, profiles(nickname, avatar_url)")
         .order("created_at", { ascending: false })
         .limit(100);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mapped: FeedbackRow[] = (data ?? []).map((d: any) => {
-        const prof = Array.isArray(d.profiles) ? d.profiles[0] : d.profiles;
-        return {
+      if (!error && data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mapped = data.map((d: any) => {
+          const prof = Array.isArray(d.profiles) ? d.profiles[0] : d.profiles;
+          return {
+            id: d.id,
+            user_id: d.user_id ?? null,
+            content: d.content,
+            image_urls: d.image_urls,
+            created_at: d.created_at,
+            nickname: prof?.nickname ?? "Unknown",
+            avatar_url: prof?.avatar_url ?? null,
+          };
+        });
+      } else {
+        const { data: plain } = await sb
+          .from("feedbacks")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(100);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mapped = (plain ?? []).map((d: any) => ({
           id: d.id,
-          content: d.content,
-          image_urls: d.image_urls,
+          user_id: d.user_id ?? null,
+          content: d.content ?? d.text ?? d.message ?? null,
+          image_urls: d.image_urls ?? (d.image_url ? [d.image_url] : null),
           created_at: d.created_at,
-          nickname: prof?.nickname ?? "Unknown",
-          avatar_url: prof?.avatar_url ?? null,
-        };
-      });
+          nickname: d.nickname ?? d.user_name ?? d.email ?? "Unknown",
+          avatar_url: d.avatar_url ?? null,
+        }));
+      }
 
       setRows(mapped);
       setWithImagesCount(mapped.filter((r) => r.image_urls && r.image_urls.length > 0).length);
