@@ -1,10 +1,6 @@
 "use client";
 
 import { KpiCard } from "@/components/admin/kpi-card";
-import {
-  getAdminAuthBrowserClient,
-  isAdminAuthConfigured,
-} from "@/lib/supabase/admin-auth-browser-client";
 import { useEffect, useState } from "react";
 
 type FeedbackRow = {
@@ -26,34 +22,22 @@ export default function FeedbackPage() {
   const [withImagesCount, setWithImagesCount] = useState(0);
 
   useEffect(() => {
-    if (!isAdminAuthConfigured()) return;
-    const sb = getAdminAuthBrowserClient();
-
     async function load() {
       setLoading(true);
 
-      const todayISO = new Date();
-      todayISO.setHours(0, 0, 0, 0);
+      try {
+        const res = await fetch("/api/admin/feedback", { cache: "no-store" });
+        if (!res.ok) {
+          setLoading(false);
+          return;
+        }
+        const json = await res.json();
 
-      const [{ count: total }, { count: today }] = await Promise.all([
-        sb.from("feedbacks").select("*", { count: "exact", head: true }),
-        sb.from("feedbacks").select("*", { count: "exact", head: true }).gte("created_at", todayISO.toISOString()),
-      ]);
+        setTotalCount(json.total ?? 0);
+        setTodayCount(json.today ?? 0);
 
-      setTotalCount(total ?? 0);
-      setTodayCount(today ?? 0);
-
-      let mapped: FeedbackRow[] = [];
-
-      const { data, error } = await sb
-        .from("feedbacks")
-        .select("id, user_id, content, image_urls, created_at, profiles(nickname, avatar_url)")
-        .order("created_at", { ascending: false })
-        .limit(100);
-
-      if (!error && data) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        mapped = data.map((d: any) => {
+        const mapped: FeedbackRow[] = (json.rows ?? []).map((d: any) => {
           const prof = Array.isArray(d.profiles) ? d.profiles[0] : d.profiles;
           return {
             id: d.id,
@@ -65,28 +49,14 @@ export default function FeedbackPage() {
             avatar_url: prof?.avatar_url ?? null,
           };
         });
-      } else {
-        const { data: plain } = await sb
-          .from("feedbacks")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(100);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        mapped = (plain ?? []).map((d: any) => ({
-          id: d.id,
-          user_id: d.user_id ?? null,
-          content: d.content ?? d.text ?? d.message ?? null,
-          image_urls: d.image_urls ?? (d.image_url ? [d.image_url] : null),
-          created_at: d.created_at,
-          nickname: d.nickname ?? d.user_name ?? d.email ?? "Unknown",
-          avatar_url: d.avatar_url ?? null,
-        }));
+        setRows(mapped);
+        setWithImagesCount(mapped.filter((r) => r.image_urls && r.image_urls.length > 0).length);
+      } catch {
+        /* network error — leave empty */
+      } finally {
+        setLoading(false);
       }
-
-      setRows(mapped);
-      setWithImagesCount(mapped.filter((r) => r.image_urls && r.image_urls.length > 0).length);
-      setLoading(false);
     }
 
     load();

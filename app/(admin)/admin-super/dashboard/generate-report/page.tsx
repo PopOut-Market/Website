@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  getAdminAuthBrowserClient,
-  isAdminAuthConfigured,
-} from "@/lib/supabase/admin-auth-browser-client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
@@ -134,14 +130,6 @@ async function fetchReportData(
   endDate: string,
   type: ReportType,
 ): Promise<ReportData> {
-  if (!isAdminAuthConfigured()) {
-    return { periods: [], totalPosts: 0, totalLikes: 0, totalDealResults: 0, totalNewUsers: 0, totalMessages: 0, totalMeetups: 0, statusDist: [] };
-  }
-
-  const sb = getAdminAuthBrowserClient();
-  const startISO = `${startDate}T00:00:00.000Z`;
-  const endISO = `${endDate}T23:59:59.999Z`;
-
   const periods = buildPeriods(new Date(startDate), new Date(endDate), type);
   const buckets: PeriodBucket[] = periods.map((p) => ({
     ...p,
@@ -163,68 +151,25 @@ async function fetchReportData(
     }
   }
 
-  async function safeSelect(
-    table: string,
-    column: string,
-    filters?: { eq?: [string, string]; gte?: [string, string]; lte?: [string, string] },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<Record<string, any>[]> {
-    let q = sb.from(table).select(column).gte(
-      filters?.gte?.[0] ?? column,
-      filters?.gte?.[1] ?? startISO,
-    ).lte(
-      filters?.lte?.[0] ?? column,
-      filters?.lte?.[1] ?? endISO,
-    );
-    if (filters?.eq) q = q.eq(filters.eq[0], filters.eq[1]);
-    const { data, error } = await q;
-    if (error) {
-      console.warn(`[Report] Failed to query ${table}.${column}:`, error.message);
-      return [];
-    }
-    return (data ?? []) as unknown as Record<string, unknown>[];
+  const res = await fetch(
+    `/api/admin/report?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`,
+    { cache: "no-store" },
+  );
+
+  if (!res.ok) {
+    console.warn("[Report] API route failed, status", res.status);
+    return { periods: buckets, totalPosts: 0, totalLikes: 0, totalDealResults: 0, totalNewUsers: 0, totalMessages: 0, totalMeetups: 0, statusDist: [] };
   }
 
-  const [posts, interests, soldPosts, profiles, allPostStatuses] = await Promise.all([
-    safeSelect("posts", "created_at", { gte: ["created_at", startISO], lte: ["created_at", endISO] }),
-    safeSelect("post_interests", "created_at", { gte: ["created_at", startISO], lte: ["created_at", endISO] }),
-    safeSelect("posts", "updated_at", { eq: ["status", "sold"], gte: ["updated_at", startISO], lte: ["updated_at", endISO] }),
-    safeSelect("profiles", "suburb_verified_at", { gte: ["suburb_verified_at", startISO], lte: ["suburb_verified_at", endISO] }),
-    safeSelect("posts", "status", { gte: ["created_at", startISO], lte: ["created_at", endISO] }),
-  ]);
+  const raw = await res.json();
 
-  let messagesRows: { created_at?: string }[] = [];
-  let meetupsRows: { updated_at?: string }[] = [];
-
-  const [msgRes, meetupRes] = await Promise.all([
-    sb.from("messages").select("created_at").gte("created_at", startISO).lte("created_at", endISO),
-    sb.from("meetup_schedules").select("updated_at").eq("status", "met").gte("updated_at", startISO).lte("updated_at", endISO),
-  ]);
-
-  if (msgRes.error) {
-    console.warn("[Report] messages query failed, trying count fallback:", msgRes.error.message);
-    for (const b of buckets) {
-      const { count } = await sb.from("messages").select("*", { count: "exact", head: true })
-        .gte("created_at", `${b.start}T00:00:00.000Z`)
-        .lte("created_at", `${b.end}T23:59:59.999Z`);
-      b.messages = count ?? 0;
-    }
-  } else {
-    messagesRows = msgRes.data ?? [];
-  }
-
-  if (meetupRes.error) {
-    console.warn("[Report] meetup_schedules query failed, trying count fallback:", meetupRes.error.message);
-    for (const b of buckets) {
-      const { count } = await sb.from("meetup_schedules").select("*", { count: "exact", head: true })
-        .eq("status", "met")
-        .gte("updated_at", `${b.start}T00:00:00.000Z`)
-        .lte("updated_at", `${b.end}T23:59:59.999Z`);
-      b.meetups = count ?? 0;
-    }
-  } else {
-    meetupsRows = meetupRes.data ?? [];
-  }
+  const posts: { created_at?: string }[] = raw.posts ?? [];
+  const interests: { created_at?: string }[] = raw.interests ?? [];
+  const soldPosts: { updated_at?: string }[] = raw.soldPosts ?? [];
+  const profiles: { suburb_verified_at?: string }[] = raw.profiles ?? [];
+  const allPostStatuses: { status?: string }[] = raw.allPostStatuses ?? [];
+  const messagesRows: { created_at?: string }[] = raw.messages ?? [];
+  const meetupsRows: { updated_at?: string }[] = raw.meetups ?? [];
 
   posts.forEach((r) => { if (r.created_at) assignToBucket(r.created_at, "posts"); });
   interests.forEach((r) => { if (r.created_at) assignToBucket(r.created_at, "likes"); });
@@ -245,25 +190,16 @@ async function fetchReportData(
     totalMeetups += b.meetups;
   }
 
-  if (totalMessages === 0 && !msgRes.error) {
-    const { count } = await sb.from("messages").select("*", { count: "exact", head: true })
-      .gte("created_at", startISO).lte("created_at", endISO);
-    if (count && count > 0) {
-      totalMessages = count;
-      const avg = Math.round(count / buckets.length);
-      buckets.forEach((b, i) => { b.messages = i === buckets.length - 1 ? count - avg * (buckets.length - 1) : avg; });
-    }
+  if (totalMessages === 0 && raw.msgCountFallback != null && raw.msgCountFallback > 0) {
+    totalMessages = raw.msgCountFallback;
+    const avg = Math.round(totalMessages / buckets.length);
+    buckets.forEach((b, i) => { b.messages = i === buckets.length - 1 ? totalMessages - avg * (buckets.length - 1) : avg; });
   }
 
-  if (totalMeetups === 0 && !meetupRes.error) {
-    const { count } = await sb.from("meetup_schedules").select("*", { count: "exact", head: true })
-      .eq("status", "met")
-      .gte("updated_at", startISO).lte("updated_at", endISO);
-    if (count && count > 0) {
-      totalMeetups = count;
-      const avg = Math.round(count / buckets.length);
-      buckets.forEach((b, i) => { b.meetups = i === buckets.length - 1 ? count - avg * (buckets.length - 1) : avg; });
-    }
+  if (totalMeetups === 0 && raw.meetupCountFallback != null && raw.meetupCountFallback > 0) {
+    totalMeetups = raw.meetupCountFallback;
+    const avg = Math.round(totalMeetups / buckets.length);
+    buckets.forEach((b, i) => { b.meetups = i === buckets.length - 1 ? totalMeetups - avg * (buckets.length - 1) : avg; });
   }
 
   return {
