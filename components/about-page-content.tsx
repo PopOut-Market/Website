@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { useSiteShell } from "@/components/site-chrome-context";
 import type { SiteCopy } from "@/lib/site-i18n";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
@@ -52,6 +53,7 @@ function StaggerBlock({
 }
 
 export function AboutPageContent({ t }: { t: SiteCopy }) {
+  const { localizePath } = useSiteShell();
   const { ref: shellRef, inView: shellInView } = useInViewOnce("0px 0px -8% 0px");
   const [animate, setAnimate] = useState(false);
 
@@ -65,7 +67,7 @@ export function AboutPageContent({ t }: { t: SiteCopy }) {
     <div className={`${SHELL_X} flex min-h-0 flex-1 flex-col pb-16 pt-8 sm:pb-24 sm:pt-12`}>
       <div className={INNER_MAX}>
         <Link
-          href="/"
+          href={localizePath("/")}
           className="inline-block text-sm font-medium text-black underline decoration-gray-400 underline-offset-4 hover:text-black hover:decoration-gray-400"
         >
           {t.footerBackHome}
@@ -166,7 +168,7 @@ export function AboutPageContent({ t }: { t: SiteCopy }) {
                   </ul>
                   <div className="mt-8 flex justify-center sm:justify-start">
                     <Link
-                      href="/privacy"
+                      href={localizePath("/privacy")}
                       className="inline-flex max-w-full items-center gap-2 rounded-full border border-gray-200 bg-gray-50/80 px-5 py-2.5 text-sm font-medium text-gray-900 shadow-sm transition hover:border-gray-300 hover:bg-white"
                     >
                       <span className="text-balance text-center">{t.aboutPrivacyLinkMore}</span>

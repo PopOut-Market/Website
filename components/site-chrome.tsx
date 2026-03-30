@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { StarFull, StarHalf } from "@/components/stars";
 import { SiteShellProvider } from "@/components/site-chrome-context";
@@ -28,6 +28,11 @@ import {
 import { readStoredMarketSuburb } from "@/lib/site-suburbs";
 import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
+import {
+  localeFromPathname,
+  stripLocalePrefix,
+  toLocalePath,
+} from "@/lib/site-locale-routing";
 
 function FooterSocialLink({
   href,
@@ -67,17 +72,89 @@ function FooterSocialLink({
   );
 }
 
+function suburbHubLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+      return "了解更多墨尔本区域";
+    case "zh-Hant":
+      return "了解更多墨爾本區域";
+    case "ko":
+      return "멜버른 지역 더 알아보기";
+    case "ja":
+      return "メルボルンのエリアを詳しく見る";
+    case "vi":
+      return "Tìm hiểu thêm về các khu vực Melbourne";
+    case "fr":
+      return "En savoir plus sur les quartiers de Melbourne";
+    case "es":
+      return "Conoce más zonas de Melbourne";
+    default:
+      return "Learn More Melbourne Suburbs";
+  }
+}
+
+function comparisonHubLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+      return "对比其他二手平台";
+    case "zh-Hant":
+      return "比較其他二手平台";
+    case "ko":
+      return "다른 중고 마켓과 비교";
+    case "ja":
+      return "他の中古マーケットと比較";
+    case "vi":
+      return "So sánh với chợ đồ cũ khác";
+    case "fr":
+      return "Comparer avec d'autres marchés d'occasion";
+    case "es":
+      return "Comparar con otros mercados de segunda mano";
+    default:
+      return "Comparison with other second-hand markets";
+  }
+}
+
+function footerFaqLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+    case "zh-Hant":
+      return "F&Q";
+    default:
+      return "F&Q";
+  }
+}
+
+const FOOTER_COPYRIGHT_EN = "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.";
+const FOOTER_ABN_EN = "ABN 76 696 464 945";
+
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [locale, setLocale] = useState<Locale>("en");
-  const [marketHref, setMarketHref] = useState("/market");
+  const [marketHref, setMarketHref] = useState("/en/market");
   const [langOpen, setLangOpen] = useState(false);
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
   const languageModalRef = useRef<HTMLDivElement | null>(null);
   const t = COPY[locale];
   const localeFontClass = LOCALE_FONT_CLASS[locale] ?? fontLatinRounded.className;
-  const isMarket = pathname === "/market" || pathname.startsWith("/market/");
+  const basePath = stripLocalePrefix(pathname);
+  const isMarket = basePath === "/market" || basePath.startsWith("/market/");
+
+  function withLocale(href: string): string {
+    if (href.startsWith("mailto:") || href.startsWith("http")) return href;
+    return toLocalePath(href, locale);
+  }
+
+  function switchLocale(nextLocale: Locale) {
+    setLocale(nextLocale);
+    setLangOpen(false);
+    setLanguageModalOpen(false);
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : pathname;
+    const nextPath = toLocalePath(currentPath, nextLocale);
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    router.push(`${nextPath}${search}`);
+  }
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
@@ -105,13 +182,20 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const pathLocale =
+      localeFromPathname(typeof window !== "undefined" ? window.location.pathname : pathname) ??
+      "en";
+    setLocale(pathLocale);
+  }, [pathname]);
+
+  useEffect(() => {
     const suburb = readStoredMarketSuburb();
     if (suburb) {
-      setMarketHref(`/market?area=${encodeURIComponent(suburb)}`);
+      setMarketHref(withLocale(`/market?area=${encodeURIComponent(suburb)}`));
     } else {
-      setMarketHref("/market");
+      setMarketHref(withLocale("/market"));
     }
-  }, [pathname]);
+  }, [pathname, locale]);
 
   return (
     <SiteShellProvider
@@ -119,6 +203,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         locale,
         t,
         openLanguageModal: () => setLanguageModalOpen(true),
+        localizePath: withLocale,
       }}
     >
       <main className={`flex min-h-screen flex-col bg-gray-100 ${localeFontClass}`}>
@@ -129,7 +214,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           >
             <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
               <Link
-                href="/"
+                href={withLocale("/")}
                 className="flex min-h-0 min-w-0 shrink-0 items-center py-1"
                 aria-label={t.homeAria}
               >
@@ -235,8 +320,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                           role="menuitemradio"
                           aria-checked={selected}
                           onClick={() => {
-                            setLocale(item.code);
-                            setLangOpen(false);
+                            switchLocale(item.code);
                           }}
                           className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition ${
                             selected
@@ -316,9 +400,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       key={item.code}
                       type="button"
                       onClick={() => {
-                        setLocale(item.code);
-                        setLanguageModalOpen(false);
-                        setLangOpen(false);
+                        switchLocale(item.code);
                       }}
                       className={`group rounded-2xl border px-3 py-2.5 text-left transition ${
                         selected
@@ -452,8 +534,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               </div>
 
               <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-gray-600 sm:text-sm min-[760px]:text-left">
-                <p>{t.footerCopyright}</p>
-                <p>{t.footerAbn}</p>
+                <p>{FOOTER_COPYRIGHT_EN}</p>
+                <p>{FOOTER_ABN_EN}</p>
                 <p>
                   <a
                     href={`mailto:${FOOTER_CONTACT_EMAIL}`}
@@ -464,12 +546,51 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 </p>
               </div>
 
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <Link
+                  href={withLocale("/melbourne-suburbs")}
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                >
+                  {suburbHubLabel(locale)}
+                  <svg
+                    className="h-4 w-4 text-gray-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24a.75.75 0 0 1 0 1.06l-4.24 4.24a.75.75 0 0 1-1.08 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </Link>
+                <Link
+                  href={withLocale("/comparison")}
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                >
+                  {comparisonHubLabel(locale)}
+                  <svg
+                    className="h-4 w-4 text-gray-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24a.75.75 0 0 1 0 1.06l-4.24 4.24a.75.75 0 0 1-1.08 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </Link>
+              </div>
+
               <nav
                 className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-xs text-black sm:text-sm min-[760px]:justify-start"
                 aria-label={t.footerLegalNavAria}
               >
                 <Link
-                  href="/about"
+                  href={withLocale("/about")}
                   className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
                 >
                   {t.footerNavAbout}
@@ -478,7 +599,16 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   |
                 </span>
                 <Link
-                  href="/terms"
+                  href={withLocale("/faq")}
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {footerFaqLabel(locale)}
+                </Link>
+                <span className="select-none text-gray-300" aria-hidden>
+                  |
+                </span>
+                <Link
+                  href={withLocale("/terms")}
                   className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
                 >
                   {t.footerNavTerms}
@@ -487,7 +617,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   |
                 </span>
                 <Link
-                  href="/privacy"
+                  href={withLocale("/privacy")}
                   className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
                 >
                   {t.footerNavPrivacy}

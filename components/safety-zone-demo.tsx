@@ -247,16 +247,25 @@ export function SafetyZoneDemo({ t }: { t: SiteCopy }) {
           </svg>
           {t.safetyZoneNearLabel}
         </p>
-        <MapIllustration area={scene.area} />
+        <div className="mt-2.5">
+          <MapIllustration area={scene.area} />
+        </div>
       </div>
-      {phase === 2 && (
-        <div className="flex items-center gap-2 rounded-xl border border-teal-100/80 bg-teal-50/50 px-3 py-2.5">
+      {/* Keep fixed space reserved so section height doesn't jump during phase changes. */}
+      <div className="min-h-[42px]">
+        <div
+          className={`flex items-center gap-2 rounded-xl border border-teal-100/80 bg-teal-50/50 px-3 py-2.5 transition-all duration-300 ${
+            phase === 2
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none -translate-y-1 opacity-0"
+          }`}
+        >
           <div className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-teal-200 border-t-teal-600" />
           <span className="text-xs font-medium text-teal-800">
             {t.safetyZoneFinding}
           </span>
         </div>
-      )}
+      </div>
     </div>
   );
 

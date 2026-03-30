@@ -7,6 +7,7 @@ export type SiteShellValue = {
   locale: Locale;
   t: SiteCopy;
   openLanguageModal: () => void;
+  localizePath: (href: string) => string;
 };
 
 const SiteShellContext = createContext<SiteShellValue | null>(null);

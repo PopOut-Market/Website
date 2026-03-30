@@ -5,12 +5,12 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import Link from "next/link";
 
 export function FooterLegalStubPage({ title }: { title: string }) {
-  const { t } = useSiteShell();
+  const { t, localizePath } = useSiteShell();
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-8`}>
       <div className={INNER_MAX}>
         <Link
-          href="/"
+          href={localizePath("/")}
           className="text-sm font-medium text-black underline decoration-gray-400 underline-offset-4 hover:text-black hover:decoration-gray-400"
         >
           {t.footerBackHome}

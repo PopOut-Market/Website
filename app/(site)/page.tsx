@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function HomePage() {
-  const { t, openLanguageModal } = useSiteShell();
+  const { t, openLanguageModal, localizePath } = useSiteShell();
   const { ref: heroRef, active: heroActive } = useSectionVisible({
     startThreshold: 0.12,
     stopThreshold: 0.05,
@@ -102,7 +102,7 @@ export default function HomePage() {
         </div>
 
         <Link
-          href="/market"
+          href={localizePath("/market")}
           className="mt-8 inline-flex items-center justify-center rounded-xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-gray-900/20 transition hover:-translate-y-0.5 hover:bg-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/40 focus-visible:ring-offset-2 sm:mt-10 sm:text-base"
         >
           {t.heroExploreCta}

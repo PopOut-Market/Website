@@ -284,7 +284,7 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
       ref={sectionRef as React.RefObject<HTMLElement>}
       className="flex flex-col items-center px-6 pb-16 pt-20 sm:pb-20 sm:pt-28"
     >
-      <div className="max-w-3xl text-center">
+      <div className="flex min-h-[116px] max-w-3xl flex-col items-center text-center sm:min-h-[132px] md:min-h-[148px]">
         <h2 className="text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl">
           {isEnglishTitle ? (
             <>
