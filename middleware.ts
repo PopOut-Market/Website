@@ -30,6 +30,7 @@ export function middleware(request: NextRequest) {
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
+    pathname.startsWith("/admin") ||
     pathname.startsWith("/admin-super") ||
     pathname.startsWith("/favicon") ||
     isStaticAsset(pathname)
@@ -54,7 +55,7 @@ export function middleware(request: NextRequest) {
     const legacyTarget = LEGACY_SUBURB_REDIRECTS[pathname];
     const nextBase = legacyTarget ?? pathname;
     url.pathname = nextBase === "/" ? `/${seg}` : `/${seg}${nextBase}`;
-    const response = NextResponse.redirect(url);
+    const response = NextResponse.redirect(url, 308);
     response.cookies.set("popout_locale", seg, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
@@ -68,7 +69,7 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     const seg = pathname.split("/").filter(Boolean)[0] ?? localeSegment(locale);
     url.pathname = `/${seg}${legacyTarget}`;
-    const response = NextResponse.redirect(url);
+    const response = NextResponse.redirect(url, 308);
     response.cookies.set("popout_locale", seg, {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,

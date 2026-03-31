@@ -1,4 +1,5 @@
 import { MelbourneSuburbsHubContent } from "@/components/melbourne-suburbs-hub-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/melbourne-suburbs",
+    languages: localizedAlternates("/melbourne-suburbs"),
   },
 };
 

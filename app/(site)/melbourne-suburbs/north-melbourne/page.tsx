@@ -1,4 +1,5 @@
 import { MelbourneNorthMelbourneSuburbContent } from "@/components/melbourne-north-melbourne-suburb-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "Find affordable second-hand furniture, appliances, and daily essentials in North Melbourne. Ideal for students, shared housing, and budget-conscious city living.",
   alternates: {
     canonical: "/melbourne-suburbs/north-melbourne",
+    languages: localizedAlternates("/melbourne-suburbs/north-melbourne"),
   },
 };
 

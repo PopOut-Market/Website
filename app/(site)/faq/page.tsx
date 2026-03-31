@@ -1,4 +1,5 @@
 import { FaqPageContent } from "@/components/faq-page-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "Frequently asked questions about how PopOut helps Melbourne users post faster, communicate across languages, and trade with clearer safety workflows.",
   alternates: {
     canonical: "/faq",
+    languages: localizedAlternates("/faq"),
   },
 };
 

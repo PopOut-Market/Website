@@ -1,4 +1,5 @@
 import { MelbourneCbdSuburbContent } from "@/components/melbourne-cbd-suburb-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "Set up city life in Melbourne CBD with affordable second-hand furniture, kitchen gear, and apartment essentials. Great for students, WHV workers, and short-term renters.",
   alternates: {
     canonical: "/melbourne-suburbs/melbourne-cbd",
+    languages: localizedAlternates("/melbourne-suburbs/melbourne-cbd"),
   },
 };
 

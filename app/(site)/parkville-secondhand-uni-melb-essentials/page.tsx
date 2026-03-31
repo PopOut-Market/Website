@@ -1,4 +1,5 @@
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/parkville-secondhand-uni-melb-essentials",
+    languages: localizedAlternates("/parkville-secondhand-uni-melb-essentials"),
   },
 };
 

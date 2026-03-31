@@ -88,6 +88,26 @@ function idForPostsEq(postId: string): string | number {
   return t;
 }
 
+function deliveryLabelFromMoreDetails(more: unknown): "yes" | "no" | "unknown" {
+  if (!more || typeof more !== "object") {
+    return "unknown";
+  }
+  const o = more as Record<string, unknown>;
+  for (const key of ["is_deliverable", "deliverable", "can_deliver", "delivery_available"] as const) {
+    const v = o[key];
+    if (typeof v === "boolean") {
+      return v ? "yes" : "no";
+    }
+    if (v === "true") {
+      return "yes";
+    }
+    if (v === "false") {
+      return "no";
+    }
+  }
+  return "unknown";
+}
+
 type PostDetailRow = {
   id: number | string;
   seller_id?: string | null;
@@ -95,7 +115,6 @@ type PostDetailRow = {
   price_cents: number;
   currency?: string | null;
   status?: string | null;
-  is_deliverable?: boolean | null;
   accept_offers?: boolean | null;
   category_id?: number | null;
   thumbnail_path?: string | null;
@@ -106,6 +125,7 @@ type PostDetailRow = {
   raw_meetup_label?: string | null;
   raw_description?: string | null;
   suburb_id?: number | null;
+  more_details?: unknown;
   profiles?: unknown;
 };
 
@@ -219,7 +239,7 @@ function mapPostRowToDetail(
   );
   const statusRaw = (raw.status ?? "").toString().trim();
   const statusLabel = statusRaw.length > 0 ? statusRaw : "unknown";
-  const deliveryLabel = raw.is_deliverable ? "yes" : "no";
+  const deliveryLabel = deliveryLabelFromMoreDetails(raw.more_details);
   const offerLabel = raw.accept_offers ? "yes" : "no";
   const categoryLabel =
     typeof raw.category_id === "number" && Number.isFinite(raw.category_id)
@@ -332,7 +352,6 @@ export async function fetchMarketPostDetail(
       price_cents,
       currency,
       status,
-      is_deliverable,
       accept_offers,
       category_id,
       thumbnail_path,
@@ -342,7 +361,8 @@ export async function fetchMarketPostDetail(
       meetup_location,
       raw_meetup_label,
       raw_description,
-      suburb_id
+      suburb_id,
+      more_details
     `;
     const withProfilesSelect = `
       ${baseSelect},

@@ -1,5 +1,6 @@
 "use client";
 
+import { BackNavLink } from "@/components/back-nav-link";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -119,15 +120,9 @@ export function MelbourneSouthbankSuburbContent() {
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
       <div className={`${INNER_MAX} max-w-4xl`}>
-        <Link
-          href={localizePath("/melbourne-suburbs")}
-          className="mb-5 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:bg-slate-50"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+        <BackNavLink href={localizePath("/melbourne-suburbs")} className="mb-5">
           {backLabel}
-        </Link>
+        </BackNavLink>
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.h1}
         </h1>

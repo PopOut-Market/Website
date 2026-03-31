@@ -1,4 +1,5 @@
 import { MelbourneCarltonSuburbContent } from "@/components/melbourne-carlton-suburb-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "Looking for student-friendly second-hand deals in Carlton? Discover affordable desks, chairs, bikes, and home essentials near UniMelb and central Melbourne campuses.",
   alternates: {
     canonical: "/melbourne-suburbs/carlton",
+    languages: localizedAlternates("/melbourne-suburbs/carlton"),
   },
 };
 

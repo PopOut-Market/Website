@@ -1,4 +1,5 @@
 import { ComparisonGumtreeContent } from "@/components/comparison-gumtree-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "Explore key workflow differences in listing setup, multilingual chat, safety zone guidance, QR meetup confirmation, and student verification support.",
   alternates: {
     canonical: "/comparison/gumtree",
+    languages: localizedAlternates("/comparison/gumtree"),
   },
 };
 

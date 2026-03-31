@@ -1,4 +1,5 @@
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/south-wharf-second-hand-apartment-essentials",
+    languages: localizedAlternates("/south-wharf-second-hand-apartment-essentials"),
   },
 };
 

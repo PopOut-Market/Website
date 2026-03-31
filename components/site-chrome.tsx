@@ -114,6 +114,27 @@ function comparisonHubLabel(locale: Locale): string {
   }
 }
 
+function graduationGuideLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+      return "毕业季卖闲置指南";
+    case "zh-Hant":
+      return "畢業季賣閒置指南";
+    case "ko":
+      return "졸업 시즌 중고 판매 가이드";
+    case "ja":
+      return "卒業シーズン売却ガイド";
+    case "vi":
+      return "Hướng dẫn bán đồ mùa tốt nghiệp";
+    case "fr":
+      return "Guide vente de fin d'études";
+    case "es":
+      return "Guía de venta en graduación";
+    default:
+      return "Graduation move-out selling guide";
+  }
+}
+
 function footerFaqLabel(locale: Locale): string {
   switch (locale) {
     case "zh-Hans":
@@ -570,6 +591,24 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
                 >
                   {comparisonHubLabel(locale)}
+                  <svg
+                    className="h-4 w-4 text-gray-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24a.75.75 0 0 1 0 1.06l-4.24 4.24a.75.75 0 0 1-1.08 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </Link>
+                <Link
+                  href={withLocale("/melbourne-graduation-move-out-guide-2026")}
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                >
+                  {graduationGuideLabel(locale)}
                   <svg
                     className="h-4 w-4 text-gray-500"
                     viewBox="0 0 20 20"

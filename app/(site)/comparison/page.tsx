@@ -1,4 +1,5 @@
 import { ComparisonHubContent } from "@/components/comparison-hub-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: "/comparison",
+    languages: localizedAlternates("/comparison"),
   },
 };
 

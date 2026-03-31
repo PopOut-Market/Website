@@ -1,4 +1,5 @@
 import { MelbourneSouthbankSuburbContent } from "@/components/melbourne-southbank-suburb-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
     "Discover second-hand furniture, art supplies & studio essentials in Southbank, Melbourne. Perfect for UniLodge students & compact apartments. Buy, sell, save!",
   alternates: {
     canonical: "/melbourne-suburbs/southbank",
+    languages: localizedAlternates("/melbourne-suburbs/southbank"),
   },
 };
 

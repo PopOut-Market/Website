@@ -2,6 +2,7 @@
 
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { BackNavLink } from "@/components/back-nav-link";
 import Link from "next/link";
 import { useMemo } from "react";
 
@@ -27,7 +28,7 @@ function getCopy(locale: string): FaqCopy {
       eyebrow: "F&Q",
       title: "PopOut 常见问题",
       intro:
-        "这里整理了用户最常问的 5 个问题，帮助你快速理解 PopOut 在发帖效率、多语言沟通和交易安全上的核心能力。",
+        "这里整理了用户最常问的 8 个问题，帮助你快速理解 PopOut 在发帖效率、多语言沟通、交易安全与毕业季出货上的核心能力。",
       disclaimerTitle: "官方说明",
       disclaimerBody:
         "本页用于产品信息说明，不构成法律、财务或安全承诺。不同地区与版本的功能可能存在差异，请以 App 内实际页面和官方公告为准。",
@@ -57,6 +58,21 @@ function getCopy(locale: string): FaqCopy {
           answer:
             "PopOut 提供学生身份验证通道，帮助同校、同学区或同学生公寓用户更高效地发现彼此，提升交易匹配效率和基础信任感。",
         },
+        {
+          question: "6) 墨尔本二手网站怎么选更安全？",
+          answer:
+            "建议优先选择提供清晰沟通、面交流程和公共场所见面建议的平台。PopOut 以邻里范围浏览和安全见面流程为核心，帮助用户降低交易中的信息不对称和线下风险。",
+        },
+        {
+          question: "7) 毕业季卖东西，用什么 App 更合适？",
+          answer:
+            "毕业季通常发布量和成交节奏都更快，建议选择对本地社区、学生用户和近距离交易更友好的平台。PopOut 面向墨尔本本地生活场景，适合处理毕业搬家前的高频闲置交易。",
+        },
+        {
+          question: "8) 墨尔本多语言环境下，二手交易沟通难怎么办？",
+          answer:
+            "可优先使用支持多语言沟通的平台，减少描述和议价误解。PopOut 支持多语言交易场景，帮助不同语言背景的用户更顺畅完成买卖。",
+        },
       ],
       backHome: "返回首页",
       comparisonCta: "查看与其他平台对比",
@@ -68,7 +84,7 @@ function getCopy(locale: string): FaqCopy {
       eyebrow: "F&Q",
       title: "PopOut 常見問題",
       intro:
-        "這裡整理了 5 個最常見問題，幫助你快速理解 PopOut 在發文效率、多語言溝通與交易安全流程上的核心能力。",
+        "這裡整理了 8 個最常見問題，幫助你快速理解 PopOut 在發文效率、多語言溝通、交易安全與畢業季出貨上的核心能力。",
       disclaimerTitle: "官方說明",
       disclaimerBody:
         "本頁僅供產品資訊參考，不構成法律、財務或安全承諾。不同地區與版本的功能可能有所差異，請以 App 內實際功能與官方公告為準。",
@@ -98,6 +114,21 @@ function getCopy(locale: string): FaqCopy {
           answer:
             "PopOut 提供學生身份驗證通道，讓同校、同學區或同學生宿舍使用者更容易互相發現，提升配對效率與基礎信任。",
         },
+        {
+          question: "6) 墨爾本二手網站怎麼選才更安全？",
+          answer:
+            "建議優先選擇提供清楚溝通、面交流程與公共場域見面建議的平台。PopOut 以鄰里範圍瀏覽與安全見面流程為核心，協助降低交易資訊不對稱與線下風險。",
+        },
+        {
+          question: "7) 畢業季要賣東西，用什麼 App 比較合適？",
+          answer:
+            "畢業季通常刊登量與成交節奏都更快，建議選擇對在地社群、學生使用者與近距離交易更友善的平台。PopOut 聚焦墨爾本在地生活場景，適合處理搬家前的高頻閒置交易。",
+        },
+        {
+          question: "8) 在墨爾本多語言環境下，二手交易溝通困難怎麼辦？",
+          answer:
+            "可優先使用支援多語言溝通的平台，降低描述與議價誤解。PopOut 支援多語言交易情境，協助不同語言背景使用者更順暢完成買賣。",
+        },
       ],
       backHome: "返回首頁",
       comparisonCta: "查看與其他平台比較",
@@ -108,7 +139,7 @@ function getCopy(locale: string): FaqCopy {
     eyebrow: "F&Q",
     title: "PopOut FAQ",
     intro:
-      "These five FAQs explain how PopOut supports faster posting, multilingual communication, and safer transaction flow for second-hand users in Melbourne.",
+      "These eight FAQs explain how PopOut supports faster posting, multilingual communication, safer transactions, and graduation season selling in Melbourne.",
     disclaimerTitle: "Official note",
     disclaimerBody:
       "This page is for product information only and does not constitute legal, financial, or safety guarantees. Features may vary by app version, region, and account context.",
@@ -137,6 +168,21 @@ function getCopy(locale: string): FaqCopy {
         question: "5) What is the benefit for student communities?",
         answer:
           "PopOut includes a student verification pathway that helps users in campus and accommodation circles discover each other faster with stronger baseline trust.",
+      },
+      {
+        question: "6) How can I choose a safer second-hand platform in Melbourne?",
+        answer:
+          "Look for clear messaging workflows, meetup guidance, and local-first trading context. PopOut focuses on neighbourhood discovery and safety-oriented meetup flows to reduce uncertainty in offline transactions.",
+      },
+      {
+        question: "7) What app is better for selling items during graduation move-out season?",
+        answer:
+          "Graduation season needs faster posting and local buyer matching. PopOut is designed for practical Melbourne scenarios, including student move-in and move-out periods.",
+      },
+      {
+        question: "8) How do multilingual users reduce communication friction in second-hand trading?",
+        answer:
+          "Using platforms that support multilingual communication can reduce misunderstandings in listing details and negotiation. PopOut supports multilingual trading use cases for Melbourne communities.",
       },
     ],
     backHome: "Back to home",
@@ -168,12 +214,7 @@ export function FaqPageContent() {
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
       <div className={`${INNER_MAX} max-w-4xl`}>
         <div className="mb-4">
-          <Link
-            href={localizePath("/")}
-            className="inline-block text-sm font-medium text-black underline decoration-gray-400 underline-offset-4 hover:text-black hover:decoration-gray-400"
-          >
-            {copy.backHome}
-          </Link>
+          <BackNavLink href={localizePath("/")}>{copy.backHome}</BackNavLink>
         </div>
 
         <article className="overflow-hidden rounded-[28px] border border-gray-200/90 bg-white/90 shadow-[0_4px_32px_rgba(0,0,0,0.06)] backdrop-blur-xl">

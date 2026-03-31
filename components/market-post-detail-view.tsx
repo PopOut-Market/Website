@@ -1,5 +1,6 @@
 "use client";
 
+import { BackNavLink } from "@/components/back-nav-link";
 import Image from "next/image";
 import Link from "next/link";
 import { MARKET_POST_DETAIL_OTHER_ITEMS_MAX, type MarketPostDetail } from "@/lib/market-post-detail";
@@ -49,25 +50,9 @@ export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetai
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4 pb-5">
       <div className="flex shrink-0 justify-start pt-1">
-        <Link
-          href={backHref}
-          className="inline-flex h-9 max-w-full items-center gap-1.5 rounded-[11px] border border-gray-200 bg-white/90 px-3 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:border-gray-300 hover:bg-white"
-          aria-label={copy.marketPostBackAria}
-        >
-          <svg
-            className="h-4 w-4 shrink-0 text-gray-600"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden
-          >
-            <path
-              fillRule="evenodd"
-              d="M12.79 5.23a.75.75 0 0 1-.02 1.06L8.832 10l3.938 3.71a.75.75 0 1 1-1.08 1.04l-4.25-4a.75.75 0 0 1 0-1.08l4.25-4a.75.75 0 0 1 1.06.02Z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="truncate">{copy.marketPostBack}</span>
-        </Link>
+        <BackNavLink href={backHref} aria-label={copy.marketPostBackAria}>
+          {copy.marketPostBack}
+        </BackNavLink>
       </div>
 
       <article className="mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm">

@@ -1,4 +1,5 @@
 import { ComparisonFacebookMarketplaceContent } from "@/components/comparison-facebook-marketplace-content";
+import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
     "A friendly feature comparison focused on faster listing, multilingual communication, safer meetup flow, and student-friendly trust tools in Melbourne.",
   alternates: {
     canonical: "/comparison/facebook-marketplace",
+    languages: localizedAlternates("/comparison/facebook-marketplace"),
   },
 };
 
