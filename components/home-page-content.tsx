@@ -63,7 +63,7 @@ export function HomePageContent() {
     <>
       <section
         ref={heroRef as React.RefObject<HTMLElement>}
-        className="flex flex-col items-center justify-center px-6 pb-16 pt-12 sm:pb-20 sm:pt-16 md:pt-24"
+        className="flex flex-col items-center justify-center px-[1.05rem] pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16 md:pt-24"
       >
         <div className="flex max-w-4xl flex-col items-center text-center">
           <h1 className="text-balance text-[clamp(1.7rem,4vw,3rem)] font-semibold tracking-tight text-gray-800">

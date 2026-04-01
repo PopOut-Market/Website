@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function AdminSuperEntryPage() {
   return (
-    <section className="mx-auto min-h-screen w-full max-w-4xl space-y-6 bg-slate-50 px-6 py-12">
+    <section className="mx-auto min-h-screen w-full max-w-4xl space-y-6 bg-slate-50 px-[1.05rem] py-12 sm:px-6">
       <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Admin Access Center</h1>
 
       <div className="grid gap-5 md:grid-cols-2">
