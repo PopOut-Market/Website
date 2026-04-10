@@ -9,6 +9,7 @@ import { SiteShellProvider } from "@/components/site-chrome-context";
 import {
   APP_STORE_BADGE_SRC,
   APP_STORE_URL,
+  FOOTER_ADDRESS_LINE,
   FOOTER_CONTACT_EMAIL,
   FOOTER_SOCIAL_IMG_INSTAGRAM,
   FOOTER_SOCIAL_IMG_LINKEDIN,
@@ -146,6 +147,7 @@ function footerFaqLabel(locale: Locale): string {
 }
 
 const FOOTER_COPYRIGHT_EN = "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.";
+const FOOTER_ACN_EN = "ACN 696 464 945";
 const FOOTER_ABN_EN = "ABN 76 696 464 945";
 
 export function SiteChrome({ children }: { children: ReactNode }) {
@@ -556,7 +558,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
               <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-gray-600 sm:text-sm min-[760px]:text-left">
                 <p>{FOOTER_COPYRIGHT_EN}</p>
+                <p>{FOOTER_ACN_EN}</p>
                 <p>{FOOTER_ABN_EN}</p>
+                <p>
+                  Address: {FOOTER_ADDRESS_LINE}
+                </p>
                 <p>
                   <a
                     href={`mailto:${FOOTER_CONTACT_EMAIL}`}
@@ -664,12 +670,12 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 <span className="select-none text-gray-300" aria-hidden>
                   |
                 </span>
-                <a
-                  href={`mailto:${FOOTER_CONTACT_EMAIL}`}
+                <Link
+                  href={withLocale("/contact")}
                   className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
                 >
                   {t.footerNavContact}
-                </a>
+                </Link>
               </nav>
             </div>
           </div>

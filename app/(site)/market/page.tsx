@@ -1,6 +1,7 @@
 import { MarketPageContent } from "@/components/market-page-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Melbourne Market Listings | PopOut Market",
@@ -19,5 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default function MarketPage() {
-  return <MarketPageContent />;
+  return (
+    <Suspense fallback={null}>
+      <MarketPageContent />
+    </Suspense>
+  );
 }

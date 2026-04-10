@@ -1,6 +1,7 @@
 import { MarketPostPageContent } from "@/components/market-post-page-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export async function generateMetadata({
   params,
@@ -20,5 +21,9 @@ export async function generateMetadata({
 }
 
 export default function MarketPostPage() {
-  return <MarketPostPageContent />;
+  return (
+    <Suspense fallback={null}>
+      <MarketPostPageContent />
+    </Suspense>
+  );
 }

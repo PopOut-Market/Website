@@ -123,7 +123,7 @@ export type SiteCopy = {
   safetyZoneBadgeLit: string;
   footerLegalNavAria: string;
   footerCopyright: string;
-  footerAbn: string;
+  footerAcn: string;
   footerNavAbout: string;
   footerNavTerms: string;
   footerNavPrivacy: string;
@@ -253,7 +253,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "Well-lit",
     footerLegalNavAria: "Policies and contact",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "About PopOut Market",
     footerNavTerms: "Terms of Use",
     footerNavPrivacy: "Privacy Policy",
@@ -302,7 +302,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutFeedbackTitle: "Suggestions & Feedback",
     aboutFeedbackLead:
       "We're always evolving. If you have any ideas, or simply want to say hello, feel free to reach out:",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   "zh-Hans": {
     topDownload: "下载",
@@ -392,7 +392,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "光线好",
     footerLegalNavAria: "条款与联系",
     footerCopyright: "版权所有 © 2026 PopOut Market Pty Ltd。保留所有权利。",
-    footerAbn: "ABN：76 696 464 945",
+    footerAcn: "ACN：696 464 945",
     footerNavAbout: "关于 PopOut Market",
     footerNavTerms: "使用条款",
     footerNavPrivacy: "隐私政策",
@@ -436,7 +436,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutVisionP3: "感谢你选择 PopOut。让我们一起，建设更安全、更紧密的墨尔本社区。",
     aboutFeedbackTitle: "建议与反馈",
     aboutFeedbackLead: "我们始终在进化。如果你有任何想法，或仅仅是想和我们打个招呼，请随时联络：",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   "zh-Hant": {
     topDownload: "下載",
@@ -526,7 +526,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "光線佳",
     footerLegalNavAria: "條款與聯絡",
     footerCopyright: "版權所有 © 2026 PopOut Market Pty Ltd。保留所有權利。",
-    footerAbn: "ABN：76 696 464 945",
+    footerAcn: "ACN：696 464 945",
     footerNavAbout: "關於 PopOut Market",
     footerNavTerms: "使用條款",
     footerNavPrivacy: "隱私權政策",
@@ -570,7 +570,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutVisionP3: "感謝你選擇 PopOut。讓我們一起，建設更安全、更緊密的墨爾本社區。",
     aboutFeedbackTitle: "建議與回饋",
     aboutFeedbackLead: "我們始終在進化。如果你有任何想法，或僅僅是想和我們打個招呼，請隨時聯絡：",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   ko: {
     topDownload: "다운로드",
@@ -660,7 +660,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "조명 양호",
     footerLegalNavAria: "약관 및 문의",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "PopOut Market 소개",
     footerNavTerms: "이용약관",
     footerNavPrivacy: "개인정보 처리방침",
@@ -705,7 +705,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "PopOut을 선택해 주셔서 감사합니다. 함께 더 안전하고 밀접한 멜버른 커뮤니티를 만들어 갑시다.",
     aboutFeedbackTitle: "제안 및 피드백",
     aboutFeedbackLead: "우리는 끊임없이 발전합니다. 아이디어가 있거나 인사만 하고 싶어도 언제든 연락 주세요:",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   ja: {
     topDownload: "ダウンロード",
@@ -795,7 +795,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "明るい",
     footerLegalNavAria: "ポリシーとお問い合わせ",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "PopOut Market について",
     footerNavTerms: "利用規約",
     footerNavPrivacy: "プライバシーポリシー",
@@ -840,7 +840,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "PopOutを選んでくださりありがとうございます。より安全で、より結びつきの強いメルボルンのコミュニティを一緒に築きましょう。",
     aboutFeedbackTitle: "ご提案・フィードバック",
     aboutFeedbackLead: "私たちは常に進化しています。アイデアや、ご挨拶だけでもお気軽にご連絡ください:",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   vi: {
     topDownload: "Tải xuống",
@@ -931,7 +931,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "Sáng sủa",
     footerLegalNavAria: "Điều khoản và liên hệ",
     footerCopyright: "Bản quyền © 2026 PopOut Market Pty Ltd. Mọi quyền được bảo lưu.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "Giới thiệu PopOut Market",
     footerNavTerms: "Điều khoản sử dụng",
     footerNavPrivacy: "Chính sách quyền riêng tư",
@@ -979,7 +979,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutFeedbackTitle: "Góp ý & phản hồi",
     aboutFeedbackLead:
       "Chúng tôi luôn phát triển. Nếu bạn có ý tưởng hoặc chỉ muốn chào hỏi, hãy liên hệ:",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   fr: {
     topDownload: "Télécharger",
@@ -1071,7 +1071,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "Bien éclairé",
     footerLegalNavAria: "Politiques et contact",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Tous droits réservés.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "À propos de PopOut Market",
     footerNavTerms: "Conditions d’utilisation",
     footerNavPrivacy: "Politique de confidentialité",
@@ -1119,7 +1119,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutFeedbackTitle: "Suggestions et retours",
     aboutFeedbackLead:
       "Nous évoluons en permanence. Pour toute idée ou simplement pour dire bonjour, écrivez‑nous :",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
   es: {
     topDownload: "Descargar",
@@ -1211,7 +1211,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     safetyZoneBadgeLit: "Bien iluminado",
     footerLegalNavAria: "Políticas y contacto",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Todos los derechos reservados.",
-    footerAbn: "ABN 76 696 464 945",
+    footerAcn: "ACN 696 464 945",
     footerNavAbout: "Acerca de PopOut Market",
     footerNavTerms: "Términos de uso",
     footerNavPrivacy: "Política de privacidad",
@@ -1259,6 +1259,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutFeedbackTitle: "Sugerencias y comentarios",
     aboutFeedbackLead:
       "Seguimos evolucionando. Si tienes ideas o solo quieres saludar, escríbenos:",
-    aboutSupportEmail: "ContactUs@popoutmarket.com.au",
+    aboutSupportEmail: "contact@popoutmarket.com.au",
   },
 };

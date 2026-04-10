@@ -33,7 +33,11 @@ export const APP_STORE_URL = "https://apps.apple.com/app/id0000000000";
 export const GOOGLE_PLAY_URL =
   "https://play.google.com/store/apps/details?id=com.example.popout";
 
-export const FOOTER_CONTACT_EMAIL = "ContactUS@popoutmarket.com.au";
+export const FOOTER_CONTACT_EMAIL = "contact@popoutmarket.com.au";
+
+/** Registered office / postal address shown in the site footer. */
+export const FOOTER_ADDRESS_LINE =
+  "1003/151 City Rd, Southbank VIC 3006, Australia";
 
 export const FOOTER_SOCIAL_IMG_REDNOTE = "/images/REDNOTE_ICON.svg";
 export const FOOTER_SOCIAL_IMG_INSTAGRAM = "/images/Instagram_logo.svg";
