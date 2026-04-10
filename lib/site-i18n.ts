@@ -171,7 +171,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     languageModalHint: "PopOut supports local communities in multiple languages.",
     heroSecondaryPrefix: "Buy and sell second-hand items nearby, in",
     heroSecondaryLink: "your language",
-    heroExploreCta: "Explore more products",
+    heroExploreCta: "Explore more items near you",
     downloadLine: "Download the PopOut Market app for iOS or Android",
     slogan: "buy and sell with people around you",
     ratingAria: "Rating 4.5 out of 5 stars",
