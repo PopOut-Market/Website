@@ -140,9 +140,9 @@ function footerFaqLabel(locale: Locale): string {
   switch (locale) {
     case "zh-Hans":
     case "zh-Hant":
-      return "F&Q";
+      return "FAQ";
     default:
-      return "F&Q";
+      return "FAQ";
   }
 }
 
