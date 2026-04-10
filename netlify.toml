@@ -1,0 +1,4 @@
+# Netlify secret scanning treats inlined Supabase anon URL/key (NEXT_PUBLIC / EXPO_PUBLIC) as
+# findings in the Next.js client bundle. Those vars are intended for the browser; omit by name.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "EXPO_PUBLIC_SUPABASE_URL,EXPO_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY"
