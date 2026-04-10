@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function HomePageContent() {
-  const { t, openLanguageModal, localizePath } = useSiteShell();
+  const { locale, t, openLanguageModal, localizePath } = useSiteShell();
   const { ref: heroRef, active: heroActive } = useSectionVisible({
     startThreshold: 0.12,
     stopThreshold: 0.05,
@@ -95,7 +95,11 @@ export function HomePageContent() {
         </div>
 
         <div className="mt-10 w-full sm:mt-12">
-          <HeroCarousel />
+          <HeroCarousel
+            locale={locale}
+            noImageAria={t.marketPostNoImageAria}
+            loadingListingsAria={t.marketSupabaseLoadingAria}
+          />
         </div>
 
         <Link
