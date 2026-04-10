@@ -49,9 +49,9 @@ export const FOOTER_SOCIAL_REDNOTE_DEFAULT = "https://xhslink.com/m/7eKhz2OkgbC"
 /** Instagram — override with `NEXT_PUBLIC_FOOTER_SOCIAL_INSTAGRAM_URL` (e.g. `/popoutmarket/`). */
 export const FOOTER_SOCIAL_INSTAGRAM_DEFAULT = "https://www.instagram.com/?hl=en";
 
-/** LinkedIn footer link. Admin dashboard URL; use `NEXT_PUBLIC_FOOTER_SOCIAL_LINKEDIN_URL` to override (e.g. public `/company/…/`). */
+/** LinkedIn footer link — public company page. Override with `NEXT_PUBLIC_FOOTER_SOCIAL_LINKEDIN_URL` if needed. */
 export const FOOTER_SOCIAL_LINKEDIN_DEFAULT =
-  "https://www.linkedin.com/company/112766074/admin/dashboard/";
+  "https://www.linkedin.com/company/popout-market/";
 
 function footerSocialUrlFromEnv(value: string | undefined): string | null {
   const v = value?.trim() ?? "";
