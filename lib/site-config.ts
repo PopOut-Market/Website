@@ -10,8 +10,8 @@ export const RADIUS = {
 } as const;
 
 /** 与 top bar 白卡片内边距一致 */
-export const SHELL_X = "px-6";
-export const INNER_MAX = "mx-auto w-full max-w-5xl px-3 sm:px-4 md:px-5";
+export const SHELL_X = "px-[1.05rem] sm:px-6";
+export const INNER_MAX = "mx-auto w-full max-w-5xl px-[0.525rem] sm:px-4 md:px-5";
 
 /**
  * Spacer under the fixed header matches `h-24` (6rem). Main content uses this as a floor so a taller

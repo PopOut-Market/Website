@@ -145,7 +145,7 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
   return (
     <section
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="flex flex-col items-center px-6 pb-16 pt-20 sm:pb-20 sm:pt-28"
+      className="flex flex-col items-center px-[1.05rem] pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
     >
       <div className="max-w-3xl text-center">
         <h2 className="text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl">
