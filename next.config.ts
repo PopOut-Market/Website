@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SUPABASE_ANON_KEY: supabaseAnonKey,
   },
   // Allow phone/tablet access to Next dev resources over LAN.
-  // Keep loopback plus the current LAN IP so mobile devices can load dev scripts.
-  allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.0.2"],
+  // Add your machine's current LAN IP when Next blocks /_next/* from that host (HMR, fonts).
+  allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.0.2", "192.168.0.75"],
   images: {
     remotePatterns: [
       {
