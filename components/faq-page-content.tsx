@@ -25,7 +25,7 @@ type FaqCopy = {
 function getCopy(locale: string): FaqCopy {
   if (locale === "zh-Hans") {
     return {
-      eyebrow: "F&Q",
+      eyebrow: "FAQ",
       title: "PopOut 常见问题",
       intro:
         "这里整理了用户最常问的 8 个问题，帮助你快速理解 PopOut 在发帖效率、多语言沟通、交易安全与毕业季出货上的核心能力。",
@@ -81,7 +81,7 @@ function getCopy(locale: string): FaqCopy {
 
   if (locale === "zh-Hant") {
     return {
-      eyebrow: "F&Q",
+      eyebrow: "FAQ",
       title: "PopOut 常見問題",
       intro:
         "這裡整理了 8 個最常見問題，幫助你快速理解 PopOut 在發文效率、多語言溝通、交易安全與畢業季出貨上的核心能力。",
@@ -136,7 +136,7 @@ function getCopy(locale: string): FaqCopy {
   }
 
   return {
-    eyebrow: "F&Q",
+    eyebrow: "FAQ",
     title: "PopOut FAQ",
     intro:
       "These eight FAQs explain how PopOut supports faster posting, multilingual communication, safer transactions, and graduation season selling in Melbourne.",

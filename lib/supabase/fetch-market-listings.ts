@@ -286,3 +286,116 @@ export async function fetchMarketListings(
     return { products: [], errorMessage: msg };
   }
 }
+
+/** Hero carousel: a small random sample from recent listings (browser client + RLS). */
+export type HeroCarouselListing = {
+  id: string;
+  title: string;
+  priceLabel: string;
+  imageUrl: string | null;
+};
+
+const HERO_CAROUSEL_POOL_LIMIT = 60;
+const HERO_CAROUSEL_COUNT = 10;
+
+function shuffleInPlace<T>(items: T[]): void {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const a = items[i]!;
+    const b = items[j]!;
+    items[i] = b;
+    items[j] = a;
+  }
+}
+
+/**
+ * Fetches a pool of recent `posts` (or legacy flat table) rows, shuffles, returns up to 10.
+ * Matches `fetchMarketListings` table/status conventions; no suburb filter.
+ */
+export async function fetchHeroCarouselListings(
+  client: SupabaseClient,
+  options: { locale: Locale },
+): Promise<{ listings: HeroCarouselListing[]; errorMessage: string | null }> {
+  try {
+    const table = marketListingsTableName();
+    const pool = HERO_CAROUSEL_POOL_LIMIT;
+    const pick = HERO_CAROUSEL_COUNT;
+
+    if (table !== "posts") {
+      const { data, error } = await client
+        .from(table)
+        .select("id,title,price_cents,currency,thumbnail_path,created_at,updated_at")
+        .order("created_at", { ascending: false })
+        .limit(pool);
+
+      if (error) {
+        return { listings: [], errorMessage: error.message };
+      }
+
+      const rows = Array.isArray(data) ? data : [];
+      const candidates: HeroCarouselListing[] = [];
+      for (const raw of rows) {
+        if (!isLegacyListingRow(raw)) {
+          continue;
+        }
+        const currency = (raw.currency ?? "AUD").toString();
+        candidates.push({
+          id: raw.id,
+          title: raw.title,
+          priceLabel: formatMoney(options.locale, raw.price_cents, currency),
+          imageUrl: getPostImageUrl(raw.thumbnail_path, raw.updated_at),
+        });
+      }
+      shuffleInPlace(candidates);
+      return { listings: candidates.slice(0, pick), errorMessage: null };
+    }
+
+    const statuses = marketPostStatuses();
+    const baseSelect = `
+      id,
+      raw_title,
+      price_cents,
+      currency,
+      thumbnail_path,
+      created_at,
+      updated_at,
+      bumped_at
+    `;
+
+    let query = client.from("posts").select(baseSelect).limit(pool);
+    if (statuses.length === 1) {
+      query = query.eq("status", statuses[0]!);
+    } else if (statuses.length > 1) {
+      query = query.in("status", statuses);
+    }
+    query = query
+      .order("bumped_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false });
+
+    const { data, error } = await query;
+
+    if (error) {
+      return { listings: [], errorMessage: error.message };
+    }
+
+    const rows = Array.isArray(data) ? data : [];
+    const candidates: HeroCarouselListing[] = [];
+    for (const raw of rows) {
+      if (!isPostRow(raw)) {
+        continue;
+      }
+      const currency = (raw.currency ?? "AUD").toString();
+      candidates.push({
+        id: String(raw.id),
+        title: raw.raw_title,
+        priceLabel: formatMoney(options.locale, raw.price_cents, currency),
+        imageUrl: getPostImageUrl(raw.thumbnail_path, raw.updated_at),
+      });
+    }
+    shuffleInPlace(candidates);
+    return { listings: candidates.slice(0, pick), errorMessage: null };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { listings: [], errorMessage: msg };
+  }
+}
