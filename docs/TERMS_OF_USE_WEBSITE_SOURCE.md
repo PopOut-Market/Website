@@ -1,0 +1,211 @@
+# Mobile App Terms and Conditions of Use
+
+**Document type:** Terms of Use (English) — source text aligned with the PopOut Market website `/terms` page.
+
+**Entity**
+
+- POPOUT MARKET PTY LTD  
+- ACN 696 464 945  
+- ABN 76 696 464 945  
+- Address: 1003/151 City Rd, Southbank VIC 3006, Australia  
+
+---
+
+## 1. About the Application
+
+Welcome to Popout Market (Application). The Application is an online platform that enables parties providing services or goods (Provider) and parties receiving services or goods (Receiver) to discover listings, communicate with each other, and independently arrange the inspection, payment, collection, and delivery of goods or services.
+
+The Application is operated by POPOUT MARKET Pty Ltd. We provide the Application as an intermediary technology platform only. We are not a buyer, seller, reseller, agent, broker, auctioneer, carrier, or financial services provider in relation to any transaction between Members.
+
+Any contract for the sale or exchange of goods is formed solely between the Provider and the Receiver. POPOUT MARKET Pty Ltd is not a party to such contracts. Services may include AI-powered listing generation, real-time translation, and safety moderation tools.
+
+By using, browsing, or reading the Application, you signify that you have read, understood, and agree to be bound by these Terms. If you do not agree, you must stop using the Application and Services immediately.
+
+---
+
+## 2. Acceptance of the Terms
+
+You accept the Terms by accessing, browsing, or using the Application.
+
+Where available, you may also accept the Terms by clicking to "accept" or "agree" in the user interface. By doing so, you warrant that you have legal capacity to enter into a binding contract with POPOUT MARKET Pty Ltd.
+
+---
+
+## 3. The Services
+
+To access the Services, both Receivers and Providers must register for an account (Account).
+
+To provide a secure and local marketplace, registration and usage may require personal information, including:
+
+- Email address and preferred username;
+- Telephone number (verified via SMS OTP);
+- Current suburb (verified via GPS mapping every 30 days);
+- Optional profile image and recovery email;
+- Optional university email for identity verification;
+- User-generated content, including images and descriptions processed by AI;
+- Communication data and chat history, including AI-assisted translation/moderation; and
+- Member activity data (ratings, reviews, transaction history).
+
+You warrant all provided information is accurate, complete, and up to date. POPOUT MARKET Pty Ltd may verify identity, conduct fraud screening, and request additional information. Failure to comply may lead to suspension or termination.
+
+You may not use the Services if you are under 18 years old or otherwise barred by applicable law.
+
+---
+
+## 4. Your Obligations as a Member
+
+As a Member, you agree that you will:
+
+- not share your profile with any other person;
+- use the Services only as permitted by these Terms and applicable law;
+- keep access credentials confidential and notify us of any security breach;
+- not impersonate another Member or use another account;
+- ensure all content you submit is accurate and up to date;
+- not harass, stalk, threaten, or abuse other Members;
+- not use the platform for unauthorised commercial solicitation or spam;
+- act in good faith for in-person transaction meetings and avoid repeated no-shows;
+- not use automated means to access or use the Application.
+
+Prohibited items include weapons, controlled substances, counterfeit goods, stolen goods, hazardous materials, and illegal content (including adult services or hate speech).
+
+---
+
+## 5. Using the Application as the Receiver
+
+Receivers (Buyers) must:
+
+- create an Account and complete mandatory verification;
+- browse listings where AI translation may be shown for convenience;
+- contact Providers directly through in-app messaging;
+- agree pickup location and payment terms directly with Provider;
+- inspect items and complete payment directly to Provider;
+- arrange collection/delivery directly with Provider; and
+- leave rating and review based on transaction experience.
+
+Popout Market does not facilitate, process, hold, escrow, remit, or settle payments between Members.
+
+---
+
+## 6. Using the Application as the Provider
+
+Providers (Sellers) must:
+
+- create an Account and complete mandatory verification;
+- create accurate listings and review AI-generated draft content;
+- remain responsible for listing legality and accuracy;
+- respond to enquiries and coordinate transaction terms directly with Receiver;
+- facilitate collection as described in listing; and
+- leave rating and review for the Receiver.
+
+Providers are solely responsible for their listings and must avoid prohibited items and repeated no-shows.
+
+---
+
+## 7. Refund Policy
+
+POPOUT MARKET Pty Ltd is an intermediary platform only and is not a party to transactions between Members. We do not process or control payments and do not provide refunds for transactions arranged through the Application.
+
+Refunds/returns are matters between Receiver and Provider, subject to Australian Consumer Law (ACL). If unresolved after 14 days, the Receiver may report through the Contact Us channel for platform-level review.
+
+---
+
+## 8. Copyright and Intellectual Property
+
+The Application and Services are protected by intellectual property laws. All rights in platform materials are owned or controlled by POPOUT MARKET Pty Ltd or its contributors.
+
+You are granted a limited, non-exclusive, revocable licence to use the Application for personal, non-commercial purposes while you are a Member.
+
+By posting Your Content, you grant POPOUT MARKET Pty Ltd a non-exclusive, transferable, perpetual, royalty-free, irrevocable, worldwide licence to use, display, distribute, adapt and process that content, including for AI-assisted listing generation and translation.
+
+---
+
+## 9. Privacy
+
+Information provided through the Application is handled in accordance with our Privacy Policy.
+
+---
+
+## 10. General Disclaimer
+
+To the maximum extent permitted by law, the Application and Services are provided on an "as is" and "as available" basis.
+
+We do not warrant uninterrupted access, complete accuracy of user or AI-assisted content, or quality/legality of goods and services listed by Members.
+
+AI tools are provided for convenience only. Members remain solely responsible for reviewing and approving all content before relying on or publishing it.
+
+---
+
+## 11. Competitors
+
+If you provide competing services for commercial gain, you are a competitor and are not permitted to access platform information/content for that purpose.
+
+---
+
+## 12. Limitation of Liability
+
+Nothing in these Terms excludes rights that cannot lawfully be excluded under Australian law.
+
+Subject to applicable law, POPOUT MARKET Pty Ltd's aggregate liability is limited to resupply of Services and excludes indirect/consequential loss, loss of profits, revenue, data, goodwill, and similar losses.
+
+---
+
+## 13. Termination of Contract
+
+You may terminate these Terms by giving 7 days' notice via Contact Us. POPOUT MARKET Pty Ltd may suspend or terminate access where Terms or laws are breached, or where platform safety/integrity requires it.
+
+For specified suspensions, written grounds are provided and Members are given an opportunity to respond.
+
+---
+
+## 14. Indemnity
+
+You indemnify POPOUT MARKET Pty Ltd and its personnel against losses arising from your content, your legal/terms breaches, your unlawful conduct, and disputes caused by your acts or omissions, subject to limits set by law.
+
+---
+
+## 15. Dispute Resolution
+
+Parties must first attempt good-faith resolution before tribunal/court proceedings (except urgent interlocutory relief), including notice, negotiation, and mediation steps under these Terms.
+
+For Provider-Receiver transaction disputes, parties should first use in-app messaging; unresolved matters may be escalated for non-binding platform-level review and moderation support.
+
+---
+
+## 16. Venue and Jurisdiction
+
+Exclusive venue for disputes is the courts of Victoria, Australia.
+
+---
+
+## 17. Governing Law
+
+The Terms are governed by the laws of Victoria, Australia.
+
+---
+
+## 18. Severance
+
+If any part of these Terms is unenforceable, that part is severed and the remainder continues in full force.
+
+---
+
+## 19. Feedback
+
+By providing feedback, ideas or suggestions, you grant POPOUT MARKET Pty Ltd a perpetual, irrevocable, royalty-free licence to use them without compensation.
+
+---
+
+## 20. Relationship of Parties
+
+Nothing in these Terms creates partnership, agency, employment, fiduciary or representative relationship between you and POPOUT MARKET Pty Ltd.
+
+---
+
+## 21. Entire Agreement
+
+These Terms are the entire agreement between you and POPOUT MARKET Pty Ltd in relation to the Application and Services.
+
+---
+
+**Source:** Website route `app/(site)/terms/page.tsx` (PopOut Market Website repository).  
+**For app team:** Use this file as the canonical English terms text; keep section numbers stable if you link to anchors or in-app “jump to section” UI.

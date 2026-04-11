@@ -37,7 +37,7 @@ export default function PrivacyPage() {
             <p>POPOUT MARKET PTY LTD</p>
             <p>ACN 696 464 945</p>
             <p>Effective Date: 28 March 2026</p>
-            <p>Version: 1.4</p>
+            <p>Version: 1.5</p>
           </div>
 
           <div className="mt-7 space-y-7">
@@ -66,23 +66,6 @@ export default function PrivacyPage() {
                 verified suburb, to support user safety, fraud prevention and trusted
                 transactions. For that reason, full anonymity is not available when creating and
                 using an account.
-              </p>
-            </PrivacySection>
-
-            <PrivacySection title="Children&apos;s Privacy">
-              <p>
-                Our application is intended for use in Australia. We do not knowingly collect
-                personal information from children under 13 years of age.
-              </p>
-              <p>For users aged 13 to 17, we apply additional safeguards, including:</p>
-              <ul className="list-disc space-y-1 pl-5">
-                <li>limiting collection to information reasonably necessary for marketplace functionality;</li>
-                <li>excluding those users from direct marketing and behavioural profiling; and</li>
-                <li>restricting public profile visibility compared with adult accounts.</li>
-              </ul>
-              <p>
-                If we become aware that we have collected personal information from a child under
-                13, we will take reasonable steps to delete that information.
               </p>
             </PrivacySection>
 
