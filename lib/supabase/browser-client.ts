@@ -51,20 +51,10 @@ export function marketListingsTableName(): string {
   return process.env.NEXT_PUBLIC_SUPABASE_MARKET_TABLE ?? "posts";
 }
 
-/**
- * Optional filter on `posts.status` — values must exist on your `post_status` enum or Postgres errors.
- * If unset/empty, the query does **not** filter by status (rely on RLS to hide non-public rows).
- * In SQL: `select unnest(enum_range(null::post_status));` to list valid labels.
- */
 export function marketPostStatuses(): string[] {
-  const raw =
-    process.env.NEXT_PUBLIC_SUPABASE_POST_STATUSES ??
-    process.env.NEXT_PUBLIC_SUPABASE_POST_STATUS ??
-    "";
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  // Website requirement: only public "available" posts are shown in market feed/detail.
+  // This intentionally excludes sold / hidden / report statuses from UI queries.
+  return ["available"];
 }
 
 /** Public bucket for `posts.thumbnail_path` — matches Expo `src/lib/storage.ts` (`post_images`). */
