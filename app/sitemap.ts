@@ -6,6 +6,9 @@ const INDEXABLE_PATHS = [
   "/about",
   "/faq",
   "/market",
+  "/melbourne-second-hand-app",
+  "/melbourne-second-hand-market",
+  "/melbourne-cbd-second-hand-marketplace",
   "/comparison",
   "/comparison/gumtree",
   "/comparison/facebook-marketplace",
@@ -28,6 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
   for (const path of INDEXABLE_PATHS) {
+    entries.push({
+      url: `${base}${path}`,
+      lastModified: now,
+      changeFrequency: path === "/" || path === "/market" ? "daily" : "weekly",
+      priority: path === "/" ? 1 : path === "/market" ? 0.9 : 0.7,
+    });
+
     for (const seg of locales) {
       const localized = path === "/" ? `/${seg}` : `/${seg}${path}`;
       entries.push({

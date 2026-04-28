@@ -4,10 +4,12 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Melbourne Market Listings | PopOut Market",
+  title: "Melbourne Second-Hand Market | PopOut Market",
   description:
-    "Browse second-hand listings by Melbourne suburb, compare nearby items, and connect with local buyers and sellers in your preferred language.",
+    "Browse Melbourne second-hand listings by suburb, compare nearby items, and use PopOut Market as a local second-hand trading platform for Melbourne city and CBD communities.",
   keywords: [
+    "Melbourne second hand market",
+    "Melbourne second hand app",
     "Melbourne market listings",
     "second hand market Melbourne",
     "buy and sell nearby Melbourne",

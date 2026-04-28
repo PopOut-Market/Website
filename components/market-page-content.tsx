@@ -14,10 +14,35 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+function marketSeoIntro(locale: string) {
+  if (locale === "zh-Hans") {
+    return {
+      title: "墨尔本二手交易平台",
+      body:
+        "按 suburb 浏览墨尔本二手商品，快速查看 Melbourne CBD 与周边区域在售物品。PopOut 适合本地社区、学生、公寓住户和毕业季搬家交易。",
+    };
+  }
+
+  if (locale === "zh-Hant") {
+    return {
+      title: "墨爾本二手交易平台",
+      body:
+        "依 suburb 瀏覽墨爾本二手商品，快速查看 Melbourne CBD 與周邊區域在售物品。PopOut 適合在地社群、學生、公寓住戶與畢業季搬家交易。",
+    };
+  }
+
+  return {
+    title: "Melbourne Second-Hand Market",
+    body:
+      "Browse second-hand listings across Melbourne suburbs, including Melbourne CBD and nearby city areas. PopOut supports local trading for students, apartment residents, and neighbourhood buyers and sellers.",
+  };
+}
+
 export function MarketPageContent() {
   const { t, locale } = useSiteShell();
   const searchParams = useSearchParams();
   const [area, setArea] = useState<MarketSuburb>(DEFAULT_MARKET_SUBURB);
+  const seoIntro = marketSeoIntro(locale);
 
   useLayoutEffect(() => {
     const areaParam = searchParams.get("area");
@@ -62,7 +87,16 @@ export function MarketPageContent() {
   return (
     <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
-        <div className="flex w-full shrink-0 justify-start pt-1">
+        <div className="w-full shrink-0 pt-4">
+          <h1 className="text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
+            {seoIntro.title}
+          </h1>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-700 sm:text-base">
+            {seoIntro.body}
+          </p>
+        </div>
+
+        <div className="flex w-full shrink-0 justify-start pt-4">
           <button
             ref={areaTriggerRef}
             type="button"
