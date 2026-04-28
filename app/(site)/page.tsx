@@ -2,6 +2,32 @@ import { HomePageContent } from "@/components/home-page-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 
+const homeJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: "PopOut Market",
+      url: "https://www.popoutmarket.com.au/",
+      inLanguage: "en-AU",
+      publisher: {
+        "@type": "Organization",
+        name: "PopOut Market",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://www.popoutmarket.com.au/favicon.png",
+        },
+      },
+    },
+    {
+      "@type": "Organization",
+      name: "PopOut Market",
+      url: "https://www.popoutmarket.com.au/",
+      logo: "https://www.popoutmarket.com.au/favicon.png",
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   title: "PopOut Market | Melbourne Neighbourhood Second-Hand Marketplace",
   description:
@@ -27,5 +53,13 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <HomePageContent />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+      />
+      <HomePageContent />
+    </>
+  );
 }

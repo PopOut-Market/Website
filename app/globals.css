@@ -8,3 +8,54 @@ body {
   margin: 0;
   font-family: Inter, "Segoe UI", Arial, sans-serif;
 }
+
+.font-latin-rounded {
+  font-family:
+    "Avenir Next",
+    "Nunito",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.font-zh-hans {
+  font-family:
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.font-zh-hant {
+  font-family:
+    "PingFang TC",
+    "Microsoft JhengHei",
+    "Noto Sans CJK TC",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.font-korean-rounded {
+  font-family:
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    "Noto Sans CJK KR",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.font-japanese-rounded {
+  font-family:
+    "Hiragino Sans",
+    "Yu Gothic",
+    "Meiryo",
+    "Noto Sans CJK JP",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
