@@ -127,6 +127,7 @@ export type SiteCopy = {
   footerNavAbout: string;
   footerNavTerms: string;
   footerNavPrivacy: string;
+  footerNavChildSafety: string;
   footerNavContact: string;
   footerSocialRednoteAria: string;
   footerSocialInstagramAria: string;
@@ -257,6 +258,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "About PopOut Market",
     footerNavTerms: "Terms of Use",
     footerNavPrivacy: "Privacy Policy",
+    footerNavChildSafety: "Child Safety",
     footerNavContact: "Contact Us",
     footerSocialRednoteAria: "PopOut Market on Xiaohongshu (RED)",
     footerSocialInstagramAria: "PopOut Market on Instagram",
@@ -396,6 +398,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "关于 PopOut Market",
     footerNavTerms: "使用条款",
     footerNavPrivacy: "隐私政策",
+    footerNavChildSafety: "儿童安全",
     footerNavContact: "联系我们",
     footerSocialRednoteAria: "PopOut Market 小红书",
     footerSocialInstagramAria: "PopOut Market Instagram",
@@ -530,6 +533,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "關於 PopOut Market",
     footerNavTerms: "使用條款",
     footerNavPrivacy: "隱私權政策",
+    footerNavChildSafety: "兒童安全",
     footerNavContact: "聯絡我們",
     footerSocialRednoteAria: "PopOut Market 小紅書",
     footerSocialInstagramAria: "PopOut Market Instagram",
@@ -664,6 +668,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "PopOut Market 소개",
     footerNavTerms: "이용약관",
     footerNavPrivacy: "개인정보 처리방침",
+    footerNavChildSafety: "아동 안전",
     footerNavContact: "문의하기",
     footerSocialRednoteAria: "PopOut Market 샤오홍슈(RED)",
     footerSocialInstagramAria: "PopOut Market 인스타그램",
@@ -799,6 +804,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "PopOut Market について",
     footerNavTerms: "利用規約",
     footerNavPrivacy: "プライバシーポリシー",
+    footerNavChildSafety: "子どもの安全",
     footerNavContact: "お問い合わせ",
     footerSocialRednoteAria: "PopOut Market 小紅書（RED）",
     footerSocialInstagramAria: "PopOut Market Instagram",
@@ -935,6 +941,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "Giới thiệu PopOut Market",
     footerNavTerms: "Điều khoản sử dụng",
     footerNavPrivacy: "Chính sách quyền riêng tư",
+    footerNavChildSafety: "An toàn trẻ em",
     footerNavContact: "Liên hệ",
     footerSocialRednoteAria: "PopOut Market trên Xiaohongshu (RED)",
     footerSocialInstagramAria: "PopOut Market trên Instagram",
@@ -1075,6 +1082,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "À propos de PopOut Market",
     footerNavTerms: "Conditions d’utilisation",
     footerNavPrivacy: "Politique de confidentialité",
+    footerNavChildSafety: "Sécurité des enfants",
     footerNavContact: "Nous contacter",
     footerSocialRednoteAria: "PopOut Market sur Xiaohongshu (RED)",
     footerSocialInstagramAria: "PopOut Market sur Instagram",
@@ -1215,6 +1223,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavAbout: "Acerca de PopOut Market",
     footerNavTerms: "Términos de uso",
     footerNavPrivacy: "Política de privacidad",
+    footerNavChildSafety: "Seguridad infantil",
     footerNavContact: "Contáctanos",
     footerSocialRednoteAria: "PopOut Market en Xiaohongshu (RED)",
     footerSocialInstagramAria: "PopOut Market en Instagram",

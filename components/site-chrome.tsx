@@ -671,6 +671,15 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   |
                 </span>
                 <Link
+                  href={withLocale("/child-safety")}
+                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                >
+                  {t.footerNavChildSafety}
+                </Link>
+                <span className="select-none text-gray-300" aria-hidden>
+                  |
+                </span>
+                <Link
                   href={withLocale("/contact")}
                   className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
                 >
