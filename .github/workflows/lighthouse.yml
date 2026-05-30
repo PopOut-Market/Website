@@ -1,0 +1,41 @@
+name: Lighthouse
+
+# Performance / accessibility / best-practices / SEO budgets for key pages.
+# Thresholds live in lighthouserc.json. SEO and accessibility are hard gates;
+# performance and best-practices are warnings (CI performance numbers are noisy).
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
