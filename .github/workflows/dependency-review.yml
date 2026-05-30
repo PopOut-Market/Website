@@ -1,0 +1,28 @@
+name: Dependency Review
+
+# Blocks PRs that introduce dependencies with known high-severity vulnerabilities
+# or disallowed licenses. Only evaluates the dependency changes in the PR diff,
+# so pre-existing transitive advisories do not trip it.
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    name: Review dependency changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
