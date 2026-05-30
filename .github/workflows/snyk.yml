@@ -1,0 +1,71 @@
+name: Snyk
+
+# Snyk Open Source (dependency) scanning. Requires a SNYK_TOKEN repo secret:
+#   gh secret set SNYK_TOKEN --repo PopOut-Market/Website
+# If the secret is absent the scan steps are skipped so the job still passes.
+#
+# Report-only: findings are uploaded to the Security > Code scanning tab (SARIF)
+# rather than blocking merges, consistent with the npm-audit step — the known
+# high-severity advisories are transitive (next) and need a major bump to clear.
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 8 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  security:
+    name: Snyk Open Source
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Snyk CLI
+        if: env.SNYK_TOKEN != ''
+        run: npm install -g snyk
+
+      - name: Snyk test (SARIF)
+        if: env.SNYK_TOKEN != ''
+        continue-on-error: true
+        run: >-
+          snyk test
+          --all-projects
+          --org=d4419332-3c5f-4bc5-addc-46e1ba083555
+          --severity-threshold=high
+          --sarif-file-output=snyk.sarif
+
+      - name: Upload result to code scanning
+        if: env.SNYK_TOKEN != '' && hashFiles('snyk.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+          category: snyk
+
+      - name: Snyk monitor (snapshot to Snyk UI)
+        if: env.SNYK_TOKEN != '' && github.event_name == 'push'
+        run: snyk monitor --all-projects --org=d4419332-3c5f-4bc5-addc-46e1ba083555
+
+      - name: Note when token is missing
+        if: env.SNYK_TOKEN == ''
+        run: echo "::warning::SNYK_TOKEN secret not set — Snyk scan skipped. Add it with 'gh secret set SNYK_TOKEN'."
