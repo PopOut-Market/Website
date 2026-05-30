@@ -4,9 +4,8 @@ name: Snyk
 #   gh secret set SNYK_TOKEN --repo PopOut-Market/Website
 # If the secret is absent the scan steps are skipped so the job still passes.
 #
-# Report-only: findings are uploaded to the Security > Code scanning tab (SARIF)
-# rather than blocking merges, consistent with the npm-audit step — the known
-# high-severity advisories are transitive (next) and need a major bump to clear.
+# Blocking gate: fails the job on high-severity (or worse) vulnerable paths, and
+# also uploads findings to the Security > Code scanning tab (SARIF).
 
 on:
   pull_request:
@@ -45,12 +44,15 @@ jobs:
         if: env.SNYK_TOKEN != ''
         run: npm install -g snyk
 
+      # Generate SARIF without failing the step, so the upload below always runs.
       - name: Snyk test (SARIF)
+        id: snyk
         if: env.SNYK_TOKEN != ''
         continue-on-error: true
         run: >-
           snyk test
           --all-projects
+          --exclude=.next,out
           --org=d4419332-3c5f-4bc5-addc-46e1ba083555
           --severity-threshold=high
           --sarif-file-output=snyk.sarif
@@ -61,6 +63,14 @@ jobs:
         with:
           sarif_file: snyk.sarif
           category: snyk
+
+      # Block the merge if the scan found high-severity (or worse) issues —
+      # runs after the SARIF upload so findings are recorded either way.
+      - name: Fail on Snyk findings
+        if: env.SNYK_TOKEN != '' && steps.snyk.outcome == 'failure'
+        run: |
+          echo "::error::Snyk found high-severity vulnerabilities — see the Security > Code scanning tab."
+          exit 1
 
       - name: Snyk monitor (snapshot to Snyk UI)
         if: env.SNYK_TOKEN != '' && github.event_name == 'push'
