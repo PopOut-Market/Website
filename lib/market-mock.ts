@@ -138,6 +138,9 @@ function pickTitle(locale: Locale, index: number): string {
 }
 
 function formatAud(locale: Locale, cents: number): string {
+  if (!cents || cents <= 0) {
+    return "FREE";
+  }
   return new Intl.NumberFormat(NUMBER_LOCALE[locale], {
     style: "currency",
     currency: "AUD",

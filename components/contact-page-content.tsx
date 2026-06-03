@@ -63,7 +63,7 @@ function contactCopy(locale: string) {
 }
 
 export function ContactPageContent() {
-  const { locale } = useSiteShell();
+  const { locale, t } = useSiteShell();
   const copy = contactCopy(locale);
   const [title, setTitle] = useState("");
   const [main, setMain] = useState("");
@@ -79,7 +79,7 @@ export function ContactPageContent() {
     const cleanTitle = title.trim();
     const cleanMain = main.trim();
     if (!cleanTitle || !cleanMain) {
-      setError(copy.errorRequired);
+      setError(t.contactErrorRequired);
       return;
     }
 
@@ -98,14 +98,14 @@ export function ContactPageContent() {
 
       if (!resp.ok) {
         const result = (await resp.json().catch(() => ({}))) as { error?: string };
-        throw new Error(result.error || copy.errorFallback);
+        throw new Error(result.error || t.contactErrorFallback);
       }
 
       setTitle("");
       setMain("");
-      setSuccess(copy.success);
+      setSuccess(t.contactSuccess);
     } catch (err) {
-      setError(err instanceof Error ? err.message : copy.errorFallback);
+      setError(err instanceof Error ? err.message : t.contactErrorFallback);
     } finally {
       setSending(false);
     }
@@ -115,14 +115,14 @@ export function ContactPageContent() {
     <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col`}>
       <div className={`${INNER_MAX} flex w-full min-h-0 flex-1 flex-col py-3 sm:py-4`}>
         <div className="pt-1">
-          <BackNavLink href="/">{copy.back}</BackNavLink>
+          <BackNavLink href="/">{t.contactBack}</BackNavLink>
         </div>
 
-        <div className="mt-4 rounded-[24px] border border-white/45 bg-white/80 p-4 shadow-[0_16px_40px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-6 md:p-7">
-          <h1 className={`text-2xl font-black sm:text-3xl ${POPOUT_BRAND_GRADIENT_TEXT_CLASS}`}>
-            {copy.title}
+        <div className="mt-4 rounded-2xl border border-black/5 bg-white p-4 shadow-soft sm:p-6 md:p-7">
+          <h1 className={`text-2xl font-bold sm:text-3xl ${POPOUT_BRAND_GRADIENT_TEXT_CLASS}`}>
+            {t.footerNavContact}
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-gray-600 sm:text-base">{copy.hint}</p>
+          <p className="mt-2 text-sm leading-relaxed text-gray-600 sm:text-base">{t.contactHint}</p>
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-1.5">
@@ -134,7 +134,7 @@ export function ContactPageContent() {
                 value={FOOTER_CONTACT_EMAIL}
                 readOnly
                 aria-readonly="true"
-                className="h-11 w-full rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-700 outline-none"
+                className="h-11 w-full rounded-xl border border-black/5 bg-gray-50 px-3 text-sm font-medium text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 
@@ -150,8 +150,8 @@ export function ContactPageContent() {
                 maxLength={140}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder={copy.titlePlaceholder}
-                className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-gray-300"
+                placeholder={t.contactTitlePlaceholder}
+                className="h-11 w-full rounded-xl border border-black/5 bg-white px-3 text-sm text-gray-900 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 
@@ -166,8 +166,8 @@ export function ContactPageContent() {
                 maxLength={4000}
                 value={main}
                 onChange={(event) => setMain(event.target.value)}
-                placeholder={copy.mainPlaceholder}
-                className="min-h-40 w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm leading-relaxed text-gray-900 outline-none transition focus:border-gray-300"
+                placeholder={t.contactMainPlaceholder}
+                className="min-h-40 w-full rounded-xl border border-black/5 bg-white px-3 py-3 text-sm leading-relaxed text-gray-900 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 
@@ -177,9 +177,9 @@ export function ContactPageContent() {
             <button
               type="submit"
               disabled={sending}
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-gray-200 bg-white px-5 text-sm font-semibold text-gray-800 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-11 items-center justify-center rounded-xl bg-brand-500 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600 active:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {sending ? copy.sending : copy.send}
+              {sending ? t.contactSending : t.contactSend}
             </button>
           </form>
         </div>

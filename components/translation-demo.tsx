@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { SiteCopy } from "@/lib/site-i18n";
 import type { Locale } from "@/lib/site-i18n";
-import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import { useSectionVisible } from "@/lib/use-section-visible";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 const LOCALE_FLAG: Record<Locale, string> = {
   en: "🇦🇺",
@@ -64,7 +64,7 @@ function PhoneFrame({
 }) {
   const isRight = align === "right";
   return (
-    <div className="flex w-full max-w-[280px] flex-col overflow-hidden rounded-[28px] border border-gray-200/80 bg-white/80 shadow-[0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl sm:max-w-[300px]">
+    <div className="flex w-full max-w-[280px] flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card sm:max-w-[300px]">
       <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-3">
         <span className="text-lg leading-none">{flag}</span>
         <span className="text-sm font-semibold text-gray-700">{label}</span>
@@ -75,12 +75,12 @@ function PhoneFrame({
           <div
             className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
               isRight
-                ? "rounded-br-md bg-gradient-to-br from-[#FF0048] to-[#FF6600] text-white"
+                ? "rounded-br-md bg-brand-500 text-white"
                 : "rounded-bl-md bg-gray-100 text-gray-900"
             } ${
               visible
-                ? "translate-y-0 opacity-100 blur-0"
-                : "translate-y-2 opacity-0 blur-[1px]"
+                ? "translate-y-0 opacity-100"
+                : "translate-y-2 opacity-0"
             }`}
           >
             {bubble}
@@ -117,6 +117,7 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
   });
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
+  const reduced = useReducedMotion();
   const cycleRef = useRef<number | null>(null);
   const fadeRef = useRef<number | null>(null);
 
@@ -127,6 +128,7 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
 
   useEffect(() => {
     if (!active) { clear(); return; }
+    if (reduced) { setVisible(true); clear(); return; }
     const run = () => {
       setVisible(false);
       fadeRef.current = window.setTimeout(() => {
@@ -137,27 +139,28 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
     };
     cycleRef.current = window.setTimeout(run, CYCLE_MS);
     return clear;
-  }, [active, clear]);
+  }, [active, clear, reduced]);
 
   const pair = CHAT_PAIRS[index]!;
-  const isEnglishTitle = t.translationDemoTitle === "Say it once. Everyone understands.";
 
   return (
     <section
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="flex flex-col items-center px-[1.05rem] pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
+      className="flex flex-col items-center px-4 pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
     >
       <div className="max-w-3xl text-center">
         <h2 className="text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl">
-          {isEnglishTitle ? (
-            <>
-              <span>Say it once. </span>
-              <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>Everyone</span>
-              <span> understands.</span>
-            </>
-          ) : (
-            t.translationDemoTitle
-          )}
+          {/* The emphasised word is wrapped in *asterisks* per locale → brand-coloured. */}
+          {t.translationDemoTitle.split(/(\*[^*]+\*)/).map((part, i) => {
+            if (!part) return null;
+            return part.startsWith("*") && part.endsWith("*") ? (
+              <span key={i} className="text-brand-500">
+                {part.slice(1, -1)}
+              </span>
+            ) : (
+              <span key={i}>{part}</span>
+            );
+          })}
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-500 sm:text-base">
           {t.translationDemoSubtitle}

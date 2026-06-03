@@ -261,14 +261,14 @@ export function MelbourneSuburbsHubContent() {
           {copy.intro}
         </p>
 
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             {copy.guideTitle}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">{copy.guideBody}</p>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             {copy.areaIntroTitle}
           </h2>
@@ -293,13 +293,13 @@ export function MelbourneSuburbsHubContent() {
               <Link
                 key={suburb}
                 href={localizePath(suburbSeoPath(suburb))}
-                className="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-md"
+                className="group rounded-2xl border border-black/5 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-200"
               >
                 <p className="text-base font-semibold text-gray-900">{suburb}</p>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">
                   {suburbBlurb(locale, suburb)}
                 </p>
-                <span className="mt-3 inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition group-hover:bg-gray-50">
+                <span className="mt-3 inline-flex items-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition group-hover:bg-brand-600">
                   {copy.cta}
                 </span>
               </Link>

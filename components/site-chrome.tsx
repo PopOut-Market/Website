@@ -9,7 +9,6 @@ import { SiteShellProvider } from "@/components/site-chrome-context";
 import {
   APP_STORE_BADGE_SRC,
   APP_STORE_URL,
-  FOOTER_ADDRESS_LINE,
   FOOTER_CONTACT_EMAIL,
   FOOTER_SOCIAL_IMG_INSTAGRAM,
   FOOTER_SOCIAL_IMG_LINKEDIN,
@@ -18,20 +17,16 @@ import {
   GOOGLE_PLAY_URL,
   INNER_MAX,
   LOGO_MARK_SRC,
-  LOGO_TEXT_SRC,
-  RADIUS,
   SHELL_X,
   SITE_MAIN_SLOT_CLASS,
   footerSocialUrlInstagram,
   footerSocialUrlLinkedIn,
   footerSocialUrlRednote,
 } from "@/lib/site-config";
-import { readStoredMarketSuburb } from "@/lib/site-suburbs";
 import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
 import {
   localeFromPathname,
-  stripLocalePrefix,
   toLocalePath,
 } from "@/lib/site-locale-routing";
 
@@ -45,8 +40,7 @@ function FooterSocialLink({
   children: ReactNode;
 }) {
   const shell =
-    "inline-flex h-10 w-10 items-center justify-center border border-gray-200/90 bg-white p-1.5 shadow-sm transition sm:h-11 sm:w-11";
-  const radiusStyle = { borderRadius: RADIUS.sheet } as const;
+    "inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white p-2 shadow-card transition-colors sm:h-11 sm:w-11";
   if (href) {
     return (
       <a
@@ -54,8 +48,7 @@ function FooterSocialLink({
         target="_blank"
         rel="noopener noreferrer"
         aria-label={ariaLabel}
-        style={radiusStyle}
-        className={`${shell} hover:border-gray-300 hover:shadow`}
+        className={`${shell} hover:border-brand-500`}
       >
         {children}
       </a>
@@ -63,8 +56,7 @@ function FooterSocialLink({
   }
   return (
     <span
-      style={radiusStyle}
-      className={`${shell} border-dashed border-gray-300/90`}
+      className={`${shell} border-dashed border-black/10`}
       aria-label={ariaLabel}
       role="group"
     >
@@ -146,7 +138,6 @@ function footerFaqLabel(locale: Locale): string {
   }
 }
 
-const FOOTER_COPYRIGHT_EN = "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.";
 const FOOTER_ACN_EN = "ACN 696 464 945";
 const FOOTER_ABN_EN = "ABN 76 696 464 945";
 
@@ -154,15 +145,12 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [locale, setLocale] = useState<Locale>("en");
-  const [marketHref, setMarketHref] = useState("/en/market");
   const [langOpen, setLangOpen] = useState(false);
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
   const languageModalRef = useRef<HTMLDivElement | null>(null);
   const t = COPY[locale];
   const localeFontClass = LOCALE_FONT_CLASS[locale] ?? fontLatinRounded.className;
-  const basePath = stripLocalePrefix(pathname);
-  const isMarket = basePath === "/market" || basePath.startsWith("/market/");
 
   function withLocale(href: string): string {
     if (href.startsWith("mailto:") || href.startsWith("http")) return href;
@@ -211,15 +199,6 @@ export function SiteChrome({ children }: { children: ReactNode }) {
     setLocale(pathLocale);
   }, [pathname]);
 
-  useEffect(() => {
-    const suburb = readStoredMarketSuburb();
-    if (suburb) {
-      setMarketHref(withLocale(`/market?area=${encodeURIComponent(suburb)}`));
-    } else {
-      setMarketHref(withLocale("/market"));
-    }
-  }, [pathname, locale]);
-
   return (
     <SiteShellProvider
       value={{
@@ -229,37 +208,18 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         localizePath: withLocale,
       }}
     >
-      <main className={`flex min-h-screen flex-col bg-gray-100 ${localeFontClass}`}>
-        <header className={`${SHELL_X} fixed inset-x-0 top-0 z-40 pb-4 pt-6`}>
-          <div
-            className={`${INNER_MAX} flex h-14 items-center justify-between gap-2 bg-white shadow-md`}
-            style={{ borderRadius: RADIUS.sheet }}
-          >
+      <main className={`flex min-h-screen flex-col bg-white ${localeFontClass}`}>
+        <header className="sticky top-0 z-40 border-b border-black/5 bg-surface-base">
+          <div className={`${INNER_MAX} flex h-16 items-center justify-between gap-4`}>
             <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
               <Link
                 href={withLocale("/")}
                 className="flex min-h-0 min-w-0 shrink-0 items-center py-1"
                 aria-label={t.homeAria}
               >
-                <Image
-                  src={LOGO_TEXT_SRC}
-                  alt="PopOut"
-                  width={320}
-                  height={80}
-                  priority
-                  className="h-[clamp(1.15rem,3.2vw,2.5rem)] w-auto max-w-[min(56vw,220px)] object-contain object-left sm:max-w-[min(72vw,280px)]"
-                  sizes="(max-width: 640px) 70vw, (max-width: 1024px) 240px, 280px"
-                />
-              </Link>
-              <Link
-                href={marketHref}
-                className={`inline-flex h-9 shrink-0 items-center rounded-[11px] border px-3 text-sm font-semibold backdrop-blur-xl transition ${
-                  isMarket
-                    ? "border-2 border-white/70 bg-white/70 text-gray-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_4px_12px_rgba(15,23,42,0.14)]"
-                    : "border-white/70 bg-white/70 text-gray-800 hover:bg-white/85"
-                }`}
-              >
-                {t.marketPageTitle}
+                <span className="inline-flex items-center text-sm font-bold uppercase tracking-wide text-black sm:text-base">
+                  PopOut Market
+                </span>
               </Link>
             </div>
 
@@ -271,11 +231,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                     setLanguageModalOpen(true);
                     setLangOpen(false);
                   }}
-                  className="inline-flex h-9 w-9 items-center justify-center gap-1.5 rounded-[11px] border border-white/70 bg-white/70 px-0 text-sm font-medium text-gray-700 backdrop-blur-xl transition hover:bg-white/85 sm:hidden"
+                  className="inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-black/10 bg-white px-0 text-sm font-medium text-black/70 transition-colors hover:border-brand-500 sm:hidden"
                   aria-label={t.topLanguage}
                 >
                   <svg
-                    className="h-4.5 w-4.5"
+                    className="h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -294,13 +254,13 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => setLangOpen((prev) => !prev)}
-                  className="hidden h-9 items-center gap-1.5 rounded-[11px] border border-white/70 bg-white/70 px-3 text-sm font-medium text-gray-700 backdrop-blur-xl transition hover:bg-white/85 sm:inline-flex"
+                  className="hidden h-11 items-center gap-2 rounded-full border border-black/10 bg-white px-4 text-sm font-medium text-black/70 transition-colors hover:border-brand-500 sm:inline-flex"
                   aria-haspopup="menu"
                   aria-expanded={langOpen}
                   aria-label={t.topLanguage}
                 >
                   <svg
-                    className="h-4.5 w-4.5"
+                    className="h-5 w-5"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -314,7 +274,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                     <path d="M12 3.5c2.5 2.2 4 5.3 4 8.5s-1.5 6.3-4 8.5" />
                     <path d="M12 3.5c-2.5 2.2-4 5.3-4 8.5s1.5 6.3 4 8.5" />
                   </svg>
-                  <span>{t.topLanguage}</span>
+                  <span>{LOCALES.find((l) => l.code === locale)?.label ?? t.topLanguage}</span>
                   <svg
                     className={`h-4 w-4 transition ${langOpen ? "rotate-180" : ""}`}
                     viewBox="0 0 20 20"
@@ -332,7 +292,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 {langOpen ? (
                   <div
                     role="menu"
-                    className="absolute right-0 z-20 mt-2 min-w-[11rem] overflow-hidden rounded-2xl border border-black/10 bg-white/95 p-1.5 shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur"
+                    className="absolute right-0 z-20 mt-2 min-w-[11rem] overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-card"
                   >
                     {LOCALES.map((item) => {
                       const selected = item.code === locale;
@@ -345,10 +305,10 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                           onClick={() => {
                             switchLocale(item.code);
                           }}
-                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition ${
+                          className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition-colors ${
                             selected
-                              ? "bg-black text-white"
-                              : "text-gray-700 hover:bg-gray-100"
+                              ? "bg-brand-500 text-white"
+                              : "text-black/70 hover:bg-brand-tint"
                           }`}
                         >
                           <span>{item.label}</span>
@@ -363,7 +323,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               <a
                 href="#download"
                 aria-label={t.topDownload}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-[11px] border border-white/70 bg-white/70 px-0 text-sm font-semibold text-blue-700 backdrop-blur-xl transition hover:bg-white/85 sm:w-auto sm:px-3.5"
+                className="inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full bg-brand-500 px-0 text-sm font-semibold text-white transition-colors hover:bg-brand-600 active:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 sm:w-auto sm:px-4"
               >
                 <svg
                   className="h-4 w-4"
@@ -385,31 +345,28 @@ export function SiteChrome({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        {/* Spacer for fixed top bar: pt-6 + h-14 + pb-4 = 96px */}
-        <div className="h-24 shrink-0" aria-hidden />
-
         <div className={SITE_MAIN_SLOT_CLASS}>{children}</div>
 
         {languageModalOpen ? (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/25 px-3 py-4 backdrop-blur-[2px] sm:px-4">
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 px-4 py-4 sm:px-6">
             <div
               ref={languageModalRef}
-              className="w-full max-w-xl max-h-[84vh] overflow-y-auto rounded-[20px] border border-white/35 bg-white/85 p-4 shadow-[0_20px_45px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:rounded-[24px] sm:p-6"
+              className="w-full max-w-xl max-h-[84vh] overflow-y-auto rounded-3xl border border-black/10 bg-white p-4 shadow-card sm:p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">
+                  <h2 className="text-lg font-semibold text-black sm:text-xl">
                     {t.languageModalTitle}
                   </h2>
-                  <p className="mt-1 text-xs text-gray-600 sm:text-sm">
+                  <p className="mt-1 text-xs text-black/55 sm:text-sm">
                     {t.languageModalHint}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setLanguageModalOpen(false)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition hover:text-gray-900"
-                  aria-label="Close language picker"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-surface-base text-black/55 transition-colors hover:border-brand-500 hover:text-black"
+                  aria-label={t.languageModalCloseAria}
                 >
                   ×
                 </button>
@@ -425,21 +382,21 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       onClick={() => {
                         switchLocale(item.code);
                       }}
-                      className={`group rounded-2xl border px-3 py-2.5 text-left transition ${
+                      className={`group rounded-2xl border px-4 py-3 text-left transition-colors ${
                         selected
-                          ? "border-blue-300 bg-blue-50/90"
-                          : "border-gray-200 bg-white/80 hover:border-gray-300 hover:bg-white"
+                          ? "border-brand-500 bg-brand-tint"
+                          : "border-black/10 bg-surface-base hover:border-brand-500"
                       }`}
                     >
                       <div className="flex items-start justify-between">
-                        <span className="text-[1rem] font-semibold text-gray-900">
+                        <span className="text-base font-semibold text-black">
                           {item.display}
                         </span>
-                        <span className="align-super text-[10px] font-semibold tracking-wide text-gray-500">
+                        <span className="align-super text-[10px] font-semibold tracking-wide text-black/40">
                           {item.short}
                         </span>
                       </div>
-                      <div className="mt-0.5 text-xs text-gray-500">{item.native}</div>
+                      <div className="mt-1 text-xs text-black/55">{item.native}</div>
                     </button>
                   );
                 })}
@@ -450,7 +407,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
         <footer
           id="download"
-          className={`${SHELL_X} border-t border-gray-300 bg-gray-100 py-8`}
+          className={`${SHELL_X} border-t border-black/5 bg-surface-base py-8`}
         >
           <div className={INNER_MAX}>
             <div className="py-4 sm:py-6">
@@ -461,7 +418,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                     alt=""
                     width={112}
                     height={112}
-                    className="h-12 w-12 shrink-0 rounded-xl border border-gray-200 bg-white object-cover shadow-sm sm:h-14 sm:w-14"
+                    className="h-12 w-12 shrink-0 rounded-2xl border border-black/10 bg-white object-cover shadow-card sm:h-14 sm:w-14"
                   />
                   <div className="min-w-0">
                     <p className="text-balance text-sm font-semibold leading-snug text-gray-800 sm:text-base">
@@ -478,7 +435,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       {[0, 1, 2, 3].map((i) => (
                         <StarFull
                           key={i}
-                          className="h-3.5 w-3.5 text-black sm:h-4 sm:w-4"
+                          className="h-4 w-4 text-brand-500"
                         />
                       ))}
                       <StarHalf />
@@ -486,7 +443,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                   </div>
                 </div>
 
-                <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-px self-stretch leading-none min-[760px]:w-auto min-[760px]:flex-nowrap min-[760px]:justify-end min-[760px]:gap-0 min-[760px]:self-auto">
+                <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-3 self-stretch leading-none min-[760px]:w-auto min-[760px]:flex-nowrap min-[760px]:justify-end min-[760px]:self-auto">
                   <Link
                     href={APP_STORE_URL}
                     target="_blank"
@@ -498,28 +455,28 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       alt={t.appStoreAlt}
                       width={300}
                       height={100}
-                      className="block h-[4.75rem] w-auto max-w-[min(100%,440px)] object-contain sm:h-[5.5rem] md:h-24 lg:h-[6.5rem]"
+                      className="block h-12 w-auto object-contain sm:h-14"
                     />
                   </Link>
                   <Link
                     href={GOOGLE_PLAY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-fit justify-center leading-none min-[760px]:justify-end min-[760px]:-ml-2"
+                    className="flex w-fit justify-center leading-none min-[760px]:justify-end"
                   >
                     <Image
                       src={GOOGLE_PLAY_BADGE_SRC}
                       alt={t.googlePlayAlt}
                       width={320}
                       height={100}
-                      className="block h-[4.75rem] w-auto max-w-[min(100%,460px)] object-contain sm:h-[5.5rem] md:h-24 lg:h-[6.5rem]"
+                      className="block h-12 w-auto object-contain sm:h-14"
                     />
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-gray-300 pt-6 sm:pt-8">
+            <div className="border-t border-black/5 pt-6 sm:pt-8">
               <div className="flex flex-wrap items-center justify-center gap-4 min-[760px]:justify-start">
                 <FooterSocialLink href={footerSocialUrlRednote()} ariaLabel={t.footerSocialRednoteAria}>
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center">
@@ -557,16 +514,13 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               </div>
 
               <div className="mt-6 space-y-1 text-center text-xs leading-relaxed text-gray-600 sm:text-sm min-[760px]:text-left">
-                <p>{FOOTER_COPYRIGHT_EN}</p>
+                <p>{t.footerCopyright}</p>
                 <p>{FOOTER_ACN_EN}</p>
                 <p>{FOOTER_ABN_EN}</p>
                 <p>
-                  Address: {FOOTER_ADDRESS_LINE}
-                </p>
-                <p>
                   <a
                     href={`mailto:${FOOTER_CONTACT_EMAIL}`}
-                    className="font-medium text-black underline decoration-gray-400 underline-offset-2 hover:text-black hover:decoration-gray-400"
+                    className="font-medium text-black/70 underline decoration-black/10 underline-offset-2 hover:text-brand-700 hover:decoration-brand-500"
                   >
                     {FOOTER_CONTACT_EMAIL}
                   </a>
@@ -576,11 +530,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               <div className="mt-5 flex flex-wrap items-center gap-2">
                 <Link
                   href={withLocale("/melbourne-suburbs")}
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-brand-500"
                 >
                   {suburbHubLabel(locale)}
                   <svg
-                    className="h-4 w-4 text-gray-500"
+                    className="h-4 w-4 text-black/40"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden
@@ -594,11 +548,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 </Link>
                 <Link
                   href={withLocale("/comparison")}
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-brand-500"
                 >
                   {comparisonHubLabel(locale)}
                   <svg
-                    className="h-4 w-4 text-gray-500"
+                    className="h-4 w-4 text-black/40"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden
@@ -612,11 +566,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 </Link>
                 <Link
                   href={withLocale("/melbourne-graduation-move-out-guide-2026")}
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-200/90 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:bg-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-brand-500"
                 >
                   {graduationGuideLabel(locale)}
                   <svg
-                    className="h-4 w-4 text-gray-500"
+                    className="h-4 w-4 text-black/40"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden
@@ -636,52 +590,52 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               >
                 <Link
                   href={withLocale("/about")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {t.footerNavAbout}
                 </Link>
-                <span className="select-none text-gray-300" aria-hidden>
+                <span className="select-none text-black/15" aria-hidden>
                   |
                 </span>
                 <Link
                   href={withLocale("/faq")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {footerFaqLabel(locale)}
                 </Link>
-                <span className="select-none text-gray-300" aria-hidden>
+                <span className="select-none text-black/15" aria-hidden>
                   |
                 </span>
                 <Link
                   href={withLocale("/terms")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {t.footerNavTerms}
                 </Link>
-                <span className="select-none text-gray-300" aria-hidden>
+                <span className="select-none text-black/15" aria-hidden>
                   |
                 </span>
                 <Link
                   href={withLocale("/privacy")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {t.footerNavPrivacy}
                 </Link>
-                <span className="select-none text-gray-300" aria-hidden>
+                <span className="select-none text-black/15" aria-hidden>
                   |
                 </span>
                 <Link
                   href={withLocale("/child-safety")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {t.footerNavChildSafety}
                 </Link>
-                <span className="select-none text-gray-300" aria-hidden>
+                <span className="select-none text-black/15" aria-hidden>
                   |
                 </span>
                 <Link
                   href={withLocale("/contact")}
-                  className="font-medium text-black underline-offset-2 decoration-gray-400 hover:text-black hover:underline hover:decoration-gray-400"
+                  className="font-medium text-black/70 underline-offset-2 decoration-black/10 hover:text-brand-700 hover:underline hover:decoration-brand-500"
                 >
                   {t.footerNavContact}
                 </Link>

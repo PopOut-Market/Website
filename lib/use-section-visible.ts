@@ -62,15 +62,6 @@ export function useSectionVisible(
       }, pauseDelayMs);
     };
 
-    const onVisibilityChange = () => {
-      if (document.hidden) {
-        clearPauseTimer();
-        setActive(false);
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
     const thresholds = Array.from(
       new Set([0, stopThreshold, startThreshold, 0.5, 1].sort((a, b) => a - b)),
     );
@@ -97,6 +88,22 @@ export function useSectionVisible(
     );
 
     io.observe(el);
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        // Tab hidden: pause now (background timers are throttled anyway).
+        clearPauseTimer();
+        setActive(false);
+      } else {
+        // Tab visible again: the IO won't re-fire on its own without a layout/scroll
+        // change, so force a fresh intersection callback to restore `active` if the
+        // section is still on screen.
+        io.unobserve(el);
+        io.observe(el);
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     return () => {
       clearPauseTimer();

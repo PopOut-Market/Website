@@ -19,7 +19,7 @@ export function StarHalf({ className }: { className?: string }) {
       aria-hidden
     >
       <svg
-        className="absolute inset-0 h-full w-full text-zinc-400"
+        className="absolute inset-0 h-full w-full text-gray-300"
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -27,7 +27,7 @@ export function StarHalf({ className }: { className?: string }) {
       </svg>
       <span className="absolute inset-0 w-1/2 overflow-hidden">
         <svg
-          className="h-full w-[200%] max-w-none text-black"
+          className="h-full w-[200%] max-w-none text-brand-500"
           viewBox="0 0 24 24"
           fill="currentColor"
         >

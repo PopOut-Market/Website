@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import type { SiteCopy } from "@/lib/site-i18n";
 import { useSectionVisible } from "@/lib/use-section-visible";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 type DemoMeetup = { date: string; time: string; location: string };
 
@@ -75,7 +76,7 @@ function QrCodeVisual({
         ))}
       </div>
       <div
-        className={`pointer-events-none absolute inset-x-0 h-[2px] rounded-full bg-emerald-400 shadow-[0_0_10px_2px_rgba(16,185,129,0.4)] transition-opacity duration-300 ${
+        className={`pointer-events-none absolute inset-x-0 h-[2px] rounded-full bg-brand-400 transition-opacity duration-300 ${
           scanning ? "opacity-100" : "opacity-0"
         }`}
         style={{
@@ -100,29 +101,10 @@ function VerifyGlowWrap({
   return (
     <div className={`relative ${className ?? ""}`}>
       <div
-        className={`pointer-events-none absolute -inset-[1.5px] rounded-[25px] transition-opacity duration-700 ${
-          glow ? "opacity-100" : "opacity-0"
+        className={`relative rounded-2xl border bg-white shadow-card transition-colors ${
+          glow ? "border-brand-500" : "border-black/5"
         }`}
-        style={{
-          background:
-            "linear-gradient(135deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981)",
-          WebkitMask:
-            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor",
-          maskComposite: "exclude",
-          padding: "2px",
-          borderRadius: "25px",
-        }}
-      />
-      <div
-        className={`pointer-events-none absolute -inset-1 rounded-[26px] blur-md transition-opacity duration-700 ${
-          glow ? "opacity-30" : "opacity-0"
-        }`}
-        style={{
-          background: "linear-gradient(135deg, #10b981, #34d399, #6ee7b7)",
-        }}
-      />
-      <div className="relative rounded-[24px] border border-gray-200/80 bg-white/90 backdrop-blur-xl">
+      >
         {children}
       </div>
     </div>
@@ -139,6 +121,7 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
   });
   const [itemIdx, setItemIdx] = useState(0);
   const [phase, setPhase] = useState(0);
+  const reduced = useReducedMotion();
   const timerRef = useRef<number | null>(null);
 
   const clear = useCallback(() => {
@@ -153,6 +136,7 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
       clear();
       return;
     }
+    if (reduced) { setPhase(6); clear(); return; }
     let cancelled = false;
 
     const advance = (p: number) => {
@@ -183,8 +167,7 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
       cancelled = true;
       clear();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, itemIdx]);
+  }, [active, itemIdx, reduced]);
 
   const meetup = DEMO_MEETUPS[itemIdx]!;
   const scanning = phase === 5;
@@ -194,8 +177,8 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
 
   const vis = (atPhase: number) =>
     phase >= atPhase
-      ? "translate-y-0 opacity-100 blur-0"
-      : "translate-y-3 opacity-0 blur-[2px]";
+      ? "translate-y-0 opacity-100"
+      : "translate-y-3 opacity-0";
 
   /* ── Schedule fields card content ── */
 
@@ -342,7 +325,7 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
   return (
     <section
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="flex flex-col items-center px-[1.05rem] pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
+      className="flex flex-col items-center px-4 pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
     >
       <style>{`
         @keyframes schedule-scan-line {
@@ -373,7 +356,7 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
 
       {/* Desktop: side-by-side */}
       <div className="mt-10 hidden w-full max-w-3xl items-start justify-center gap-8 sm:flex">
-        <div className="w-full max-w-[280px] rounded-[24px] border border-gray-200/80 bg-white/90 shadow-[0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+        <div className="w-full max-w-[280px] rounded-2xl border border-black/5 bg-white shadow-card">
           {scheduleFields}
         </div>
 
@@ -398,32 +381,9 @@ export function ScheduleDemo({ t }: { t: SiteCopy }) {
 
       {/* Mobile: single combined card */}
       <div className="relative mt-8 w-full max-w-[320px] sm:hidden">
-        <div
-          className={`pointer-events-none absolute -inset-[1.5px] rounded-[29px] transition-opacity duration-700 ${
-            verified ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            background:
-              "linear-gradient(135deg, #10b981, #34d399, #6ee7b7, #34d399, #10b981)",
-            WebkitMask:
-              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            padding: "2px",
-            borderRadius: "29px",
-          }}
-        />
-        <div
-          className={`pointer-events-none absolute -inset-1 rounded-[30px] blur-md transition-opacity duration-700 ${
-            verified ? "opacity-25" : "opacity-0"
-          }`}
-          style={{
-            background: "linear-gradient(135deg, #10b981, #34d399, #6ee7b7)",
-          }}
-        />
-        <div className="relative overflow-hidden rounded-[28px] border border-gray-200/80 bg-white/90 shadow-[0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
           {scheduleFields}
-          <div className="border-t border-gray-200/80">{qrContent}</div>
+          <div className="border-t border-gray-200">{qrContent}</div>
         </div>
       </div>
     </section>

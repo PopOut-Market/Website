@@ -1,19 +1,99 @@
 @import "tailwindcss";
 
+/*
+ * PopOut "app-exact" theme tokens (Tailwind v4 `@theme`).
+ * Anchor brand orange = #FF8C00. The `gray-*` ramp is a PURE grey (chroma 0)
+ * surface ladder mirroring the mobile app — changing these token values recolours
+ * the whole site (canvas, text, borders, every page wrapper) with no per-component
+ * edits. Flat surfaces: neutral low-opacity shadows, no warm tint, no orange glow.
+ */
+@theme {
+  /* Brand orange — 500 anchor (#FF8C00); 700 pressed = app brandPressed (#CC3200). */
+  --color-brand-50: #fff4e5;
+  --color-brand-100: #ffe3bf;
+  --color-brand-200: #ffce8a;
+  --color-brand-300: #ffb85c;
+  --color-brand-400: #ffa12e;
+  --color-brand-500: #ff8c00; /* anchor */
+  --color-brand-600: #e57500; /* hover */
+  --color-brand-700: #cc3200; /* pressed/active */
+  --color-brand-800: #a32800;
+  --color-brand-900: #7a1e00;
+
+  /* Pure-grey neutral ramp (chroma 0) — surface ladder + text darks, app-mirror. */
+  --color-gray-50: #f9f9f9; /* card / base surface (lightest) */
+  --color-gray-100: #f3f3f3; /* raised surface */
+  --color-gray-200: #eeeeee; /* chrome (header/footer) */
+  --color-gray-300: #e8e8e8; /* page background */
+  --color-gray-400: #c6c6c6; /* borderStrong / hairlines */
+  --color-gray-500: #8e8e8e;
+  --color-gray-600: #6b6b6b;
+  --color-gray-700: #4a4a4a;
+  --color-gray-800: #2e2e2e;
+  --color-gray-900: #1a1a1a;
+  --color-gray-950: #0d0d0d;
+
+  /* Neutral, low-opacity, flat shadows (pure black) — replaces the warm-tinted set. */
+  --shadow-2xs: 0 1px 1px 0 rgb(0 0 0 / 0.04);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 8px 24px -6px rgb(0 0 0 / 0.12);
+  --shadow-xl: 0 16px 40px -12px rgb(0 0 0 / 0.12);
+  /* `shadow-soft` kept (~51 usages) but now neutral+flat; `shadow-pop` glow neutralised. */
+  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
+  --shadow-pop: 0 4px 12px -2px rgb(0 0 0 / 0.10);
+
+  /* Semantic surface aliases (same values as the grey ladder; clearer intent in markup). */
+  --color-surface-base: #ffffff; /* page / header / footer / section surface (white) */
+  --color-surface-raised: #f3f3f3; /* wells / nested surfaces */
+  --color-surface-chrome: #eeeeee; /* header/footer chrome tone */
+  --color-surface-background: #e8e8e8; /* page canvas */
+  --color-brand-tint: rgb(255 140 0 / 0.12); /* soft orange fill behind dark text */
+  /* Sky-blue secondary + semantics (informational only; never small text on light). */
+  --color-info: #00a6f4;
+  --color-info-tint: rgb(0 166 244 / 0.12);
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04); /* neutral, flat */
+}
+
 :root {
   color-scheme: light;
 }
 
 body {
   margin: 0;
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/*
+ * Reduced-motion safety net: neutralise all CSS transitions/animations for users
+ * who ask for it (WCAG 2.3.3). Auto-advancing JS timers (hero rotator, carousel,
+ * demos, scroll reveals) are additionally gated via useReducedMotion (WCAG 2.2.2).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .font-latin-rounded {
   font-family:
-    "Avenir Next",
-    "Nunito",
+    -apple-system,
+    BlinkMacSystemFont,
     "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
     Arial,
     sans-serif;
 }

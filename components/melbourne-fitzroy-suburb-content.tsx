@@ -108,14 +108,9 @@ function getCopy(locale: string): FitzroyCopy {
 }
 
 export function MelbourneFitzroySuburbContent() {
-  const { locale, localizePath } = useSiteShell();
+  const { locale, localizePath, t } = useSiteShell();
   const copy = getCopy(locale);
-  const backLabel =
-    locale === "zh-Hans"
-      ? "返回墨尔本区域页"
-      : locale === "zh-Hant"
-        ? "返回墨爾本區域頁"
-        : "Back to Melbourne suburbs";
+  const backLabel = t.suburbBackToHub;
 
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
@@ -128,7 +123,7 @@ export function MelbourneFitzroySuburbContent() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-gray-700">{copy.lead}</p>
 
-        <div className="mt-7 space-y-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mt-6 space-y-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
           <section>
             <h2 className="text-base font-semibold text-gray-900">{copy.overviewTitle}</h2>
             <p className="mt-2 text-sm leading-relaxed text-gray-700">{copy.overviewBody}</p>
@@ -155,16 +150,16 @@ export function MelbourneFitzroySuburbContent() {
           </section>
         </div>
 
-        <div className="mt-7">
+        <div className="mt-6">
           <Link
             href={localizePath("/market?area=Fitzory")}
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+            className="inline-flex items-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-600 active:bg-brand-700"
           >
             {copy.marketCta}
           </Link>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             {copy.relatedTitle}
           </h2>
@@ -173,7 +168,7 @@ export function MelbourneFitzroySuburbContent() {
               <Link
                 key={suburb}
                 href={localizePath(suburbSeoPath(suburb))}
-                className="rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:bg-gray-50"
+                className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
                 {suburb}
               </Link>

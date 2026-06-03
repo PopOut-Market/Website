@@ -191,7 +191,7 @@ function getCopy(locale: string): FaqCopy {
 }
 
 export function FaqPageContent() {
-  const { locale, localizePath } = useSiteShell();
+  const { locale, localizePath, t } = useSiteShell();
   const copy = getCopy(locale);
 
   const faqJsonLd = useMemo(
@@ -214,27 +214,27 @@ export function FaqPageContent() {
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
       <div className={`${INNER_MAX} max-w-4xl`}>
         <div className="mb-4">
-          <BackNavLink href={localizePath("/")}>{copy.backHome}</BackNavLink>
+          <BackNavLink href={localizePath("/")}>{t.footerBackHome}</BackNavLink>
         </div>
 
-        <article className="overflow-hidden rounded-[28px] border border-gray-200/90 bg-white/90 shadow-[0_4px_32px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+        <article className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
           <div className="px-5 py-8 sm:px-10 sm:py-12">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{copy.eyebrow}</p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
-              {copy.title}
+              {t.faqTitle}
             </h1>
-            <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">{copy.intro}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">{t.faqIntro}</p>
 
-            <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/70 p-5">
+            <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-700">
-                {copy.disclaimerTitle}
+                {t.faqDisclaimerTitle}
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-amber-900">{copy.disclaimerBody}</p>
+              <p className="mt-2 text-sm leading-relaxed text-amber-900">{t.faqDisclaimerBody}</p>
             </div>
 
             <div className="mt-8 space-y-4">
               {copy.faqs.map((item) => (
-                <article key={item.question} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <article key={item.question} className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
                   <h2 className="text-base font-semibold text-gray-900">{item.question}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-gray-700">{item.answer}</p>
                 </article>
@@ -244,9 +244,9 @@ export function FaqPageContent() {
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href={localizePath("/comparison")}
-                className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+                className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:border-brand-500"
               >
-                {copy.comparisonCta}
+                {t.faqComparisonCta}
               </Link>
             </div>
           </div>

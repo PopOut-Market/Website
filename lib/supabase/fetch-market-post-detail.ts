@@ -22,6 +22,9 @@ const NUMBER_LOCALE: Record<Locale, string> = {
 
 /** Prices are always AUD on this marketplace (the backend dropped the currency column). */
 function formatMoney(locale: Locale, cents: number): string {
+  if (!cents || cents <= 0) {
+    return "FREE";
+  }
   try {
     return new Intl.NumberFormat(NUMBER_LOCALE[locale], {
       style: "currency",

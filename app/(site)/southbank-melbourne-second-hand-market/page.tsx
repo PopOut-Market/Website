@@ -52,7 +52,7 @@ export default function SouthbankSeoPage() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
-        <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
             Geo Tags
           </h2>
@@ -64,10 +64,10 @@ export default function SouthbankSeoPage() {
           </ul>
         </div>
 
-        <div className="mt-7">
+        <div className="mt-6">
           <Link
             href="/market?area=Southbank"
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+            className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             Explore Southbank Listings
           </Link>

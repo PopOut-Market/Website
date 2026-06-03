@@ -29,7 +29,7 @@ export default function ChildSafetyPage() {
       <div className={`${INNER_MAX} space-y-6`}>
         <BackNavLink href={localizePath("/")}>{t.footerBackHome}</BackNavLink>
 
-        <div className="rounded-[24px] border border-white/45 bg-white/80 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-7">
+        <div className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft sm:p-7">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
             Child Safety Standards
           </h1>
@@ -37,7 +37,11 @@ export default function ChildSafetyPage() {
             <p>Last updated: 27 May 2026</p>
           </div>
 
-          <div className="mt-7 space-y-7">
+          <p className="mt-3 text-xs italic text-gray-500">
+            {t.legalEnglishAuthoritative}
+          </p>
+
+          <div className="mt-6 space-y-6">
             <div className="space-y-3 text-sm leading-relaxed text-gray-700 sm:text-[0.95rem]">
               <p>
                 PopOut Market has zero tolerance for child sexual abuse and exploitation (CSAE)

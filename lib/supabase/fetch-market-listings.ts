@@ -1,8 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { formatMarketDistanceKm } from "@/lib/market-distance";
 import type { MarketProduct } from "@/lib/market-product";
-import { marketSuburbDbId } from "@/lib/market-suburb-ids";
-import type { MarketSuburb } from "@/lib/site-suburbs";
 import type { Locale } from "@/lib/site-i18n";
 import { getPostImageUrl } from "@/lib/supabase/post-image-url";
 
@@ -19,6 +17,9 @@ const NUMBER_LOCALE: Record<Locale, string> = {
 
 /** Prices are always AUD on this marketplace (the backend dropped the currency column). */
 function formatMoney(locale: Locale, cents: number): string {
+  if (!cents || cents <= 0) {
+    return "FREE";
+  }
   try {
     return new Intl.NumberFormat(NUMBER_LOCALE[locale], {
       style: "currency",
@@ -114,6 +115,7 @@ function toMarketProduct(
     distanceLabel: formatMarketDistanceKm(null, options.kmSuffix),
     sellerLabel: seller && seller.length > 0 ? seller : options.sellerFallback,
     isNew: isRecent(raw.created_at),
+    suburbLabel: raw.suburb_name?.trim() || null,
     imageUrl: getPostImageUrl(raw.thumbnail_path, raw.updated_at),
     meetupPoint: meetupPointFrom(raw.post_lat, raw.post_lng, raw.has_meetup_location),
   };
@@ -126,42 +128,53 @@ function toMarketProduct(
 export async function fetchMarketListings(
   client: SupabaseClient,
   options: {
-    /** Picker value — resolves to `suburb_id` via lib/market-suburb-ids.ts */
-    marketSuburb: MarketSuburb;
-    suburbSlug: string;
-    suburbLabel: string;
+    /** `public.suburbs.id` to filter the feed by. */
+    suburbId: number;
     locale: Locale;
     sellerFallback: string;
     kmSuffix: string;
-    limit?: number;
+    /** Rows already fetched (page offset). */
+    offset: number;
+    /** Page size (the RPC rejects > 50). */
+    limit: number;
+    /** Stable shuffle seed — constant across a session's pages, rotated on refresh. */
+    jitterSeed: number;
   },
-): Promise<{ products: MarketProduct[]; errorMessage: string | null }> {
+): Promise<{
+  products: MarketProduct[];
+  /** Whether the browsed suburb itself has matching listings (drives the "nearby" notice). */
+  hasLocalListing: boolean | null;
+  errorMessage: string | null;
+}> {
   try {
-    const suburbId = marketSuburbDbId(options.marketSuburb);
-    if (suburbId === null) {
-      return { products: [], errorMessage: null };
+    const suburbId = options.suburbId;
+    if (!Number.isFinite(suburbId) || suburbId <= 0) {
+      return { products: [], hasLocalListing: null, errorMessage: null };
     }
 
-    const limit = Math.min(options.limit ?? MARKET_FEED_LIMIT, MARKET_FEED_LIMIT);
+    const limit = Math.min(Math.max(1, options.limit), MARKET_FEED_LIMIT);
     const { data, error } = await client.rpc("get_home_feed", {
       p_suburb_id: suburbId,
       p_locale: options.locale,
       p_filter: HOME_FEED_FILTER,
-      p_offset: 0,
+      p_offset: Math.max(0, options.offset),
       p_limit: limit,
-      p_jitter_seed: randomJitterSeed(),
+      p_jitter_seed: options.jitterSeed,
     });
 
     if (error) {
-      return { products: [], errorMessage: error.message };
+      return { products: [], hasLocalListing: null, errorMessage: error.message };
     }
 
-    const rows = Array.isArray(data) ? data : [];
-    const products = rows.filter(isHomeFeedRow).map((raw) => toMarketProduct(raw, options));
-    return { products, errorMessage: null };
+    const rows = (Array.isArray(data) ? data : []).filter(isHomeFeedRow);
+    // The RPC broadcasts has_local_listing onto every row; read it off the first.
+    const hasLocalListing =
+      typeof rows[0]?.has_local_listing === "boolean" ? rows[0]!.has_local_listing : null;
+    const products = rows.map((raw) => toMarketProduct(raw, options));
+    return { products, hasLocalListing, errorMessage: null };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    return { products: [], errorMessage: msg };
+    return { products: [], hasLocalListing: null, errorMessage: msg };
   }
 }
 

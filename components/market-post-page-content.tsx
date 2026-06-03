@@ -9,7 +9,6 @@ import type { Locale, SiteCopy } from "@/lib/site-i18n";
 import { DEFAULT_MARKET_SUBURB } from "@/lib/site-suburbs";
 import { fetchMarketPostDetail } from "@/lib/supabase/fetch-market-post-detail";
 import { getSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser-client";
-import { isMarketSuburb, type MarketSuburb } from "@/lib/site-suburbs";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -52,9 +51,11 @@ export function MarketPostPageContent() {
   const rawPostId = params.postId;
   const postId = Array.isArray(rawPostId) ? rawPostId[0] : rawPostId;
   const safePostId = typeof postId === "string" ? postId : "";
-  const areaParam = searchParams.get("area");
-  const selectedArea: MarketSuburb | null = areaParam && isMarketSuburb(areaParam) ? areaParam : null;
-  const backHref = selectedArea ? `/market?area=${encodeURIComponent(selectedArea)}` : "/market";
+  // Pass the area straight through: /market re-resolves any live suburb name
+  // (incl. the Fitzory->Fitzroy alias) against the Supabase list, so we don't gate
+  // it on the frozen 8 here — that would drop the suburb for the 10 new ones.
+  const areaParam = searchParams.get("area")?.trim() ?? "";
+  const backHref = areaParam ? `/market?area=${encodeURIComponent(areaParam)}` : "/market";
 
   const { locale, t } = useSiteShell();
   const configured = isSupabaseBrowserConfigured();
@@ -123,6 +124,8 @@ export function MarketPostPageContent() {
       marketUnknown: t.marketUnknown,
       marketPostNoImageAria: t.marketPostNoImageAria,
       marketBadgeNew: t.marketBadgeNew,
+      marketPostMeetupMapAlt: t.marketPostMeetupMapAlt,
+      downloadCta: t.topDownload,
     }),
     [t],
   );
@@ -131,10 +134,10 @@ export function MarketPostPageContent() {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
-          <p className="max-w-md text-sm text-gray-700">{t.marketPostNotFoundBody}</p>
+          <p className="max-w-md text-sm text-black/55">{t.marketPostNotFoundBody}</p>
           <Link
             href={backHref}
-            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+            className="rounded-xl border border-black/10 bg-surface-base px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-brand-500"
           >
             {t.marketPostBack}
           </Link>
@@ -148,7 +151,7 @@ export function MarketPostPageContent() {
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-16`}>
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center`}>
           <div
-            className="h-9 w-9 animate-spin rounded-full border-2 border-gray-200 border-t-gray-700"
+            className="h-9 w-9 animate-spin rounded-full border-2 border-black/10 border-t-black/40"
             role="status"
             aria-label={t.marketPostDetailLoadingAria}
           />
@@ -161,11 +164,11 @@ export function MarketPostPageContent() {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
-          <p className="max-w-md text-sm text-gray-700">{t.marketSupabaseLoadError}</p>
+          <p className="max-w-md text-sm text-black/55">{t.marketSupabaseLoadError}</p>
           <button
             type="button"
             onClick={() => void load()}
-            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+            className="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-600 active:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
             {t.marketSupabaseRetry}
           </button>
@@ -178,11 +181,11 @@ export function MarketPostPageContent() {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
-          <h1 className="text-lg font-semibold text-gray-900">{t.marketPostNotFoundTitle}</h1>
-          <p className="max-w-md text-sm text-gray-600">{t.marketPostNotFoundBody}</p>
+          <h1 className="text-lg font-semibold text-black">{t.marketPostNotFoundTitle}</h1>
+          <p className="max-w-md text-sm text-black/55">{t.marketPostNotFoundBody}</p>
           <Link
             href={backHref}
-            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+            className="rounded-xl border border-black/10 bg-surface-base px-4 py-2 text-sm font-semibold text-black transition-colors hover:border-brand-500"
           >
             {t.marketPostBack}
           </Link>

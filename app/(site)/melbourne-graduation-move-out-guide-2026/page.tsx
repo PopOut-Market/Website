@@ -129,12 +129,12 @@ export default function GraduationMoveOutGuidePage() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">{title}</h1>
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
-        <section className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">1) 2026 关键卖货时间表</h2>
           <p className="mt-3 text-sm leading-relaxed text-gray-700">
             根据 UniMelb 与 RMIT 常见学期节奏，交易高峰通常集中在 6 月下旬与 11 月中旬到 12 月初。
           </p>
-          <div className="mt-4 rounded-xl border border-transparent bg-[linear-gradient(135deg,rgba(255,0,72,0.10)_0%,rgba(255,102,0,0.10)_100%)] p-4">
+          <div className="mt-4 rounded-xl border border-black/10 bg-brand-tint p-4">
             <p className="text-sm font-semibold text-gray-900">S1 搬家高峰：6 月下旬</p>
             <p className="mt-1 text-sm text-gray-700">考试周后 1 周通常是家具与教材出货黄金窗口。</p>
             <p className="mt-3 text-sm font-semibold text-gray-900">S2 毕业清仓：11 月中旬 - 12 月初</p>
@@ -146,7 +146,7 @@ export default function GraduationMoveOutGuidePage() {
           </div>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">2) 核心区域与公寓交易场景</h2>
           <h3 className="mt-4 text-base font-semibold text-gray-900">Parkville & Carlton（墨大主场）</h3>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">
@@ -158,7 +158,7 @@ export default function GraduationMoveOutGuidePage() {
           </p>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">3) 在 PopOut 高效出货策略</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full border-collapse text-left text-sm">
@@ -195,7 +195,7 @@ export default function GraduationMoveOutGuidePage() {
           </p>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">常见问题（FAQ）</h2>
           <div className="mt-4 space-y-4">
             {faqItems.map((item) => (
@@ -210,19 +210,19 @@ export default function GraduationMoveOutGuidePage() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/market?area=Carlton"
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+            className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 Carlton 在售
           </Link>
           <Link
             href="/market?area=Parkville"
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+            className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 Parkville 在售
           </Link>
           <Link
             href="/market?area=Melbourne%20CBD"
-            className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+            className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 CBD 在售
           </Link>

@@ -1,22 +1,31 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { COPY, LOCALES, type Locale } from "@/lib/site-i18n";
 
-export default function NotFoundPage() {
+function resolveLocale(value: string | undefined): Locale {
+  return value && LOCALES.some((l) => l.code === value) ? (value as Locale) : "en";
+}
+
+export default async function NotFoundPage() {
+  // The root not-found renders outside the SiteChrome provider, so read the locale
+  // from the cookie the middleware sets and pull copy from COPY directly.
+  const cookieStore = await cookies();
+  const t = COPY[resolveLocale(cookieStore.get("popout_locale")?.value)];
+
   return (
-    <main className="flex min-h-[70vh] items-center justify-center px-[1.05rem] py-16 sm:px-6">
-      <section className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-sm font-medium uppercase tracking-wider text-slate-500">404</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900">
-          Page not found
+    <main className="flex min-h-[70vh] items-center justify-center bg-gray-300 px-4 py-16 sm:px-6">
+      <section className="w-full max-w-xl rounded-2xl border border-black/5 bg-white p-8 text-center shadow-soft">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">404</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-gray-900">
+          {t.notFoundTitle}
         </h1>
-        <p className="mt-3 text-slate-600">
-          The page you requested does not exist or is not publicly accessible.
-        </p>
+        <p className="mt-3 text-gray-600">{t.notFoundDescription}</p>
         <div className="mt-6">
           <Link
             href="/"
-            className="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-black"
+            className="inline-flex rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-600 active:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
-            Back to Home
+            {t.footerBackHome}
           </Link>
         </div>
       </section>

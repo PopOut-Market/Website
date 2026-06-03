@@ -72,7 +72,7 @@ export default function MelbourneSecondHandMarketPage() {
         </h1>
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
-        <section className="mt-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">How local trading works in Melbourne</h2>
           <p className="mt-3 text-sm leading-relaxed text-gray-700">
             In a real Melbourne second-hand market, users rarely care only about price. They also care about
@@ -86,7 +86,7 @@ export default function MelbourneSecondHandMarketPage() {
           </p>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Strong-fit use cases</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full border-collapse text-left text-sm">
@@ -114,31 +114,31 @@ export default function MelbourneSecondHandMarketPage() {
           </div>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Related pages</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/market"
-              className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+              className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
             >
               Open Melbourne market listings
             </Link>
             <Link
               href="/melbourne-second-hand-app"
-              className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+              className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
             >
               Read Melbourne second-hand app page
             </Link>
             <Link
               href="/melbourne-cbd-second-hand-marketplace"
-              className="inline-flex items-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50"
+              className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
             >
               Read Melbourne CBD marketplace page
             </Link>
           </div>
         </section>
 
-        <section className="mt-7 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">FAQ</h2>
           <div className="mt-4 space-y-4">
             {faqItems.map((item) => (

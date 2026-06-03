@@ -16,6 +16,10 @@ function useInViewOnce(rootMargin = "0px 0px -10% 0px") {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
     const io = new IntersectionObserver(
       ([e]) => {
         if (e?.isIntersecting) setInView(true);
@@ -304,7 +308,7 @@ export function AboutPageContent() {
 
         <article
           ref={shellRef as React.RefObject<HTMLElement>}
-          className="mt-8 overflow-hidden rounded-[28px] border border-gray-200/90 bg-white/90 shadow-[0_4px_32px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-opacity duration-[400ms] sm:mt-10"
+          className="mt-8 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card transition-opacity duration-[400ms] sm:mt-10"
           style={{
             opacity: shellInView ? 1 : 0,
             transitionTimingFunction: ease,
@@ -323,7 +327,7 @@ export function AboutPageContent() {
             <div className="mt-10 space-y-10 sm:mt-14 sm:space-y-12">
               <StaggerBlock show={animate} delayMs={100}>
                 <section>
-                  <p className="mb-8 mt-4 rounded-2xl border border-gray-200/80 bg-gray-50/70 px-4 py-3 text-sm font-semibold sm:text-base">
+                  <p className="mb-8 mt-4 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold sm:text-base">
                     <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>{extra.introHighlight}</span>
                   </p>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
@@ -402,7 +406,7 @@ export function AboutPageContent() {
                   <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">
                     {t.aboutPrivacyLead}
                   </p>
-                  <ul className="mt-6 space-y-5">
+                  <ul className="mt-6 space-y-6">
                     <li>
                       <p className="text-sm font-semibold text-gray-800">{t.aboutPrivacyMinimalTitle}</p>
                       <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">
@@ -425,7 +429,7 @@ export function AboutPageContent() {
                   <div className="mt-8 flex justify-center sm:justify-start">
                     <Link
                       href={localizePath("/privacy")}
-                      className="inline-flex max-w-full items-center gap-2 rounded-full border border-gray-200 bg-gray-50/80 px-5 py-2.5 text-sm font-medium text-gray-900 shadow-sm transition hover:border-gray-300 hover:bg-white"
+                      className="inline-flex max-w-full items-center gap-2 rounded-xl border border-black/5 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 shadow-sm transition hover:border-brand-500"
                     >
                       <span className="text-balance text-center">{t.aboutPrivacyLinkMore}</span>
                       <span aria-hidden className="text-gray-400">

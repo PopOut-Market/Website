@@ -1,68 +1,128 @@
 "use client";
 
 import { MarketFeed } from "@/components/market-feed";
+import { SuburbBoundaryMap } from "@/components/suburb-boundary-map";
 import { useSiteShell } from "@/components/site-chrome-context";
+import { SUBURB_COORDS } from "@/lib/market-map";
+import { marketSuburbDbId } from "@/lib/market-suburb-ids";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import {
   DEFAULT_MARKET_SUBURB,
   MARKET_SUBURBS,
-  isMarketSuburb,
-  readStoredMarketSuburb,
-  writeStoredMarketSuburb,
   type MarketSuburb,
 } from "@/lib/site-suburbs";
+import { suburbDisplayLabel } from "@/lib/suburb-display";
+import {
+  getSupabaseBrowserClient,
+  isSupabaseBrowserConfigured,
+} from "@/lib/supabase/browser-client";
+import {
+  fetchActiveSuburbs,
+  matchSuburbByName,
+  type ActiveSuburb,
+} from "@/lib/supabase/fetch-active-suburbs";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-function marketSeoIntro(locale: string) {
-  if (locale === "zh-Hans") {
-    return {
-      title: "墨尔本二手交易平台",
-      body:
-        "按 suburb 浏览墨尔本二手商品，快速查看 Melbourne CBD 与周边区域在售物品。PopOut 适合本地社区、学生、公寓住户和毕业季搬家交易。",
-    };
+/** New key (the frozen `popout-market-suburb` only validated the 8 picker values). */
+const SELECTION_STORAGE_KEY = "popout-market-suburb-v2";
+
+/** Seed an ActiveSuburb from the frozen picker set — instant render + offline fallback. */
+function seedSuburb(name: MarketSuburb): ActiveSuburb {
+  return { id: marketSuburbDbId(name) ?? 0, name, center: SUBURB_COORDS[name] };
+}
+
+const SEED_SUBURBS: ActiveSuburb[] = MARKET_SUBURBS.map(seedSuburb);
+
+function readStoredSuburbName(): string | null {
+  if (typeof window === "undefined") {
+    return null;
   }
-
-  if (locale === "zh-Hant") {
-    return {
-      title: "墨爾本二手交易平台",
-      body:
-        "依 suburb 瀏覽墨爾本二手商品，快速查看 Melbourne CBD 與周邊區域在售物品。PopOut 適合在地社群、學生、公寓住戶與畢業季搬家交易。",
-    };
+  try {
+    return window.localStorage.getItem(SELECTION_STORAGE_KEY);
+  } catch {
+    return null;
   }
+}
 
-  return {
-    title: "Melbourne Second-Hand Market",
-    body:
-      "Browse second-hand listings across Melbourne suburbs, including Melbourne CBD and nearby city areas. PopOut supports local trading for students, apartment residents, and neighbourhood buyers and sellers.",
-  };
+function storeSuburbName(name: string): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  try {
+    window.localStorage.setItem(SELECTION_STORAGE_KEY, name);
+  } catch {
+    /* ignore quota / private mode */
+  }
 }
 
 export function MarketPageContent() {
   const { t, locale } = useSiteShell();
   const searchParams = useSearchParams();
-  const [area, setArea] = useState<MarketSuburb>(DEFAULT_MARKET_SUBURB);
-  const seoIntro = marketSeoIntro(locale);
 
-  useLayoutEffect(() => {
-    const areaParam = searchParams.get("area");
-    if (areaParam && isMarketSuburb(areaParam)) {
-      setArea(areaParam);
-      writeStoredMarketSuburb(areaParam);
-      return;
-    }
-    const stored = readStoredMarketSuburb();
-    if (stored) {
-      setArea(stored);
-    }
-  }, [searchParams]);
+  const [suburbs, setSuburbs] = useState<ActiveSuburb[]>(SEED_SUBURBS);
+  const [selected, setSelected] = useState<ActiveSuburb>(() =>
+    seedSuburb(DEFAULT_MARKET_SUBURB),
+  );
+
   const [areaModalOpen, setAreaModalOpen] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
   const areaModalRef = useRef<HTMLDivElement | null>(null);
   const areaTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const mapModalRef = useRef<HTMLDivElement | null>(null);
+  /** Set once the user picks from the list, so the in-flight fetch can't override them. */
+  const userPickedRef = useRef(false);
+
+  // Load the live active-suburb list, then resolve the selection
+  // (?area= link → stored → default) against it.
+  useEffect(() => {
+    const param = searchParams.get("area");
+    const wanted = param ?? readStoredSuburbName() ?? DEFAULT_MARKET_SUBURB;
+
+    // Resolve against the seed set first so links work pre-fetch / offline.
+    const seedMatch = matchSuburbByName(SEED_SUBURBS, wanted);
+    if (seedMatch) {
+      setSelected(seedMatch);
+      storeSuburbName(seedMatch.name);
+    }
+
+    if (!isSupabaseBrowserConfigured()) {
+      return;
+    }
+    let cancelled = false;
+    fetchActiveSuburbs(getSupabaseBrowserClient())
+      .then((list) => {
+        const fallback = list[0];
+        if (cancelled || !fallback) {
+          return;
+        }
+        setSuburbs(list);
+        // If the user picked from the seed list while this was loading, keep their
+        // choice (its id/center from the seed 8 are valid) — don't snap them back.
+        if (userPickedRef.current) {
+          return;
+        }
+        const match =
+          matchSuburbByName(list, wanted) ??
+          matchSuburbByName(list, DEFAULT_MARKET_SUBURB) ??
+          fallback;
+        setSelected(match);
+        storeSuburbName(match.name);
+      })
+      .catch(() => {
+        /* keep the seed set */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
       const target = event.target as Node;
+      if (mapModalRef.current && !mapModalRef.current.contains(target)) {
+        setMapOpen(false);
+      }
       if (areaTriggerRef.current?.contains(target)) {
         return;
       }
@@ -78,73 +138,105 @@ export function MarketPageContent() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setAreaModalOpen(false);
+        setMapOpen(false);
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  function chooseSuburb(suburb: ActiveSuburb) {
+    userPickedRef.current = true;
+    setSelected(suburb);
+    storeSuburbName(suburb.name);
+    setAreaModalOpen(false);
+  }
+
+  const selectedLabel = suburbDisplayLabel(selected.name);
+
   return (
-    <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col`}>
+    <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col bg-surface-base`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
-        <div className="w-full shrink-0 pt-4">
-          <h1 className="text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl">
-            {seoIntro.title}
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-700 sm:text-base">
-            {seoIntro.body}
-          </p>
-        </div>
-
-        <div className="flex w-full shrink-0 justify-start pt-4">
-          <button
-            ref={areaTriggerRef}
-            type="button"
-            onClick={() => setAreaModalOpen((open) => !open)}
-            aria-haspopup="dialog"
-            aria-expanded={areaModalOpen}
-            aria-label={`${t.marketAreaPickerAria}: ${area}`}
-            className="inline-flex h-9 max-w-full items-center gap-1.5 rounded-[11px] border border-gray-200 bg-white/90 px-3 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:border-gray-300 hover:bg-white"
-          >
-            <span className="truncate">{area}</span>
-            <svg
-              className={`h-4 w-4 shrink-0 text-gray-600 transition ${areaModalOpen ? "rotate-180" : ""}`}
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden
+        <div className="w-full shrink-0 pb-6 pt-8">
+          <h1 className="text-balance text-xl font-semibold tracking-tight text-black sm:text-2xl">
+            <button
+              ref={areaTriggerRef}
+              type="button"
+              onClick={() => setAreaModalOpen((open) => !open)}
+              aria-haspopup="dialog"
+              aria-expanded={areaModalOpen}
+              aria-label={`${t.marketAreaPickerAria}: ${selectedLabel}`}
+              className="group inline-flex items-center gap-1.5 rounded text-black transition-transform hover:-translate-y-px motion-reduce:transform-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
             >
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.12l3.71-3.89a.75.75 0 1 1 1.08 1.04l-4.25 4.45a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+              <span className="underline-offset-4 group-hover:underline">{selectedLabel}</span>
+              <svg
+                className={`h-[1em] w-[1em] shrink-0 transition-transform ${areaModalOpen ? "rotate-180" : ""}`}
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path d="M3 7l7 6 7-6z" />
+              </svg>
+            </button>
+          </h1>
         </div>
 
-        <MarketFeed area={area} locale={locale} t={t} />
+        <div className="w-full shrink-0 pb-5">
+          <div className="group relative h-28 w-full overflow-hidden rounded-2xl border border-black/5 bg-surface-raised shadow-card transition-colors hover:border-black/25 sm:h-36">
+            <SuburbBoundaryMap
+              suburbId={selected.id}
+              center={selected.center}
+              title={t.marketSuburbMapTitle.replace("{suburb}", selectedLabel)}
+              className="pointer-events-none absolute inset-0 h-full w-full border-0"
+            />
+            <span className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-xs font-semibold text-white sm:text-sm">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
+              </svg>
+              {t.marketSeoIntroNearLabel} {selectedLabel}
+            </span>
+            <span className="pointer-events-none absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-black/60 shadow-card transition-colors group-hover:text-black">
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+              </svg>
+            </span>
+            <button
+              type="button"
+              onClick={() => setMapOpen(true)}
+              aria-label={`${t.marketSeoIntroNearLabel} ${selectedLabel}`}
+              className="absolute inset-0 z-[1] rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-700"
+            />
+          </div>
+        </div>
+
+        <MarketFeed
+          suburbId={selected.id}
+          suburbName={selected.name}
+          locale={locale}
+          t={t}
+        />
       </div>
 
       {areaModalOpen ? (
-        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/25 px-3 py-4 backdrop-blur-[2px] sm:px-4">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 px-4 py-4 sm:px-6">
           <div
             ref={areaModalRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="market-area-modal-title"
-            className="w-full max-w-xl max-h-[84vh] overflow-y-auto rounded-[20px] border border-white/35 bg-white/85 p-4 shadow-[0_20px_45px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:rounded-[24px] sm:p-6"
+            className="w-full max-w-xl max-h-[84vh] overflow-y-auto rounded-3xl border border-black/10 bg-white p-4 shadow-card sm:p-6"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 id="market-area-modal-title" className="text-lg font-semibold text-gray-900 sm:text-xl">
+                <h2 id="market-area-modal-title" className="text-lg font-semibold text-black sm:text-xl">
                   {t.marketAreaModalTitle}
                 </h2>
-                <p className="mt-1 text-xs text-gray-600 sm:text-sm">{t.marketAreaModalHint}</p>
+                <p className="mt-1 text-xs text-black/55 sm:text-sm">{t.marketAreaModalHint}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setAreaModalOpen(false)}
-                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition hover:text-gray-900"
+                className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/10 bg-surface-base text-black/55 transition-colors hover:border-brand-500 hover:text-black"
                 aria-label={t.marketAreaCloseAria}
               >
                 ×
@@ -152,31 +244,47 @@ export function MarketPageContent() {
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {MARKET_SUBURBS.map((name) => {
-                const selected = name === area;
+              {suburbs.map((suburb) => {
+                const isSelected = suburb.id === selected.id;
                 return (
                   <button
-                    key={name}
+                    key={suburb.id}
                     type="button"
-                    onClick={() => {
-                      setArea(name);
-                      writeStoredMarketSuburb(name);
-                      setAreaModalOpen(false);
-                    }}
-                    className={`rounded-2xl border px-3 py-2.5 text-left text-[1rem] font-semibold transition ${
-                      selected
-                        ? "border-blue-300 bg-blue-50/90 text-gray-900"
-                        : "border-gray-200 bg-white/80 text-gray-900 hover:border-gray-300 hover:bg-white"
+                    onClick={() => chooseSuburb(suburb)}
+                    className={`rounded-2xl border px-4 py-3 text-left text-base font-semibold transition-colors ${
+                      isSelected
+                        ? "border-brand-500 bg-brand-tint text-black"
+                        : "border-black/10 bg-surface-base text-black hover:border-brand-500"
                     }`}
                   >
                     <span className="flex items-center justify-between gap-2">
-                      {name}
-                      {selected ? <span className="text-xs font-semibold text-blue-700">✓</span> : null}
+                      {suburb.name}
+                      {isSelected ? <span className="text-xs font-semibold text-brand-700">✓</span> : null}
                     </span>
                   </button>
                 );
               })}
             </div>
+          </div>
+        </div>
+      ) : null}
+
+      {mapOpen ? (
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 p-4 sm:p-6">
+          <div
+            ref={mapModalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedLabel}
+            className="flex w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-card"
+          >
+            <SuburbBoundaryMap
+              suburbId={selected.id}
+              center={selected.center}
+              interactive
+              title={selectedLabel}
+              className="h-[60vh] w-full border-0"
+            />
           </div>
         </div>
       ) : null}

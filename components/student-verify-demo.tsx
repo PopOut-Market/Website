@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { POPOUT_BRAND_GRADIENT_TEXT_CLASS } from "@/lib/site-config";
 import type { SiteCopy } from "@/lib/site-i18n";
 import { useSectionVisible } from "@/lib/use-section-visible";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 type DemoStudent = {
   email: string;
@@ -69,29 +70,10 @@ function TrustGlowWrap({
   return (
     <div className={`relative ${className ?? ""}`}>
       <div
-        className={`pointer-events-none absolute -inset-[1.5px] rounded-[25px] transition-opacity duration-700 ${
-          glow ? "opacity-100" : "opacity-0"
+        className={`relative rounded-2xl border bg-white shadow-card transition-colors ${
+          glow ? "border-brand-500" : "border-black/5"
         }`}
-        style={{
-          background:
-            "linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc, #818cf8, #6366f1)",
-          WebkitMask:
-            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor",
-          maskComposite: "exclude",
-          padding: "2px",
-          borderRadius: "25px",
-        }}
-      />
-      <div
-        className={`pointer-events-none absolute -inset-1 rounded-[26px] blur-md transition-opacity duration-700 ${
-          glow ? "opacity-30" : "opacity-0"
-        }`}
-        style={{
-          background: "linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)",
-        }}
-      />
-      <div className="relative rounded-[24px] border border-gray-200/80 bg-white/90 backdrop-blur-xl">
+      >
         {children}
       </div>
     </div>
@@ -108,6 +90,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
   });
   const [itemIdx, setItemIdx] = useState(0);
   const [phase, setPhase] = useState(0);
+  const reduced = useReducedMotion();
   const timerRef = useRef<number | null>(null);
 
   const clear = useCallback(() => {
@@ -122,6 +105,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       clear();
       return;
     }
+    if (reduced) { setPhase(5); clear(); return; }
     let cancelled = false;
 
     const advance = (p: number) => {
@@ -152,8 +136,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       cancelled = true;
       clear();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, itemIdx]);
+  }, [active, itemIdx, reduced]);
 
   const student = DEMO_STUDENTS[itemIdx]!;
   const verified = phase >= 5;
@@ -162,8 +145,8 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
 
   const vis = (atPhase: number) =>
     phase >= atPhase
-      ? "translate-y-0 opacity-100 blur-0"
-      : "translate-y-3 opacity-0 blur-[2px]";
+      ? "translate-y-0 opacity-100"
+      : "translate-y-3 opacity-0";
 
   /* ── Email verification card ── */
 
@@ -183,7 +166,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
           </svg>
           {t.studentVerifyEmailLabel}
         </p>
-        <p className="mt-1 truncate rounded-lg border border-gray-200/80 bg-gray-50/80 px-3 py-2 font-mono text-xs text-gray-800">
+        <p className="mt-1 truncate rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 font-mono text-xs text-gray-800">
           {student.email}
         </p>
       </div>
@@ -232,8 +215,8 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
           </>
         ) : (
           <>
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-500" />
-            <span className="text-sm font-medium text-indigo-500">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-brand-200 border-t-brand-500" />
+            <span className="text-sm font-medium text-brand-700">
               {t.studentVerifyVerifying}
             </span>
           </>
@@ -247,7 +230,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
   const profileCard = (
     <div className="flex flex-col items-center gap-3 p-6">
       <div className={`${ease} ${vis(5)}`}>
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 text-base font-bold text-white shadow-md">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-base font-bold text-white shadow-card">
           {student.initials}
         </div>
       </div>
@@ -256,7 +239,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
         <p className="mt-0.5 text-sm text-gray-500">{student.university}</p>
       </div>
       <div className={`${ease} ${vis(5)}`}>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-600 shadow-sm">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
           <svg
             className="h-3.5 w-3.5"
             viewBox="0 0 20 20"
@@ -280,7 +263,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
   return (
     <section
       ref={sectionRef as React.RefObject<HTMLElement>}
-      className="flex flex-col items-center px-[1.05rem] pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
+      className="flex flex-col items-center px-4 pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28"
     >
       {/* Heading */}
       <div className="max-w-3xl text-center">
@@ -302,7 +285,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
 
       {/* Desktop: side-by-side */}
       <div className="mt-10 hidden w-full max-w-3xl items-start justify-center gap-8 sm:flex">
-        <div className="w-full max-w-[280px] rounded-[24px] border border-gray-200/80 bg-white/90 shadow-[0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+        <div className="w-full max-w-[280px] rounded-2xl border border-black/5 bg-white shadow-card">
           {emailCard}
         </div>
 
@@ -327,32 +310,9 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
 
       {/* Mobile: single combined card */}
       <div className="relative mt-8 w-full max-w-[320px] sm:hidden">
-        <div
-          className={`pointer-events-none absolute -inset-[1.5px] rounded-[29px] transition-opacity duration-700 ${
-            verified ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            background:
-              "linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc, #818cf8, #6366f1)",
-            WebkitMask:
-              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            padding: "2px",
-            borderRadius: "29px",
-          }}
-        />
-        <div
-          className={`pointer-events-none absolute -inset-1 rounded-[30px] blur-md transition-opacity duration-700 ${
-            verified ? "opacity-25" : "opacity-0"
-          }`}
-          style={{
-            background: "linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)",
-          }}
-        />
-        <div className="relative overflow-hidden rounded-[28px] border border-gray-200/80 bg-white/90 shadow-[0_4px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
           {emailCard}
-          <div className="border-t border-gray-200/80">{profileCard}</div>
+          <div className="border-t border-gray-200">{profileCard}</div>
         </div>
       </div>
     </section>

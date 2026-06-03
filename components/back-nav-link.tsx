@@ -4,12 +4,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const linkClassName =
-  "inline-flex h-9 max-w-full items-center gap-1.5 rounded-[11px] border border-gray-200 bg-white/90 px-3 text-sm font-semibold text-gray-800 shadow-sm backdrop-blur-xl transition hover:border-gray-300 hover:bg-white";
+  "inline-flex h-9 max-w-full items-center gap-2 rounded-xl border border-black/10 bg-surface-base px-3 text-sm font-semibold text-black transition-colors hover:border-brand-500";
 
 function BackChevron() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-gray-600"
+      className="h-4 w-4 shrink-0 text-black/40"
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden

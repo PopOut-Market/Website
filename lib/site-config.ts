@@ -10,22 +10,35 @@ export const RADIUS = {
 } as const;
 
 /** 与 top bar 白卡片内边距一致 */
-export const SHELL_X = "px-[1.05rem] sm:px-6";
-export const INNER_MAX = "mx-auto w-full max-w-5xl px-[0.525rem] sm:px-4 md:px-5";
+export const SHELL_X = "px-4 sm:px-6";
+export const INNER_MAX = "mx-auto w-full max-w-5xl px-2 sm:px-4 md:px-6";
 
 /**
- * Spacer under the fixed header matches `h-24` (6rem). Main content uses this as a floor so a taller
- * footer does not shrink the hero / page body — the page scrolls instead.
+ * Floor matches the flat sticky header height (`h-16` = 4rem). Main content uses this as a floor so a
+ * taller footer does not shrink the hero / page body — the page scrolls instead.
  */
 export const SITE_MAIN_SLOT_CLASS =
-  "flex w-full min-h-[calc(100dvh-6rem)] flex-grow basis-auto shrink-0 flex-col";
+  "flex w-full min-h-[calc(100dvh-4rem)] flex-grow basis-auto shrink-0 flex-col";
 
-/** Hero “PopOut Market” and matching accent text (use with `bg-clip-text text-transparent`). */
-export const POPOUT_BRAND_GRADIENT_TEXT_CLASS =
-  "bg-[linear-gradient(to_bottom,#FF0048_0%,#FF154A_24%,#FF314A_45%,#FF4B45_63%,#FF5A33_80%,#FF6600_100%)] bg-clip-text text-transparent";
+/** Brand wordmark / accent text — flat brand orange-dark (#CC3200, passes WCAG AA on light; gradient killed). */
+export const POPOUT_BRAND_GRADIENT_TEXT_CLASS = "text-brand-700";
+
+/**
+ * App-exact shared class tokens. Flat surfaces, neutral shadows, single orange anchor.
+ * Buttons are soft rounded-rect (`rounded-xl` = 12) — never full pills.
+ */
+/** Flat card surface (one step lighter than its section). */
+export const CARD_CLASS =
+  "rounded-2xl border border-black/5 bg-gray-50 shadow-card";
+/** Solid brand-orange primary button/CTA — flat, pressed = brand-700 (#CC3200). */
+export const PRIMARY_BUTTON_CLASS =
+  "inline-flex items-center justify-center rounded-xl bg-brand-500 font-semibold text-white transition-colors hover:bg-brand-600 active:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700";
+/** Secondary button: flat, neutral; hover shifts border to brand only. */
+export const SECONDARY_PILL_CLASS =
+  "inline-flex items-center justify-center rounded-xl border border-gray-400 bg-gray-50 font-semibold text-gray-900 transition-colors hover:border-brand-500 active:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700";
 
 export const LOGO_TEXT_SRC = "/images/Logo_text.png";
-export const LOGO_MARK_SRC = "/images/LOGO.png";
+export const LOGO_MARK_SRC = "/images/app-icon.png";
 export const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 export const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 

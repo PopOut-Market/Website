@@ -7,6 +7,12 @@ const supabaseAnonKey =
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 const nextConfig: NextConfig = {
+  // Pin the Turbopack workspace root to this app. A stray package-lock.json in a
+  // parent/home directory makes Next 16 infer the wrong root and fail to resolve
+  // `tailwindcss` from the CSS `@import`. This forces the correct project root.
+  turbopack: {
+    root: __dirname,
+  },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: supabaseAnonKey,

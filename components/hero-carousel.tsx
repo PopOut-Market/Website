@@ -5,9 +5,11 @@ import {
   getSupabaseBrowserClient,
   isSupabaseBrowserConfigured,
 } from "@/lib/supabase/browser-client";
-import type { Locale } from "@/lib/site-i18n";
+import type { Locale, SiteCopy } from "@/lib/site-i18n";
+import { useSiteShell } from "@/components/site-chrome-context";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import { useSectionVisible } from "@/lib/use-section-visible";
+import { useReducedMotion } from "@/lib/use-reduced-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -15,19 +17,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 type DemoShowcaseItem = {
   emoji: string;
   gradient: string;
-  titleKey: string;
+  titleCopyKey?: keyof SiteCopy;
+  titleFallback: string;
   price: string;
 };
 
 const SHOWCASE: DemoShowcaseItem[] = [
-  { emoji: "🪑", gradient: "from-amber-50 to-orange-100", titleKey: "Wooden Dining Chair", price: "$45" },
-  { emoji: "🚲", gradient: "from-sky-50 to-blue-100", titleKey: "Mountain Bike", price: "$180" },
-  { emoji: "📱", gradient: "from-gray-50 to-slate-100", titleKey: "iPhone 14 Pro", price: "$890" },
-  { emoji: "🎸", gradient: "from-rose-50 to-pink-100", titleKey: "Acoustic Guitar", price: "$120" },
-  { emoji: "🎧", gradient: "from-violet-50 to-purple-100", titleKey: "Wireless Headphones", price: "$65" },
-  { emoji: "📚", gradient: "from-emerald-50 to-green-100", titleKey: "Textbook Bundle", price: "$30" },
-  { emoji: "⌚", gradient: "from-yellow-50 to-amber-100", titleKey: "Smart Watch", price: "$210" },
-  { emoji: "🎮", gradient: "from-indigo-50 to-blue-100", titleKey: "Game Controller", price: "$55" },
+  { emoji: "🪑", gradient: "from-amber-50 to-orange-100", titleCopyKey: "demoListingWoodenDiningChair", titleFallback: "Wooden Dining Chair", price: "$45" },
+  { emoji: "🚲", gradient: "from-sky-50 to-blue-100", titleCopyKey: "demoListingMountainBike", titleFallback: "Mountain Bike", price: "$180" },
+  { emoji: "📱", gradient: "from-gray-50 to-gray-200", titleFallback: "iPhone 14 Pro", price: "$890" },
+  { emoji: "🎸", gradient: "from-rose-50 to-pink-100", titleCopyKey: "demoListingAcousticGuitar", titleFallback: "Acoustic Guitar", price: "$120" },
+  { emoji: "🎧", gradient: "from-violet-50 to-purple-100", titleCopyKey: "demoListingWirelessHeadphones", titleFallback: "Wireless Headphones", price: "$65" },
+  { emoji: "📚", gradient: "from-emerald-50 to-green-100", titleCopyKey: "demoListingTextbookBundle", titleFallback: "Textbook Bundle", price: "$30" },
+  { emoji: "⌚", gradient: "from-yellow-50 to-amber-100", titleCopyKey: "demoListingSmartWatch", titleFallback: "Smart Watch", price: "$210" },
+  { emoji: "🎮", gradient: "from-indigo-50 to-blue-100", titleCopyKey: "demoListingGameController", titleFallback: "Game Controller", price: "$55" },
 ];
 
 const AUTO_INTERVAL = 3200;
@@ -42,10 +45,10 @@ type CarouselSlide = {
   href?: string;
 };
 
-function demoSlides(): CarouselSlide[] {
+function demoSlides(t: SiteCopy): CarouselSlide[] {
   return SHOWCASE.map((s, i) => ({
     reactKey: `demo-${i}`,
-    title: s.titleKey,
+    title: s.titleCopyKey ? (t[s.titleCopyKey] as string) : s.titleFallback,
     priceLabel: s.price,
     imageUrl: null,
     emoji: s.emoji,
@@ -68,8 +71,8 @@ type SlotConfig = {
 /** Horizontal spread (% of card width from center). Larger = cards farther apart; keep scale/blur/opacity unchanged. */
 const SLOT_CONFIG: Record<number, SlotConfig> = {
   0: { scale: 1, offsetPercent: 0, blur: 0, opacity: 1, zIndex: 5 },
-  1: { scale: 0.82, offsetPercent: 108, blur: 1.5, opacity: 0.65, zIndex: 4 },
-  2: { scale: 0.66, offsetPercent: 184, blur: 4, opacity: 0.3, zIndex: 3 },
+  1: { scale: 0.82, offsetPercent: 108, blur: 0, opacity: 0.65, zIndex: 4 },
+  2: { scale: 0.66, offsetPercent: 184, blur: 0, opacity: 0.3, zIndex: 3 },
 };
 
 function getSlotConfig(distance: number): SlotConfig | null {
@@ -89,7 +92,7 @@ function CarouselCard({
   const inner = (
     <>
       <div
-        className={`relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden bg-gradient-to-b ${slide.gradient}`}
+        className="relative flex aspect-square w-full items-center justify-center overflow-hidden bg-surface-raised"
         aria-label={slide.imageUrl ? undefined : noImageAria}
       >
         {slide.imageUrl ? (
@@ -101,14 +104,14 @@ function CarouselCard({
             sizes="(max-width: 640px) 180px, 220px"
           />
         ) : (
-          <span className="text-5xl sm:text-6xl drop-shadow-sm">{slide.emoji}</span>
+          <span className="text-5xl sm:text-6xl">{slide.emoji}</span>
         )}
       </div>
-      <div className="px-3 py-2.5 sm:px-3.5">
-        <p className="truncate text-[13px] font-semibold leading-tight text-gray-900 sm:text-sm">
+      <div className="flex flex-col gap-1 p-3">
+        <p className="line-clamp-2 min-h-[2.5rem] text-[0.95rem] font-semibold leading-snug text-black sm:text-base">
           {slide.title}
         </p>
-        <p className="mt-0.5 text-sm font-bold tabular-nums text-gray-800 sm:text-base">
+        <p className="text-lg font-bold tabular-nums text-black">
           {slide.priceLabel}
         </p>
       </div>
@@ -120,9 +123,9 @@ function CarouselCard({
       className="absolute left-1/2 top-0 w-[180px] sm:w-[200px] md:w-[220px] will-change-transform"
       style={style}
     >
-      <div className="overflow-hidden rounded-2xl border border-gray-200/60 bg-white shadow-lg shadow-black/[0.06]">
+      <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
         {slide.href ? (
-          <Link href={slide.href} className="block text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/30 focus-visible:ring-offset-2">
+          <Link href={slide.href} className="block text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/50 focus-visible:ring-offset-2">
             {inner}
           </Link>
         ) : (
@@ -145,9 +148,11 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
     stopThreshold: 0.05,
     pauseDelayMs: 900,
   });
+  const reduced = useReducedMotion();
+  const { t } = useSiteShell();
 
   const configured = isSupabaseBrowserConfigured();
-  const demoItems = useMemo(() => demoSlides(), []);
+  const demoItems = useMemo(() => demoSlides(t), [t]);
 
   const [slides, setSlides] = useState<CarouselSlide[]>(() =>
     configured ? [] : demoItems,
@@ -190,7 +195,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
             priceLabel: L.priceLabel,
             imageUrl: L.imageUrl,
             emoji: "📦",
-            gradient: "from-gray-50 to-slate-100",
+            gradient: "from-gray-50 to-gray-200",
             href: toLocalePath(`/market/p/${encodeURIComponent(L.id)}`, locale),
           })),
         );
@@ -239,7 +244,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
 
   // Auto-play
   useEffect(() => {
-    if (!active || isDragging || total === 0) {
+    if (!active || isDragging || total === 0 || reduced) {
       clearAutoTimer();
       return;
     }
@@ -247,7 +252,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       goTo(currentIndex + 1);
     }, AUTO_INTERVAL);
     return clearAutoTimer;
-  }, [active, isDragging, currentIndex, goTo, clearAutoTimer, total]);
+  }, [active, isDragging, currentIndex, goTo, clearAutoTimer, total, reduced]);
 
   // Pointer / touch drag
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -329,11 +334,11 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
     >
-      <div className="relative mx-auto h-[290px] w-full sm:h-[320px] md:h-[350px]">
+      <div className="relative mx-auto h-[280px] w-full sm:h-[300px] md:h-[320px]">
         {configured && loadState === "loading" ? (
           <div className="flex h-full items-center justify-center">
             <div
-              className="h-9 w-9 animate-spin rounded-full border-2 border-gray-200 border-t-gray-700"
+              className="h-9 w-9 animate-spin rounded-full border-2 border-black/10 border-t-black/40"
               role="status"
               aria-label={loadingListingsAria}
             />
@@ -351,14 +356,14 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       </div>
 
       {total > 0 && !(configured && loadState === "loading") ? (
-        <div className="mt-2 flex items-center justify-center gap-1.5 sm:mt-3">
+        <div className="mt-2 flex items-center justify-center gap-2 sm:mt-3">
           {slides.map((s, i) => (
             <button
               key={s.reactKey}
               type="button"
-              aria-label={`Go to item ${i + 1}`}
+              aria-label={t.carouselGoToItemAria.replace("{index}", String(i + 1))}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === currentIndex ? "w-5 bg-gray-800" : "w-1.5 bg-gray-300 hover:bg-gray-400"
+                i === currentIndex ? "w-5 bg-brand-500" : "w-1.5 bg-black/15 hover:bg-black/30"
               }`}
               onClick={() => goTo(i)}
             />
