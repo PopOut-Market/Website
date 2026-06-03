@@ -23,7 +23,7 @@
   /* Pure-grey neutral ramp (chroma 0) — surface ladder + text darks, app-mirror. */
   --color-gray-50: #f9f9f9; /* card / base surface (lightest) */
   --color-gray-100: #f3f3f3; /* raised surface */
-  --color-gray-200: #eeeeee; /* chrome (header/footer) */
+  --color-gray-200: #eee; /* chrome (header/footer) */
   --color-gray-300: #e8e8e8; /* page background */
   --color-gray-400: #c6c6c6; /* borderStrong / hairlines */
   --color-gray-500: #8e8e8e;
@@ -34,30 +34,32 @@
   --color-gray-950: #0d0d0d;
 
   /* Neutral, low-opacity, flat shadows (pure black) — replaces the warm-tinted set. */
-  --shadow-2xs: 0 1px 1px 0 rgb(0 0 0 / 0.04);
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.06);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.10);
-  --shadow-lg: 0 8px 24px -6px rgb(0 0 0 / 0.12);
-  --shadow-xl: 0 16px 40px -12px rgb(0 0 0 / 0.12);
+  --shadow-2xs: 0 1px 1px 0 rgb(0 0 0 / 4%);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 5%);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 6%);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 8%), 0 1px 2px -1px rgb(0 0 0 / 6%);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 10%);
+  --shadow-lg: 0 8px 24px -6px rgb(0 0 0 / 12%);
+  --shadow-xl: 0 16px 40px -12px rgb(0 0 0 / 12%);
+
   /* `shadow-soft` kept (~51 usages) but now neutral+flat; `shadow-pop` glow neutralised. */
-  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
-  --shadow-pop: 0 4px 12px -2px rgb(0 0 0 / 0.10);
+  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 6%), 0 1px 1px -1px rgb(0 0 0 / 4%);
+  --shadow-pop: 0 4px 12px -2px rgb(0 0 0 / 10%);
 
   /* Semantic surface aliases (same values as the grey ladder; clearer intent in markup). */
-  --color-surface-base: #ffffff; /* page / header / footer / section surface (white) */
+  --color-surface-base: #fff; /* page / header / footer / section surface (white) */
   --color-surface-raised: #f3f3f3; /* wells / nested surfaces */
-  --color-surface-chrome: #eeeeee; /* header/footer chrome tone */
+  --color-surface-chrome: #eee; /* header/footer chrome tone */
   --color-surface-background: #e8e8e8; /* page canvas */
-  --color-brand-tint: rgb(255 140 0 / 0.12); /* soft orange fill behind dark text */
+  --color-brand-tint: rgb(255 140 0 / 12%); /* soft orange fill behind dark text */
+
   /* Sky-blue secondary + semantics (informational only; never small text on light). */
   --color-info: #00a6f4;
-  --color-info-tint: rgb(0 166 244 / 0.12);
+  --color-info-tint: rgb(0 166 244 / 12%);
   --color-success: #22c55e;
   --color-error: #ef4444;
   --color-warning: #f59e0b;
-  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04); /* neutral, flat */
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 6%), 0 1px 1px -1px rgb(0 0 0 / 4%); /* neutral, flat */
 }
 
 :root {
