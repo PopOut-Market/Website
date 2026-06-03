@@ -21,3 +21,6 @@ Thumbs.db
 
 # Vercel
 .vercel
+
+# Debug screenshots dropped in the repo root
+Screenshot*.png
