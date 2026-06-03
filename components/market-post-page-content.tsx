@@ -30,6 +30,8 @@ function demoDetailFromPostId(postId: string, locale: Locale, t: SiteCopy): Mark
     sellerVerifiedAtLabel: null,
     distanceLabel: p.distanceLabel,
     meetupPoint: null,
+    suburbId: null,
+    suburbCentroid: null,
     imageUrl: p.imageUrl,
     photoUrls: p.imageUrl ? [p.imageUrl] : [],
     isNew: p.isNew,
@@ -111,21 +113,20 @@ export function MarketPostPageContent() {
 
   const detailCopy = useMemo(
     () => ({
-      marketPostBack: t.marketPostBack,
-      marketPostBackAria: t.marketPostBackAria,
-      marketPostListedLabel: t.marketPostListedLabel,
-      marketPostAreaLabel: t.marketPostAreaLabel,
       marketPostDeliverableBadge: t.marketPostDeliverableBadge,
       marketPostFixedPriceLabel: t.marketPostFixedPriceLabel,
       marketPostDescriptionHeading: t.marketPostDescriptionHeading,
       marketPostPreferredMeetupLabel: t.marketPostPreferredMeetupLabel,
       marketPostOtherItemsHeading: t.marketPostOtherItemsHeading,
       marketPostSellerVerifiedLabel: t.marketPostSellerVerifiedLabel,
+      marketPostContactSellerCta: t.marketPostContactSellerCta,
+      marketPostListedInOn: t.marketPostListedInOn,
+      marketPostListedIn: t.marketPostListedIn,
+      marketPostListedOn: t.marketPostListedOn,
       marketUnknown: t.marketUnknown,
       marketPostNoImageAria: t.marketPostNoImageAria,
       marketBadgeNew: t.marketBadgeNew,
       marketPostMeetupMapAlt: t.marketPostMeetupMapAlt,
-      downloadCta: t.topDownload,
     }),
     [t],
   );
@@ -148,7 +149,7 @@ export function MarketPostPageContent() {
 
   if (loading) {
     return (
-      <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-16`}>
+      <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col bg-gray-50 py-16`}>
         <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center`}>
           <div
             className="h-9 w-9 animate-spin rounded-full border-2 border-black/10 border-t-black/40"
@@ -195,9 +196,9 @@ export function MarketPostPageContent() {
   }
 
   return (
-    <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col`}>
+    <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col bg-gray-50`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
-        <MarketPostDetailView detail={detail} copy={detailCopy} backHref={backHref} />
+        <MarketPostDetailView detail={detail} copy={detailCopy} />
       </div>
     </section>
   );

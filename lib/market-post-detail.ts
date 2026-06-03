@@ -19,6 +19,8 @@ export type MarketPostDetail = {
   sellerVerifiedAtLabel: string | null;
   distanceLabel: string;
   meetupPoint: { lat: number; lng: number } | null;
+  suburbId: number | null;
+  suburbCentroid: { lat: number; lng: number } | null;
   imageUrl: string | null;
   photoUrls: string[];
   isNew: boolean;

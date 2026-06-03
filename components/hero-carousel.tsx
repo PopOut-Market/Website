@@ -84,10 +84,12 @@ function CarouselCard({
   slide,
   style,
   noImageAria,
+  priority,
 }: {
   slide: CarouselSlide;
   style: React.CSSProperties;
   noImageAria: string;
+  priority: boolean;
 }) {
   const inner = (
     <>
@@ -100,6 +102,7 @@ function CarouselCard({
             src={slide.imageUrl}
             alt={slide.title}
             fill
+            priority={priority}
             className="object-cover"
             sizes="(max-width: 640px) 180px, 220px"
           />
@@ -294,7 +297,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
   const cardWidth = 220;
   const dragFraction = isDragging ? dragOffset / cardWidth : 0;
 
-  const cards: { slide: CarouselSlide; style: React.CSSProperties; dataIdx: number }[] = [];
+  const cards: { slide: CarouselSlide; style: React.CSSProperties; dataIdx: number; priority: boolean }[] = [];
 
   if (total > 0) {
     for (let offset = -2; offset <= 2; offset++) {
@@ -317,7 +320,9 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
         pointerEvents: absOffset === 0 ? "auto" : "none",
       };
 
-      cards.push({ slide, style, dataIdx });
+      // The initial centre card (largest, fully opaque) is the LCP element → load it
+      // eagerly. Gate on currentIndex === 0 so cycling doesn't accumulate preload links.
+      cards.push({ slide, style, dataIdx, priority: absOffset === 0 && currentIndex === 0 });
     }
   }
 
@@ -344,12 +349,13 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
             />
           </div>
         ) : (
-          cards.map(({ slide, style, dataIdx }) => (
+          cards.map(({ slide, style, dataIdx, priority }) => (
             <CarouselCard
               key={`${dataIdx}-${slide.reactKey}`}
               slide={slide}
               style={style}
               noImageAria={noImageAria}
+              priority={priority}
             />
           ))
         )}

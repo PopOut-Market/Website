@@ -38,6 +38,29 @@ function formatMoney(locale: Locale, cents: number): string {
   }
 }
 
+/** English ordinal suffix: 1→st, 2→nd, 3→rd, 11–13→th, else th. */
+function ordinalSuffix(day: number): string {
+  const tens = day % 100;
+  if (tens >= 11 && tens <= 13) {
+    return "th";
+  }
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+/**
+ * Day + month only (no time, no year), localized. English uses the Australian
+ * ordinal form ("29th April"); other locales use their native day–month order
+ * via Intl ("29 avril", "4月29日", "4월 29일").
+ */
 function formatListedAt(locale: Locale, iso: string | null | undefined): string | null {
   if (!iso) {
     return null;
@@ -47,12 +70,17 @@ function formatListedAt(locale: Locale, iso: string | null | undefined): string 
     return null;
   }
   try {
+    if (locale === "en") {
+      const day = d.getDate();
+      const month = new Intl.DateTimeFormat("en-AU", { month: "long" }).format(d);
+      return `${day}${ordinalSuffix(day)} ${month}`;
+    }
     return new Intl.DateTimeFormat(NUMBER_LOCALE[locale], {
-      dateStyle: "medium",
-      timeStyle: "short",
+      day: "numeric",
+      month: "long",
     }).format(d);
   } catch {
-    return d.toISOString();
+    return null;
   }
 }
 
@@ -183,6 +211,15 @@ function mapPostRowToDetail(
     sellerVerifiedAtLabel: raw.seller_verified_freshness?.trim() || null,
     distanceLabel: formatMarketDistanceKm(raw.distance_from_suburb_centroid_m ?? null, options.kmSuffix),
     meetupPoint,
+    suburbId:
+      typeof raw.listing_suburb_id === "number" && Number.isFinite(raw.listing_suburb_id)
+        ? raw.listing_suburb_id
+        : null,
+    suburbCentroid:
+      typeof raw.listing_suburb_centroid_lat === "number" &&
+      typeof raw.listing_suburb_centroid_lng === "number"
+        ? { lat: raw.listing_suburb_centroid_lat, lng: raw.listing_suburb_centroid_lng }
+        : null,
     imageUrl: photoUrls[0] ?? null,
     photoUrls,
     isNew: isRecent(raw.created_at),

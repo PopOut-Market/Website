@@ -1,6 +1,7 @@
 "use client";
 
 import { AiPostDemo } from "@/components/ai-post-demo";
+import { AutoReplyDemo } from "@/components/auto-reply-demo";
 import { HeroCarousel } from "@/components/hero-carousel";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { TranslationDemo } from "@/components/translation-demo";
@@ -141,13 +142,15 @@ export function HomePageContent() {
 
           <p className="mt-4 max-w-2xl text-balance text-base text-black/55 sm:text-lg">
             {t.heroSecondaryPrefix}
-            <button
-              type="button"
-              onClick={() => openLanguageModal()}
-              className="rounded-sm font-bold text-black transition-colors hover:text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
-            >
-              {t.heroSecondaryLink}
-            </button>
+            {t.heroSecondaryLink ? (
+              <button
+                type="button"
+                onClick={() => openLanguageModal()}
+                className="rounded-sm font-bold text-black transition-colors hover:text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+              >
+                {t.heroSecondaryLink}
+              </button>
+            ) : null}
             {t.heroSecondarySuffix}
           </p>
         </div>
@@ -170,6 +173,7 @@ export function HomePageContent() {
 
       <TranslationDemo t={t} />
       <AiPostDemo t={t} />
+      <AutoReplyDemo t={t} />
     </>
   );
 }

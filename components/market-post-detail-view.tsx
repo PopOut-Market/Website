@@ -1,65 +1,135 @@
 "use client";
 
-import { BackNavLink } from "@/components/back-nav-link";
 import Image from "next/image";
 import Link from "next/link";
+import { SuburbBoundaryMap } from "@/components/suburb-boundary-map";
 import { MARKET_POST_DETAIL_OTHER_ITEMS_MAX, type MarketPostDetail } from "@/lib/market-post-detail";
 import { PRIMARY_BUTTON_CLASS } from "@/lib/site-config";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+
+/** Flat white card sitting on the grey listing canvas — mirrors the app's card stack. */
+const CARD = "rounded-2xl bg-white shadow-card";
+
+/** Small padlock shown in front of the fixed-price badge. */
+function LockIcon() {
+  return (
+    <svg
+      className="h-3 w-3"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+/** Lines icon for the Description heading. */
+function DescriptionIcon() {
+  return (
+    <svg
+      className="h-[18px] w-[18px] text-black/45"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="17" x2="14" y2="17" />
+    </svg>
+  );
+}
+
+/** Map-pin icon for the meet-up heading. */
+function PinIcon() {
+  return (
+    <svg
+      className="h-[18px] w-[18px] text-black/45"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  );
+}
 
 type MarketPostDetailViewCopy = {
-  marketPostBack: string;
-  marketPostBackAria: string;
-  marketPostListedLabel: string;
-  marketPostAreaLabel: string;
   marketPostDeliverableBadge: string;
   marketPostFixedPriceLabel: string;
   marketPostDescriptionHeading: string;
   marketPostPreferredMeetupLabel: string;
   marketPostOtherItemsHeading: string;
   marketPostSellerVerifiedLabel: string;
+  marketPostContactSellerCta: string;
+  marketPostListedInOn: string;
+  marketPostListedIn: string;
+  marketPostListedOn: string;
   marketUnknown: string;
   marketPostNoImageAria: string;
   marketBadgeNew: string;
   marketPostMeetupMapAlt: string;
-  downloadCta: string;
 };
 
 type MarketPostDetailViewProps = {
   detail: MarketPostDetail;
   copy: MarketPostDetailViewCopy;
-  backHref: string;
 };
 
-export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetailViewProps) {
+export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps) {
   const desc = detail.description?.trim() ?? "";
+
+  // Single "listed in {suburb} on {date}" caption (date is already locale-formatted
+  // upstream; suburb names stay as-is). Falls back gracefully if one side is missing.
+  const area = detail.areaLabel?.trim() || null;
+  const listedAt = detail.listedAtLabel?.trim() || null;
+  const listedLine =
+    area && listedAt
+      ? copy.marketPostListedInOn.replace("{suburb}", area).replace("{date}", listedAt)
+      : area
+        ? copy.marketPostListedIn.replace("{suburb}", area)
+        : listedAt
+          ? copy.marketPostListedOn.replace("{date}", listedAt)
+          : null;
   const [activePhoto, setActivePhoto] = useState(0);
 
   const photos = detail.photoUrls.length > 0 ? detail.photoUrls : detail.imageUrl ? [detail.imageUrl] : [];
   const mainPhoto = photos[activePhoto] ?? detail.imageUrl;
-  const mapImageUrl = useMemo(() => {
-    const p = detail.meetupPoint;
-    if (!p) {
-      return null;
-    }
-    return `https://staticmap.openstreetmap.de/staticmap.php?center=${p.lat},${p.lng}&zoom=14&size=900x460&markers=${p.lat},${p.lng},lightred1`;
-  }, [detail.meetupPoint]);
+
+  // Meet-up map: pin the exact point when set, otherwise centre on the listing's suburb.
+  const meetupPoint = detail.meetupPoint;
+  const mapMarker: [number, number] | null = meetupPoint ? [meetupPoint.lat, meetupPoint.lng] : null;
+  const mapCenter: [number, number] | null = meetupPoint
+    ? [meetupPoint.lat, meetupPoint.lng]
+    : detail.suburbCentroid
+      ? [detail.suburbCentroid.lat, detail.suburbCentroid.lng]
+      : null;
+  const showMap = Boolean(meetupPoint || detail.suburbCentroid || (detail.suburbId ?? 0) > 0);
 
   useEffect(() => {
     setActivePhoto(0);
   }, [detail.id]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4 pb-5">
-      <div className="flex shrink-0 justify-start pt-1">
-        <BackNavLink href={backHref} aria-label={copy.marketPostBackAria}>
-          {copy.marketPostBack}
-        </BackNavLink>
-      </div>
-
-      <article className="mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 pb-8 pt-4">
+      {/* Photo */}
+      <div className={`${CARD} overflow-hidden`}>
         <div
-          className="relative aspect-square w-full max-w-lg shrink-0 self-center bg-surface-raised sm:max-w-2xl"
+          className="relative aspect-square w-full bg-surface-raised"
           aria-label={mainPhoto ? undefined : copy.marketPostNoImageAria}
         >
           {mainPhoto ? (
@@ -68,7 +138,7 @@ export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetai
               alt={detail.title}
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 100vw, 34rem"
+              sizes="(max-width: 640px) 100vw, 42rem"
               priority
             />
           ) : (
@@ -84,7 +154,7 @@ export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetai
         </div>
 
         {photos.length > 1 ? (
-          <div className="mx-auto mt-2 flex w-full max-w-2xl gap-2 overflow-x-auto px-4 pb-1">
+          <div className="flex gap-2 overflow-x-auto p-3">
             {photos.map((url, i) => (
               <button
                 key={`${url}-${i}`}
@@ -99,134 +169,117 @@ export function MarketPostDetailView({ detail, copy, backHref }: MarketPostDetai
             ))}
           </div>
         ) : null}
+      </div>
 
-        <div className="flex flex-col gap-4 p-5 sm:p-6">
-          <section className="rounded-2xl border border-black/5 bg-surface-raised p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-white">
-                  {detail.sellerAvatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={detail.sellerAvatarUrl}
-                      alt={detail.sellerLabel}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-black/40">
-                      {detail.sellerLabel.slice(0, 1).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <p className="truncate text-base font-semibold text-black">{detail.sellerLabel}</p>
-                  {detail.sellerVerifiedSuburbLabel || detail.sellerVerifiedAtLabel ? (
-                    <p className="truncate text-sm text-black/55">
-                      {copy.marketPostSellerVerifiedLabel}{" "}
-                      {detail.sellerVerifiedSuburbLabel ?? copy.marketUnknown}
-                      {detail.sellerVerifiedAtLabel ? ` · ${detail.sellerVerifiedAtLabel}` : ""}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
+      {/* Seller */}
+      <div className={`${CARD} flex items-center gap-3 px-4 py-3.5`}>
+        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-surface-raised">
+          {detail.sellerAvatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={detail.sellerAvatarUrl}
+              alt={detail.sellerLabel}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-black/40">
+              {detail.sellerLabel.slice(0, 1).toUpperCase()}
             </div>
-          </section>
-
-          <div className="flex flex-col gap-2 border-b border-black/5 pb-5">
-            <h1 className="text-balance text-left text-2xl font-semibold leading-snug text-black sm:text-3xl">
-              {detail.title}
-            </h1>
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-3xl font-bold tabular-nums text-black sm:text-4xl">
-                {detail.priceLabel}
-              </p>
-              {detail.offerLabel === "no" ? (
-                <span className="rounded-full border border-black/10 bg-surface-raised px-2.5 py-1 text-xs font-semibold text-black/55 sm:text-sm">
-                  {copy.marketPostFixedPriceLabel}
-                </span>
-              ) : null}
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1">
-              <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
-                {detail.statusLabel}
-              </span>
-              {detail.deliveryLabel === "yes" ? (
-                <span className="rounded-full bg-brand-tint px-2.5 py-1 text-xs font-semibold text-brand-700">
-                  {copy.marketPostDeliverableBadge}
-                </span>
-              ) : null}
-            </div>
-            <Link
-              href="#download"
-              className={`${PRIMARY_BUTTON_CLASS} mt-3 h-11 w-full px-5 text-sm sm:w-auto`}
-            >
-              {copy.downloadCta}
-            </Link>
-          </div>
-
-          <dl className="grid gap-3 text-sm text-black/70 sm:grid-cols-1">
-            {detail.areaLabel ? (
-              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-black/5 py-2">
-                <dt className="font-medium text-black/55">{copy.marketPostAreaLabel}</dt>
-                <dd className="text-right font-semibold text-black">{detail.areaLabel}</dd>
-              </div>
-            ) : null}
-            {detail.listedAtLabel ? (
-              <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-black/5 py-2">
-                <dt className="font-medium text-black/55">{copy.marketPostListedLabel}</dt>
-                <dd className="text-right text-black">{detail.listedAtLabel}</dd>
-              </div>
-            ) : null}
-          </dl>
-
-          {desc.length > 0 ? (
-            <section className="border-t border-black/5 pt-4">
-              <h2 className="text-sm font-semibold text-black">{copy.marketPostDescriptionHeading}</h2>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-black/70">{desc}</p>
-            </section>
-          ) : null}
-
-          <section className="border-t border-black/5 pt-4">
-            <h2 className="text-sm font-semibold text-black">{copy.marketPostPreferredMeetupLabel}</h2>
-            <p className="mt-1 text-sm text-black/55">{detail.meetupLabel ?? copy.marketUnknown}</p>
-            {mapImageUrl ? (
-              <div className="relative mt-3 h-48 w-full overflow-hidden rounded-xl border border-black/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={mapImageUrl} alt={detail.meetupLabel ?? copy.marketPostMeetupMapAlt} className="h-full w-full object-cover" />
-              </div>
-            ) : null}
-          </section>
-
-          {detail.otherItems.length > 0 ? (
-            <section className="border-t border-black/5 pt-4">
-              <h2 className="text-xl font-semibold text-black">{copy.marketPostOtherItemsHeading}</h2>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {detail.otherItems.slice(0, MARKET_POST_DETAIL_OTHER_ITEMS_MAX).map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/market/p/${encodeURIComponent(item.id)}`}
-                    className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card transition-colors hover:border-brand-500"
-                  >
-                    <div className="relative aspect-square w-full bg-surface-raised">
-                      {item.imageUrl ? (
-                        <Image src={item.imageUrl} alt={item.title} fill className="object-cover" sizes="220px" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-black/30">—</div>
-                      )}
-                    </div>
-                    <div className="p-2.5">
-                      <p className="line-clamp-2 text-sm font-semibold text-black">{item.title}</p>
-                      <p className="mt-1 text-sm font-bold tabular-nums text-black">
-                        {item.priceLabel}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-base font-semibold text-black">{detail.sellerLabel}</p>
+          {detail.sellerVerifiedSuburbLabel ? (
+            <p className="truncate text-sm text-black/55">
+              {copy.marketPostSellerVerifiedLabel} {detail.sellerVerifiedSuburbLabel}
+            </p>
           ) : null}
         </div>
-      </article>
+      </div>
+
+      {/* Title · price · CTA */}
+      <div className={`${CARD} flex flex-col gap-3 p-5`}>
+        <h1 className="text-balance text-left text-xl font-semibold leading-snug text-black sm:text-2xl">
+          {detail.title}
+        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <div className="flex items-center gap-x-3">
+            <p className="text-xl font-bold tabular-nums text-black sm:text-2xl">{detail.priceLabel}</p>
+            {detail.offerLabel === "no" ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-surface-raised px-2.5 py-1 text-xs font-semibold text-black/55 sm:text-sm">
+                <LockIcon />
+                {copy.marketPostFixedPriceLabel}
+              </span>
+            ) : null}
+          </div>
+          {listedLine ? <span className="text-sm text-black/55">{listedLine}</span> : null}
+        </div>
+        <Link
+          href="#download"
+          className={`${PRIMARY_BUTTON_CLASS} mt-1 w-full px-7 py-4 text-base sm:w-auto sm:text-lg`}
+        >
+          {copy.marketPostContactSellerCta}
+        </Link>
+      </div>
+
+      {/* Description */}
+      {desc.length > 0 ? (
+        <div className={`${CARD} p-5`}>
+          <h2 className="flex items-center gap-2 text-base font-semibold text-black">
+            <DescriptionIcon />
+            {copy.marketPostDescriptionHeading}
+          </h2>
+          <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-black/80 sm:text-lg">{desc}</p>
+        </div>
+      ) : null}
+
+      {/* Where to meet up */}
+      <div className={`${CARD} p-5`}>
+        <h2 className="flex items-center gap-2 text-base font-semibold text-black">
+          <PinIcon />
+          {copy.marketPostPreferredMeetupLabel}
+        </h2>
+        <p className="mt-2 text-sm text-black/55">{detail.meetupLabel ?? copy.marketUnknown}</p>
+        {showMap ? (
+          <div className="relative mt-3 h-52 w-full overflow-hidden rounded-xl border border-black/10">
+            <SuburbBoundaryMap
+              suburbId={detail.suburbId ?? 0}
+              center={mapCenter}
+              marker={mapMarker}
+              title={detail.meetupLabel ?? copy.marketPostMeetupMapAlt}
+              className="absolute inset-0 h-full w-full border-0"
+            />
+          </div>
+        ) : null}
+      </div>
+
+      {/* More from this seller */}
+      {detail.otherItems.length > 0 ? (
+        <div className={`${CARD} p-5`}>
+          <h2 className="text-base font-semibold text-black">{copy.marketPostOtherItemsHeading}</h2>
+          <div className="mt-3 grid grid-cols-3 gap-3">
+            {detail.otherItems.slice(0, MARKET_POST_DETAIL_OTHER_ITEMS_MAX).map((item) => (
+              <Link
+                key={item.id}
+                href={`/market/p/${encodeURIComponent(item.id)}`}
+                className="block overflow-hidden rounded-2xl border border-black/5 bg-white text-inherit no-underline shadow-card transition-[border-color,transform] duration-150 hover:-translate-y-px hover:border-black/25 motion-reduce:transform-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+              >
+                <div className="relative aspect-square w-full bg-surface-raised">
+                  {item.imageUrl ? (
+                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" sizes="220px" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-black/30">—</div>
+                  )}
+                </div>
+                <div className="p-2.5">
+                  <p className="line-clamp-2 text-sm font-semibold text-black">{item.title}</p>
+                  <p className="mt-1 text-sm font-bold tabular-nums text-black">{item.priceLabel}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
