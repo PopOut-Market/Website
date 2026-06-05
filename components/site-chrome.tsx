@@ -217,7 +217,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 className="flex min-h-0 min-w-0 shrink-0 items-center py-1"
                 aria-label={t.homeAria}
               >
-                <span className="inline-flex items-center text-sm font-bold uppercase tracking-wide text-black sm:text-base">
+                <span className="font-latin-rounded inline-flex items-center text-sm font-black uppercase tracking-wide text-black sm:text-base">
                   PopOut Market
                 </span>
               </Link>
@@ -411,7 +411,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         >
           <div className={INNER_MAX}>
             <div className="py-4 sm:py-6">
-              <div className="flex w-fit max-w-full flex-col gap-3 min-[760px]:w-full min-[760px]:max-w-none min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between min-[760px]:gap-5">
+              <div className="flex w-full flex-col items-center gap-3 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between min-[760px]:gap-5">
                 <div className="flex min-w-0 items-center gap-3 min-[760px]:flex-1 sm:gap-4">
                   <Image
                     src={LOGO_MARK_SRC}
@@ -455,7 +455,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       alt={t.appStoreAlt}
                       width={300}
                       height={100}
-                      className="block h-12 w-auto object-contain sm:h-14"
+                      className="block h-[108px] w-auto object-contain sm:h-[126px]"
                     />
                   </Link>
                   <Link
@@ -469,7 +469,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                       alt={t.googlePlayAlt}
                       width={320}
                       height={100}
-                      className="block h-12 w-auto object-contain sm:h-14"
+                      className="block h-[108px] w-auto object-contain sm:h-[126px]"
                     />
                   </Link>
                 </div>
