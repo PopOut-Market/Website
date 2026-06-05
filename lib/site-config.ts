@@ -42,7 +42,7 @@ export const LOGO_MARK_SRC = "/images/app-icon.png";
 export const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 export const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
-export const APP_STORE_URL = "https://apps.apple.com/app/id0000000000";
+export const APP_STORE_URL = "https://apps.apple.com/au/app/popout-market-buy-sell/id6761421626";
 export const GOOGLE_PLAY_URL =
   "https://play.google.com/store/apps/details?id=com.example.popout";
 

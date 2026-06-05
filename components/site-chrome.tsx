@@ -173,7 +173,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       if (langMenuRef.current && !langMenuRef.current.contains(target)) {
         setLangOpen(false);
       }
-      if (languageModalRef.current && !languageModalRef.current.contains(target)) {
+      if (
+        languageModalRef.current &&
+        !languageModalRef.current.contains(target) &&
+        !(langMenuRef.current && langMenuRef.current.contains(target))
+      ) {
         setLanguageModalOpen(false);
       }
     }
@@ -228,10 +232,16 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => {
-                    setLanguageModalOpen(true);
+                    setLanguageModalOpen((prev) => !prev);
                     setLangOpen(false);
                   }}
-                  className="inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-black/10 bg-white px-0 text-sm font-medium text-black/70 transition-colors hover:border-brand-500 sm:hidden"
+                  className={`inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full border px-0 text-sm font-medium transition-colors sm:hidden ${
+                    languageModalOpen
+                      ? "border-gray-300 bg-gray-200 text-gray-900"
+                      : "border-black/10 bg-white text-black/70 hover:border-brand-500"
+                  }`}
+                  aria-haspopup="dialog"
+                  aria-expanded={languageModalOpen}
                   aria-label={t.topLanguage}
                 >
                   <svg
@@ -254,7 +264,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => setLangOpen((prev) => !prev)}
-                  className="hidden h-11 items-center gap-2 rounded-full border border-black/10 bg-white px-4 text-sm font-medium text-black/70 transition-colors hover:border-brand-500 sm:inline-flex"
+                  className={`hidden h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors sm:inline-flex ${
+                    langOpen
+                      ? "border-gray-300 bg-gray-200 text-gray-900"
+                      : "border-black/10 bg-white text-black/70 hover:border-brand-500"
+                  }`}
                   aria-haspopup="menu"
                   aria-expanded={langOpen}
                   aria-label={t.topLanguage}
@@ -348,12 +362,12 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className={SITE_MAIN_SLOT_CLASS}>{children}</div>
 
         {languageModalOpen ? (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 px-4 py-4 sm:px-6">
+          <div className="fixed inset-x-0 bottom-0 top-16 z-30 flex items-end justify-center bg-black/40 px-4 sm:items-center sm:p-6">
             <div
               ref={languageModalRef}
-              className="w-full max-w-xl max-h-[84vh] overflow-y-auto rounded-3xl border border-black/10 bg-white p-4 shadow-card sm:p-6"
+              className="flex max-h-[75vh] w-full flex-col overflow-hidden rounded-t-3xl border border-black/10 bg-white shadow-card sm:max-h-[84vh] sm:max-w-xl sm:rounded-3xl"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-4 border-b border-black/5 p-4 sm:p-6">
                 <div>
                   <h2 className="text-lg font-semibold text-black sm:text-xl">
                     {t.languageModalTitle}
@@ -365,41 +379,43 @@ export function SiteChrome({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => setLanguageModalOpen(false)}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/10 bg-surface-base text-black/55 transition-colors hover:border-brand-500 hover:text-black"
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-black/10 bg-surface-base text-black/55 transition-colors hover:border-brand-500 hover:text-black"
                   aria-label={t.languageModalCloseAria}
                 >
                   ×
                 </button>
               </div>
 
-              <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                {LANGUAGE_LIBRARY.map((item) => {
-                  const selected = item.code === locale;
-                  return (
-                    <button
-                      key={item.code}
-                      type="button"
-                      onClick={() => {
-                        switchLocale(item.code);
-                      }}
-                      className={`group rounded-2xl border px-4 py-3 text-left transition-colors ${
-                        selected
-                          ? "border-brand-500 bg-brand-tint"
-                          : "border-black/10 bg-surface-base hover:border-brand-500"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <span className="text-base font-semibold text-black">
-                          {item.display}
-                        </span>
-                        <span className="align-super text-[10px] font-semibold tracking-wide text-black/40">
-                          {item.short}
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs text-black/55">{item.native}</div>
-                    </button>
-                  );
-                })}
+              <div className="overflow-y-auto p-4 sm:p-6">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {LANGUAGE_LIBRARY.map((item) => {
+                    const selected = item.code === locale;
+                    return (
+                      <button
+                        key={item.code}
+                        type="button"
+                        onClick={() => {
+                          switchLocale(item.code);
+                        }}
+                        className={`group rounded-2xl border px-4 py-3 text-left transition-colors ${
+                          selected
+                            ? "border-brand-500 bg-brand-tint"
+                            : "border-black/10 bg-surface-base hover:border-brand-500"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <span className="text-base font-semibold text-black">
+                            {item.display}
+                          </span>
+                          <span className="align-super text-[10px] font-semibold tracking-wide text-black/40">
+                            {item.short}
+                          </span>
+                        </div>
+                        <div className="mt-1 text-xs text-black/55">{item.native}</div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
