@@ -1,0 +1,213 @@
+import type { Metadata } from "next";
+import type { Locale } from "@/lib/site-i18n";
+import { localizedAlternates, siteUrl } from "@/lib/seo";
+import { toLocalePath } from "@/lib/site-locale-routing";
+
+type SeoEntry = {
+  title: string;
+  description: string;
+  keywords?: string[];
+};
+
+// Localized SEO copy per logical path. `en` is the fallback for any locale that
+// is not translated yet, so partial language coverage is always safe.
+// This version covers en / zh-Hans (简体中文) / ko (한국어).
+const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
+  "/": {
+    en: {
+      title: "PopOut Market | Melbourne Second-Hand App & Neighbourhood Marketplace",
+      description:
+        "PopOut Market is a Melbourne second-hand app and neighbourhood marketplace for buying and selling locally, with suburb-first discovery, multilingual communication, and safer meetup workflows.",
+      keywords: [
+        "Melbourne second hand marketplace",
+        "Melbourne second hand app",
+        "Melbourne second hand market",
+        "buy and sell in Melbourne",
+        "student second hand app Melbourne",
+        "safe second hand trading",
+        "multilingual marketplace app",
+      ],
+    },
+    "zh-Hans": {
+      title: "PopOut Market | 墨尔本二手App与同城二手交易市场",
+      description:
+        "PopOut Market 是面向墨尔本的二手交易App和同城二手市场：按郊区/社区发现身边的二手好物，支持多语言沟通和更安全的当面交易，适合留学生搬家、毕业清仓和公寓生活。",
+      keywords: [
+        "墨尔本二手",
+        "墨尔本二手App",
+        "墨尔本二手交易",
+        "墨尔本二手市场",
+        "同城二手交易",
+        "留学生二手",
+        "墨尔本闲置物品",
+      ],
+    },
+    ko: {
+      title: "PopOut Market | 멜버른 중고거래 앱 & 동네 중고마켓",
+      description:
+        "PopOut Market는 멜버른 지역 기반 중고거래 앱이자 동네 중고마켓입니다. 동네별로 가까운 중고 물품을 찾고, 다국어 채팅과 더 안전한 직거래로 거래하세요. 유학생 이사, 졸업 정리, 아파트 생활에 딱 맞습니다.",
+      keywords: [
+        "멜버른 중고",
+        "멜버른 중고거래",
+        "멜버른 중고거래 앱",
+        "멜버른 중고마켓",
+        "동네 중고거래",
+        "유학생 중고",
+        "멜버른 직거래",
+      ],
+    },
+  },
+  "/market": {
+    en: {
+      title: "Melbourne Second-Hand Market | PopOut Market",
+      description:
+        "Browse Melbourne second-hand listings by suburb, compare nearby items, and use PopOut Market as a local second-hand trading platform for Melbourne city and CBD communities.",
+      keywords: [
+        "Melbourne second hand market",
+        "Melbourne second hand app",
+        "Melbourne market listings",
+        "second hand market Melbourne",
+        "buy and sell nearby Melbourne",
+        "Melbourne suburb marketplace",
+      ],
+    },
+    "zh-Hans": {
+      title: "墨尔本二手市集 | PopOut Market",
+      description:
+        "按郊区浏览墨尔本的二手商品，对比附近的闲置好物，用 PopOut Market 在墨尔本市区与 CBD 社区进行同城二手交易。",
+      keywords: [
+        "墨尔本二手市集",
+        "墨尔本二手",
+        "墨尔本二手商品",
+        "同城二手交易",
+        "墨尔本附近二手",
+        "墨尔本郊区二手",
+      ],
+    },
+    ko: {
+      title: "멜버른 중고마켓 | PopOut Market",
+      description:
+        "동네별로 멜버른 중고 매물을 둘러보고 주변의 가까운 물건을 비교하세요. PopOut Market로 멜버른 시내와 CBD 지역에서 동네 중고거래를 시작하세요.",
+      keywords: [
+        "멜버른 중고마켓",
+        "멜버른 중고",
+        "멜버른 중고 매물",
+        "동네 중고거래",
+        "멜버른 근처 중고",
+        "멜버른 직거래",
+      ],
+    },
+  },
+  "/about": {
+    en: {
+      title: "About PopOut Market | Melbourne Neighbourhood Second-Hand Marketplace",
+      description:
+        "Learn how PopOut Market helps Melbourne locals and international students buy and sell second-hand items with suburb-first discovery, multilingual communication, and safer meetup workflows.",
+      keywords: [
+        "Melbourne second hand marketplace",
+        "sell second hand in Melbourne",
+        "student second hand app Melbourne",
+        "safe second hand trading Melbourne",
+        "multilingual marketplace app",
+      ],
+    },
+    "zh-Hans": {
+      title: "关于 PopOut Market | 墨尔本社区二手交易市场",
+      description:
+        "了解 PopOut Market 如何帮助墨尔本本地居民和留学生买卖二手物品：按郊区发现、多语言沟通、更安全的当面交易流程。",
+      keywords: [
+        "墨尔本二手市场",
+        "在墨尔本卖二手",
+        "留学生二手App",
+        "墨尔本安全二手交易",
+        "多语言二手平台",
+      ],
+    },
+    ko: {
+      title: "PopOut Market 소개 | 멜버른 동네 중고마켓",
+      description:
+        "PopOut Market가 멜버른 현지인과 유학생이 중고 물품을 사고팔도록 어떻게 돕는지 알아보세요. 동네 중심 탐색, 다국어 소통, 더 안전한 직거래 방식을 제공합니다.",
+      keywords: [
+        "멜버른 중고마켓",
+        "멜버른 중고 판매",
+        "유학생 중고 앱",
+        "멜버른 안전 직거래",
+        "다국어 중고 플랫폼",
+      ],
+    },
+  },
+  "/faq": {
+    en: {
+      title: "PopOut Market FAQ",
+      description:
+        "Frequently asked questions about how PopOut helps Melbourne users post faster, communicate across languages, and trade with clearer safety workflows.",
+    },
+    "zh-Hans": {
+      title: "常见问题 FAQ | PopOut Market 墨尔本二手交易",
+      description:
+        "关于 PopOut 如何帮助墨尔本用户更快发布、跨语言沟通、并以更清晰的安全流程进行二手交易的常见问题解答。",
+    },
+    ko: {
+      title: "자주 묻는 질문 FAQ | PopOut Market 멜버른 중고거래",
+      description:
+        "PopOut이 멜버른 사용자의 빠른 등록, 다국어 소통, 더 명확한 안전 거래 방식을 어떻게 돕는지에 대한 자주 묻는 질문입니다.",
+    },
+  },
+};
+
+// og:locale value per locale.
+const OG_LOCALE: Record<Locale, string> = {
+  en: "en_AU",
+  "zh-Hans": "zh_CN",
+  "zh-Hant": "zh_TW",
+  ko: "ko_KR",
+  ja: "ja_JP",
+  vi: "vi_VN",
+  fr: "fr_FR",
+  es: "es_ES",
+};
+
+function seoEntry(path: string, locale: Locale): SeoEntry | null {
+  const byPath = SEO_COPY[path];
+  if (!byPath) return null;
+  return byPath[locale] ?? byPath.en ?? null;
+}
+
+/**
+ * Build localized Next.js Metadata for a logical path + locale:
+ * - localized <title>/<description>/keywords (en fallback)
+ * - self-referential canonical for the current locale
+ * - full hreflang alternates (8 locales + x-default)
+ * - Open Graph with the localized URL and og:locale
+ *
+ * `title.absolute` is used so the page title is not wrapped again by the root
+ * layout's "%s | PopOut Market" template (which would duplicate the brand).
+ */
+export function localizedMetadata(path: string, locale: Locale): Metadata {
+  const entry = seoEntry(path, locale);
+  const selfPath = toLocalePath(path, locale);
+  const base = siteUrl().replace(/\/$/, "");
+
+  const meta: Metadata = {
+    alternates: {
+      canonical: selfPath,
+      languages: localizedAlternates(path),
+    },
+  };
+
+  if (entry) {
+    meta.title = { absolute: entry.title };
+    meta.description = entry.description;
+    if (entry.keywords) meta.keywords = entry.keywords;
+    meta.openGraph = {
+      title: entry.title,
+      description: entry.description,
+      url: `${base}${selfPath}`,
+      type: "website",
+      siteName: "PopOut Market",
+      locale: OG_LOCALE[locale],
+    };
+  }
+
+  return meta;
+}

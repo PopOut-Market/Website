@@ -1,7 +1,7 @@
 const LOCALE_SEGMENTS = ["en", "zh-cn", "zh-tw", "ko", "ja", "vi", "fr", "es"] as const;
 
 export function localizedAlternates(path: string): Record<string, string> {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const normalized = path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
   return {
     en: `/en${normalized}`,
     "zh-CN": `/zh-cn${normalized}`,

@@ -24,3 +24,6 @@ Thumbs.db
 
 # Debug screenshots dropped in the repo root
 Screenshot*.png
+
+# Internal SEO/GEO notes — do NOT upload
+SEO-GEO-TODO.md

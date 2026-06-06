@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { siteUrl } from "@/lib/seo";
+import { getServerLocale } from "@/lib/server-locale";
+import { htmlLang } from "@/lib/site-locale-routing";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -19,13 +21,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getServerLocale();
   return (
-    <html lang="en">
+    <html lang={htmlLang(locale)}>
       <body>{children}</body>
     </html>
   );

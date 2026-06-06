@@ -54,3 +54,30 @@ export function toLocalePath(pathname: string, locale: Locale): string {
   const seg = localeSegment(locale);
   return base === "/" ? `/${seg}` : `/${seg}${base}`;
 }
+
+// Request header the middleware sets on each localized rewrite so server
+// components (root layout, site layout, generateMetadata) can render the right
+// language for the initial HTML — see lib/server-locale.ts.
+export const LOCALE_HEADER = "x-popout-locale";
+
+const ALL_LOCALE_CODES = Object.keys(CODE_TO_SEGMENT) as Locale[];
+
+export function isLocale(value: string | null | undefined): value is Locale {
+  return !!value && (ALL_LOCALE_CODES as string[]).includes(value);
+}
+
+// BCP47 language tag for the <html lang> attribute, per locale.
+const LOCALE_TO_HTML_LANG: Record<Locale, string> = {
+  en: "en",
+  "zh-Hans": "zh-CN",
+  "zh-Hant": "zh-TW",
+  ko: "ko",
+  ja: "ja",
+  vi: "vi",
+  fr: "fr",
+  es: "es",
+};
+
+export function htmlLang(locale: Locale): string {
+  return LOCALE_TO_HTML_LANG[locale];
+}

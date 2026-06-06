@@ -1,5 +1,6 @@
 import { HomePageContent } from "@/components/home-page-content";
-import { localizedAlternates } from "@/lib/seo";
+import { getServerLocale } from "@/lib/server-locale";
+import { localizedMetadata } from "@/lib/site-seo-copy";
 import type { Metadata } from "next";
 
 const homeJsonLd = {
@@ -54,31 +55,10 @@ const homeJsonLd = {
   ],
 };
 
-export const metadata: Metadata = {
-  title: "PopOut Market | Melbourne Second-Hand App & Neighbourhood Marketplace",
-  description:
-    "PopOut Market is a Melbourne second-hand app and neighbourhood marketplace for buying and selling locally, with suburb-first discovery, multilingual communication, and safer meetup workflows.",
-  keywords: [
-    "Melbourne second hand marketplace",
-    "Melbourne second hand app",
-    "Melbourne second hand market",
-    "buy and sell in Melbourne",
-    "student second hand app Melbourne",
-    "safe second hand trading",
-    "multilingual marketplace app",
-  ],
-  alternates: {
-    canonical: "/",
-    languages: localizedAlternates("/"),
-  },
-  openGraph: {
-    title: "PopOut Market | Melbourne Neighbourhood Marketplace",
-    description:
-      "Neighbourhood-first second-hand trading in Melbourne with multilingual support and safer meetups.",
-    type: "website",
-    url: "https://www.popoutmarket.com.au/en",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return localizedMetadata("/", locale);
+}
 
 export default function HomePage() {
   return (

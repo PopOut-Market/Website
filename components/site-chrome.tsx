@@ -141,10 +141,16 @@ function footerFaqLabel(locale: Locale): string {
 const FOOTER_ACN_EN = "ACN 696 464 945";
 const FOOTER_ABN_EN = "ABN 76 696 464 945";
 
-export function SiteChrome({ children }: { children: ReactNode }) {
+export function SiteChrome({
+  children,
+  initialLocale = "en",
+}: {
+  children: ReactNode;
+  initialLocale?: Locale;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocale] = useState<Locale>(initialLocale);
   const [langOpen, setLangOpen] = useState(false);
   const [languageModalOpen, setLanguageModalOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement | null>(null);
@@ -199,9 +205,9 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   useEffect(() => {
     const pathLocale =
       localeFromPathname(typeof window !== "undefined" ? window.location.pathname : pathname) ??
-      "en";
+      initialLocale;
     setLocale(pathLocale);
-  }, [pathname]);
+  }, [pathname, initialLocale]);
 
   return (
     <SiteShellProvider

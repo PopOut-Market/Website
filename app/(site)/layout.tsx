@@ -1,8 +1,8 @@
-"use client";
-
 import { SiteChrome } from "@/components/site-chrome";
+import { getServerLocale } from "@/lib/server-locale";
 import type { ReactNode } from "react";
 
-export default function SiteLayout({ children }: { children: ReactNode }) {
-  return <SiteChrome>{children}</SiteChrome>;
+export default async function SiteLayout({ children }: { children: ReactNode }) {
+  const locale = await getServerLocale();
+  return <SiteChrome initialLocale={locale}>{children}</SiteChrome>;
 }

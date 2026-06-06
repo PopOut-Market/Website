@@ -1,16 +1,12 @@
 import { FaqPageContent } from "@/components/faq-page-content";
-import { localizedAlternates } from "@/lib/seo";
+import { getServerLocale } from "@/lib/server-locale";
+import { localizedMetadata } from "@/lib/site-seo-copy";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "PopOut Market FAQ",
-  description:
-    "Frequently asked questions about how PopOut helps Melbourne users post faster, communicate across languages, and trade with clearer safety workflows.",
-  alternates: {
-    canonical: "/faq",
-    languages: localizedAlternates("/faq"),
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  return localizedMetadata("/faq", locale);
+}
 
 export default function FaqPage() {
   return <FaqPageContent />;

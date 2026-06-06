@@ -1,5 +1,6 @@
 import {
   DEFAULT_LOCALE,
+  LOCALE_HEADER,
   LOCALE_SEGMENT_TO_CODE,
   localeFromSegment,
   localeSegment,
@@ -120,10 +121,16 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // Serve existing routes while keeping locale in browser URL.
+  // Serve existing routes while keeping locale in browser URL. Forward the
+  // resolved locale to server components via a request header so the initial
+  // SSR output (html lang, <title>, body copy) is localized for crawlers.
   const rewritten = request.nextUrl.clone();
   rewritten.pathname = basePath;
-  const response = NextResponse.rewrite(rewritten);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(LOCALE_HEADER, locale);
+  const response = NextResponse.rewrite(rewritten, {
+    request: { headers: requestHeaders },
+  });
   if (Object.hasOwn(LOCALE_SEGMENT_TO_CODE, firstSegment.toLowerCase())) {
     response.cookies.set("popout_locale", firstSegment.toLowerCase(), {
       path: "/",
