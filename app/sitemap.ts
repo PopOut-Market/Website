@@ -8,6 +8,7 @@ const INDEXABLE_PATHS = [
   "/market",
   "/melbourne-second-hand-app",
   "/melbourne-second-hand-market",
+  "/melbourne-second-hand-marketplace",
   "/melbourne-cbd-second-hand-marketplace",
   "/comparison",
   "/comparison/gumtree",

@@ -174,6 +174,17 @@ function seoEntry(path: string, locale: Locale): SeoEntry | null {
 }
 
 /**
+ * Localized <title> for a logical path, or null when the path has no localized
+ * SEO copy. Used client-side to keep the browser tab title in sync when the
+ * language is switched without a full reload (server generateMetadata only runs
+ * on a fresh request). Returns null for untranslated pages so their own
+ * server-rendered title is left untouched.
+ */
+export function localizedTitle(path: string, locale: Locale): string | null {
+  return seoEntry(path, locale)?.title ?? null;
+}
+
+/**
  * Build localized Next.js Metadata for a logical path + locale:
  * - localized <title>/<description>/keywords (en fallback)
  * - self-referential canonical for the current locale

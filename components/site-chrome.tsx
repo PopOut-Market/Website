@@ -27,8 +27,10 @@ import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
 import {
   localeFromPathname,
+  stripLocalePrefix,
   toLocalePath,
 } from "@/lib/site-locale-routing";
+import { localizedTitle } from "@/lib/site-seo-copy";
 
 function FooterSocialLink({
   href,
@@ -208,6 +210,17 @@ export function SiteChrome({
       initialLocale;
     setLocale(pathLocale);
   }, [pathname, initialLocale]);
+
+  // Keep the browser tab title in sync when the language is switched client-side.
+  // A soft navigation does not re-run server generateMetadata, so document.title
+  // would otherwise lag until a full reload. SEO is unaffected — crawlers always
+  // fetch a fresh server-rendered title; this is a UX nicety only. Untranslated
+  // pages return null here and keep their own server title.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const title = localizedTitle(stripLocalePrefix(window.location.pathname), locale);
+    if (title) document.title = title;
+  }, [locale, pathname]);
 
   return (
     <SiteShellProvider

@@ -97,6 +97,24 @@ export default function MelbourneSecondHandAppPage() {
         </section>
 
         <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900">What you can buy and sell</h2>
+          <p className="mt-3 text-sm leading-relaxed text-gray-700">
+            The app is most active around everyday Melbourne living — the things people need when they
+            move in, move out, or refresh a room:
+          </p>
+          <ul className="mt-4 space-y-2 text-sm leading-relaxed text-gray-700">
+            <li>Furniture such as beds, desks, chairs, sofas and wardrobes.</li>
+            <li>Appliances and kitchen gear like fridges, microwaves and cookware.</li>
+            <li>Bikes, scooters and study or work-from-home setups.</li>
+            <li>Move-in bundles and clear-out items around exam and graduation season.</li>
+          </ul>
+          <p className="mt-3 text-sm leading-relaxed text-gray-700">
+            The CBD and inner suburbs are the busiest, but suburb-based discovery means anyone across
+            Melbourne can use the app to trade quickly with people nearby.
+          </p>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Related Melbourne search intent</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
@@ -110,6 +128,12 @@ export default function MelbourneSecondHandAppPage() {
               className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
             >
               Read Melbourne second-hand market guide
+            </Link>
+            <Link
+              href="/melbourne-second-hand-marketplace"
+              className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
+            >
+              Melbourne second-hand marketplace
             </Link>
             <Link
               href="/melbourne-cbd-second-hand-marketplace"

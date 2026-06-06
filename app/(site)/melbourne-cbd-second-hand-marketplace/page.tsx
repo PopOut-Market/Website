@@ -87,9 +87,10 @@ export default function MelbourneCbdSecondHandMarketplacePage() {
             evaluate from photos and descriptions.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-gray-700">
-            That is where a CBD-focused second-hand marketplace becomes more useful than a broad statewide
-            listing experience. The closer the listing is to real daily movement patterns, the more likely the
-            trade is to complete smoothly.
+            That is where a CBD-focused second-hand marketplace really helps city-centre users. The closer the
+            listing is to real daily movement patterns, the more likely the trade is to complete smoothly. The
+            CBD is the busiest hub, but because discovery is suburb-based, people across the rest of Melbourne
+            can use the same app to trade quickly with others close to them too.
           </p>
         </section>
 

@@ -115,6 +115,27 @@ export default function MelbourneSecondHandMarketPage() {
         </section>
 
         <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900">Across Melbourne, centred on the CBD</h2>
+          <p className="mt-3 text-sm leading-relaxed text-gray-700">
+            Melbourne CBD and the inner-city apartments are the busiest part of the local second-hand
+            market, driven by dense living and frequent move-in and move-out cycles. But the same local
+            trading works across the wider city: because listings are discovered by suburb, people
+            anywhere in Melbourne can buy and sell quickly with others nearby.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-700">
+            This page explains how the Melbourne second-hand market works. If you want the platform
+            behind it, see the{" "}
+            <Link
+              href="/melbourne-second-hand-marketplace"
+              className="font-medium text-gray-900 underline decoration-black/20 underline-offset-2 hover:decoration-brand-500"
+            >
+              Melbourne second-hand marketplace
+            </Link>{" "}
+            page.
+          </p>
+        </section>
+
+        <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Related pages</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
