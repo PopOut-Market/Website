@@ -490,7 +490,7 @@ export function SiteChrome({
                       alt={t.appStoreAlt}
                       width={300}
                       height={100}
-                      className="block h-[108px] w-auto object-contain sm:h-[126px]"
+                      className="-my-4 block h-[108px] w-auto object-contain sm:h-[126px] min-[760px]:my-0"
                     />
                   </Link>
                   <Link
@@ -504,7 +504,7 @@ export function SiteChrome({
                       alt={t.googlePlayAlt}
                       width={320}
                       height={100}
-                      className="block h-[108px] w-auto object-contain sm:h-[126px]"
+                      className="-my-4 block h-[108px] w-auto object-contain sm:h-[126px] min-[760px]:my-0"
                     />
                   </Link>
                 </div>
