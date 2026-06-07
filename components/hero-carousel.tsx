@@ -295,7 +295,10 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
   );
 
   const cardWidth = 220;
-  const dragFraction = isDragging ? dragOffset / cardWidth : 0;
+  // Clamp so a long drag can't fling cards past the rendered neighbours.
+  const dragFraction = isDragging
+    ? Math.max(-1, Math.min(1, dragOffset / cardWidth))
+    : 0;
 
   const cards: { slide: CarouselSlide; style: React.CSSProperties; dataIdx: number; priority: boolean }[] = [];
 
@@ -308,7 +311,9 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       if (!slot) continue;
 
       const direction = offset < 0 ? -1 : offset > 0 ? 1 : 0;
-      const dragShift = dragFraction * -SLOT_CONFIG[1]!.offsetPercent;
+      // Cards follow the drag: drag right → shift right (reveals the previous
+      // card from the left); drag left → shift left (reveals the next card).
+      const dragShift = dragFraction * SLOT_CONFIG[1]!.offsetPercent;
       const translateX = slot.offsetPercent * direction + dragShift;
 
       const style: React.CSSProperties = {
