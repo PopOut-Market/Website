@@ -447,7 +447,7 @@ export function SiteChrome({
           <div className={INNER_MAX}>
             <div className="py-4 sm:py-6">
               <div className="flex w-full flex-col items-center gap-3 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between min-[760px]:gap-5">
-                <div className="flex min-w-0 items-center gap-3 min-[760px]:flex-1 sm:gap-4">
+                <div className="flex min-w-0 flex-col items-center gap-3 text-center min-[760px]:flex-1 min-[760px]:flex-row min-[760px]:gap-4 min-[760px]:text-left">
                   <Image
                     src={LOGO_MARK_SRC}
                     alt=""
@@ -478,7 +478,7 @@ export function SiteChrome({
                   </div>
                 </div>
 
-                <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-3 self-stretch leading-none min-[760px]:w-auto min-[760px]:flex-nowrap min-[760px]:justify-end min-[760px]:self-auto">
+                <div className="flex w-full shrink-0 flex-row flex-wrap items-center justify-center gap-1 self-stretch leading-none min-[760px]:w-auto min-[760px]:flex-nowrap min-[760px]:justify-end min-[760px]:gap-3 min-[760px]:self-auto">
                   <Link
                     href={APP_STORE_URL}
                     target="_blank"
