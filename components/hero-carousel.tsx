@@ -34,6 +34,8 @@ const SHOWCASE: DemoShowcaseItem[] = [
 ];
 
 const AUTO_INTERVAL = 3200;
+// A gesture only becomes a drag after moving this many px; below it stays a tap.
+const DRAG_THRESHOLD = 6;
 
 type CarouselSlide = {
   reactKey: string;
@@ -85,11 +87,15 @@ function CarouselCard({
   style,
   noImageAria,
   priority,
+  isCenter,
+  onActivate,
 }: {
   slide: CarouselSlide;
   style: React.CSSProperties;
   noImageAria: string;
   priority: boolean;
+  isCenter: boolean;
+  onActivate?: () => void;
 }) {
   const inner = (
     <>
@@ -121,19 +127,33 @@ function CarouselCard({
     </>
   );
 
+  const focusRing =
+    "block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/50 focus-visible:ring-offset-2";
+
+  let body: React.ReactNode = inner;
+  if (isCenter && slide.href) {
+    // Centre card opens the listing.
+    body = (
+      <Link href={slide.href} className={focusRing}>
+        {inner}
+      </Link>
+    );
+  } else if (onActivate) {
+    // Adjacent card: tap/click to bring it to the centre.
+    body = (
+      <button type="button" onClick={onActivate} aria-label={slide.title} className={focusRing}>
+        {inner}
+      </button>
+    );
+  }
+
   return (
     <div
       className="absolute left-1/2 top-0 w-[180px] sm:w-[200px] md:w-[220px] will-change-transform"
       style={style}
     >
       <div className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
-        {slide.href ? (
-          <Link href={slide.href} className="block text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/50 focus-visible:ring-offset-2">
-            {inner}
-          </Link>
-        ) : (
-          inner
-        )}
+        {body}
       </div>
     </div>
   );
@@ -222,7 +242,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const autoTimerRef = useRef<number | null>(null);
-  const dragStartRef = useRef({ x: 0, time: 0 });
+  const gestureRef = useRef({ active: false, startX: 0, time: 0, dragging: false });
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -257,30 +277,40 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
     return clearAutoTimer;
   }, [active, isDragging, currentIndex, goTo, clearAutoTimer, total, reduced]);
 
-  // Pointer / touch drag
+  // Pointer / touch drag. A gesture only becomes a drag after the pointer moves
+  // past DRAG_THRESHOLD; below that it stays a tap, so clicks on the centre card
+  // (open listing) and the adjacent cards (recenter) still fire normally, and we
+  // don't capture the pointer for taps.
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    setIsDragging(true);
+    gestureRef.current = { active: true, startX: e.clientX, time: Date.now(), dragging: false };
     setDragOffset(0);
-    dragStartRef.current = { x: e.clientX, time: Date.now() };
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }, []);
 
-  const onPointerMove = useCallback(
-    (e: React.PointerEvent) => {
-      if (!isDragging) return;
-      const dx = e.clientX - dragStartRef.current.x;
-      setDragOffset(dx);
-    },
-    [isDragging],
-  );
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    const g = gestureRef.current;
+    if (!g.active) return;
+    const dx = e.clientX - g.startX;
+    if (!g.dragging) {
+      if (Math.abs(dx) < DRAG_THRESHOLD) return;
+      g.dragging = true;
+      setIsDragging(true);
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      } catch {}
+    }
+    setDragOffset(dx);
+  }, []);
 
   const onPointerUp = useCallback(
     (e: React.PointerEvent) => {
-      if (!isDragging) return;
+      const g = gestureRef.current;
+      if (!g.active) return;
+      g.active = false;
+      if (!g.dragging) return; // a tap — let the card's own click handler run
       setIsDragging(false);
-      const dx = e.clientX - dragStartRef.current.x;
-      const dt = Date.now() - dragStartRef.current.time;
+      const dx = e.clientX - g.startX;
+      const dt = Date.now() - g.time;
       const velocity = Math.abs(dx) / Math.max(dt, 1);
       const threshold = velocity > 0.3 ? 20 : 50;
 
@@ -291,7 +321,7 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       }
       setDragOffset(0);
     },
-    [isDragging, currentIndex, goTo],
+    [currentIndex, goTo],
   );
 
   const cardWidth = 220;
@@ -300,7 +330,14 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
     ? Math.max(-1, Math.min(1, dragOffset / cardWidth))
     : 0;
 
-  const cards: { slide: CarouselSlide; style: React.CSSProperties; dataIdx: number; priority: boolean }[] = [];
+  const cards: {
+    slide: CarouselSlide;
+    style: React.CSSProperties;
+    dataIdx: number;
+    priority: boolean;
+    isCenter: boolean;
+    onActivate?: () => void;
+  }[] = [];
 
   if (total > 0) {
     for (let offset = -2; offset <= 2; offset++) {
@@ -316,18 +353,31 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       const dragShift = dragFraction * SLOT_CONFIG[1]!.offsetPercent;
       const translateX = slot.offsetPercent * direction + dragShift;
 
+      const isCenter = absOffset === 0;
+      const isAdjacent = absOffset === 1;
       const style: React.CSSProperties = {
         transform: `translateX(calc(-50% + ${translateX}%)) scale(${slot.scale})`,
         filter: `blur(${slot.blur}px)`,
         opacity: slot.opacity,
         zIndex: slot.zIndex,
         transition: isDragging ? "none" : "all 520ms cubic-bezier(0.32, 0.72, 0, 1)",
-        pointerEvents: absOffset === 0 ? "auto" : "none",
+        // Centre opens the listing; the two adjacent cards are clickable to
+        // recenter. The far (±2) cards stay non-interactive.
+        pointerEvents: absOffset <= 1 ? "auto" : "none",
+        cursor: isAdjacent ? "pointer" : undefined,
       };
 
       // The initial centre card (largest, fully opaque) is the LCP element → load it
       // eagerly. Gate on currentIndex === 0 so cycling doesn't accumulate preload links.
-      cards.push({ slide, style, dataIdx, priority: absOffset === 0 && currentIndex === 0 });
+      cards.push({
+        slide,
+        style,
+        dataIdx,
+        priority: isCenter && currentIndex === 0,
+        isCenter,
+        // Click an adjacent card to bring it to the centre (A B C → click A ⇒ Z A B).
+        onActivate: isAdjacent ? () => goTo(currentIndex + offset) : undefined,
+      });
     }
   }
 
@@ -354,13 +404,15 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
             />
           </div>
         ) : (
-          cards.map(({ slide, style, dataIdx, priority }) => (
+          cards.map(({ slide, style, dataIdx, priority, isCenter, onActivate }) => (
             <CarouselCard
               key={`${dataIdx}-${slide.reactKey}`}
               slide={slide}
               style={style}
               noImageAria={noImageAria}
               priority={priority}
+              isCenter={isCenter}
+              onActivate={onActivate}
             />
           ))
         )}
