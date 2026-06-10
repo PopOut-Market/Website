@@ -89,8 +89,8 @@ export default function MelbourneSecondHandAppPage() {
         <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Who this is designed for</h2>
           <ul className="mt-4 space-y-3 text-sm leading-relaxed text-gray-700">
-            <li>Students setting up or clearing out rooms near universities and city campuses.</li>
-            <li>Apartment residents in Melbourne city and Melbourne CBD who prefer nearby pickup.</li>
+            <li>Students setting up or clearing out rooms near universities and campuses.</li>
+            <li>Apartment residents and renters across Melbourne who prefer nearby pickup.</li>
             <li>Local buyers and sellers who want multilingual communication and clearer coordination.</li>
             <li>Graduation-season users moving out quickly and trying to sell practical household items.</li>
           </ul>

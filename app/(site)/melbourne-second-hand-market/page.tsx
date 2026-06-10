@@ -99,7 +99,7 @@ export default function MelbourneSecondHandMarketPage() {
               <tbody>
                 <tr>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">Student move-in</td>
-                  <td className="border border-gray-200 px-3 py-2 text-gray-700">Beds, desks, and kitchen items are easier to compare when pickup stays near campus or city housing.</td>
+                  <td className="border border-gray-200 px-3 py-2 text-gray-700">Beds, desks, and kitchen items are easier to compare when pickup stays close to where you live.</td>
                 </tr>
                 <tr>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">Graduation move-out</td>

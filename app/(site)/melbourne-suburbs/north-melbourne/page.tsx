@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "North Melbourne Second-Hand: Student Living & Apartment Essentials",
   description:
-    "Find affordable second-hand furniture, appliances, and daily essentials in North Melbourne. Ideal for students, shared housing, and budget-conscious city living.",
+    "Find affordable second-hand furniture, appliances, and daily essentials in North Melbourne. Ideal for students, shared housing, and budget-conscious living.",
   alternates: {
     canonical: "/melbourne-suburbs/north-melbourne",
     languages: localizedAlternates("/melbourne-suburbs/north-melbourne"),

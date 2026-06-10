@@ -23,7 +23,7 @@ const categories = [
   },
   {
     name: "Bikes & scooters",
-    detail: "Commuter bikes, e-scooters, locks and accessories for getting around the city.",
+    detail: "Commuter bikes, e-scooters, locks and accessories for getting around town.",
   },
   {
     name: "Electronics",
