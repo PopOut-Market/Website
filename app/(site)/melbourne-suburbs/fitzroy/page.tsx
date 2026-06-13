@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/fitzroy";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "vi": {"title":"Đồ Cũ Fitzroy | Mua Bán Đồ Cũ Melbourne Fitzroy - PopOut Market","description":"PopOut Market giúp bạn thanh lý đồ cũ ở Fitzroy: nội thất, đồ điện tử cũ. Chợ mua bán đồ second-hand Melbourne, du học sinh thanh lý dễ dàng."},
     "zh-Hant": {"title":"Fitzroy 二手交易 | 墨爾本 Fitzroy 二手家具家電買賣 App - PopOut Market","description":"在免費 App PopOut Market 發掘 Fitzroy 二手好物。按社區瀏覽墨爾本 Fitzroy 的二手家具、二手電器與中古家居用品，用多語言即時翻譯聊天輕鬆溝通，安心約見面交。墨爾本在地二手平台，是留學生、租屋族與搬家人士的首選，更是旋轉拍賣（Carousell）的好替代，讓你在墨爾本 Fitzroy 放心二手買賣。"},
     ja: {"title":"Fitzroy 中古取引 | メルボルン Fitzroy 中古売買アプリ - PopOut Market","description":"無料アプリPopOut MarketでFitzroyの中古をチェック。メルボルンのフリマアプリとして地元の中古家具や不用品を地域ごとに探せて、多言語チャットと安心の手渡し直接取引に対応。留学生にも人気のメルボルン中古売買アプリです。"},
   "zh-Hans": { title: "Fitzroy 二手交易 | 墨尔本 Fitzroy 二手家具买卖 - PopOut Market", description: "在免费 App PopOut Market 上发现 Fitzroy 二手好物。按社区浏览墨尔本 Fitzroy 的二手家具与家居用品，用多语言聊天轻松沟通，安心约见面交，让你在 Fitzroy 附近放心买卖二手物品。" },

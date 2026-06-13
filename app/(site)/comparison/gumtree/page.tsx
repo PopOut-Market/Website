@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/comparison/gumtree";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "vi": {"title":"PopOut Market vs Gumtree｜App mua bán đồ cũ Melbourne thay thế Gumtree","description":"Tìm app thay thế Gumtree ở Melbourne? PopOut Market là app mua bán đồ cũ miễn phí: thanh lý nội thất cũ, đồ điện cũ theo khu vực, chat đa ngôn ngữ có dịch tự động và giao dịch an toàn. So sánh chợ đồ cũ Melbourne, phù hợp cho du học sinh thanh lý đồ."},
     "zh-Hant": {"title":"PopOut Market vs Gumtree｜墨爾本二手交易的 Gumtree 替代之選","description":"在找 Gumtree 的替代選擇嗎？PopOut Market 是免費的墨爾本二手交易 App，覆蓋全墨爾本同城買賣，支援依社區探索二手好物、App 內多語言翻譯聊天，以及更安全的當面交易。比較 PopOut Market 與 Gumtree，也是二手家具電器與旋轉拍賣的替代方案，更適合墨爾本的留學生。"},
     ja: {"title":"PopOut Market vs Gumtree｜メルボルンの中古フリマ Gumtree 代替アプリ","description":"Gumtree からの乗り換えをお探しの方へ。PopOut Market はメルボルン全域で使える無料の中古フリマアプリです。近くのエリア別に商品を探せて、翻訳付きの多言語チャットや手渡しで安全に直接取引が可能。Gumtree との比較や、留学生にも選ばれる理由がわかります。"},
   "zh-Hans": { title: "PopOut Market vs Gumtree｜墨尔本二手 Gumtree 替代之选", description: "在找 Gumtree 替代？PopOut Market 是免费的墨尔本本地二手交易 app，覆盖全墨尔本，支持按社区发现好物、应用内多语言聊天和更安全的当面交易。看 PopOut Market 与 Gumtree 的对比，了解为何它更适合留学生与租房族。" },
