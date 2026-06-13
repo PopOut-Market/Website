@@ -1,16 +1,29 @@
 import { MelbourneFitzroySuburbContent } from "@/components/melbourne-fitzroy-suburb-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { getServerLocale } from "@/lib/server-locale";
+import { toLocalePath } from "@/lib/site-locale-routing";
+import type { Locale } from "@/lib/site-i18n";
 
-export const metadata: Metadata = {
-  title: "Fitzroy Second-Hand: Creative Living, Decor & Apartment Essentials",
-  description:
-    "Discover second-hand home decor, furniture, and practical apartment essentials around Fitzroy. Ideal for creative living, students, and budget-friendly Melbourne lifestyles.",
-  alternates: {
-    canonical: "/melbourne-suburbs/fitzroy",
-    languages: localizedAlternates("/melbourne-suburbs/fitzroy"),
-  },
+const PATH = "/melbourne-suburbs/fitzroy";
+
+const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+  "zh-Hans": { title: "Fitzroy 二手交易 | 墨尔本 Fitzroy 二手家具买卖 - PopOut Market", description: "在免费 App PopOut Market 上发现 Fitzroy 二手好物。按社区浏览墨尔本 Fitzroy 的二手家具与家居用品，用多语言聊天轻松沟通，安心约见面交，让你在 Fitzroy 附近放心买卖二手物品。" },
+  ko: { title: "Fitzroy 중고거래 | 멜버른 Fitzroy 중고 가구·생활용품 - PopOut Market", description: "무료 앱 PopOut Market에서 Fitzroy 중고 가구와 생활용품을 찾아보세요. 동네별로 멜버른 Fitzroy 중고 매물을 둘러보고, 다국어 채팅과 안전한 직거래 만남으로 Fitzroy 근처에서 편하게 사고팔 수 있어요." },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  const loc = LOCALIZED_META[locale];
+  return {
+    title: loc ? { absolute: loc.title } : "Fitzroy Second-Hand: Creative Living, Decor & Apartment Essentials",
+    description: loc ? loc.description : "Discover second-hand home decor, furniture, and practical apartment essentials around Fitzroy. Ideal for creative living, students, and budget-friendly Melbourne lifestyles.",
+    alternates: {
+      canonical: toLocalePath(PATH, locale),
+      languages: localizedAlternates(PATH),
+    },
+  };
+}
 
 export default function FitzroySuburbPage() {
   return <MelbourneFitzroySuburbContent />;

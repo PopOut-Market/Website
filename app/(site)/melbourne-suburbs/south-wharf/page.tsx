@@ -1,16 +1,29 @@
 import { MelbourneSouthWharfSuburbContent } from "@/components/melbourne-south-wharf-suburb-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { getServerLocale } from "@/lib/server-locale";
+import { toLocalePath } from "@/lib/site-locale-routing";
+import type { Locale } from "@/lib/site-i18n";
 
-export const metadata: Metadata = {
-  title: "South Wharf Second-Hand: Apartment Furniture & Home Essentials",
-  description:
-    "Shop affordable second-hand furniture, appliances, and compact home essentials in South Wharf. Great for apartment setups and short-term stays in Melbourne.",
-  alternates: {
-    canonical: "/melbourne-suburbs/south-wharf",
-    languages: localizedAlternates("/melbourne-suburbs/south-wharf"),
-  },
+const PATH = "/melbourne-suburbs/south-wharf";
+
+const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+  "zh-Hans": { title: "South Wharf 二手交易 | PopOut Market 墨尔本本地二手", description: "在 PopOut Market 选购 South Wharf 二手好物：附近的二手家具、家电与公寓家居都能轻松买卖。免费 App 按社区浏览整个墨尔本的二手物品，支持多语言聊天，让当面交易更安全省心。" },
+  ko: { title: "South Wharf 중고거래 | PopOut Market 멜버른 중고", description: "PopOut Market에서 South Wharf 중고 매물을 만나보세요. 멜버른 전역의 중고 가구와 생활용품을 동네별로 둘러보고, 무료 앱으로 가까운 매물을 거래할 수 있습니다. 다국어 채팅과 안전한 직거래를 지원합니다." },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  const loc = LOCALIZED_META[locale];
+  return {
+    title: loc ? { absolute: loc.title } : "South Wharf Second-Hand: Apartment Furniture & Home Essentials",
+    description: loc ? loc.description : "Shop affordable second-hand furniture, appliances, and compact home essentials in South Wharf. Great for apartment setups and short-term stays in Melbourne.",
+    alternates: {
+      canonical: toLocalePath(PATH, locale),
+      languages: localizedAlternates(PATH),
+    },
+  };
+}
 
 export default function SouthWharfSuburbPage() {
   return <MelbourneSouthWharfSuburbContent />;

@@ -1,17 +1,29 @@
 import { MelbourneSouthbankSuburbContent } from "@/components/melbourne-southbank-suburb-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { getServerLocale } from "@/lib/server-locale";
+import { toLocalePath } from "@/lib/site-locale-routing";
+import type { Locale } from "@/lib/site-i18n";
 
-export const metadata: Metadata = {
-  title:
-    "Southbank Melbourne Second-Hand Market: Furniture, Art Supplies & Studio Essentials",
-  description:
-    "Discover second-hand furniture, art supplies & studio essentials in Southbank, Melbourne. Perfect for UniLodge students & compact apartments. Buy, sell, save!",
-  alternates: {
-    canonical: "/melbourne-suburbs/southbank",
-    languages: localizedAlternates("/melbourne-suburbs/southbank"),
-  },
+const PATH = "/melbourne-suburbs/southbank";
+
+const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+  "zh-Hans": { title: "Southbank 二手交易 | 墨尔本 Southbank 二手家具与生活好物 - PopOut Market", description: "在墨尔本 Southbank 二手买卖家具、生活好物与公寓闲置。PopOut Market 是免费应用,按社区浏览 Southbank 附近的二手好物,支持多语言聊天与更安全的当面交易,服务全墨尔本,留学生与租房族都爱用。" },
+  ko: { title: "Southbank 중고거래 | 멜버른 Southbank 중고 가구·생활용품 - PopOut Market", description: "멜버른 Southbank 중고거래는 PopOut Market에서. 무료 앱으로 동네별 Southbank 근처 중고 가구와 생활용품을 사고팔고, 다국어 채팅과 더 안전한 직거래까지 지원합니다. 멜버른 전역에서, 유학생과 자취생에게 딱이에요." },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  const loc = LOCALIZED_META[locale];
+  return {
+    title: loc ? { absolute: loc.title } : "Southbank Melbourne Second-Hand Market: Furniture, Art Supplies & Studio Essentials",
+    description: loc ? loc.description : "Discover second-hand furniture, art supplies & studio essentials in Southbank, Melbourne. Perfect for UniLodge students & compact apartments. Buy, sell, save!",
+    alternates: {
+      canonical: toLocalePath(PATH, locale),
+      languages: localizedAlternates(PATH),
+    },
+  };
+}
 
 export default function SouthbankSuburbPage() {
   return <MelbourneSouthbankSuburbContent />;

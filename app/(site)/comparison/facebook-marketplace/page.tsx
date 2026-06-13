@@ -1,16 +1,29 @@
 import { ComparisonFacebookMarketplaceContent } from "@/components/comparison-facebook-marketplace-content";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
+import { getServerLocale } from "@/lib/server-locale";
+import { toLocalePath } from "@/lib/site-locale-routing";
+import type { Locale } from "@/lib/site-i18n";
 
-export const metadata: Metadata = {
-  title: "PopOut vs Facebook Marketplace | Feature Comparison",
-  description:
-    "A friendly feature comparison focused on faster listing, multilingual communication, safer meetup flow, and student-friendly trust tools in Melbourne.",
-  alternates: {
-    canonical: "/comparison/facebook-marketplace",
-    languages: localizedAlternates("/comparison/facebook-marketplace"),
-  },
+const PATH = "/comparison/facebook-marketplace";
+
+const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+  "zh-Hans": { title: "PopOut Market vs Facebook Marketplace | 墨尔本二手 App 对比", description: "在找 Facebook Marketplace 的替代品？PopOut Market 是墨尔本免费二手 App，支持按社区找货、应用内多语言聊天和更安全的当面交易流程，覆盖全墨尔本，深受留学生、租房族和搬家人群喜爱。" },
+  ko: { title: "PopOut Market vs 페이스북 마켓플레이스 | 멜버른 중고 비교", description: "페이스북 마켓플레이스 대안을 찾으세요? PopOut Market은 멜버른 무료 중고 앱으로 동네별 검색, 앱 내 다국어 채팅, 더 안전한 직거래를 지원합니다. 멜버른 전역에서 유학생과 자취생에게 인기 있어요." },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getServerLocale();
+  const loc = LOCALIZED_META[locale];
+  return {
+    title: loc ? { absolute: loc.title } : "PopOut vs Facebook Marketplace | Feature Comparison",
+    description: loc ? loc.description : "A friendly feature comparison focused on faster listing, multilingual communication, safer meetup flow, and student-friendly trust tools in Melbourne.",
+    alternates: {
+      canonical: toLocalePath(PATH, locale),
+      languages: localizedAlternates(PATH),
+    },
+  };
+}
 
 export default function ComparisonFacebookMarketplacePage() {
   return <ComparisonFacebookMarketplaceContent />;
