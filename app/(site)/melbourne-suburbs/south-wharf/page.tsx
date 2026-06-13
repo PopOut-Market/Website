@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/south-wharf";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "zh-Hant": {"title":"South Wharf 二手交易 | PopOut Market 墨爾本免費二手 App","description":"PopOut Market 是墨爾本免費二手平台，在 South Wharf 買賣二手家具、電器與公寓家居都輕鬆方便。可按社區瀏覽整個墨爾本的同城二手與中古好物，內建多語言翻譯聊天，支援安全的當面交易，是旋轉拍賣（Carousell）的理想替代，深受留學生與搬家族喜愛。"},
     ja: {"title":"South Wharf 中古売買 | PopOut Market メルボルンの無料フリマアプリ","description":"PopOut Marketなら、メルボルンのSouth Wharf周辺で中古の家具や不用品を地域ごとに探して売買できます。多言語チャットの翻訳機能と安心の対面受け渡しで、留学生や引っ越し中の方にも使いやすい無料フリマアプリです。"},
   "zh-Hans": { title: "South Wharf 二手交易 | PopOut Market 墨尔本本地二手", description: "在 PopOut Market 选购 South Wharf 二手好物：附近的二手家具、家电与公寓家居都能轻松买卖。免费 App 按社区浏览整个墨尔本的二手物品，支持多语言聊天，让当面交易更安全省心。" },
   ko: { title: "South Wharf 중고거래 | PopOut Market 멜버른 중고", description: "PopOut Market에서 South Wharf 중고 매물을 만나보세요. 멜버른 전역의 중고 가구와 생활용품을 동네별로 둘러보고, 무료 앱으로 가까운 매물을 거래할 수 있습니다. 다국어 채팅과 안전한 직거래를 지원합니다." },

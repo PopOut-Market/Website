@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/carlton";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "zh-Hant": {"title":"Carlton 二手交易 | 墨爾本 Carlton 二手家具電器交易平台 - PopOut Market","description":"在 Carlton 找二手？PopOut Market 是覆蓋全墨爾本的免費本地二手 App，可按社區探索 Carlton 的二手家具、電器與學習用品。墨爾本二手買賣、二手交易一站搞定，多語言聊天翻譯讓墨爾本 Carlton 的二手約見面交易更安心，是旋轉拍賣（Carousell）的好替代，深受留學生與租屋族喜愛。"},
     ja: {"title":"Carlton 中古品 | メルボルン Carlton 周辺の中古売買アプリ - PopOut Market","description":"Carlton で中古品をお探しなら PopOut Market。メルボルン全域で使える無料の地元フリマアプリで、Carlton 周辺の中古家具・自転車・学用品を地域ごとに見つけられます。多言語チャット翻訳付きで、対面の手渡し取引も安心。留学生や引越し中の方にも人気です。"},
   "zh-Hans": { title: "Carlton 二手交易 | 墨尔本 Carlton 附近二手好物 - PopOut Market", description: "在 Carlton 找二手好物？PopOut Market 是覆盖全墨尔本的免费同城二手 App，按社区发现 Carlton 二手家具、自行车与学习用品，支持多语言聊天，约见面交易更安心，深受留学生与租房族喜爱。" },
   ko: { title: "Carlton 중고거래 | 멜버른 Carlton 근처 중고 - PopOut Market", description: "Carlton 중고 찾으세요? PopOut Market은 멜버른 전역에서 쓰는 무료 동네 중고거래 앱입니다. 동네 기반으로 Carlton 근처 중고 가구와 자전거를 찾고, 다국어 채팅으로 더 안전하게 직거래하세요. 유학생과 자취생에게 인기." },

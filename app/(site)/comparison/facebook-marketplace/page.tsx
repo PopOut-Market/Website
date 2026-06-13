@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/comparison/facebook-marketplace";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "zh-Hant": {"title":"PopOut Market vs Facebook Marketplace｜墨爾本二手交易 App 比較","description":"正在尋找 Facebook Marketplace 的替代方案？PopOut Market 是墨爾本的免費二手交易 App，支援同城分區尋寶、App 內多語言聊天自動翻譯，以及更安全的當面交易，是旋轉拍賣（Carousell）的理想替代之選。墨爾本二手交易、二手拍賣、二手買賣、二手家具與電器一站搞定，深受留學生與租屋族歡迎。"},
     ja: {"title":"PopOut Market vs Facebook Marketplace | メルボルン 中古アプリ 比較","description":"Facebook Marketplace の代わりをお探しの方へ。PopOut Market はメルボルン全域で使える無料のフリマアプリです。近所のサバーブごとに中古品を探せ、アプリ内の多言語チャット（自動翻訳付き）と安全な対面取引に対応。留学生や引越しの不用品売買にも人気の地域密着型マーケットです。"},
   "zh-Hans": { title: "PopOut Market vs Facebook Marketplace | 墨尔本二手 App 对比", description: "在找 Facebook Marketplace 的替代品？PopOut Market 是墨尔本免费二手 App，支持按社区找货、应用内多语言聊天和更安全的当面交易流程，覆盖全墨尔本，深受留学生、租房族和搬家人群喜爱。" },
   ko: { title: "PopOut Market vs 페이스북 마켓플레이스 | 멜버른 중고 비교", description: "페이스북 마켓플레이스 대안을 찾으세요? PopOut Market은 멜버른 무료 중고 앱으로 동네별 검색, 앱 내 다국어 채팅, 더 안전한 직거래를 지원합니다. 멜버른 전역에서 유학생과 자취생에게 인기 있어요." },
