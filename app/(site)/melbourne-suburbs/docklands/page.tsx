@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/docklands";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "fr": {"title":"Docklands d'occasion | Acheter et vendre d'occasion à Melbourne - PopOut Market","description":"PopOut Market, l'appli d'occasion gratuite de Melbourne. Achetez et vendez d'occasion à Docklands : meubles, électroménager, petites annonces et messagerie traduite."},
     "vi": {"title":"Đồ cũ Docklands | Mua bán đồ cũ Melbourne Docklands - PopOut Market","description":"PopOut Market là app mua bán đồ cũ miễn phí khắp Melbourne. Đồ cũ Docklands: nội thất cũ, đồ điện cũ, dịch chat đa ngôn ngữ, giao dịch an toàn cho du học sinh."},
     "zh-Hant": {"title":"Docklands 二手交易 | 墨爾本 Docklands 二手家具家電買賣 - PopOut Market","description":"PopOut Market 是覆蓋全墨爾本的免費二手交易 app，主打同城買賣與按社區探索。在 Docklands 輕鬆交易二手家具、家電與各式好物，內建多語即時翻譯聊天與安全當面交易，是旋轉拍賣（Carousell）的理想替代之選，深受墨爾本留學生與租客喜愛。"},
     ja: {"title":"Docklands の中古売買 | メルボルンのフリマアプリ - PopOut Market","description":"PopOut Marketはメルボルン全域で使える無料のフリマアプリ。Docklandsなど地元エリアで中古の家具や家電を手軽に売買でき、多言語チャットの翻訳機能でやり取りも安心です。安全な手渡し取引にも対応し、留学生や引っ越しをする方にぴったり。"},
