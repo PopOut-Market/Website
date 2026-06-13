@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/comparison/facebook-marketplace";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "es": {"title":"PopOut Market vs Facebook Marketplace | App de segunda mano en Melbourne","description":"Alternativa a Facebook Marketplace: PopOut Market es la app gratis para comprar y vender de segunda mano en Melbourne. Muebles, electrodomésticos y artículos usados, chat multilingüe y transacciones seguras. Comparativa pensada para estudiantes."},
     "fr": {"title":"PopOut Market vs Facebook Marketplace | App d'occasion à Melbourne","description":"Alternative à Facebook Marketplace : PopOut Market, l'application d'occasion gratuite à Melbourne. Comparez les annonces : meubles et électroménager, chat multilingue et échanges en toute sécurité."},
     "vi": {"title":"PopOut Market vs Facebook Marketplace | App đồ cũ Melbourne","description":"Đang tìm app thay Facebook Marketplace? PopOut Market là chợ đồ cũ miễn phí tại Melbourne: mua bán đồ cũ, nội thất, đồ điện tử, chat đa ngôn ngữ và giao dịch an toàn. So sánh ngay!"},
     "zh-Hant": {"title":"PopOut Market vs Facebook Marketplace｜墨爾本二手交易 App 比較","description":"正在尋找 Facebook Marketplace 的替代方案？PopOut Market 是墨爾本的免費二手交易 App，支援同城分區尋寶、App 內多語言聊天自動翻譯，以及更安全的當面交易，是旋轉拍賣（Carousell）的理想替代之選。墨爾本二手交易、二手拍賣、二手買賣、二手家具與電器一站搞定，深受留學生與租屋族歡迎。"},

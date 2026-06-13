@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/southbank";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "es": {"title":"Segunda mano en Southbank | Comprar y vender artículos usados en Melbourne - PopOut Market","description":"Compra y vende artículos de segunda mano en Southbank, Melbourne con PopOut Market: app gratuita para muebles y electrodomésticos usados, con chat traducido e intercambios seguros."},
     "fr": {"title":"Achat et vente d'occasion à Southbank, Melbourne | PopOut Market","description":"Achetez et vendez d'occasion à Southbank, Melbourne sur PopOut Market : appli gratuite de petites annonces, meubles et électroménager de seconde main, messagerie traduite et échanges en toute sécurité."},
     "vi": {"title":"Đồ cũ Southbank | Mua bán đồ cũ Melbourne Southbank - PopOut Market","description":"Mua bán đồ cũ tại Southbank, Melbourne trên PopOut Market: app đồ cũ miễn phí, chợ đồ cũ theo khu vực, nội thất cũ, đồ điện tử cũ, chat đa ngôn ngữ có dịch tự động và giao dịch an toàn."},
     "zh-Hant": {"title":"Southbank 二手交易 | 墨爾本 Southbank 二手家具與公寓好物 App - PopOut Market","description":"在墨爾本 Southbank 二手買賣家具、電器與公寓閒置好物,就用 PopOut Market。免費的墨爾本二手 App 與同城二手平台,可按社區瀏覽 Southbank 附近的中古好物,支援多語言聊天翻譯與更安全的當面交易,是旋轉拍賣(Carousell)的替代選擇,服務全墨爾本,留學生與租屋族都愛用。"},

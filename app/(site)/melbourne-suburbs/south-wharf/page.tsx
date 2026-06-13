@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/south-wharf";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "es": {"title":"South Wharf de segunda mano | PopOut Market - compra y vende en Melbourne","description":"Compra y vende artículos de segunda mano en South Wharf con PopOut Market: muebles, electrodomésticos y objetos usados. App de segunda mano en Melbourne con chat traducido."},
     "fr": {"title":"South Wharf occasion | PopOut Market - acheter et vendre à Melbourne","description":"Achetez et vendez d'occasion à South Wharf sur PopOut Market : meubles, électroménager et petites annonces à Melbourne. Appli de seconde main avec chat traduit."},
     "vi": {"title":"Đồ cũ South Wharf | PopOut Market - mua bán đồ second-hand Melbourne","description":"Mua bán đồ cũ tại South Wharf trên PopOut Market: nội thất, đồ điện tử, đồ du học sinh thanh lý. Chợ second-hand Melbourne theo khu vực, có chat tích hợp dịch đa ngôn ngữ."},
     "zh-Hant": {"title":"South Wharf 二手交易 | PopOut Market 墨爾本免費二手 App","description":"PopOut Market 是墨爾本免費二手平台，在 South Wharf 買賣二手家具、電器與公寓家居都輕鬆方便。可按社區瀏覽整個墨爾本的同城二手與中古好物，內建多語言翻譯聊天，支援安全的當面交易，是旋轉拍賣（Carousell）的理想替代，深受留學生與搬家族喜愛。"},

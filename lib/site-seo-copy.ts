@@ -14,6 +14,7 @@ type SeoEntry = {
 // This version covers en / zh-Hans (简体中文) / ko (한국어).
 const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
   "/": {
+    "es": {"title":"PopOut Market | App de segunda mano en Melbourne y mercado de barrio","description":"PopOut Market es la app de segunda mano y el mercado de barrio de Melbourne para comprar y vender cerca de ti: descubre artículos por zona, chatea en varios idiomas y queda de forma más segura. Ideal para muebles, electrodomésticos y mudanzas de estudiantes."},
     "fr": {"title":"PopOut Market | Appli d'occasion à Melbourne & marché de quartier","description":"PopOut Market est une appli d'occasion et un marché de quartier à Melbourne pour acheter et vendre près de chez vous : annonces classées par quartier, messagerie multilingue et rencontres plus sûres. Idéal pour les meubles, l'électroménager et les déménagements d'étudiants."},
     "vi": {"title":"PopOut Market | App đồ cũ Melbourne & chợ đồ cũ khu vực","description":"PopOut Market là app đồ cũ Melbourne và chợ mua bán đồ cũ theo khu vực: tìm nội thất, đồ điện cũ gần bạn, chat đa ngôn ngữ và giao dịch trực tiếp an toàn hơn. Lý tưởng cho du học sinh chuyển nhà, thanh lý đồ khi tốt nghiệp và cuộc sống căn hộ tại Melbourne."},
     "zh-Hant": {"title":"PopOut Market | 墨爾本二手 App 與同城二手交易平台","description":"PopOut Market 是墨爾本的二手 App 與同城二手交易平台：依郊區／社區發現身邊的二手好物，支援多語言聊天翻譯與更安全的當面交易，適合留學生搬家、畢業清倉與公寓生活。"},
@@ -103,6 +104,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     },
   },
   "/about": {
+    "es": {"title":"Sobre PopOut Market | Mercado de segunda mano en Melbourne","description":"Conoce PopOut Market, la app gratuita para comprar y vender de segunda mano en Melbourne por barrio: muebles, electrodomésticos, chat con traducción e ideal para estudiantes."},
     "fr": {"title":"À propos de PopOut Market | Marché d'occasion de quartier à Melbourne","description":"Découvrez comment PopOut Market aide les Melbournois et les étudiants internationaux à acheter et vendre leurs objets d'occasion : recherche par quartier, messagerie multilingue et rencontres en personne plus sûres."},
     "vi": {"title":"Giới thiệu PopOut Market | App mua bán đồ cũ tại Melbourne","description":"Tìm hiểu về PopOut Market: nền tảng và ứng dụng mua bán đồ cũ miễn phí tại Melbourne. Tìm đồ theo khu vực, nhắn tin đa ngôn ngữ, từ nội thất, đồ điện cũ đến đồ thanh lý của du học sinh."},
     "zh-Hant": {"title":"關於 PopOut Market｜墨爾本同城二手交易 App","description":"認識 PopOut Market：免費的墨爾本二手交易平台與二手 App，服務全墨爾本地區。可依郊區（suburb）探索附近的二手好物與中古商品，內建多語言翻譯聊天與 AI 自動回覆，讓當面交易更安全便利。從家具到電器應有盡有，是留學生、租屋族與搬家族尋找二手物品的理想之選。"},
@@ -145,6 +147,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     },
   },
   "/faq": {
+    "es": {"title":"FAQ segunda mano Melbourne | PopOut Market preguntas frecuentes","description":"Preguntas frecuentes de PopOut Market, la app de segunda mano en Melbourne: comprar y vender artículos usados, muebles y electrodomésticos, publicar anuncios y chat con traducción."},
     "fr": {"title":"FAQ occasion à Melbourne | PopOut Market questions fréquentes","description":"Questions fréquentes sur PopOut Market, l'application d'occasion à Melbourne : acheter et vendre meubles et électroménager, petites annonces et chat traduit."},
     "vi": {"title":"Câu hỏi thường gặp | PopOut Market mua bán đồ cũ tại Melbourne","description":"Giải đáp các câu hỏi thường gặp về PopOut Market: đăng tin nhanh với AI, hỗ trợ đa ngôn ngữ và nhắn tin xuyên ngôn ngữ, giao dịch gặp mặt an toàn ngay trong khu phố, xác minh sinh viên và bán đồ cũ mùa tốt nghiệp tại Melbourne."},
     "zh-Hant": {"title":"墨爾本二手常見問題 FAQ | PopOut Market 二手交易平台","description":"PopOut Market 墨爾本二手常見問題：免費二手 App 怎麼用、如何在同城刊登與買賣二手家具及家電、墨爾本中古拍賣與留學生二手交易、多語言聊天自動翻譯、更安全的面交流程，以及作為旋轉拍賣（Carousell）替代方案的二手平台說明。"},

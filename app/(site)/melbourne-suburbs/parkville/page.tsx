@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/site-i18n";
 const PATH = "/melbourne-suburbs/parkville";
 
 const LOCALIZED_META: Partial<Record<Locale, { title: string; description: string }>> = {
+    "es": {"title":"Comprar y vender de segunda mano en Parkville, Melbourne | PopOut Market","description":"PopOut Market es la app gratuita de segunda mano en Melbourne. Compra y vende artículos usados en Parkville: muebles, electrodomésticos y bicicletas cerca de la Universidad de Melbourne. Ideal para estudiantes."},
     "fr": {"title":"Occasion à Parkville | Acheter et vendre d'occasion à Parkville Melbourne - PopOut Market","description":"PopOut Market, l'appli d'occasion gratuite à Melbourne. Achetez et vendez d'occasion à Parkville : meubles, électroménager, vélos. De la seconde main près de l'Université de Melbourne."},
     "vi": {"title":"Đồ cũ Parkville | Mua bán đồ cũ Parkville Melbourne - PopOut Market","description":"PopOut Market là app mua bán đồ cũ miễn phí tại Melbourne. Mua bán đồ cũ ở Parkville: nội thất, đồ điện, đồ gia dụng cũ gần UniMelb. Dịch chat đa ngôn ngữ, giao dịch an toàn."},
     "zh-Hant": {"title":"Parkville 二手交易 | 墨爾本 Parkville 二手家具家電 - PopOut Market","description":"PopOut Market 是墨爾本免費的二手交易 App，在 Parkville 二手專區依在地社群尋寶，輕鬆挑選墨爾本大學周邊好物：二手書桌、單車與宿舍家具家電。墨爾本 Parkville 二手買賣一站搞定，支援多語言聊天翻譯與安全面交，是留學生愛用的 Carousell 替代平台，服務範圍覆蓋全墨爾本。"},
