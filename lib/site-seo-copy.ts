@@ -14,6 +14,7 @@ type SeoEntry = {
 // This version covers en / zh-Hans (简体中文) / ko (한국어).
 const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
   "/": {
+    ja: {"title":"PopOut Market | メルボルンの中古売買アプリ・地元フリマアプリ","description":"PopOut Marketはメルボルンの中古売買アプリ・地元フリマアプリ。エリアや近所ごとに身近な中古品を探し、翻訳付きの多言語チャットでやり取りし、より安全な手渡しの直接取引で売買できます。メルボルン全域に対応し、留学生やお部屋の引っ越しにも最適です。"},
     en: {
       title: "PopOut Market | Melbourne Second-Hand App & Neighbourhood Marketplace",
       description:
@@ -99,6 +100,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     },
   },
   "/about": {
+    ja: {"title":"PopOut Market とは | メルボルンの地元中古マーケットアプリ","description":"PopOut Market は、メルボルン全域で使える無料の中古売買アプリです。お住まいの地域から近くの出品を探せて、多言語チャット翻訳と安心の手渡し直接取引に対応。留学生や引越し・お部屋の片付けの不用品売買にも便利です。"},
     en: {
       title: "About PopOut Market | Melbourne Neighbourhood Second-Hand Marketplace",
       description:
@@ -137,6 +139,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     },
   },
   "/faq": {
+    ja: {"title":"よくある質問 FAQ | PopOut Market メルボルン中古アプリ","description":"メルボルンでの中古売買に関するよくある質問。PopOut Marketは地元の出品を地域・郊外別に探せる無料フリマアプリで、多言語チャット（自動翻訳付き）と安心の対面手渡し取引に対応。出品方法や不用品の売り方、留学生や引っ越し時の使い方をわかりやすく解説します。"},
     en: {
       title: "PopOut Market FAQ",
       description:
