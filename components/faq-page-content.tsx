@@ -44,14 +44,14 @@ function getCopy(locale: string): FaqCopy {
             "目前支持英语、简体中文、繁体中文、韩语、日语、法语、西班牙语和越南语。帖子与聊天会按用户语言进行理解和展示，减少跨语言买卖沟通成本。",
         },
         {
-          question: "3) 如何提升线下见面交易的安全性？",
+          question: "3) 如何让线下交易更安全？",
           answer:
-            "PopOut 会推荐附近更合适的见面区域，并支持 schedule 约见流程。交易双方可在见面环节使用 QR 扫码确认，提高流程清晰度与履约记录完整度。",
+            "PopOut 以邻里就近交易为核心，建议大家在人多、明亮的公共场所见面。把取货保持在附近、公开的地点，能让买卖双方都更安心地完成交易。",
         },
         {
-          question: "4) PopOut 如何处理 no-show（临时不赴约）？",
+          question: "4) PopOut 有 AI 自动回复吗？",
           answer:
-            "在完整约见流程下，系统可通过见面确认步骤辅助识别 no-show 行为，帮助双方减少沟通争议并优化后续交易安排。",
+            "有。PopOut 已加入 AI 自动回复功能。目前还是比较简单的回复，我们正在持续更新，很快会有更强的功能上线。现在它能帮你回复大量重复、无意义的咨询，以及你在帖子里已经写明的内容，帮你节省时间；遇到不确定或帖子里没写到的问题，AI 不会贸然回复，而是留给你亲自回复买家。这样你就能把精力集中在买家真正有价值的问题上。",
         },
         {
           question: "5) 学生用户在 PopOut 有什么优势？",
@@ -100,14 +100,14 @@ function getCopy(locale: string): FaqCopy {
             "目前支援英語、簡中、繁中、韓語、日語、法語、西班牙語與越南語。貼文與聊天可依使用者語言呈現，降低跨語言溝通成本。",
         },
         {
-          question: "3) 如何提升線下見面交易安全？",
+          question: "3) 如何讓線下交易更安全？",
           answer:
-            "PopOut 會推薦附近較合適的見面區域，並提供 schedule 約見流程。雙方可在見面環節以 QR 掃碼確認，提升流程清晰度與履約記錄完整性。",
+            "PopOut 以鄰里就近交易為核心，建議在人多、明亮的公共場所見面。把取貨保持在附近、公開的地點，能讓買賣雙方都更安心地完成交易。",
         },
         {
-          question: "4) PopOut 如何處理 no-show（未赴約）？",
+          question: "4) PopOut 有 AI 自動回覆嗎？",
           answer:
-            "在完整約見流程下，系統可透過見面確認步驟協助識別 no-show 行為，降低溝通爭議並改善後續交易安排。",
+            "有。PopOut 已加入 AI 自動回覆功能。目前還是比較簡單的回覆，我們正在持續更新，很快會有更強的功能上線。現在它能幫你回覆大量重複、無意義的詢問，以及你在貼文裡已經寫明的內容，替你節省時間；遇到不確定或貼文裡沒寫到的問題，AI 不會貿然回覆，而是留給你親自回覆買家。這樣你就能把精力集中在買家真正有價值的問題上。",
         },
         {
           question: "5) 學生使用者在 PopOut 有什麼優勢？",
@@ -155,14 +155,14 @@ function getCopy(locale: string): FaqCopy {
           "PopOut currently supports English, Simplified Chinese, Traditional Chinese, Korean, Japanese, French, Spanish, and Vietnamese. Both posts and chat can be understood in users' preferred language flow.",
       },
       {
-        question: "3) How does PopOut support safer in-person meetups?",
+        question: "3) How does PopOut support safer in-person trades?",
         answer:
-          "PopOut can recommend nearby meetup areas and provides a schedule flow. The QR-based meetup confirmation step helps keep the process clearer for both sides.",
+          "PopOut is neighbourhood-first, so trades happen close to home, and we encourage meeting in busy, public, well-lit places. Keeping pickups local and public helps both sides feel more comfortable completing a trade.",
       },
       {
-        question: "4) How does PopOut handle no-show situations?",
+        question: "4) Does PopOut have AI auto-reply for messages?",
         answer:
-          "With a completed schedule flow, meetup confirmation records can help identify no-show behavior and reduce ambiguity in follow-up communication.",
+          "Yes. PopOut now includes an AI auto-reply feature. For now it handles simpler replies, and we are actively improving it — better capabilities are coming soon. Today it can take care of the high volume of repetitive or low-value messages and questions already answered in your listing, saving you time. For anything uncertain or not covered in your post, the AI will not guess — it leaves those for you to answer the buyer personally, so you can focus your energy on the questions that genuinely matter.",
       },
       {
         question: "5) What is the benefit for student communities?",

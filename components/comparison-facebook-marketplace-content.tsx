@@ -64,7 +64,7 @@ export function ComparisonFacebookMarketplaceContent() {
   const visualCards = [
     { icon: "AI", title: t.comparisonFbCard1Title, body: t.comparisonFbCard1Body },
     { icon: "LANG", title: t.comparisonFbCard2Title, body: t.comparisonFbCard2Body },
-    { icon: "QR", title: t.comparisonFbCard3Title, body: t.comparisonFbCard3Body },
+    { icon: "AI", title: t.comparisonFbCard3Title, body: t.comparisonFbCard3Body },
   ];
 
   const jsonLd = useMemo(
