@@ -11,7 +11,14 @@ import { clientIp, rateLimit } from "@/lib/rate-limit";
  * (see lib/supabase/admin-fetch.ts). We validate the token with Supabase and
  * then check the email against the `ADMIN_EMAILS` allowlist.
  *
- * Fails CLOSED: if `ADMIN_EMAILS` is not configured, all access is denied.
+ * Two modes:
+ *  - `ADMIN_EMAILS` set   -> full lockdown: token must be valid AND the email
+ *                            must be on the allowlist.
+ *  - `ADMIN_EMAILS` unset -> authenticated-only fallback: a valid signed-in
+ *                            Supabase session is required (this still closes the
+ *                            anonymous data leak), but no email allowlist is
+ *                            applied. TODO: set ADMIN_EMAILS to upgrade to the
+ *                            allowlist.
  */
 
 function env(name: string): string {
@@ -50,10 +57,6 @@ export async function requireAdmin(
   }
 
   const allowlist = adminEmailAllowlist();
-  if (allowlist.size === 0) {
-    // Misconfiguration must not silently grant access.
-    return deny(503, "Admin access is not configured (ADMIN_EMAILS unset).");
-  }
 
   const authHeader = req.headers.get("authorization") ?? "";
   const token = authHeader.toLowerCase().startsWith("bearer ")
@@ -76,7 +79,10 @@ export async function requireAdmin(
   const { data, error } = await sb.auth.getUser(token);
   const email = data.user?.email?.toLowerCase() ?? "";
   if (error || !email) return deny(401, "Invalid or expired session.");
-  if (!allowlist.has(email)) return deny(403, "Not authorized.");
+  // Enforce the allowlist only when it is configured (see header comment).
+  if (allowlist.size > 0 && !allowlist.has(email)) {
+    return deny(403, "Not authorized.");
+  }
 
   return { email };
 }
