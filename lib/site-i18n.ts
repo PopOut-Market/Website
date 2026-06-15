@@ -430,7 +430,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Precise location-based recommendations in Melbourne help you discover hidden gems right on your doorstep. Knowing the seller might live on the next street over gives every transaction a foundation of trust you can see.",
     aboutWhySafetyTitle: "Safety Is Our Core Principle",
     aboutWhySafetyBody:
-      "Your safety comes first. We've hand-picked the safest public spots across Melbourne for in-person trades, and we encourage users to verify their student identity. Every transaction on PopOut comes with an extra layer of assurance.",
+      "Your safety comes first. We suggest busy, well-lit public spots across Melbourne as safer places for in-person trades, and we encourage users to verify their student identity. Every transaction on PopOut comes with an extra layer of assurance.",
     aboutWhyCommunicationTitle: "Communication Without Borders",
     aboutWhyCommunicationBody:
       "Language should never be a barrier to connection. PopOut features a powerful real-time bilingual translation system. Chat in your native language — the other person receives an automatic translation. Even if your English isn't perfect, you can trade freely and make like-minded friends here.",
@@ -441,10 +441,10 @@ export const COPY: Record<Locale, SiteCopy> = {
       "We only collect essential information like your phone number and email for login verification.",
     aboutPrivacyStorageTitle: "High-Standard Storage",
     aboutPrivacyStorageBody:
-      "Your sensitive data is stored in world-class encrypted databases.",
+      "Your sensitive data is stored in encrypted databases, in transit and at rest.",
     aboutPrivacyNoTracesTitle: "No Traces Left",
     aboutPrivacyNoTracesBody:
-      "We promise never to store or misuse your private location data. Explore with peace of mind.",
+      "We don't track or retain your location history — GPS is used only briefly to verify your suburb and is then deleted. Explore with peace of mind.",
     aboutPrivacyLinkMore: "More detailed privacy information",
     aboutVisionTitle: "Our Vision",
     aboutVisionP1:
@@ -703,7 +703,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "基于墨尔本精准的地理位置推荐，帮你发现家门口的好物。知道卖家可能就住在隔壁街，让每一次交易都多一份看得见的信任。",
     aboutWhySafetyTitle: "安全，是我们的核心理念",
     aboutWhySafetyBody:
-      "你的安全高于一切。我们精选了墨尔本最安全的公共场所作为面交地点，并鼓励用户完成学生身份验证。在 PopOut 上的每一笔交易，都多一层安心保障。",
+      "你的安全高于一切。我们会推荐墨尔本人多、明亮的公共场所作为更安全的面交地点，并鼓励用户完成学生身份验证。在 PopOut 上的每一笔交易，都多一层安心保障。",
     aboutWhyCommunicationTitle: "沟通，再无国界",
     aboutWhyCommunicationBody:
       "语言不该成为连接的障碍。PopOut 配备强大的实时双语翻译系统。用你的母语聊天——对方会收到自动翻译。即使英语还不够流利，你也可以在这里自由交易、结识志同道合的朋友。",
@@ -712,9 +712,9 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalTitle: "极简数据采集",
     aboutPrivacyMinimalBody: "我们只收集登录验证所必需的信息，例如手机号与邮箱。",
     aboutPrivacyStorageTitle: "高标准存储",
-    aboutPrivacyStorageBody: "你的敏感数据存放在世界一流的加密数据库中。",
+    aboutPrivacyStorageBody: "你的敏感数据存放在加密数据库中（传输与存储均加密）。",
     aboutPrivacyNoTracesTitle: "不留痕迹",
-    aboutPrivacyNoTracesBody: "我们承诺绝不存储或滥用你的私人位置数据。请放心探索。",
+    aboutPrivacyNoTracesBody: "我们不会追踪或保留你的位置历史——GPS 仅用于短暂验证你所在的城区，之后即删除。请放心探索。",
     aboutPrivacyLinkMore: "更多详细的隐私介绍",
     aboutVisionTitle: "我们的愿景",
     aboutVisionP1:
@@ -971,7 +971,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "基於墨爾本精準的地理位置推薦，幫你發現家門口的好物。知道賣家可能就住在隔壁街，讓每一次交易都多一份看得見的信任。",
     aboutWhySafetyTitle: "安全，是我們的核心理念",
     aboutWhySafetyBody:
-      "你的安全高於一切。我們精選了墨爾本最安全的公共場所作為面交地點，並鼓勵使用者完成學生身份驗證。在 PopOut 上的每一筆交易，都多一層安心保障。",
+      "你的安全高於一切。我們會推薦墨爾本人多、明亮的公共場所作為更安全的面交地點，並鼓勵使用者完成學生身份驗證。在 PopOut 上的每一筆交易，都多一層安心保障。",
     aboutWhyCommunicationTitle: "溝通，再無國界",
     aboutWhyCommunicationBody:
       "語言不該成為連結的障礙。PopOut 配備強大的即時雙語翻譯系統。用你的母語聊天——對方會收到自動翻譯。即使英文還不夠流利，你也可以在這裡自由交易、結識志同道合的朋友。",
@@ -980,9 +980,9 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalTitle: "極簡資料採集",
     aboutPrivacyMinimalBody: "我們只收集登入驗證所必需的資訊，例如手機號碼與電子郵件。",
     aboutPrivacyStorageTitle: "高標準儲存",
-    aboutPrivacyStorageBody: "你的敏感資料存放在世界一流的加密資料庫中。",
+    aboutPrivacyStorageBody: "你的敏感資料存放在加密資料庫中（傳輸與儲存均加密）。",
     aboutPrivacyNoTracesTitle: "不留痕跡",
-    aboutPrivacyNoTracesBody: "我們承諾絕不儲存或濫用你的私人位置資料。請放心探索。",
+    aboutPrivacyNoTracesBody: "我們不會追蹤或保留你的位置歷史——GPS 僅用於短暫驗證你所在的城區，之後即刪除。請放心探索。",
     aboutPrivacyLinkMore: "更多詳細的隱私介紹",
     aboutVisionTitle: "我們的願景",
     aboutVisionP1:
@@ -1239,7 +1239,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "멜버른 기반의 정확한 위치 추천으로 집 앞에서 보물 같은 물건을 발견하세요. 판매자가 바로 옆 거리에 살 수 있다는 걸 알면, 모든 거래에 눈에 보이는 신뢰가 생깁니다.",
     aboutWhySafetyTitle: "안전이 우리의 핵심 원칙",
     aboutWhySafetyBody:
-      "당신의 안전이 최우선입니다. 멜버른 전역에서 안전한 공공 장소를 엄선해 대면 거래를 돕고, 학생 신원 인증을 권장합니다. PopOut의 모든 거래에 한 겹 더 안심이 더해집니다.",
+      "당신의 안전이 최우선입니다. 멜버른에서 사람이 많고 밝은 공공장소를 더 안전한 대면 거래 장소로 추천하고, 학생 신원 인증을 권장합니다. PopOut의 모든 거래에 한 겹 더 안심이 더해집니다.",
     aboutWhyCommunicationTitle: "국경 없는 소통",
     aboutWhyCommunicationBody:
       "언어는 연결의 장벽이 되어서는 안 됩니다. PopOut에는 강력한 실시간 이중 언어 번역이 있습니다. 모국어로 채팅하면 상대에게는 자동으로 번역됩니다. 영어가 완벽하지 않아도 자유롭게 거래하고 마음이 맞는 친구를 만나세요.",
@@ -1248,9 +1248,9 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalTitle: "최소 수집",
     aboutPrivacyMinimalBody: "로그인 확인을 위해 전화번호와 이메일 등 필수 정보만 수집합니다.",
     aboutPrivacyStorageTitle: "높은 수준의 저장",
-    aboutPrivacyStorageBody: "민감한 데이터는 세계 수준의 암호화 데이터베이스에 보관됩니다.",
+    aboutPrivacyStorageBody: "민감한 데이터는 전송 구간과 저장 모두 암호화된 데이터베이스에 보관됩니다.",
     aboutPrivacyNoTracesTitle: "흔적 없음",
-    aboutPrivacyNoTracesBody: "개인 위치 데이터를 저장하거나 남용하지 않겠습니다. 안심하고 이용하세요.",
+    aboutPrivacyNoTracesBody: "위치 기록을 추적하거나 보관하지 않습니다. GPS는 거주 지역(서버브) 확인을 위해 잠깐만 사용된 뒤 삭제됩니다. 안심하고 이용하세요.",
     aboutPrivacyLinkMore: "자세한 개인정보 안내",
     aboutVisionTitle: "비전",
     aboutVisionP1:
@@ -1508,7 +1508,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "メルボルンに基づく位置情報のおすすめで、家のすぐそばの掘り出し物を見つけられます。売り手が隣の通りに住んでいるかもしれないと分かれば、取引に目に見える信頼が生まれます。",
     aboutWhySafetyTitle: "安全が私たちの核",
     aboutWhySafetyBody:
-      "あなたの安全が最優先です。対面取引用にメルボルン中の安全な公共スポットを厳選し、学生身分の確認も推奨しています。PopOut上の取引には、さらに一層の安心があります。",
+      "あなたの安全が最優先です。対面取引には、メルボルンの人通りが多く明るい公共スポットをより安全な場所としておすすめし、学生身分の確認も推奨しています。PopOut上の取引には、さらに一層の安心があります。",
     aboutWhyCommunicationTitle: "国境のないコミュニケーション",
     aboutWhyCommunicationBody:
       "言語がつながりの障壁になるべきではありません。PopOutには強力なリアルタイム二言語翻訳があります。母語でチャットすれば、相手には自動翻訳が届きます。英語が完璧でなくても、自由に取引し、気の合う友だちを作れます。",
@@ -1517,9 +1517,9 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalTitle: "最小限のデータ収集",
     aboutPrivacyMinimalBody: "ログイン確認のため、電話番号やメールなど必要な情報だけを収集します。",
     aboutPrivacyStorageTitle: "高水準の保管",
-    aboutPrivacyStorageBody: "機微なデータは世界水準の暗号化データベースに保存されます。",
+    aboutPrivacyStorageBody: "機微なデータは、通信時も保存時も暗号化されたデータベースに保管されます。",
     aboutPrivacyNoTracesTitle: "痕跡を残さない",
-    aboutPrivacyNoTracesBody: "個人の位置データを保存・悪用することはありません。安心してご利用ください。",
+    aboutPrivacyNoTracesBody: "位置情報の履歴を追跡・保存することはありません。GPSはお住まいのサバーブ確認のために短時間だけ使用し、その後削除します。安心してご利用ください。",
     aboutPrivacyLinkMore: "プライバシーの詳細",
     aboutVisionTitle: "ビジョン",
     aboutVisionP1:
@@ -1778,7 +1778,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Gợi ý theo vị trí chính xác tại Melbourne giúp bạn khám phá món hời ngay trước cửa. Biết người bán có thể ở ngay phố bên cạnh tạo nền tảng tin cậy cho mỗi giao dịch.",
     aboutWhySafetyTitle: "An toàn là nguyên tắc cốt lõi",
     aboutWhySafetyBody:
-      "Sự an toàn của bạn được đặt lên hàng đầu. Chúng tôi chọn các điểm gặp công cộng an toàn nhất khắp Melbourne và khuyến khích xác minh danh tính sinh viên. Mỗi giao dịch trên PopOut có thêm một lớp đảm bảo.",
+      "Sự an toàn của bạn được đặt lên hàng đầu. Chúng tôi gợi ý những điểm gặp công cộng đông người, đủ ánh sáng khắp Melbourne làm nơi giao dịch trực tiếp an toàn hơn, và khuyến khích xác minh danh tính sinh viên. Mỗi giao dịch trên PopOut có thêm một lớp đảm bảo.",
     aboutWhyCommunicationTitle: "Kết nối không biên giới",
     aboutWhyCommunicationBody:
       "Ngôn ngữ không nên là rào cản. PopOut có dịch song ngữ thời gian thực mạnh. Trò chuyện bằng tiếng mẹ đẻ — đối phương nhận bản dịch tự động. Dù tiếng Anh chưa hoàn hảo, bạn vẫn có thể giao dịch tự do và kết bạn.",
@@ -1788,10 +1788,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalBody:
       "Chúng tôi chỉ thu thập thông tin cần thiết như số điện thoại và email để xác minh đăng nhập.",
     aboutPrivacyStorageTitle: "Lưu trữ tiêu chuẩn cao",
-    aboutPrivacyStorageBody: "Dữ liệu nhạy cảm được lưu trong cơ sở dữ liệu mã hóa hàng đầu. ",
+    aboutPrivacyStorageBody: "Dữ liệu nhạy cảm được lưu trong cơ sở dữ liệu mã hóa, cả khi truyền và khi lưu trữ.",
     aboutPrivacyNoTracesTitle: "Không lưu dấu vết",
     aboutPrivacyNoTracesBody:
-      "Chúng tôi cam kết không lưu trữ hay lạm dụng dữ liệu vị trí riêng tư của bạn. Hãy khám phá với an tâm.",
+      "Chúng tôi không theo dõi hay lưu giữ lịch sử vị trí của bạn — GPS chỉ được dùng trong giây lát để xác minh khu vực (suburb) của bạn rồi xóa ngay. Hãy khám phá với an tâm.",
     aboutPrivacyLinkMore: "Thông tin chi tiết về quyền riêng tư",
     aboutVisionTitle: "Tầm nhìn",
     aboutVisionP1:
@@ -2052,7 +2052,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Des recommandations précises basées sur la localisation à Melbourne vous aident à découvrir des pépites près de chez vous. Savoir que le vendeur habite peut‑être la rue suivante donne à chaque échange une confiance visible.",
     aboutWhySafetyTitle: "La sécurité est notre principe fondamental",
     aboutWhySafetyBody:
-      "Votre sécurité passe avant tout. Nous avons sélectionné les lieux publics les plus sûrs pour les remises en main propre et encourageons la vérification du statut étudiant. Chaque transaction sur PopOut comporte une assurance supplémentaire.",
+      "Votre sécurité passe avant tout. Nous suggérons des lieux publics fréquentés et bien éclairés à Melbourne comme endroits plus sûrs pour les remises en main propre, et encourageons la vérification du statut étudiant. Chaque transaction sur PopOut comporte une assurance supplémentaire.",
     aboutWhyCommunicationTitle: "Communiquer sans frontières",
     aboutWhyCommunicationBody:
       "La langue ne doit pas être un obstacle. PopOut propose une traduction bilingue en temps réel. Écrivez dans votre langue — l’autre reçoit une traduction automatique. Même si votre anglais n’est pas parfait, vous pouvez échanger et vous faire des amis.",
@@ -2062,10 +2062,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalBody:
       "Nous ne collectons que l’essentiel — téléphone et e‑mail pour la vérification de connexion.",
     aboutPrivacyStorageTitle: "Stockage exigeant",
-    aboutPrivacyStorageBody: "Vos données sensibles sont stockées dans des bases chiffrées de niveau mondial.",
+    aboutPrivacyStorageBody: "Vos données sensibles sont stockées dans des bases chiffrées, en transit comme au repos.",
     aboutPrivacyNoTracesTitle: "Aucune trace",
     aboutPrivacyNoTracesBody:
-      "Nous ne conservons ni n’abusons jamais de vos données de localisation privées. Explorez l’appli en toute sérénité.",
+      "Nous ne suivons ni ne conservons votre historique de localisation : le GPS sert uniquement, brièvement, à vérifier votre quartier (suburb), puis il est supprimé. Explorez l’appli en toute sérénité.",
     aboutPrivacyLinkMore: "Plus d’informations sur la confidentialité",
     aboutVisionTitle: "Notre vision",
     aboutVisionP1:
@@ -2326,7 +2326,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Recomendaciones precisas por ubicación en Melbourne te ayudan a descubrir joyas a la vuelta de la esquina. Saber que el vendedor puede vivir en la calle de al lado da a cada intercambio una confianza visible.",
     aboutWhySafetyTitle: "La seguridad es nuestro principio central",
     aboutWhySafetyBody:
-      "Tu seguridad es lo primero. Hemos elegido los lugares públicos más seguros de Melbourne para las entregas en persona y animamos a verificar la condición de estudiante. Cada transacción en PopOut lleva una capa extra de tranquilidad.",
+      "Tu seguridad es lo primero. Sugerimos lugares públicos concurridos y bien iluminados de Melbourne como puntos más seguros para las entregas en persona, y animamos a verificar la condición de estudiante. Cada transacción en PopOut lleva una capa extra de tranquilidad.",
     aboutWhyCommunicationTitle: "Comunicación sin fronteras",
     aboutWhyCommunicationBody:
       "El idioma no debe ser una barrera. PopOut ofrece traducción bilingüe en tiempo real. Escribe en tu lengua — la otra persona recibe traducción automática. Aunque tu inglés no sea perfecto, puedes comerciar con libertad y hacer amigos.",
@@ -2336,10 +2336,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyMinimalBody:
       "Solo recopilamos lo esencial, como teléfono y correo, para verificar el inicio de sesión.",
     aboutPrivacyStorageTitle: "Almacenamiento de alto nivel",
-    aboutPrivacyStorageBody: "Tus datos sensibles se guardan en bases cifradas de primer nivel.",
+    aboutPrivacyStorageBody: "Tus datos sensibles se guardan en bases de datos cifradas, tanto en tránsito como en reposo.",
     aboutPrivacyNoTracesTitle: "Sin rastros",
     aboutPrivacyNoTracesBody:
-      "Prometemos no almacenar ni abusar de tus datos de ubicación privados. Explora con tranquilidad.",
+      "No rastreamos ni conservamos tu historial de ubicación: el GPS solo se usa brevemente para verificar tu barrio (suburb) y luego se elimina. Explora con tranquilidad.",
     aboutPrivacyLinkMore: "Más información sobre privacidad",
     aboutVisionTitle: "Nuestra visión",
     aboutVisionP1:
