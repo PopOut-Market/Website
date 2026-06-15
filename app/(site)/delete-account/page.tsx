@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+// Store-compliance utility page — keep it out of the index.
+export const metadata: Metadata = {
+  title: "Delete Your Account",
+  robots: { index: false, follow: true },
+};
+
 export default function DeleteAccountPage() {
   return (
     <main className="p-6">
