@@ -85,13 +85,17 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Keep API, Next internals, admin routes, and static assets untouched.
+  // Keep API, Next internals, admin routes, static assets, and the device-
+  // detecting /app smart link untouched (the latter must stay un-prefixed so the
+  // clean /app URL serves directly instead of 308-ing to /en/app).
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/admin-super") ||
     pathname.startsWith("/favicon") ||
+    pathname === "/app" ||
+    pathname === "/app/" ||
     isStaticAsset(pathname)
   ) {
     return NextResponse.next();
