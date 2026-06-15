@@ -36,8 +36,8 @@ export default function PrivacyPage() {
           <div className="mt-3 space-y-1 text-sm text-gray-600">
             <p>POPOUT MARKET PTY LTD</p>
             <p>ACN 696 464 945</p>
-            <p>Effective Date: 28 March 2026</p>
-            <p>Version: 1.5</p>
+            <p>Effective Date: 16 June 2026</p>
+            <p>Version: 1.6</p>
           </div>
 
           <p className="mt-3 text-xs italic text-gray-500">
@@ -54,8 +54,8 @@ export default function PrivacyPage() {
               </p>
               <p>
                 This Privacy Policy explains how we collect, use, disclose and store your
-                personal information when you use the Popout Market application and related
-                services.
+                personal information when you use the Popout Market application, this website,
+                and related services.
               </p>
             </PrivacySection>
 
@@ -91,6 +91,28 @@ export default function PrivacyPage() {
                 <li>Directly from you, when you create an account, submit listings, upload photos, send messages, contact support or otherwise use the application; and</li>
                 <li>Automatically from your device or application use, including technical data collected through our service providers and temporary GPS access used for suburb verification.</li>
               </ul>
+            </PrivacySection>
+
+            <PrivacySection title="Website, Contact Form and Cookies">
+              <p>
+                This Privacy Policy also applies to our website at
+                www.popoutmarket.com.au.
+              </p>
+              <p>
+                When you use the contact form on our website, we collect the message
+                content you submit, together with your IP address, the page language and a
+                timestamp. We use this information to receive, review and respond to your
+                enquiry. The message is delivered to us by email through a third-party email
+                (SMTP) provider, and we retain the resulting email for as long as reasonably
+                necessary to handle your enquiry and keep records of our communications.
+              </p>
+              <p>
+                Our website uses a single functional cookie, &quot;popout_locale&quot;, which
+                remembers your preferred language for up to 12 months. It is strictly
+                necessary for the multilingual website to work and is not used for
+                advertising, analytics or tracking. We do not use third-party advertising or
+                analytics trackers on the website.
+              </p>
             </PrivacySection>
 
             <PrivacySection title="Location Verification">
@@ -194,7 +216,7 @@ export default function PrivacyPage() {
               </p>
             </PrivacySection>
 
-            <PrivacySection title="12. Data Retention">
+            <PrivacySection title="Data Retention">
               <p>
                 We retain personal information only for as long as reasonably necessary for our
                 functions and legal obligations. Our current retention practices include:

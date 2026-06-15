@@ -6,8 +6,8 @@
 
 - POPOUT MARKET PTY LTD  
 - ACN 696 464 945  
-- Effective Date: 28 March 2026  
-- Version: 1.5  
+- Effective Date: 16 June 2026  
+- Version: 1.6  
 
 ---
 
@@ -15,7 +15,7 @@
 
 POPOUT MARKET PTY LTD ("we", "us", or "our") is committed to protecting your privacy and handling personal information in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs).
 
-This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the Popout Market application and related services.
+This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the Popout Market application, this website, and related services.
 
 ---
 
@@ -46,6 +46,16 @@ We collect personal information from two main sources:
 
 - Directly from you, when you create an account, submit listings, upload photos, send messages, contact support or otherwise use the application; and
 - Automatically from your device or application use, including technical data collected through our service providers and temporary GPS access used for suburb verification.
+
+---
+
+## Website, Contact Form and Cookies
+
+This Privacy Policy also applies to our website at www.popoutmarket.com.au.
+
+When you use the contact form on our website, we collect the message content you submit, together with your IP address, the page language and a timestamp. We use this information to receive, review and respond to your enquiry. The message is delivered to us by email through a third-party email (SMTP) provider, and we retain the resulting email for as long as reasonably necessary to handle your enquiry and keep records of our communications.
+
+Our website uses a single functional cookie, "popout_locale", which remembers your preferred language for up to 12 months. It is strictly necessary for the multilingual website to work and is not used for advertising, analytics or tracking. We do not use third-party advertising or analytics trackers on the website.
 
 ---
 
@@ -119,7 +129,7 @@ If we become aware of an eligible data breach that is likely to result in seriou
 
 ---
 
-## 12. Data Retention
+## Data Retention
 
 We retain personal information only for as long as reasonably necessary for our functions and legal obligations. Our current retention practices include:
 
