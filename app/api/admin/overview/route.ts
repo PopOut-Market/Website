@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 type Bucket = { posts: number; likes: number; dealResults: number };
 type CachedResult = {
@@ -22,9 +21,6 @@ function startOfTodayIso(): string {
 }
 
 export async function GET(req: Request) {
-  const gate = await requireAdmin(req);
-  if (gate instanceof NextResponse) return gate;
-
   const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
   const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
 

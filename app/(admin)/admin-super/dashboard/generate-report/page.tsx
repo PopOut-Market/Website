@@ -1,6 +1,5 @@
 "use client";
 
-import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
@@ -152,7 +151,7 @@ async function fetchReportData(
     }
   }
 
-  const res = await adminApiFetch(
+  const res = await fetch(
     `/api/admin/report?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`,
     { cache: "no-store" },
   );

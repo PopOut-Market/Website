@@ -1,5 +1,4 @@
 import { FOOTER_CONTACT_EMAIL } from "@/lib/site-config";
-import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -20,18 +19,6 @@ function escapeHtml(input: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  // Abuse guard: cap submissions per IP so the contact endpoint can't be used
-  // to exhaust the SMTP quota or flood the inbox.
-  const rl = rateLimit(`contact:${clientIp(req)}`, 5, 10 * 60_000);
-  if (!rl.ok) {
-    const res = NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 },
-    );
-    res.headers.set("Retry-After", String(rl.retryAfterSec));
-    return res;
-  }
-
   let payload: unknown;
   try {
     payload = await req.json();
