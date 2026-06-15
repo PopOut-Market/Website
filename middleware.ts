@@ -64,25 +64,14 @@ function localeFromAcceptLanguageHeader(headerValue: string | null): Locale | nu
   return null;
 }
 
-// Canonical host. The apex (non-www) and www both resolve to the same origin,
-// so without this every URL exists twice and Google splits crawl budget /
-// dilutes ranking signals across the duplicate. Force a single host: any request
-// to the bare apex 301-redirects to the www version, matching the canonical /
-// metadataBase host used in lib/seo.ts. Leaves localhost and *.netlify.app
-// preview hosts untouched.
-const APEX_HOST = "popoutmarket.com.au";
-const CANONICAL_HOST = "www.popoutmarket.com.au";
+// NOTE: apex(non-www)->www canonicalization is intentionally NOT done here.
+// Netlify already redirects between apex and www based on the primary-domain
+// setting; adding the opposite redirect in middleware creates an infinite loop
+// (apex->www via middleware, www->apex via Netlify). The single canonical host
+// must be enforced in ONE place only — the Netlify domain settings. Set the
+// primary domain to www there to match the canonical/metadataBase in lib/seo.ts.
 
 export function middleware(request: NextRequest) {
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (host === APEX_HOST) {
-    const url = request.nextUrl.clone();
-    url.protocol = "https:";
-    url.hostname = CANONICAL_HOST;
-    url.port = "";
-    return NextResponse.redirect(url, 301);
-  }
-
   const { pathname } = request.nextUrl;
 
   // Keep API, Next internals, admin routes, static assets, and the device-
