@@ -83,6 +83,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/admin-super") ||
     pathname.startsWith("/favicon") ||
+    pathname.startsWith("/opengraph-image") ||
+    pathname.startsWith("/twitter-image") ||
     pathname === "/app" ||
     pathname === "/app/" ||
     isStaticAsset(pathname)

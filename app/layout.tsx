@@ -12,6 +12,21 @@ export const metadata: Metadata = {
   },
   description:
     "PopOut Market helps Melbourne communities buy and sell second-hand items with suburb-first discovery, multilingual communication, and safer meetup workflows.",
+  // og:image / twitter:image are supplied automatically by app/opengraph-image.tsx
+  // and app/twitter-image.tsx. These set the card type and shared defaults.
+  openGraph: {
+    type: "website",
+    siteName: "PopOut Market",
+    title: "PopOut Market",
+    description:
+      "Melbourne's second-hand marketplace — buy and sell locally with suburb-first discovery and multilingual chat.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PopOut Market",
+    description:
+      "Melbourne's second-hand marketplace — buy and sell locally with suburb-first discovery and multilingual chat.",
+  },
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png", sizes: "1024x1024" },
