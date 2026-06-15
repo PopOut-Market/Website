@@ -165,7 +165,7 @@ export type HeroCarouselProps = {
   loadingListingsAria: string;
 };
 
-export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroCarouselProps) {
+export function HeroCarousel({ locale, noImageAria }: HeroCarouselProps) {
   const { ref: sectionRef, active } = useSectionVisible({
     startThreshold: 0.15,
     stopThreshold: 0.05,
@@ -177,24 +177,19 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
   const configured = isSupabaseBrowserConfigured();
   const demoItems = useMemo(() => demoSlides(t), [t]);
 
-  const [slides, setSlides] = useState<CarouselSlide[]>(() =>
-    configured ? [] : demoItems,
-  );
-  const [loadState, setLoadState] = useState<"loading" | "done">(() =>
-    configured ? "loading" : "done",
-  );
+  // Render demo slides immediately (these are in the server-rendered HTML too),
+  // so the hero shows real content on first paint instead of a blank spinner.
+  // Live listings replace the demo slides once the client fetch resolves — the
+  // LCP element is therefore never gated on a network round-trip.
+  const [slides, setSlides] = useState<CarouselSlide[]>(() => demoItems);
 
   useEffect(() => {
     if (!configured) {
       setSlides(demoItems);
-      setLoadState("done");
       return;
     }
 
     let cancelled = false;
-    setLoadState("loading");
-    setSlides([]);
-
     (async () => {
       try {
         const client = getSupabaseBrowserClient();
@@ -202,15 +197,9 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
         if (cancelled) return;
         if (errorMessage) {
           console.error("[PopOut Market] Hero carousel listings failed:", errorMessage);
-          setSlides(demoItems);
-          setLoadState("done");
-          return;
+          return; // keep the demo slides already on screen
         }
-        if (listings.length === 0) {
-          setSlides(demoItems);
-          setLoadState("done");
-          return;
-        }
+        if (listings.length === 0) return; // keep the demo slides
         setSlides(
           listings.map((L) => ({
             reactKey: `post-${L.id}`,
@@ -222,13 +211,11 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
             href: toLocalePath(`/market/p/${encodeURIComponent(L.id)}`, locale),
           })),
         );
-        setLoadState("done");
       } catch (e) {
         if (cancelled) return;
         const msg = e instanceof Error ? e.message : String(e);
         console.error("[PopOut Market] Hero carousel listings failed:", msg);
-        setSlides(demoItems);
-        setLoadState("done");
+        // keep the demo slides already on screen
       }
     })();
 
@@ -395,30 +382,20 @@ export function HeroCarousel({ locale, noImageAria, loadingListingsAria }: HeroC
       onPointerCancel={onPointerUp}
     >
       <div className="relative mx-auto h-[280px] w-full sm:h-[300px] md:h-[320px]">
-        {configured && loadState === "loading" ? (
-          <div className="flex h-full items-center justify-center">
-            <div
-              className="h-9 w-9 animate-spin rounded-full border-2 border-black/10 border-t-black/40"
-              role="status"
-              aria-label={loadingListingsAria}
-            />
-          </div>
-        ) : (
-          cards.map(({ slide, style, dataIdx, priority, isCenter, onActivate }) => (
-            <CarouselCard
-              key={`${dataIdx}-${slide.reactKey}`}
-              slide={slide}
-              style={style}
-              noImageAria={noImageAria}
-              priority={priority}
-              isCenter={isCenter}
-              onActivate={onActivate}
-            />
-          ))
-        )}
+        {cards.map(({ slide, style, dataIdx, priority, isCenter, onActivate }) => (
+          <CarouselCard
+            key={`${dataIdx}-${slide.reactKey}`}
+            slide={slide}
+            style={style}
+            noImageAria={noImageAria}
+            priority={priority}
+            isCenter={isCenter}
+            onActivate={onActivate}
+          />
+        ))}
       </div>
 
-      {total > 0 && !(configured && loadState === "loading") ? (
+      {total > 0 ? (
         <div className="mt-2 flex items-center justify-center gap-2 sm:mt-3">
           {slides.map((s, i) => (
             <button
