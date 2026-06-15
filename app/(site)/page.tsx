@@ -1,8 +1,17 @@
 import { HomePageContent } from "@/components/home-page-content";
 import { getServerLocale } from "@/lib/server-locale";
 import { localizedMetadata } from "@/lib/site-seo-copy";
+import {
+  APP_STORE_URL,
+  FOOTER_CONTACT_EMAIL,
+  FOOTER_SOCIAL_LINKEDIN_DEFAULT,
+  FOOTER_SOCIAL_REDNOTE_DEFAULT,
+} from "@/lib/site-config";
 import type { Metadata } from "next";
 
+// Real, verifiable external identifiers (App Store + social profiles + ACN +
+// address) are the strongest trust signals AI assistants use to recognise and
+// cite an entity. operatingSystem is iOS-only until the Android app ships.
 const homeJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -23,18 +32,36 @@ const homeJsonLd = {
     {
       "@type": "Organization",
       name: "PopOut Market",
+      legalName: "POPOUT MARKET PTY LTD",
       url: "https://www.popoutmarket.com.au/",
       logo: "https://www.popoutmarket.com.au/favicon.png",
+      email: FOOTER_CONTACT_EMAIL,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "1003/151 City Rd",
+        addressLocality: "Southbank",
+        addressRegion: "VIC",
+        postalCode: "3006",
+        addressCountry: "AU",
+      },
       areaServed: {
         "@type": "City",
         name: "Melbourne",
       },
+      sameAs: [
+        APP_STORE_URL,
+        FOOTER_SOCIAL_LINKEDIN_DEFAULT,
+        FOOTER_SOCIAL_REDNOTE_DEFAULT,
+      ],
     },
     {
       "@type": "MobileApplication",
       name: "PopOut Market",
       applicationCategory: "MarketplaceApplication",
-      operatingSystem: "iOS, Android",
+      operatingSystem: "iOS",
+      url: "https://www.popoutmarket.com.au/",
+      downloadUrl: APP_STORE_URL,
+      installUrl: APP_STORE_URL,
       areaServed: {
         "@type": "City",
         name: "Melbourne",
