@@ -1,11 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
 export async function GET(req: Request) {
+  const gate = await requireAdmin(req);
+  if (gate instanceof NextResponse) return gate;
+
   const supabaseUrl =
     env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
   const serviceRoleKey =

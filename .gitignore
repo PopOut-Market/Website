@@ -28,3 +28,9 @@ Screenshot*.png
 # Internal SEO/GEO notes — do NOT upload
 SEO-GEO-TODO.md
 MARKETING-DRAFTS.md
+
+# Internal audit findings — do NOT upload
+WEBSITE-AUDIT-FINDINGS.md
+
+# Claude Code local settings
+.claude/

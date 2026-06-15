@@ -1,6 +1,7 @@
 "use client";
 
 import { KpiCard } from "@/components/admin/kpi-card";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useEffect, useState } from "react";
 
 type FeedbackRow = {
@@ -26,7 +27,7 @@ export default function FeedbackPage() {
       setLoading(true);
 
       try {
-        const res = await fetch("/api/admin/feedback", { cache: "no-store" });
+        const res = await adminApiFetch("/api/admin/feedback", { cache: "no-store" });
         if (!res.ok) {
           setLoading(false);
           return;

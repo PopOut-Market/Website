@@ -1,0 +1,82 @@
+import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
+
+/**
+ * Server-side authorization gate for every `/api/admin/*` route.
+ *
+ * These routes use the Supabase service-role key, which bypasses Row Level
+ * Security, so they MUST verify the caller before doing anything. The browser
+ * sends the admin's Supabase access token as `Authorization: Bearer <jwt>`
+ * (see lib/supabase/admin-fetch.ts). We validate the token with Supabase and
+ * then check the email against the `ADMIN_EMAILS` allowlist.
+ *
+ * Fails CLOSED: if `ADMIN_EMAILS` is not configured, all access is denied.
+ */
+
+function env(name: string): string {
+  return (process.env[name] ?? "").trim();
+}
+
+function adminEmailAllowlist(): Set<string> {
+  return new Set(
+    env("ADMIN_EMAILS")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
+function deny(status: number, message: string): NextResponse {
+  return NextResponse.json({ error: message }, { status });
+}
+
+/**
+ * Returns `{ email }` for an authorized admin, or a `NextResponse` (401/403/429/500)
+ * to return immediately. Usage:
+ *   const gate = await requireAdmin(req);
+ *   if (gate instanceof NextResponse) return gate;
+ *   // ... gate.email is a verified admin
+ */
+export async function requireAdmin(
+  req: Request,
+): Promise<{ email: string } | NextResponse> {
+  // Throttle auth attempts per IP to blunt brute force / scripted probing.
+  const rl = rateLimit(`admin:${clientIp(req)}`, 60, 60_000);
+  if (!rl.ok) {
+    const res = deny(429, "Too many requests.");
+    res.headers.set("Retry-After", String(rl.retryAfterSec));
+    return res;
+  }
+
+  const allowlist = adminEmailAllowlist();
+  if (allowlist.size === 0) {
+    // Misconfiguration must not silently grant access.
+    return deny(503, "Admin access is not configured (ADMIN_EMAILS unset).");
+  }
+
+  const authHeader = req.headers.get("authorization") ?? "";
+  const token = authHeader.toLowerCase().startsWith("bearer ")
+    ? authHeader.slice(7).trim()
+    : "";
+  if (!token) return deny(401, "Missing bearer token.");
+
+  const supabaseUrl =
+    env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
+  const anonKey =
+    env("EXPO_PUBLIC_SUPABASE_ANON_KEY") || env("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !anonKey) {
+    return deny(500, "Supabase is not configured on the server.");
+  }
+
+  const sb = createClient(supabaseUrl, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
+  const { data, error } = await sb.auth.getUser(token);
+  const email = data.user?.email?.toLowerCase() ?? "";
+  if (error || !email) return deny(401, "Invalid or expired session.");
+  if (!allowlist.has(email)) return deny(403, "Not authorized.");
+
+  return { email };
+}

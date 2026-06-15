@@ -5,6 +5,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useCallback, useEffect, useState } from "react";
 import {
   Area,
@@ -117,7 +118,7 @@ export default function LikesPage() {
     if (cache !== null) return;
     setTopLoading(true);
     try {
-      const res = await fetch(`/api/admin/top-liked?period=${period}`, { cache: "no-store" });
+      const res = await adminApiFetch(`/api/admin/top-liked?period=${period}`, { cache: "no-store" });
       if (res.ok) {
         const { topPosts: tp } = await res.json();
         if (period === "all") setTopPostsAll(tp ?? []);

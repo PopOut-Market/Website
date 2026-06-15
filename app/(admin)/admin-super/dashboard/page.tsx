@@ -5,6 +5,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -247,7 +248,7 @@ export default function DashboardOverviewPage() {
       setLoadWarning(null);
 
       try {
-        const res = await fetch(`/api/admin/overview?range=${range}`, { cache: "no-store" });
+        const res = await adminApiFetch(`/api/admin/overview?range=${range}`, { cache: "no-store" });
         if (!res.ok) {
           const errBody = await res.json().catch(() => ({}));
           await loadViaBrowserFallback();
