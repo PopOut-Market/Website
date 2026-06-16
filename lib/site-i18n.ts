@@ -300,7 +300,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     heroSecondaryLink: "",
     heroSecondarySuffix: "",
     heroExploreCta: "Explore more items near you",
-    downloadLine: "Download the PopOut Market app for iOS or Android123",
+    downloadLine: "Download the PopOut Market app for iOS or Android",
     slogan: "buy and sell with people around you",
     ratingAria: "Rating 4.5 out of 5 stars",
     homeAria: "PopOut home",
