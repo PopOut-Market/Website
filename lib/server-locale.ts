@@ -15,9 +15,7 @@ export type LocaleParams = { params: Promise<{ locale: string }> };
  * it does NOT read headers — so pages that use it can be statically generated
  * per locale via generateStaticParams.
  */
-export async function localeFromParams(
-  params: Promise<{ locale: string }>,
-): Promise<Locale> {
+export async function localeFromParams(params: Promise<{ locale: string }>): Promise<Locale> {
   const { locale } = await params;
   return localeFromSegment(locale) ?? DEFAULT_LOCALE;
 }

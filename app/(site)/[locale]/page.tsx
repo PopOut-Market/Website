@@ -48,11 +48,7 @@ const homeJsonLd = {
         "@type": "City",
         name: "Melbourne",
       },
-      sameAs: [
-        APP_STORE_URL,
-        FOOTER_SOCIAL_LINKEDIN_DEFAULT,
-        FOOTER_SOCIAL_REDNOTE_DEFAULT,
-      ],
+      sameAs: [APP_STORE_URL, FOOTER_SOCIAL_LINKEDIN_DEFAULT, FOOTER_SOCIAL_REDNOTE_DEFAULT],
     },
     {
       "@type": "MobileApplication",

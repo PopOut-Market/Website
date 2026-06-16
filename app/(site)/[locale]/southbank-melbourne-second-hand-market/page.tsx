@@ -3,8 +3,7 @@ import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-const title =
-  "Southbank Melbourne Second-Hand Market: Furniture, Art Supplies & Studio Essentials";
+const title = "Southbank Melbourne Second-Hand Market: Furniture, Art Supplies & Studio Essentials";
 const description =
   "Discover second-hand furniture, art supplies & studio essentials in Southbank, Melbourne. Perfect for UniLodge students & compact apartments. Buy, sell, save!";
 
@@ -53,9 +52,7 @@ export default function SouthbankSeoPage() {
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-            Geo Tags
-          </h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Geo Tags</h2>
           <ul className="mt-3 space-y-1 text-sm text-gray-700">
             <li>Southbank</li>
             <li>Melbourne</li>

@@ -2,8 +2,7 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-const title =
-  "2026 墨尔本留学生毕业季回血指南 | 墨大/RMIT/Monash 卖闲置攻略 - PopOut Market";
+const title = "2026 墨尔本留学生毕业季回血指南 | 墨大/RMIT/Monash 卖闲置攻略 - PopOut Market";
 const description =
   "准备离开墨尔本？PopOut Market 为 2026 届墨大、RMIT、Monash 留学生提供卖闲置实用指南，覆盖 Carlton、Parkville、CBD 等高频区域与学生公寓交易节奏。";
 
@@ -126,7 +125,9 @@ export default function GraduationMoveOutGuidePage() {
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
       <div className={`${INNER_MAX} max-w-4xl`}>
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">{title}</h1>
+        <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+          {title}
+        </h1>
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
         <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
@@ -136,8 +137,12 @@ export default function GraduationMoveOutGuidePage() {
           </p>
           <div className="mt-4 rounded-xl border border-black/10 bg-brand-tint p-4">
             <p className="text-sm font-semibold text-gray-900">S1 搬家高峰：6 月下旬</p>
-            <p className="mt-1 text-sm text-gray-700">考试周后 1 周通常是家具与教材出货黄金窗口。</p>
-            <p className="mt-3 text-sm font-semibold text-gray-900">S2 毕业清仓：11 月中旬 - 12 月初</p>
+            <p className="mt-1 text-sm text-gray-700">
+              考试周后 1 周通常是家具与教材出货黄金窗口。
+            </p>
+            <p className="mt-3 text-sm font-semibold text-gray-900">
+              S2 毕业清仓：11 月中旬 - 12 月初
+            </p>
             <p className="mt-1 text-sm text-gray-700">全年需求最强窗口，建议提前备图并分批上架。</p>
             <p className="mt-3 text-sm font-semibold text-gray-900">春节前离澳人群提醒</p>
             <p className="mt-1 text-sm text-gray-700">
@@ -148,13 +153,19 @@ export default function GraduationMoveOutGuidePage() {
 
         <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">2) 核心区域与公寓交易场景</h2>
-          <h3 className="mt-4 text-base font-semibold text-gray-900">Parkville & Carlton（墨大主场）</h3>
+          <h3 className="mt-4 text-base font-semibold text-gray-900">
+            Parkville & Carlton（墨大主场）
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">
-            常见学生居住圈覆盖 Little Hall、UniLodge、Scape 等。区域内买家同校比例高，近距离面交效率更高。
+            常见学生居住圈覆盖 Little Hall、UniLodge、Scape
+            等。区域内买家同校比例高，近距离面交效率更高。
           </p>
-          <h3 className="mt-4 text-base font-semibold text-gray-900">Melbourne CBD（RMIT / Monash City）</h3>
+          <h3 className="mt-4 text-base font-semibold text-gray-900">
+            Melbourne CBD（RMIT / Monash City）
+          </h3>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">
-            常见公寓群包括 Scape Swanston、Journal、Iglu。适合“下楼即取”类型交易，对响应速度要求更高。
+            常见公寓群包括 Scape
+            Swanston、Journal、Iglu。适合“下楼即取”类型交易，对响应速度要求更高。
           </p>
         </section>
 
@@ -164,14 +175,22 @@ export default function GraduationMoveOutGuidePage() {
             <table className="min-w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">物品类别</th>
-                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">建议挂牌时间</th>
-                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">PopOut 小贴士</th>
+                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">
+                    物品类别
+                  </th>
+                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">
+                    建议挂牌时间
+                  </th>
+                  <th className="border border-gray-200 px-3 py-2 font-semibold text-gray-900">
+                    PopOut 小贴士
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-gray-200 px-3 py-2 text-gray-700">大件家具（床/桌）</td>
+                  <td className="border border-gray-200 px-3 py-2 text-gray-700">
+                    大件家具（床/桌）
+                  </td>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">离澳前 4-6 周</td>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">
                     描述中写明可取货时段，并优先约在 Lobby 或公共区域。
@@ -180,18 +199,25 @@ export default function GraduationMoveOutGuidePage() {
                 <tr>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">生活小家电</td>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">离澳前 2 周</td>
-                  <td className="border border-gray-200 px-3 py-2 text-gray-700">补充细节图与功能状态，提升决策效率。</td>
+                  <td className="border border-gray-200 px-3 py-2 text-gray-700">
+                    补充细节图与功能状态，提升决策效率。
+                  </td>
                 </tr>
                 <tr>
                   <td className="border border-gray-200 px-3 py-2 text-gray-700">教材/文具</td>
-                  <td className="border border-gray-200 px-3 py-2 text-gray-700">考试周结束后 3 天内</td>
-                  <td className="border border-gray-200 px-3 py-2 text-gray-700">需求高峰短，定价合理更容易快速成交。</td>
+                  <td className="border border-gray-200 px-3 py-2 text-gray-700">
+                    考试周结束后 3 天内
+                  </td>
+                  <td className="border border-gray-200 px-3 py-2 text-gray-700">
+                    需求高峰短，定价合理更容易快速成交。
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-gray-700">
-            安全提示：即使同楼交易，也建议在 Lobby 或公共区域交接。优先使用站内聊天沟通，避免泄露私人联系方式。
+            安全提示：即使同楼交易，也建议在 Lobby
+            或公共区域交接。优先使用站内聊天沟通，避免泄露私人联系方式。
           </p>
         </section>
 
@@ -229,7 +255,10 @@ export default function GraduationMoveOutGuidePage() {
         </div>
       </div>
 
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </section>
   );
 }
