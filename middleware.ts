@@ -73,9 +73,9 @@ function localeFromAcceptLanguageHeader(headerValue: string | null): Locale | nu
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Keep API, Next internals, admin routes, static assets, and the device-
-  // detecting /app smart link untouched (the latter must stay un-prefixed so the
-  // clean /app URL serves directly instead of 308-ing to /en/app).
+  // Keep API, Next internals, admin routes, static assets, and the standalone
+  // /download page untouched (the latter must stay un-prefixed so the clean
+  // /download URL serves directly instead of 308-ing to /en/download).
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
@@ -84,8 +84,8 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/favicon") ||
     pathname.startsWith("/opengraph-image") ||
     pathname.startsWith("/twitter-image") ||
-    pathname === "/app" ||
-    pathname === "/app/" ||
+    pathname === "/download" ||
+    pathname === "/download/" ||
     isStaticAsset(pathname)
   ) {
     return NextResponse.next();
