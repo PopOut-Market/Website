@@ -8,7 +8,8 @@ const description =
   "准备离开墨尔本？PopOut Market 为 2026 届墨大、RMIT、Monash 留学生提供卖闲置实用指南，覆盖 Carlton、Parkville、CBD 等高频区域与学生公寓交易节奏。";
 
 export const metadata: Metadata = {
-  title,
+  // title.absolute avoids the root template appending a second " | PopOut Market".
+  title: { absolute: title },
   description,
   keywords: [
     "墨尔本留学生毕业",
@@ -21,18 +22,16 @@ export const metadata: Metadata = {
     "Melbourne student move out sale",
     "graduate moving out Melbourne",
   ],
+  // This guide's body is Simplified Chinese only. Canonicalise every locale
+  // variant to the zh-cn URL and only advertise zh-CN/zh-TW hreflang, so Google
+  // consolidates to the Chinese page instead of treating /en, /ko, … (which
+  // serve Chinese) as separate language versions.
   alternates: {
-    canonical: "/melbourne-graduation-move-out-guide-2026",
+    canonical: "/zh-cn/melbourne-graduation-move-out-guide-2026",
     languages: {
-      en: "/en/melbourne-graduation-move-out-guide-2026",
       "zh-CN": "/zh-cn/melbourne-graduation-move-out-guide-2026",
       "zh-TW": "/zh-tw/melbourne-graduation-move-out-guide-2026",
-      ko: "/ko/melbourne-graduation-move-out-guide-2026",
-      ja: "/ja/melbourne-graduation-move-out-guide-2026",
-      vi: "/vi/melbourne-graduation-move-out-guide-2026",
-      fr: "/fr/melbourne-graduation-move-out-guide-2026",
-      es: "/es/melbourne-graduation-move-out-guide-2026",
-      "x-default": "/en/melbourne-graduation-move-out-guide-2026",
+      "x-default": "/zh-cn/melbourne-graduation-move-out-guide-2026",
     },
   },
   openGraph: {

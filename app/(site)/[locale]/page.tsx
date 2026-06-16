@@ -3,6 +3,7 @@ import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { localizedMetadata } from "@/lib/site-seo-copy";
 import {
   APP_STORE_URL,
+  GOOGLE_PLAY_URL,
   FOOTER_CONTACT_EMAIL,
   FOOTER_SOCIAL_LINKEDIN_DEFAULT,
   FOOTER_SOCIAL_REDNOTE_DEFAULT,
@@ -48,13 +49,18 @@ const homeJsonLd = {
         "@type": "City",
         name: "Melbourne",
       },
-      sameAs: [APP_STORE_URL, FOOTER_SOCIAL_LINKEDIN_DEFAULT, FOOTER_SOCIAL_REDNOTE_DEFAULT],
+      sameAs: [
+        APP_STORE_URL,
+        GOOGLE_PLAY_URL,
+        FOOTER_SOCIAL_LINKEDIN_DEFAULT,
+        FOOTER_SOCIAL_REDNOTE_DEFAULT,
+      ],
     },
     {
       "@type": "MobileApplication",
       name: "PopOut Market",
       applicationCategory: "MarketplaceApplication",
-      operatingSystem: "iOS",
+      operatingSystem: "iOS, Android",
       url: "https://www.popoutmarket.com.au/",
       downloadUrl: APP_STORE_URL,
       installUrl: APP_STORE_URL,
