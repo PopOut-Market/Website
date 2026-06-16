@@ -1,7 +1,7 @@
 import { ComparisonHubContent } from "@/components/comparison-hub-content";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
-import { localizedAlternates, siteUrl } from "@/lib/seo";
+import { localizedAlternates, siteUrl, OG_IMAGE } from "@/lib/seo";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
@@ -556,6 +556,7 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
       description: c.description,
       url: siteUrl().replace(/\/$/, "") + selfPath,
       type: "website",
+      images: [OG_IMAGE],
       siteName: "PopOut Market",
     },
   };

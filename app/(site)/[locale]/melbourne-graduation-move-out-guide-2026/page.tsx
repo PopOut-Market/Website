@@ -1,3 +1,4 @@
+import { OG_IMAGE } from "@/lib/seo";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -40,6 +41,7 @@ export const metadata: Metadata = {
     type: "article",
     locale: "zh_CN",
     url: "https://www.popoutmarket.com.au/melbourne-graduation-move-out-guide-2026",
+    images: [OG_IMAGE],
   },
 };
 
