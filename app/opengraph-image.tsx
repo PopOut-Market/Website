@@ -44,7 +44,7 @@ export default function Image() {
             display: "flex",
             fontSize: 96,
             fontWeight: 800,
-            color: "#CC3200",
+            color: "#111827",
             letterSpacing: "-2px",
             lineHeight: 1.05,
           }}
