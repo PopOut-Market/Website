@@ -5,6 +5,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useCallback, useEffect, useState } from "react";
 import {
   Area,
@@ -48,7 +49,8 @@ export default function LikesPage() {
       const [{ data: interests }, { data: categories }, { data: posts }] = await Promise.all([
         sb.from("post_interests").select("created_at").gte("created_at", cutoff30.toISOString()),
         sb.from("categories").select("id, slug").eq("is_active", true),
-        sb.from("posts")
+        sb
+          .from("posts")
           .select("id, raw_title, category_id, price_cents, interest_count, created_at")
           .order("interest_count", { ascending: false }),
       ]);
@@ -57,21 +59,33 @@ export default function LikesPage() {
       categories?.forEach((c: { id: number; slug: string }) => catMap.set(c.id, c.slug));
 
       const safePosts =
-        posts?.map((p: { id: number; raw_title: string | null; category_id: number; price_cents: number | null; interest_count: number | null; created_at: string }) => ({
-          ...p,
-          raw_title: p.raw_title ?? "",
-          price_cents: p.price_cents ?? 0,
-          interest_count: p.interest_count ?? 0,
-        })) ?? [];
+        posts?.map(
+          (p: {
+            id: number;
+            raw_title: string | null;
+            category_id: number;
+            price_cents: number | null;
+            interest_count: number | null;
+            created_at: string;
+          }) => ({
+            ...p,
+            raw_title: p.raw_title ?? "",
+            price_cents: p.price_cents ?? 0,
+            interest_count: p.interest_count ?? 0,
+          }),
+        ) ?? [];
 
       // Use a single source of truth: posts.interest_count
       const totalLikesFromPosts = safePosts.reduce((sum, p) => sum + p.interest_count, 0);
       setTotalLikes(totalLikesFromPosts);
-      setAvgPerPost(safePosts.length > 0 ? (totalLikesFromPosts / safePosts.length).toFixed(1) : "0");
+      setAvgPerPost(
+        safePosts.length > 0 ? (totalLikesFromPosts / safePosts.length).toFixed(1) : "0",
+      );
 
       // "Today likes": prefer real event count if accessible; otherwise fall back to 0.
       const todayFromEvents =
-        interests?.filter((r: { created_at: string }) => r.created_at >= todayISO.toISOString()).length ?? 0;
+        interests?.filter((r: { created_at: string }) => r.created_at >= todayISO.toISOString())
+          .length ?? 0;
       setTodayLikes(todayFromEvents);
 
       const catLikes: Record<string, number> = {};
@@ -104,7 +118,9 @@ export default function LikesPage() {
           if (buckets[k] !== undefined) buckets[k] += p.interest_count;
         });
       }
-      setTrendData(Object.entries(buckets).map(([date, likes]) => ({ date: date.slice(5), likes })));
+      setTrendData(
+        Object.entries(buckets).map(([date, likes]) => ({ date: date.slice(5), likes })),
+      );
 
       setLoading(false);
     }
@@ -112,38 +128,46 @@ export default function LikesPage() {
     load();
   }, []);
 
-  const fetchTopLiked = useCallback(async (period: "all" | "month") => {
-    const cache = period === "all" ? topPostsAll : topPostsMonth;
-    if (cache !== null) return;
-    setTopLoading(true);
-    try {
-      const res = await fetch(`/api/admin/top-liked?period=${period}`, { cache: "no-store" });
-      if (res.ok) {
-        const { topPosts: tp } = await res.json();
-        if (period === "all") setTopPostsAll(tp ?? []);
-        else setTopPostsMonth(tp ?? []);
-      } else {
+  const fetchTopLiked = useCallback(
+    async (period: "all" | "month") => {
+      const cache = period === "all" ? topPostsAll : topPostsMonth;
+      if (cache !== null) return;
+      setTopLoading(true);
+      try {
+        const res = await adminApiFetch(`/api/admin/top-liked?period=${period}`, {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const { topPosts: tp } = await res.json();
+          if (period === "all") setTopPostsAll(tp ?? []);
+          else setTopPostsMonth(tp ?? []);
+        } else {
+          if (period === "all") setTopPostsAll([]);
+          else setTopPostsMonth([]);
+        }
+      } catch {
         if (period === "all") setTopPostsAll([]);
         else setTopPostsMonth([]);
+      } finally {
+        setTopLoading(false);
       }
-    } catch {
-      if (period === "all") setTopPostsAll([]);
-      else setTopPostsMonth([]);
-    } finally {
-      setTopLoading(false);
-    }
-  }, [topPostsAll, topPostsMonth]);
+    },
+    [topPostsAll, topPostsMonth],
+  );
 
   useEffect(() => {
     fetchTopLiked(topRange);
   }, [topRange, fetchTopLiked]);
 
-  const displayedTopPosts = topRange === "month" ? (topPostsMonth ?? []) : (topPostsAll ?? topPosts);
+  const displayedTopPosts =
+    topRange === "month" ? (topPostsMonth ?? []) : (topPostsAll ?? topPosts);
   const topTableLoading = topLoading;
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Likes / Interest Analytics</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        Likes / Interest Analytics
+      </h1>
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <KpiCard label="Total Likes" total={totalLikes} loading={loading} />

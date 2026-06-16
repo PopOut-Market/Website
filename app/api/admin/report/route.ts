@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
 export async function GET(req: Request) {
-  const supabaseUrl =
-    env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
-  const serviceRoleKey =
-    env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
+  const gate = await requireAdmin(req);
+  if (gate instanceof NextResponse) return gate;
+
+  const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
+  const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
     return NextResponse.json(
@@ -26,10 +28,7 @@ export async function GET(req: Request) {
   const endDate = url.searchParams.get("end");
 
   if (!startDate || !endDate) {
-    return NextResponse.json(
-      { error: "Missing start or end query parameter." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Missing start or end query parameter." }, { status: 400 });
   }
 
   const startISO = `${startDate}T00:00:00.000Z`;
@@ -40,35 +39,26 @@ export async function GET(req: Request) {
   });
 
   try {
-    const [postsRes, interestsRes, soldPostsRes, profilesRes, allStatusRes] =
-      await Promise.all([
-        sb
-          .from("posts")
-          .select("created_at")
-          .gte("created_at", startISO)
-          .lte("created_at", endISO),
-        sb
-          .from("post_interests")
-          .select("created_at")
-          .gte("created_at", startISO)
-          .lte("created_at", endISO),
-        sb
-          .from("posts")
-          .select("updated_at")
-          .eq("status", "sold")
-          .gte("updated_at", startISO)
-          .lte("updated_at", endISO),
-        sb
-          .from("profiles")
-          .select("suburb_verified_at")
-          .gte("suburb_verified_at", startISO)
-          .lte("suburb_verified_at", endISO),
-        sb
-          .from("posts")
-          .select("status")
-          .gte("created_at", startISO)
-          .lte("created_at", endISO),
-      ]);
+    const [postsRes, interestsRes, soldPostsRes, profilesRes, allStatusRes] = await Promise.all([
+      sb.from("posts").select("created_at").gte("created_at", startISO).lte("created_at", endISO),
+      sb
+        .from("post_interests")
+        .select("created_at")
+        .gte("created_at", startISO)
+        .lte("created_at", endISO),
+      sb
+        .from("posts")
+        .select("updated_at")
+        .eq("status", "sold")
+        .gte("updated_at", startISO)
+        .lte("updated_at", endISO),
+      sb
+        .from("profiles")
+        .select("suburb_verified_at")
+        .gte("suburb_verified_at", startISO)
+        .lte("suburb_verified_at", endISO),
+      sb.from("posts").select("status").gte("created_at", startISO).lte("created_at", endISO),
+    ]);
 
     const [msgRes, meetupRes] = await Promise.all([
       sb

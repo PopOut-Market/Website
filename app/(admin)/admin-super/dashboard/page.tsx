@@ -5,6 +5,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -40,7 +41,14 @@ type Kpis = {
 type StatusSlice = { name: string; value: number };
 
 const STATUS_COLORS = [
-  "#64748b", "#3b82f6", "#f59e0b", "#10b981", "#6366f1", "#ef4444", "#8b5cf6", "#ec4899",
+  "#64748b",
+  "#3b82f6",
+  "#f59e0b",
+  "#10b981",
+  "#6366f1",
+  "#ef4444",
+  "#8b5cf6",
+  "#ec4899",
 ];
 
 const RANGE_OPTIONS = [
@@ -117,7 +125,9 @@ function DailyTrendLegendContent({
 export default function DashboardOverviewPage() {
   const [kpis, setKpis] = useState<Kpis | null>(null);
   const [statusDist, setStatusDist] = useState<StatusSlice[]>([]);
-  const [dailyData, setDailyData] = useState<{ date: string; posts: number; likes: number; dealResults: number }[]>([]);
+  const [dailyData, setDailyData] = useState<
+    { date: string; posts: number; likes: number; dealResults: number }[]
+  >([]);
   const [range, setRange] = useState<7 | 14 | 30>(30);
   const [loading, setLoading] = useState(true);
   const [loadWarning, setLoadWarning] = useState<string | null>(null);
@@ -175,17 +185,31 @@ export default function DashboardOverviewPage() {
         { data: allPosts },
       ] = await Promise.all([
         sb.from("profiles").select("*", { count: "exact", head: true }),
-        sb.from("profiles").select("*", { count: "exact", head: true }).gte("suburb_verified_at", todayISO),
+        sb
+          .from("profiles")
+          .select("*", { count: "exact", head: true })
+          .gte("suburb_verified_at", todayISO),
         sb.from("posts").select("*", { count: "exact", head: true }),
         sb.from("posts").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
         sb.from("posts").select("*", { count: "exact", head: true }).eq("status", "sold"),
-        sb.from("posts").select("*", { count: "exact", head: true }).eq("status", "sold").gte("updated_at", todayISO),
+        sb
+          .from("posts")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "sold")
+          .gte("updated_at", todayISO),
         sb.from("post_interests").select("*", { count: "exact", head: true }),
-        sb.from("post_interests").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
+        sb
+          .from("post_interests")
+          .select("*", { count: "exact", head: true })
+          .gte("created_at", todayISO),
         sb.from("messages").select("*", { count: "exact", head: true }),
         sb.from("messages").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
         sb.from("meetup_schedules").select("*", { count: "exact", head: true }).eq("status", "met"),
-        sb.from("meetup_schedules").select("*", { count: "exact", head: true }).eq("status", "met").gte("updated_at", todayISO),
+        sb
+          .from("meetup_schedules")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "met")
+          .gte("updated_at", todayISO),
         sb.from("posts").select("status"),
       ]);
 
@@ -213,12 +237,11 @@ export default function DashboardOverviewPage() {
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - range);
       const cutoffISO = cutoff.toISOString();
-      const [{ data: dailyPosts }, { data: dailyLikes }, { data: dailyDeals }] =
-        await Promise.all([
-          sb.from("posts").select("created_at").gte("created_at", cutoffISO),
-          sb.from("post_interests").select("created_at").gte("created_at", cutoffISO),
-          sb.from("posts").select("updated_at").eq("status", "sold").gte("updated_at", cutoffISO),
-        ]);
+      const [{ data: dailyPosts }, { data: dailyLikes }, { data: dailyDeals }] = await Promise.all([
+        sb.from("posts").select("created_at").gte("created_at", cutoffISO),
+        sb.from("post_interests").select("created_at").gte("created_at", cutoffISO),
+        sb.from("posts").select("updated_at").eq("status", "sold").gte("updated_at", cutoffISO),
+      ]);
 
       const buckets: Record<string, { posts: number; likes: number; dealResults: number }> = {};
       for (let i = 0; i < range; i++) {
@@ -247,7 +270,9 @@ export default function DashboardOverviewPage() {
       setLoadWarning(null);
 
       try {
-        const res = await fetch(`/api/admin/overview?range=${range}`, { cache: "no-store" });
+        const res = await adminApiFetch(`/api/admin/overview?range=${range}`, {
+          cache: "no-store",
+        });
         if (!res.ok) {
           const errBody = await res.json().catch(() => ({}));
           await loadViaBrowserFallback();
@@ -265,9 +290,7 @@ export default function DashboardOverviewPage() {
         setDailyData(data.dailyData ?? []);
       } catch {
         await loadViaBrowserFallback();
-        setLoadWarning(
-          "Server aggregate API failed. Showing fallback values from browser query.",
-        );
+        setLoadWarning("Server aggregate API failed. Showing fallback values from browser query.");
       }
       setLoading(false);
     }
@@ -285,8 +308,18 @@ export default function DashboardOverviewPage() {
             onClick={() => setReportOpen((v) => !v)}
             className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
           >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
             Generate Report
           </button>
@@ -347,12 +380,42 @@ export default function DashboardOverviewPage() {
       ) : null}
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
-        <KpiCard label="Users" total={kpis?.totalUsers ?? "-"} today={kpis?.todayUsers} loading={loading} />
-        <KpiCard label="Posts" total={kpis?.totalPosts ?? "-"} today={kpis?.todayPosts} loading={loading} />
-        <KpiCard label="Deal Results" total={kpis?.totalDealResults ?? "-"} today={kpis?.todayDealResults} loading={loading} />
-        <KpiCard label="Likes" total={kpis?.totalLikes ?? "-"} today={kpis?.todayLikes} loading={loading} />
-        <KpiCard label="Messages" total={kpis?.totalMessages ?? "-"} today={kpis?.todayMessages} loading={loading} />
-        <KpiCard label="Meetups" total={kpis?.totalMeetups ?? "-"} today={kpis?.todayMeetups} loading={loading} />
+        <KpiCard
+          label="Users"
+          total={kpis?.totalUsers ?? "-"}
+          today={kpis?.todayUsers}
+          loading={loading}
+        />
+        <KpiCard
+          label="Posts"
+          total={kpis?.totalPosts ?? "-"}
+          today={kpis?.todayPosts}
+          loading={loading}
+        />
+        <KpiCard
+          label="Deal Results"
+          total={kpis?.totalDealResults ?? "-"}
+          today={kpis?.todayDealResults}
+          loading={loading}
+        />
+        <KpiCard
+          label="Likes"
+          total={kpis?.totalLikes ?? "-"}
+          today={kpis?.todayLikes}
+          loading={loading}
+        />
+        <KpiCard
+          label="Messages"
+          total={kpis?.totalMessages ?? "-"}
+          today={kpis?.todayMessages}
+          loading={loading}
+        />
+        <KpiCard
+          label="Meetups"
+          total={kpis?.totalMeetups ?? "-"}
+          today={kpis?.todayMeetups}
+          loading={loading}
+        />
       </div>
 
       {/* Daily trend chart */}

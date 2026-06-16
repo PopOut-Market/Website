@@ -1,4 +1,5 @@
 import { FOOTER_CONTACT_EMAIL } from "@/lib/site-config";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -19,6 +20,18 @@ function escapeHtml(input: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  // Abuse guard: cap submissions per IP so the contact endpoint can't be used
+  // to exhaust the SMTP quota or flood the inbox. Does not affect normal use.
+  const rl = rateLimit(`contact:${clientIp(req)}`, 5, 10 * 60_000);
+  if (!rl.ok) {
+    const res = NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 },
+    );
+    res.headers.set("Retry-After", String(rl.retryAfterSec));
+    return res;
+  }
+
   let payload: unknown;
   try {
     payload = await req.json();
@@ -39,22 +52,13 @@ export async function POST(req: NextRequest) {
   const locale = (body.locale ?? "").trim();
 
   if (!title || !main) {
-    return NextResponse.json(
-      { error: "Title and Main are required." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Title and Main are required." }, { status: 400 });
   }
   if (title.length > MAX_TITLE_LENGTH || main.length > MAX_MAIN_LENGTH) {
-    return NextResponse.json(
-      { error: "Title or Main is too long." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Title or Main is too long." }, { status: 400 });
   }
   if (email.toLowerCase() !== FOOTER_CONTACT_EMAIL.toLowerCase()) {
-    return NextResponse.json(
-      { error: "Email field is invalid." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Email field is invalid." }, { status: 400 });
   }
 
   const smtpHost = env("SMTP_HOST");
@@ -78,8 +82,7 @@ export async function POST(req: NextRequest) {
     auth: { user: smtpUser, pass: smtpPass },
   });
 
-  const requestIp =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const requestIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const submittedAt = new Date().toISOString();
 
   await transport.sendMail({

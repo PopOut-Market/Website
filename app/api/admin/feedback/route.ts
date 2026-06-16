@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
-export async function GET() {
-  const supabaseUrl =
-    env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
-  const serviceRoleKey =
-    env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
+export async function GET(req: Request) {
+  const gate = await requireAdmin(req);
+  if (gate instanceof NextResponse) return gate;
+
+  const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
+  const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
     return NextResponse.json({ error: "Missing server key." }, { status: 500 });
@@ -22,27 +24,21 @@ export async function GET() {
   const todayISO = new Date();
   todayISO.setHours(0, 0, 0, 0);
 
-  const [{ count: total }, { count: today }, { data, error }] =
-    await Promise.all([
-      sb.from("feedbacks").select("*", { count: "exact", head: true }),
-      sb
-        .from("feedbacks")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", todayISO.toISOString()),
-      sb
-        .from("feedbacks")
-        .select(
-          "id, user_id, content, image_urls, created_at, profiles(nickname, avatar_url)",
-        )
-        .order("created_at", { ascending: false })
-        .limit(100),
-    ]);
+  const [{ count: total }, { count: today }, { data, error }] = await Promise.all([
+    sb.from("feedbacks").select("*", { count: "exact", head: true }),
+    sb
+      .from("feedbacks")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", todayISO.toISOString()),
+    sb
+      .from("feedbacks")
+      .select("id, user_id, content, image_urls, created_at, profiles(nickname, avatar_url)")
+      .order("created_at", { ascending: false })
+      .limit(100),
+  ]);
 
   if (error) {
-    return NextResponse.json(
-      { error: `Query failed: ${error.message}` },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: `Query failed: ${error.message}` }, { status: 500 });
   }
 
   const rows = data ?? [];
@@ -59,9 +55,7 @@ export async function GET() {
 
   const signedMap = new Map<string, string>();
   if (allPaths.length > 0) {
-    const { data: signed } = await sb.storage
-      .from("feedback")
-      .createSignedUrls(allPaths, 3600);
+    const { data: signed } = await sb.storage.from("feedback").createSignedUrls(allPaths, 3600);
     if (signed) {
       for (const s of signed) {
         if (s.signedUrl && !s.error) {
@@ -76,9 +70,7 @@ export async function GET() {
     if (!r.image_urls) return row;
     return {
       ...row,
-      image_urls: r.image_urls.map((p) =>
-        p.startsWith("http") ? p : (signedMap.get(p) ?? p),
-      ),
+      image_urls: r.image_urls.map((p) => (p.startsWith("http") ? p : (signedMap.get(p) ?? p))),
     };
   });
 

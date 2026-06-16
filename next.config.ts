@@ -29,6 +29,30 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Baseline security headers (defense-in-depth). These do not change how pages
+  // render for visitors or how crawlers read content. A full Content-Security-
+  // Policy is intentionally deferred (needs testing against inline JSON-LD,
+  // Supabase, and Leaflet tile hosts).
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), browsing-topics=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

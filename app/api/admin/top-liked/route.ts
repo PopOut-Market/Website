@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
 export async function GET(req: Request) {
-  const supabaseUrl =
-    env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
-  const serviceRoleKey =
-    env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
+  const gate = await requireAdmin(req);
+  if (gate instanceof NextResponse) return gate;
+
+  const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
+  const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
     return NextResponse.json({ error: "Missing server key." }, { status: 500 });
@@ -31,10 +33,7 @@ export async function GET(req: Request) {
   const { data: interests, error } = await query;
 
   if (error) {
-    return NextResponse.json(
-      { error: `Query failed: ${error.message}` },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: `Query failed: ${error.message}` }, { status: 500 });
   }
 
   const counts: Record<number, number> = {};
@@ -57,15 +56,10 @@ export async function GET(req: Request) {
     .select("id, raw_title, category_id, price_cents")
     .in("id", postIds);
 
-  const { data: categories } = await sb
-    .from("categories")
-    .select("id, slug")
-    .eq("is_active", true);
+  const { data: categories } = await sb.from("categories").select("id, slug").eq("is_active", true);
 
   const catMap = new Map<number, string>();
-  categories?.forEach((c: { id: number; slug: string }) =>
-    catMap.set(c.id, c.slug),
-  );
+  categories?.forEach((c: { id: number; slug: string }) => catMap.set(c.id, c.slug));
 
   const postMap = new Map<
     number,

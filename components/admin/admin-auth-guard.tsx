@@ -4,6 +4,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -43,9 +44,18 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
     const sb = getAdminAuthBrowserClient();
     let mounted = true;
 
-    sb.auth.getUser().then(({ data, error }) => {
+    sb.auth.getUser().then(async ({ data, error }) => {
       if (!mounted) return;
       if (error || !data.user?.email) {
+        router.replace("/admin-super/admin-login");
+        return;
+      }
+      // Authentication alone is not enough — confirm the user is an authorized
+      // admin server-side. A signed-in non-admin must not see the dashboard.
+      const res = await adminApiFetch("/api/admin/me").catch(() => null);
+      if (!mounted) return;
+      if (!res || !res.ok) {
+        await sb.auth.signOut().catch(() => {});
         router.replace("/admin-super/admin-login");
         return;
       }

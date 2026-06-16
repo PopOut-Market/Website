@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 type Bucket = { posts: number; likes: number; dealResults: number };
 type CachedResult = {
@@ -21,6 +22,9 @@ function startOfTodayIso(): string {
 }
 
 export async function GET(req: Request) {
+  const gate = await requireAdmin(req);
+  if (gate instanceof NextResponse) return gate;
+
   const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
   const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
 
@@ -72,28 +76,58 @@ export async function GET(req: Request) {
       { data: dailyDealResults, error: e16 },
     ] = await Promise.all([
       sb.from("profiles").select("*", { count: "exact", head: true }),
-      sb.from("profiles").select("*", { count: "exact", head: true }).gte("suburb_verified_at", todayISO),
+      sb
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .gte("suburb_verified_at", todayISO),
       sb.from("posts").select("*", { count: "exact", head: true }),
       sb.from("posts").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
       sb.from("posts").select("*", { count: "exact", head: true }).eq("status", "sold"),
-      sb.from("posts").select("*", { count: "exact", head: true }).eq("status", "sold").gte("updated_at", todayISO),
+      sb
+        .from("posts")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "sold")
+        .gte("updated_at", todayISO),
       sb.from("post_interests").select("*", { count: "exact", head: true }),
-      sb.from("post_interests").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
+      sb
+        .from("post_interests")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayISO),
       sb.from("messages").select("*", { count: "exact", head: true }),
       sb.from("messages").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
       sb.from("meetup_schedules").select("*", { count: "exact", head: true }).eq("status", "met"),
-      sb.from("meetup_schedules").select("*", { count: "exact", head: true }).eq("status", "met").gte("updated_at", todayISO),
+      sb
+        .from("meetup_schedules")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "met")
+        .gte("updated_at", todayISO),
       sb.from("posts").select("status"),
       sb.from("posts").select("created_at").gte("created_at", cutoffISO),
       sb.from("post_interests").select("created_at").gte("created_at", cutoffISO),
       sb.from("posts").select("updated_at").eq("status", "sold").gte("updated_at", cutoffISO),
     ]);
 
-    const firstErr = e1 ?? e2 ?? e3 ?? e4 ?? e5 ?? e6 ?? e7 ?? e8 ?? e9 ?? e10 ?? e11 ?? e12 ?? e13 ?? e14 ?? e15 ?? e16;
+    const firstErr =
+      e1 ??
+      e2 ??
+      e3 ??
+      e4 ??
+      e5 ??
+      e6 ??
+      e7 ??
+      e8 ??
+      e9 ??
+      e10 ??
+      e11 ??
+      e12 ??
+      e13 ??
+      e14 ??
+      e15 ??
+      e16;
     if (firstErr) {
       return NextResponse.json(
         {
-          error: `Supabase query failed: ${firstErr.message || "(empty)"} (code: ${(firstErr as unknown as {code?:string}).code ?? "unknown"}).`,
+          error: `Supabase query failed: ${firstErr.message || "(empty)"} (code: ${(firstErr as unknown as { code?: string }).code ?? "unknown"}).`,
         },
         { status: 500 },
       );

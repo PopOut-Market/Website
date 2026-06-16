@@ -1,5 +1,6 @@
 "use client";
 
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
@@ -45,7 +46,14 @@ interface ReportData {
 }
 
 const STATUS_COLORS = [
-  "#64748b", "#3b82f6", "#f59e0b", "#10b981", "#6366f1", "#ef4444", "#8b5cf6", "#ec4899",
+  "#64748b",
+  "#3b82f6",
+  "#f59e0b",
+  "#10b981",
+  "#6366f1",
+  "#ef4444",
+  "#8b5cf6",
+  "#ec4899",
 ];
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -62,7 +70,11 @@ function typeLabel(t: ReportType): string {
   return t === "weekly" ? "Weekly" : t === "monthly" ? "Monthly" : "Quarterly";
 }
 
-function buildPeriods(start: Date, end: Date, type: ReportType): { label: string; start: string; end: string }[] {
+function buildPeriods(
+  start: Date,
+  end: Date,
+  type: ReportType,
+): { label: string; start: string; end: string }[] {
   const periods: { label: string; start: string; end: string }[] = [];
   const cursor = new Date(start);
 
@@ -141,7 +153,10 @@ async function fetchReportData(
     meetups: 0,
   }));
 
-  function assignToBucket(dateStr: string, field: keyof Omit<PeriodBucket, "label" | "start" | "end">) {
+  function assignToBucket(
+    dateStr: string,
+    field: keyof Omit<PeriodBucket, "label" | "start" | "end">,
+  ) {
     const d = dateStr.slice(0, 10);
     for (const b of buckets) {
       if (d >= b.start && d <= b.end) {
@@ -151,14 +166,23 @@ async function fetchReportData(
     }
   }
 
-  const res = await fetch(
+  const res = await adminApiFetch(
     `/api/admin/report?start=${encodeURIComponent(startDate)}&end=${encodeURIComponent(endDate)}`,
     { cache: "no-store" },
   );
 
   if (!res.ok) {
     console.warn("[Report] API route failed, status", res.status);
-    return { periods: buckets, totalPosts: 0, totalLikes: 0, totalDealResults: 0, totalNewUsers: 0, totalMessages: 0, totalMeetups: 0, statusDist: [] };
+    return {
+      periods: buckets,
+      totalPosts: 0,
+      totalLikes: 0,
+      totalDealResults: 0,
+      totalNewUsers: 0,
+      totalMessages: 0,
+      totalMeetups: 0,
+      statusDist: [],
+    };
   }
 
   const raw = await res.json();
@@ -171,12 +195,24 @@ async function fetchReportData(
   const messagesRows: { created_at?: string }[] = raw.messages ?? [];
   const meetupsRows: { updated_at?: string }[] = raw.meetups ?? [];
 
-  posts.forEach((r) => { if (r.created_at) assignToBucket(r.created_at, "posts"); });
-  interests.forEach((r) => { if (r.created_at) assignToBucket(r.created_at, "likes"); });
-  soldPosts.forEach((r) => { if (r.updated_at) assignToBucket(r.updated_at, "dealResults"); });
-  profiles.forEach((r) => { if (r.suburb_verified_at) assignToBucket(r.suburb_verified_at, "newUsers"); });
-  messagesRows.forEach((r) => { if (r.created_at) assignToBucket(r.created_at, "messages"); });
-  meetupsRows.forEach((r) => { if (r.updated_at) assignToBucket(r.updated_at, "meetups"); });
+  posts.forEach((r) => {
+    if (r.created_at) assignToBucket(r.created_at, "posts");
+  });
+  interests.forEach((r) => {
+    if (r.created_at) assignToBucket(r.created_at, "likes");
+  });
+  soldPosts.forEach((r) => {
+    if (r.updated_at) assignToBucket(r.updated_at, "dealResults");
+  });
+  profiles.forEach((r) => {
+    if (r.suburb_verified_at) assignToBucket(r.suburb_verified_at, "newUsers");
+  });
+  messagesRows.forEach((r) => {
+    if (r.created_at) assignToBucket(r.created_at, "messages");
+  });
+  meetupsRows.forEach((r) => {
+    if (r.updated_at) assignToBucket(r.updated_at, "meetups");
+  });
 
   const statusCounts: Record<string, number> = {};
   allPostStatuses.forEach((p) => {
@@ -193,13 +229,17 @@ async function fetchReportData(
   if (totalMessages === 0 && raw.msgCountFallback != null && raw.msgCountFallback > 0) {
     totalMessages = raw.msgCountFallback;
     const avg = Math.round(totalMessages / buckets.length);
-    buckets.forEach((b, i) => { b.messages = i === buckets.length - 1 ? totalMessages - avg * (buckets.length - 1) : avg; });
+    buckets.forEach((b, i) => {
+      b.messages = i === buckets.length - 1 ? totalMessages - avg * (buckets.length - 1) : avg;
+    });
   }
 
   if (totalMeetups === 0 && raw.meetupCountFallback != null && raw.meetupCountFallback > 0) {
     totalMeetups = raw.meetupCountFallback;
     const avg = Math.round(totalMeetups / buckets.length);
-    buckets.forEach((b, i) => { b.meetups = i === buckets.length - 1 ? totalMeetups - avg * (buckets.length - 1) : avg; });
+    buckets.forEach((b, i) => {
+      b.meetups = i === buckets.length - 1 ? totalMeetups - avg * (buckets.length - 1) : avg;
+    });
   }
 
   return {
@@ -266,7 +306,9 @@ function ReportContent() {
     setLoading(false);
   }, [startDate, endDate, type]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   async function handleExport() {
     setExporting(true);
@@ -285,7 +327,13 @@ function ReportContent() {
           href="/admin-super/dashboard"
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:bg-slate-50"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
           Back to Dashboard
@@ -296,8 +344,18 @@ function ReportContent() {
           disabled={loading || exporting}
           className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:opacity-50"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
           {exporting ? "Exporting…" : "Export PDF"}
         </button>
@@ -322,7 +380,11 @@ function ReportContent() {
               </div>
               <div className="text-right text-xs text-slate-400">
                 <p>Generated: {fmtDate(new Date())}</p>
-                <p>{data.periods.length} {type === "weekly" ? "weeks" : type === "monthly" ? "months" : "quarters"} analyzed</p>
+                <p>
+                  {data.periods.length}{" "}
+                  {type === "weekly" ? "weeks" : type === "monthly" ? "months" : "quarters"}{" "}
+                  analyzed
+                </p>
               </div>
             </div>
           </header>
@@ -331,12 +393,36 @@ function ReportContent() {
           <section>
             <h2 className="mb-4 text-lg font-semibold text-slate-800">Executive Summary</h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-              <SummaryKpi label="New Posts" value={data.totalPosts} color="bg-blue-50 text-blue-700" />
-              <SummaryKpi label="Likes" value={data.totalLikes} color="bg-emerald-50 text-emerald-700" />
-              <SummaryKpi label="Deals Closed" value={data.totalDealResults} color="bg-amber-50 text-amber-700" />
-              <SummaryKpi label="New Users" value={data.totalNewUsers} color="bg-violet-50 text-violet-700" />
-              <SummaryKpi label="Messages" value={data.totalMessages} color="bg-sky-50 text-sky-700" />
-              <SummaryKpi label="Meetups" value={data.totalMeetups} color="bg-rose-50 text-rose-700" />
+              <SummaryKpi
+                label="New Posts"
+                value={data.totalPosts}
+                color="bg-blue-50 text-blue-700"
+              />
+              <SummaryKpi
+                label="Likes"
+                value={data.totalLikes}
+                color="bg-emerald-50 text-emerald-700"
+              />
+              <SummaryKpi
+                label="Deals Closed"
+                value={data.totalDealResults}
+                color="bg-amber-50 text-amber-700"
+              />
+              <SummaryKpi
+                label="New Users"
+                value={data.totalNewUsers}
+                color="bg-violet-50 text-violet-700"
+              />
+              <SummaryKpi
+                label="Messages"
+                value={data.totalMessages}
+                color="bg-sky-50 text-sky-700"
+              />
+              <SummaryKpi
+                label="Meetups"
+                value={data.totalMeetups}
+                color="bg-rose-50 text-rose-700"
+              />
             </div>
             {data.periods.length >= 2 && (
               <div className="mt-4 rounded-lg bg-slate-50 p-4">
@@ -344,12 +430,18 @@ function ReportContent() {
                   Period-over-Period Change (Latest vs Previous)
                 </h3>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                  {(["posts", "likes", "dealResults", "newUsers", "messages", "meetups"] as const).map((k) => {
+                  {(
+                    ["posts", "likes", "dealResults", "newUsers", "messages", "meetups"] as const
+                  ).map((k) => {
                     const cur = data.periods[data.periods.length - 1][k];
                     const prev = data.periods[data.periods.length - 2][k];
                     const labels: Record<string, string> = {
-                      posts: "Posts", likes: "Likes", dealResults: "Deals",
-                      newUsers: "Users", messages: "Messages", meetups: "Meetups",
+                      posts: "Posts",
+                      likes: "Likes",
+                      dealResults: "Deals",
+                      newUsers: "Users",
+                      messages: "Messages",
+                      meetups: "Meetups",
                     };
                     return (
                       <div key={k} className="rounded-lg bg-white p-3 shadow-sm">
@@ -357,7 +449,9 @@ function ReportContent() {
                         <p className={`text-lg font-bold ${pctChangeColor(cur, prev)}`}>
                           {pctChange(cur, prev)}
                         </p>
-                        <p className="text-[11px] text-slate-400">{prev} → {cur}</p>
+                        <p className="text-[11px] text-slate-400">
+                          {prev} → {cur}
+                        </p>
                       </div>
                     );
                   })}
@@ -370,7 +464,8 @@ function ReportContent() {
           <section>
             <h2 className="mb-4 text-lg font-semibold text-slate-800">Activity Trends</h2>
             <p className="mb-3 text-xs text-slate-500">
-              Posts, likes, and deal completions per {type === "weekly" ? "week" : type === "monthly" ? "month" : "quarter"}.
+              Posts, likes, and deal completions per{" "}
+              {type === "weekly" ? "week" : type === "monthly" ? "month" : "quarter"}.
             </p>
             <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-4">
               <ResponsiveContainer width="100%" height={280}>
@@ -390,12 +485,36 @@ function ReportContent() {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="label" tick={{ fontSize: 10 }} angle={-20} textAnchor="end" height={50} />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 10 }}
+                    angle={-20}
+                    textAnchor="end"
+                    height={50}
+                  />
                   <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="posts" stroke="#3b82f6" fill="url(#rptPosts)" name="Posts" />
-                  <Area type="monotone" dataKey="likes" stroke="#10b981" fill="url(#rptLikes)" name="Likes" />
-                  <Area type="monotone" dataKey="dealResults" stroke="#f59e0b" fill="url(#rptDeals)" name="Deals Closed" />
+                  <Area
+                    type="monotone"
+                    dataKey="posts"
+                    stroke="#3b82f6"
+                    fill="url(#rptPosts)"
+                    name="Posts"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="likes"
+                    stroke="#10b981"
+                    fill="url(#rptLikes)"
+                    name="Likes"
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="dealResults"
+                    stroke="#f59e0b"
+                    fill="url(#rptDeals)"
+                    name="Deals Closed"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -405,13 +524,20 @@ function ReportContent() {
           <section>
             <h2 className="mb-4 text-lg font-semibold text-slate-800">Engagement & Growth</h2>
             <p className="mb-3 text-xs text-slate-500">
-              New users, messages, and meetups per {type === "weekly" ? "week" : type === "monthly" ? "month" : "quarter"}.
+              New users, messages, and meetups per{" "}
+              {type === "weekly" ? "week" : type === "monthly" ? "month" : "quarter"}.
             </p>
             <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-4">
               <ResponsiveContainer width="100%" height={260}>
                 <BarChart data={data.periods}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="label" tick={{ fontSize: 10 }} angle={-20} textAnchor="end" height={50} />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 10 }}
+                    angle={-20}
+                    textAnchor="end"
+                    height={50}
+                  />
                   <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                   <Tooltip />
                   <Bar dataKey="newUsers" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="New Users" />
@@ -425,7 +551,9 @@ function ReportContent() {
           {/* Post Status Distribution */}
           {data.statusDist.length > 0 && (
             <section>
-              <h2 className="mb-4 text-lg font-semibold text-slate-800">Post Status Distribution</h2>
+              <h2 className="mb-4 text-lg font-semibold text-slate-800">
+                Post Status Distribution
+              </h2>
               <p className="mb-3 text-xs text-slate-500">
                 Breakdown of all posts created during the reporting period by their current status.
               </p>
@@ -510,12 +638,24 @@ function ReportContent() {
                   {data.periods.length > 0 && (
                     <tr className="bg-slate-50 text-slate-500">
                       <td className="px-4 py-2 text-xs">Avg / period</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalPosts / data.periods.length).toFixed(1)}</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalLikes / data.periods.length).toFixed(1)}</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalDealResults / data.periods.length).toFixed(1)}</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalNewUsers / data.periods.length).toFixed(1)}</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalMessages / data.periods.length).toFixed(1)}</td>
-                      <td className="px-4 py-2 text-right text-xs">{(data.totalMeetups / data.periods.length).toFixed(1)}</td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalPosts / data.periods.length).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalLikes / data.periods.length).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalDealResults / data.periods.length).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalNewUsers / data.periods.length).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalMessages / data.periods.length).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-xs">
+                        {(data.totalMeetups / data.periods.length).toFixed(1)}
+                      </td>
                     </tr>
                   )}
                 </tfoot>
@@ -593,7 +733,17 @@ function MetricCell({ value, prev }: { value: number; prev?: number }) {
   );
 }
 
-function FunnelStep({ label, value, color, pct }: { label: string; value: number; color: string; pct: number }) {
+function FunnelStep({
+  label,
+  value,
+  color,
+  pct,
+}: {
+  label: string;
+  value: number;
+  color: string;
+  pct: number;
+}) {
   return (
     <div className={`flex flex-col items-center rounded-xl p-5 ${color}`} style={{ minWidth: 140 }}>
       <p className="text-2xl font-bold">{value.toLocaleString()}</p>
@@ -606,7 +756,13 @@ function FunnelStep({ label, value, color, pct }: { label: string; value: number
 function FunnelArrow() {
   return (
     <svg className="h-5 w-8 shrink-0 text-slate-300" viewBox="0 0 32 20" fill="none">
-      <path d="M0 10h26m0 0l-6-6m6 6l-6 6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M0 10h26m0 0l-6-6m6 6l-6 6"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -618,43 +774,64 @@ function KeyInsights({ data, type }: { data: ReportData; type: ReportType }) {
 
   if (n === 0) {
     insights.push("No data available for the selected period.");
-    return <ul className="list-inside list-disc space-y-1 text-sm text-slate-600">{insights.map((t, i) => <li key={i}>{t}</li>)}</ul>;
+    return (
+      <ul className="list-inside list-disc space-y-1 text-sm text-slate-600">
+        {insights.map((t, i) => (
+          <li key={i}>{t}</li>
+        ))}
+      </ul>
+    );
   }
 
   const totalActivity = data.totalPosts + data.totalLikes + data.totalDealResults;
-  insights.push(`Total platform activity during this period: ${totalActivity.toLocaleString()} events across ${n} ${periodName}(s).`);
+  insights.push(
+    `Total platform activity during this period: ${totalActivity.toLocaleString()} events across ${n} ${periodName}(s).`,
+  );
 
   if (data.totalPosts > 0) {
     const likeRatio = (data.totalLikes / data.totalPosts).toFixed(1);
-    insights.push(`Average of ${likeRatio} likes per post created — indicates ${Number(likeRatio) >= 2 ? "strong" : Number(likeRatio) >= 1 ? "moderate" : "low"} buyer interest.`);
+    insights.push(
+      `Average of ${likeRatio} likes per post created — indicates ${Number(likeRatio) >= 2 ? "strong" : Number(likeRatio) >= 1 ? "moderate" : "low"} buyer interest.`,
+    );
   }
 
   if (data.totalLikes > 0) {
     const convRate = ((data.totalDealResults / data.totalLikes) * 100).toFixed(1);
-    insights.push(`Like-to-deal conversion rate: ${convRate}% — ${Number(convRate) >= 10 ? "healthy" : "room for improvement"}.`);
+    insights.push(
+      `Like-to-deal conversion rate: ${convRate}% — ${Number(convRate) >= 10 ? "healthy" : "room for improvement"}.`,
+    );
   }
 
   if (n >= 2) {
     const last = data.periods[n - 1];
     const secondLast = data.periods[n - 2];
-    const postGrowth = secondLast.posts > 0 ? ((last.posts - secondLast.posts) / secondLast.posts) * 100 : 0;
+    const postGrowth =
+      secondLast.posts > 0 ? ((last.posts - secondLast.posts) / secondLast.posts) * 100 : 0;
     if (Math.abs(postGrowth) > 5) {
       insights.push(
         `Post volume ${postGrowth > 0 ? "increased" : "decreased"} by ${Math.abs(postGrowth).toFixed(1)}% in the latest ${periodName} compared to the previous one.`,
       );
     }
 
-    const peakPeriod = data.periods.reduce((max, p) => (p.posts + p.likes + p.dealResults > max.posts + max.likes + max.dealResults ? p : max));
-    insights.push(`Peak activity ${periodName}: ${peakPeriod.label} with ${peakPeriod.posts + peakPeriod.likes + peakPeriod.dealResults} total events.`);
+    const peakPeriod = data.periods.reduce((max, p) =>
+      p.posts + p.likes + p.dealResults > max.posts + max.likes + max.dealResults ? p : max,
+    );
+    insights.push(
+      `Peak activity ${periodName}: ${peakPeriod.label} with ${peakPeriod.posts + peakPeriod.likes + peakPeriod.dealResults} total events.`,
+    );
   }
 
   if (data.totalNewUsers > 0 && n > 0) {
-    insights.push(`${data.totalNewUsers} new verified users joined, averaging ${(data.totalNewUsers / n).toFixed(1)} per ${periodName}.`);
+    insights.push(
+      `${data.totalNewUsers} new verified users joined, averaging ${(data.totalNewUsers / n).toFixed(1)} per ${periodName}.`,
+    );
   }
 
   if (data.totalMeetups > 0 && data.totalDealResults > 0) {
     const meetupRate = ((data.totalMeetups / data.totalDealResults) * 100).toFixed(0);
-    insights.push(`${meetupRate}% of completed deals had confirmed meetups — indicating ${Number(meetupRate) >= 50 ? "strong" : "growing"} trust in the scheduling feature.`);
+    insights.push(
+      `${meetupRate}% of completed deals had confirmed meetups — indicating ${Number(meetupRate) >= 50 ? "strong" : "growing"} trust in the scheduling feature.`,
+    );
   }
 
   return (
@@ -669,11 +846,13 @@ function KeyInsights({ data, type }: { data: ReportData; type: ReportType }) {
 /* ─── Page Wrapper ─── */
 export default function GenerateReportPage() {
   return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center py-32">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-700" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center py-32">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-700" />
+        </div>
+      }
+    >
       <ReportContent />
     </Suspense>
   );
