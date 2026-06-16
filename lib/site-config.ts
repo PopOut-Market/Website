@@ -28,8 +28,7 @@ export const POPOUT_BRAND_GRADIENT_TEXT_CLASS = "text-brand-700";
  * Buttons are soft rounded-rect (`rounded-xl` = 12) — never full pills.
  */
 /** Flat card surface (one step lighter than its section). */
-export const CARD_CLASS =
-  "rounded-2xl border border-black/5 bg-gray-50 shadow-card";
+export const CARD_CLASS = "rounded-2xl border border-black/5 bg-gray-50 shadow-card";
 /** Solid brand-orange primary button/CTA — flat, pressed = brand-700 (#CC3200). */
 export const PRIMARY_BUTTON_CLASS =
   "inline-flex items-center justify-center rounded-xl bg-brand-500 font-semibold text-white transition-colors hover:bg-brand-600 active:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700";
@@ -43,14 +42,12 @@ export const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 export const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
 export const APP_STORE_URL = "https://apps.apple.com/au/app/popout-market-buy-sell/id6761421626";
-export const GOOGLE_PLAY_URL =
-  "https://play.google.com/store/apps/details?id=com.example.popout";
+export const GOOGLE_PLAY_URL = "https://play.google.com/store/search?q=popout+market&c=apps";
 
 export const FOOTER_CONTACT_EMAIL = "contact@popoutmarket.com.au";
 
 /** Registered office / postal address shown in the site footer. */
-export const FOOTER_ADDRESS_LINE =
-  "1003/151 City Rd, Southbank VIC 3006, Australia";
+export const FOOTER_ADDRESS_LINE = "1003/151 City Rd, Southbank VIC 3006, Australia";
 
 export const FOOTER_SOCIAL_IMG_REDNOTE = "/images/REDNOTE_ICON.svg";
 export const FOOTER_SOCIAL_IMG_INSTAGRAM = "/images/Instagram_logo.svg";
@@ -63,8 +60,7 @@ export const FOOTER_SOCIAL_REDNOTE_DEFAULT = "https://xhslink.com/m/7eKhz2OkgbC"
 export const FOOTER_SOCIAL_INSTAGRAM_DEFAULT = "https://www.instagram.com/?hl=en";
 
 /** LinkedIn footer link — public company page. Override with `NEXT_PUBLIC_FOOTER_SOCIAL_LINKEDIN_URL` if needed. */
-export const FOOTER_SOCIAL_LINKEDIN_DEFAULT =
-  "https://www.linkedin.com/company/popout-market/";
+export const FOOTER_SOCIAL_LINKEDIN_DEFAULT = "https://www.linkedin.com/company/popout-market/";
 
 function footerSocialUrlFromEnv(value: string | undefined): string | null {
   const v = value?.trim() ?? "";
