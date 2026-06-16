@@ -1,6 +1,26 @@
 import { headers } from "next/headers";
 import type { Locale } from "@/lib/site-i18n";
-import { DEFAULT_LOCALE, LOCALE_HEADER, isLocale } from "@/lib/site-locale-routing";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_HEADER,
+  isLocale,
+  localeFromSegment,
+} from "@/lib/site-locale-routing";
+
+/** Shape of the `[locale]` dynamic route param (Next 15+ passes params async). */
+export type LocaleParams = { params: Promise<{ locale: string }> };
+
+/**
+ * Resolve the active locale from the `[locale]` route segment. This is static —
+ * it does NOT read headers — so pages that use it can be statically generated
+ * per locale via generateStaticParams.
+ */
+export async function localeFromParams(
+  params: Promise<{ locale: string }>,
+): Promise<Locale> {
+  const { locale } = await params;
+  return localeFromSegment(locale) ?? DEFAULT_LOCALE;
+}
 
 /**
  * Resolve the active locale on the server from the header the middleware sets on
