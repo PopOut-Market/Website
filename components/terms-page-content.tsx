@@ -4,13 +4,7 @@ import { BackNavLink } from "@/components/back-nav-link";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 
-function TermsSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function TermsSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">{title}</h2>
@@ -38,37 +32,37 @@ export function TermsPageContent() {
             <p>ACN 696 464 945</p>
             <p>ABN 76 696 464 945</p>
             <p>Address: 1003/151 City Rd, Southbank VIC 3006, Australia</p>
+            <p>Effective Date: 16 June 2026</p>
+            <p>Version: 1.0</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">
-            {t.legalEnglishAuthoritative}
-          </p>
+          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <TermsSection title="1. About the Application">
               <p>
-                Welcome to Popout Market (Application). The Application is an online platform
-                that enables parties providing services or goods (Provider) and parties receiving
-                services or goods (Receiver) to discover listings, communicate with each other,
-                and independently arrange the inspection, payment, collection, and delivery of
-                goods or services.
+                Welcome to Popout Market (Application). The Application is an online platform that
+                enables parties providing services or goods (Provider) and parties receiving
+                services or goods (Receiver) to discover listings, communicate with each other, and
+                independently arrange the inspection, payment, collection, and delivery of goods or
+                services.
               </p>
               <p>
-                The Application is operated by POPOUT MARKET Pty Ltd. We provide the
-                Application as an intermediary technology platform only. We are not a buyer,
-                seller, reseller, agent, broker, auctioneer, carrier, or financial services provider
-                in relation to any transaction between Members.
+                The Application is operated by POPOUT MARKET Pty Ltd. We provide the Application as
+                an intermediary technology platform only. We are not a buyer, seller, reseller,
+                agent, broker, auctioneer, carrier, or financial services provider in relation to
+                any transaction between Members.
               </p>
               <p>
-                Any contract for the sale or exchange of goods is formed solely between the
-                Provider and the Receiver. POPOUT MARKET Pty Ltd is not a party to such
-                contracts. Services may include AI-powered listing generation, real-time
-                translation, and safety moderation tools.
+                Any contract for the sale or exchange of goods is formed solely between the Provider
+                and the Receiver. POPOUT MARKET Pty Ltd is not a party to such contracts. Services
+                may include AI-powered listing generation, real-time translation, and safety
+                moderation tools.
               </p>
               <p>
                 By using, browsing, or reading the Application, you signify that you have read,
-                understood, and agree to be bound by these Terms. If you do not agree, you must
-                stop using the Application and Services immediately.
+                understood, and agree to be bound by these Terms. If you do not agree, you must stop
+                using the Application and Services immediately.
               </p>
             </TermsSection>
 
@@ -76,8 +70,8 @@ export function TermsPageContent() {
               <p>You accept the Terms by accessing, browsing, or using the Application.</p>
               <p>
                 Where available, you may also accept the Terms by clicking to &quot;accept&quot; or
-                &quot;agree&quot; in the user interface. By doing so, you warrant that you have legal
-                capacity to enter into a binding contract with POPOUT MARKET Pty Ltd.
+                &quot;agree&quot; in the user interface. By doing so, you warrant that you have
+                legal capacity to enter into a binding contract with POPOUT MARKET Pty Ltd.
               </p>
             </TermsSection>
 
@@ -97,13 +91,16 @@ export function TermsPageContent() {
                 <li>Optional profile image and recovery email;</li>
                 <li>Optional university email for identity verification;</li>
                 <li>User-generated content, including images and descriptions processed by AI;</li>
-                <li>Communication data and chat history, including AI-assisted translation/moderation; and</li>
+                <li>
+                  Communication data and chat history, including AI-assisted translation/moderation;
+                  and
+                </li>
                 <li>Member activity data (ratings, reviews, transaction history).</li>
               </ul>
               <p>
-                You warrant all provided information is accurate, complete, and up to date.
-                POPOUT MARKET Pty Ltd may verify identity, conduct fraud screening, and request
-                additional information. Failure to comply may lead to suspension or termination.
+                You warrant all provided information is accurate, complete, and up to date. POPOUT
+                MARKET Pty Ltd may verify identity, conduct fraud screening, and request additional
+                information. Failure to comply may lead to suspension or termination.
               </p>
               <p>
                 You may not use the Services if you are under 18 years old or otherwise barred by
@@ -121,7 +118,9 @@ export function TermsPageContent() {
                 <li>ensure all content you submit is accurate and up to date;</li>
                 <li>not harass, stalk, threaten, or abuse other Members;</li>
                 <li>not use the platform for unauthorised commercial solicitation or spam;</li>
-                <li>act in good faith for in-person transaction meetings and avoid repeated no-shows;</li>
+                <li>
+                  act in good faith for in-person transaction meetings and avoid repeated no-shows;
+                </li>
                 <li>not use automated means to access or use the Application.</li>
               </ul>
               <p>
@@ -143,8 +142,8 @@ export function TermsPageContent() {
                 <li>leave rating and review based on transaction experience.</li>
               </ul>
               <p>
-                Popout Market does not facilitate, process, hold, escrow, remit, or settle
-                payments between Members.
+                Popout Market does not facilitate, process, hold, escrow, remit, or settle payments
+                between Members.
               </p>
             </TermsSection>
 
@@ -154,7 +153,9 @@ export function TermsPageContent() {
                 <li>create an Account and complete mandatory verification;</li>
                 <li>create accurate listings and review AI-generated draft content;</li>
                 <li>remain responsible for listing legality and accuracy;</li>
-                <li>respond to enquiries and coordinate transaction terms directly with Receiver;</li>
+                <li>
+                  respond to enquiries and coordinate transaction terms directly with Receiver;
+                </li>
                 <li>facilitate collection as described in listing; and</li>
                 <li>leave rating and review for the Receiver.</li>
               </ul>
@@ -172,16 +173,16 @@ export function TermsPageContent() {
               </p>
               <p>
                 Refunds/returns are matters between Receiver and Provider, subject to Australian
-                Consumer Law (ACL). If unresolved after 14 days, the Receiver may report through
-                the Contact Us channel for platform-level review.
+                Consumer Law (ACL). If unresolved after 14 days, the Receiver may report through the
+                Contact Us channel for platform-level review.
               </p>
             </TermsSection>
 
             <TermsSection title="8. Copyright and Intellectual Property">
               <p>
-                The Application and Services are protected by intellectual property laws. All
-                rights in platform materials are owned or controlled by POPOUT MARKET Pty Ltd
-                or its contributors.
+                The Application and Services are protected by intellectual property laws. All rights
+                in platform materials are owned or controlled by POPOUT MARKET Pty Ltd or its
+                contributors.
               </p>
               <p>
                 You are granted a limited, non-exclusive, revocable licence to use the Application
@@ -204,8 +205,8 @@ export function TermsPageContent() {
 
             <TermsSection title="10. General Disclaimer">
               <p>
-                To the maximum extent permitted by law, the Application and Services are
-                provided on an &quot;as is&quot; and &quot;as available&quot; basis.
+                To the maximum extent permitted by law, the Application and Services are provided on
+                an &quot;as is&quot; and &quot;as available&quot; basis.
               </p>
               <p>
                 We do not warrant uninterrupted access, complete accuracy of user or AI-assisted
@@ -219,8 +220,8 @@ export function TermsPageContent() {
 
             <TermsSection title="11. Competitors">
               <p>
-                If you provide competing services for commercial gain, you are a competitor and
-                are not permitted to access platform information/content for that purpose.
+                If you provide competing services for commercial gain, you are a competitor and are
+                not permitted to access platform information/content for that purpose.
               </p>
             </TermsSection>
 
@@ -238,9 +239,9 @@ export function TermsPageContent() {
 
             <TermsSection title="13. Termination of Contract">
               <p>
-                You may terminate these Terms by giving 7 days&apos; notice via Contact Us.
-                POPOUT MARKET Pty Ltd may suspend or terminate access where Terms or laws are
-                breached, or where platform safety/integrity requires it.
+                You may terminate these Terms by giving 7 days&apos; notice via Contact Us. POPOUT
+                MARKET Pty Ltd may suspend or terminate access where Terms or laws are breached, or
+                where platform safety/integrity requires it.
               </p>
               <p>
                 For specified suspensions, written grounds are provided and Members are given an
@@ -250,9 +251,9 @@ export function TermsPageContent() {
 
             <TermsSection title="14. Indemnity">
               <p>
-                You indemnify POPOUT MARKET Pty Ltd and its personnel against losses arising
-                from your content, your legal/terms breaches, your unlawful conduct, and disputes
-                caused by your acts or omissions, subject to limits set by law.
+                You indemnify POPOUT MARKET Pty Ltd and its personnel against losses arising from
+                your content, your legal/terms breaches, your unlawful conduct, and disputes caused
+                by your acts or omissions, subject to limits set by law.
               </p>
             </TermsSection>
 
@@ -264,15 +265,13 @@ export function TermsPageContent() {
               </p>
               <p>
                 For Provider-Receiver transaction disputes, parties should first use in-app
-                messaging; unresolved matters may be escalated for non-binding platform-level
-                review and moderation support.
+                messaging; unresolved matters may be escalated for non-binding platform-level review
+                and moderation support.
               </p>
             </TermsSection>
 
             <TermsSection title="16. Venue and Jurisdiction">
-              <p>
-                Exclusive venue for disputes is the courts of Victoria, Australia.
-              </p>
+              <p>Exclusive venue for disputes is the courts of Victoria, Australia.</p>
             </TermsSection>
 
             <TermsSection title="17. Governing Law">
@@ -281,15 +280,15 @@ export function TermsPageContent() {
 
             <TermsSection title="18. Severance">
               <p>
-                If any part of these Terms is unenforceable, that part is severed and the
-                remainder continues in full force.
+                If any part of these Terms is unenforceable, that part is severed and the remainder
+                continues in full force.
               </p>
             </TermsSection>
 
             <TermsSection title="19. Feedback">
               <p>
-                By providing feedback, ideas or suggestions, you grant POPOUT MARKET Pty Ltd
-                a perpetual, irrevocable, royalty-free licence to use them without compensation.
+                By providing feedback, ideas or suggestions, you grant POPOUT MARKET Pty Ltd a
+                perpetual, irrevocable, royalty-free licence to use them without compensation.
               </p>
             </TermsSection>
 

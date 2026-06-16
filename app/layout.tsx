@@ -26,11 +26,8 @@ export const metadata: Metadata = {
       "Melbourne's second-hand marketplace — buy and sell locally with suburb-first discovery and multilingual chat.",
   },
   icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png", sizes: "1024x1024" },
-      { url: "/favicon.png", rel: "shortcut icon" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "1024x1024" }],
+    icon: [{ url: "/favicon-48.png", type: "image/png", sizes: "48x48" }],
+    apple: [{ url: "/apple-touch-icon-180.png", sizes: "180x180" }],
   },
 };
 

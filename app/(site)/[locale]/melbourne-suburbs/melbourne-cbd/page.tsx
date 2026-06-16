@@ -1,4 +1,5 @@
 import { MelbourneCbdSuburbContent } from "@/components/melbourne-cbd-suburb-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
@@ -62,8 +63,21 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   };
 }
 
-export default function MelbourneCbdSuburbPage() {
-  return <MelbourneCbdSuburbContent />;
+export default async function MelbourneCbdSuburbPage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Melbourne suburbs", path: "/melbourne-suburbs" },
+          { name: "Melbourne CBD", path: "/melbourne-suburbs/melbourne-cbd" },
+        ]}
+      />
+      <MelbourneCbdSuburbContent />
+    </>
+  );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";

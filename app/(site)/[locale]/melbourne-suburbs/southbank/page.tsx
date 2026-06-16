@@ -1,4 +1,5 @@
 import { MelbourneSouthbankSuburbContent } from "@/components/melbourne-southbank-suburb-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
@@ -63,8 +64,21 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   };
 }
 
-export default function SouthbankSuburbPage() {
-  return <MelbourneSouthbankSuburbContent />;
+export default async function SouthbankSuburbPage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Melbourne suburbs", path: "/melbourne-suburbs" },
+          { name: "Southbank", path: "/melbourne-suburbs/southbank" },
+        ]}
+      />
+      <MelbourneSouthbankSuburbContent />
+    </>
+  );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";

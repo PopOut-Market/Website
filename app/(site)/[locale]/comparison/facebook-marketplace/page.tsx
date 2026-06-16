@@ -1,4 +1,5 @@
 import { ComparisonFacebookMarketplaceContent } from "@/components/comparison-facebook-marketplace-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
@@ -60,8 +61,21 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   };
 }
 
-export default function ComparisonFacebookMarketplacePage() {
-  return <ComparisonFacebookMarketplaceContent />;
+export default async function ComparisonFacebookMarketplacePage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Comparison", path: "/comparison" },
+          { name: "Facebook Marketplace", path: "/comparison/facebook-marketplace" },
+        ]}
+      />
+      <ComparisonFacebookMarketplaceContent />
+    </>
+  );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";

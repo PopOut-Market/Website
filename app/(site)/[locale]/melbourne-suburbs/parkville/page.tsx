@@ -1,4 +1,5 @@
 import { MelbourneParkvilleSuburbContent } from "@/components/melbourne-parkville-suburb-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
@@ -63,8 +64,21 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   };
 }
 
-export default function ParkvilleSuburbPage() {
-  return <MelbourneParkvilleSuburbContent />;
+export default async function ParkvilleSuburbPage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Melbourne suburbs", path: "/melbourne-suburbs" },
+          { name: "Parkville", path: "/melbourne-suburbs/parkville" },
+        ]}
+      />
+      <MelbourneParkvilleSuburbContent />
+    </>
+  );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";

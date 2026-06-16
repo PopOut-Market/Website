@@ -1,4 +1,5 @@
 import { MelbourneFitzroySuburbContent } from "@/components/melbourne-fitzroy-suburb-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
 import { localizedAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
@@ -62,8 +63,21 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   };
 }
 
-export default function FitzroySuburbPage() {
-  return <MelbourneFitzroySuburbContent />;
+export default async function FitzroySuburbPage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Melbourne suburbs", path: "/melbourne-suburbs" },
+          { name: "Fitzroy", path: "/melbourne-suburbs/fitzroy" },
+        ]}
+      />
+      <MelbourneFitzroySuburbContent />
+    </>
+  );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";
