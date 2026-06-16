@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { siteUrl } from "@/lib/seo";
-import { getServerLocale } from "@/lib/server-locale";
-import { htmlLang } from "@/lib/site-locale-routing";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -36,14 +34,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+// Static root shared by the localized site and the (non-localized) admin tree.
+// The per-locale lang is refined client-side from the [locale] layout (HtmlLang);
+// keeping this static lets the site pages be statically generated.
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getServerLocale();
   return (
-    <html lang={htmlLang(locale)}>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
