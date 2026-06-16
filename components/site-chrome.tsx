@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { StarFull, StarHalf } from "@/components/stars";
+import { StarFull } from "@/components/stars";
 import { SiteShellProvider } from "@/components/site-chrome-context";
 import {
   APP_STORE_BADGE_SRC,
+  APP_STORE_RATING,
   APP_STORE_URL,
   FOOTER_CONTACT_EMAIL,
   FOOTER_SOCIAL_IMG_INSTAGRAM,
@@ -25,11 +26,7 @@ import {
 } from "@/lib/site-config";
 import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
-import {
-  localeFromPathname,
-  stripLocalePrefix,
-  toLocalePath,
-} from "@/lib/site-locale-routing";
+import { localeFromPathname, stripLocalePrefix, toLocalePath } from "@/lib/site-locale-routing";
 import { localizedTitle } from "@/lib/site-seo-copy";
 
 function FooterSocialLink({
@@ -57,11 +54,7 @@ function FooterSocialLink({
     );
   }
   return (
-    <span
-      className={`${shell} border-dashed border-black/10`}
-      aria-label={ariaLabel}
-      role="group"
-    >
+    <span className={`${shell} border-dashed border-black/10`} aria-label={ariaLabel} role="group">
       {children}
     </span>
   );
@@ -391,9 +384,7 @@ export function SiteChrome({
                   <h2 className="text-lg font-semibold text-black sm:text-xl">
                     {t.languageModalTitle}
                   </h2>
-                  <p className="mt-1 text-xs text-black/55 sm:text-sm">
-                    {t.languageModalHint}
-                  </p>
+                  <p className="mt-1 text-xs text-black/55 sm:text-sm">{t.languageModalHint}</p>
                 </div>
                 <button
                   type="button"
@@ -423,9 +414,7 @@ export function SiteChrome({
                         }`}
                       >
                         <div className="flex items-start justify-between">
-                          <span className="text-base font-semibold text-black">
-                            {item.display}
-                          </span>
+                          <span className="text-base font-semibold text-black">{item.display}</span>
                           <span className="align-super text-[10px] font-semibold tracking-wide text-black/40">
                             {item.short}
                           </span>
@@ -440,10 +429,7 @@ export function SiteChrome({
           </div>
         ) : null}
 
-        <footer
-          id="download"
-          className={`${SHELL_X} border-t border-black/5 bg-surface-base py-8`}
-        >
+        <footer id="download" className={`${SHELL_X} border-t border-black/5 bg-surface-base py-8`}>
           <div className={INNER_MAX}>
             <div className="py-4 sm:py-6">
               <div className="flex w-full flex-col items-center gap-3 min-[760px]:flex-row min-[760px]:items-center min-[760px]:justify-between min-[760px]:gap-5">
@@ -459,21 +445,21 @@ export function SiteChrome({
                     <p className="text-balance text-sm font-semibold leading-snug text-gray-800 sm:text-base">
                       {t.downloadLine}
                     </p>
-                    <p className="mt-1 text-xs leading-snug text-gray-600 sm:text-sm">
-                      {t.slogan}
-                    </p>
-                    <div
-                      className="mt-2 inline-flex items-center gap-0.5"
-                      role="img"
-                      aria-label={t.ratingAria}
-                    >
-                      {[0, 1, 2, 3].map((i) => (
-                        <StarFull
-                          key={i}
-                          className="h-4 w-4 text-brand-500"
-                        />
-                      ))}
-                      <StarHalf />
+                    <p className="mt-1 text-xs leading-snug text-gray-600 sm:text-sm">{t.slogan}</p>
+                    <div className="mt-2 inline-flex items-center gap-1.5">
+                      <span
+                        className="inline-flex items-center gap-0.5"
+                        role="img"
+                        aria-label={t.ratingAria}
+                      >
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <StarFull key={i} className="h-4 w-4 text-brand-500" />
+                        ))}
+                      </span>
+                      <span className="text-xs font-semibold text-gray-700">
+                        {APP_STORE_RATING}
+                      </span>
+                      <span className="text-xs text-gray-500">App Store</span>
                     </div>
                   </div>
                 </div>
@@ -513,7 +499,10 @@ export function SiteChrome({
 
             <div className="border-t border-black/5 pt-6 sm:pt-8">
               <div className="flex flex-wrap items-center justify-center gap-4 min-[760px]:justify-start">
-                <FooterSocialLink href={footerSocialUrlRednote()} ariaLabel={t.footerSocialRednoteAria}>
+                <FooterSocialLink
+                  href={footerSocialUrlRednote()}
+                  ariaLabel={t.footerSocialRednoteAria}
+                >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center">
                     <Image
                       src={FOOTER_SOCIAL_IMG_REDNOTE}
@@ -524,7 +513,10 @@ export function SiteChrome({
                     />
                   </div>
                 </FooterSocialLink>
-                <FooterSocialLink href={footerSocialUrlInstagram()} ariaLabel={t.footerSocialInstagramAria}>
+                <FooterSocialLink
+                  href={footerSocialUrlInstagram()}
+                  ariaLabel={t.footerSocialInstagramAria}
+                >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center">
                     <Image
                       src={FOOTER_SOCIAL_IMG_INSTAGRAM}
@@ -535,7 +527,10 @@ export function SiteChrome({
                     />
                   </div>
                 </FooterSocialLink>
-                <FooterSocialLink href={footerSocialUrlLinkedIn()} ariaLabel={t.footerSocialLinkedInAria}>
+                <FooterSocialLink
+                  href={footerSocialUrlLinkedIn()}
+                  ariaLabel={t.footerSocialLinkedInAria}
+                >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center">
                     <Image
                       src={FOOTER_SOCIAL_IMG_LINKEDIN}

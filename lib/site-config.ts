@@ -46,6 +46,10 @@ export const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=au
 
 export const FOOTER_CONTACT_EMAIL = "contact@popoutmarket.com.au";
 
+/** Real App Store rating shown in the footer (source: App Store). Update this if
+ *  the live store rating changes — it is displayed without a count by choice. */
+export const APP_STORE_RATING = "5.0";
+
 /** Registered office / postal address shown in the site footer. */
 export const FOOTER_ADDRESS_LINE = "1003/151 City Rd, Southbank VIC 3006, Australia";
 
