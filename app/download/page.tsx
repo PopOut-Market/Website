@@ -35,6 +35,11 @@ export const metadata: Metadata = {
   },
 };
 
+// Prerender as a static page so the CDN serves /download directly, ahead of the
+// (site)/[locale] dynamic route (which otherwise 404s a non-locale path on
+// Netlify).
+export const dynamic = "force-static";
+
 // Standalone download page (no site header/footer). The store links resolve
 // device-natively: on a computer they open the store web page; on a phone iOS
 // opens the App Store app and Android opens the Google Play app.
