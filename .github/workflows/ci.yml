@@ -45,9 +45,9 @@ jobs:
 
   format:
     name: Prettier (changed files)
-    # PR-scoped: only files changed in the PR are checked, so existing unformatted
-    # files are left alone until they are next edited.
-    if: github.event_name == 'pull_request'
+    # Runs on PRs (diff vs the base branch) AND on direct pushes (diff vs the
+    # previous commit), so changed files are format-checked either way. Only the
+    # files touched are checked — pre-existing unformatted files are left alone.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -66,8 +66,20 @@ jobs:
 
       - name: Prettier check on changed files
         run: |
-          BASE="origin/${{ github.base_ref }}"
-          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.base_ref }}"
+            git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] \
+              || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+              || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              BASE="HEAD~1"
+            else
+              BASE="$BEFORE"
+            fi
+          fi
+          echo "Diff base: $BASE"
           FILES=$(git diff --name-only --diff-filter=ACMR "$BASE"...HEAD -- \
             '*.ts' '*.tsx' '*.js' '*.mjs' '*.cjs' '*.json' '*.css' '*.md' '*.yml' '*.yaml' \
             | tr '\n' ' ')
