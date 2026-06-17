@@ -1,7 +1,11 @@
-import type { ReactNode } from "react";
+import "@/app/globals.css";
+import { baseMetadata } from "@/lib/root-metadata";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 
+// Root layout for the (non-localized, noindex) admin tree. Owns its own <html>.
 export const metadata: Metadata = {
+  ...baseMetadata,
   robots: {
     index: false,
     follow: false,
@@ -18,5 +22,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminGroupLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }
