@@ -309,7 +309,9 @@ function ClaimCard({
 
           {claim.other_listings && claim.other_listings.length > 0 && (
             <div className="mt-3">
-              <p className="mb-1 text-xs font-medium text-slate-500">Seller&apos;s other listings</p>
+              <p className="mb-1 text-xs font-medium text-slate-500">
+                Seller&apos;s other listings
+              </p>
               <div className="flex flex-wrap gap-2">
                 {claim.other_listings.slice(0, 6).map((o) => {
                   const thumb = getPostImageUrl(o.thumbnail_path);

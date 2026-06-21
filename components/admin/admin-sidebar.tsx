@@ -36,9 +36,7 @@ export function AdminSidebar() {
             key={item.href}
             href={item.href}
             className={`mb-0.5 flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition ${
-              isActive(item.href)
-                ? "bg-slate-900 text-white"
-                : "text-slate-700 hover:bg-slate-100"
+              isActive(item.href) ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-100"
             }`}
           >
             <span className="text-base">{item.icon}</span>

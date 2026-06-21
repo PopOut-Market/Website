@@ -10,8 +10,7 @@ export default function AdminSuperEntryPage() {
       <article className="max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-900">Admin Login</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Sign in with your authorized admin mobile number — we&apos;ll send a one-time SMS
-          code.
+          Sign in with your authorized admin mobile number — we&apos;ll send a one-time SMS code.
         </p>
         <Link
           href="/admin-super/admin-login"

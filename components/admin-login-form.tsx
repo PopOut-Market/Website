@@ -103,7 +103,10 @@ export function AdminLoginForm({
             Missing Supabase browser env keys. Set
             <code className="mx-1 rounded bg-amber-100 px-1 py-0.5">EXPO_PUBLIC_SUPABASE_URL</code>
             and
-            <code className="ml-1 rounded bg-amber-100 px-1 py-0.5">EXPO_PUBLIC_SUPABASE_ANON_KEY</code>.
+            <code className="ml-1 rounded bg-amber-100 px-1 py-0.5">
+              EXPO_PUBLIC_SUPABASE_ANON_KEY
+            </code>
+            .
           </div>
         ) : null}
 
