@@ -1,11 +1,6 @@
 "use client";
 
 import { KpiCard } from "@/components/admin/kpi-card";
-import {
-  type GraphLink,
-  type GraphNode,
-  InvitationGraph,
-} from "@/components/admin/invitation-graph";
 import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { type ReactNode, useEffect, useState } from "react";
 import {
@@ -111,21 +106,10 @@ function Section({
 
 const sumCounts = (rows: { count: number }[]): number => rows.reduce((a, r) => a + r.count, 0);
 
-type Invitations = { nodes: GraphNode[]; links: GraphLink[]; pending: number };
-
 export default function DashboardPage() {
   const [data, setData] = useState<Overview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [invites, setInvites] = useState<Invitations | null>(null);
-
-  // Loads independently of the overview metrics so one failing doesn't blank the other.
-  useEffect(() => {
-    adminApiFetch("/api/admin/invitations", { cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => j && setInvites(j as Invitations))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     async function load() {
@@ -244,26 +228,6 @@ export default function DashboardPage() {
           </div>
         </>
       ) : null}
-
-      {invites && invites.nodes.length > 0 && (
-        <Section title="Invitations · who invited whom" total={invites.links.length}>
-          <InvitationGraph nodes={invites.nodes} links={invites.links} />
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-indigo-500" /> inviter (size
-              = # invites)
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full border border-slate-400 bg-white" />{" "}
-              invitee
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-0.5 w-4 bg-emerald-500" /> reward paid
-            </span>
-            {invites.pending > 0 && <span>· {invites.pending} phone-only (not yet joined)</span>}
-          </div>
-        </Section>
-      )}
 
       {data && (
         <p className="text-xs text-slate-400">

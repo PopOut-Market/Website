@@ -5,91 +5,72 @@ import { useMemo, useState } from "react";
 export type GraphNode = { id: string; label: string; invites: number; invited: number };
 export type GraphLink = { source: string; target: string; paid: boolean };
 
-const W = 760;
-const H = 440;
+type Placed = { x: number; y: number; depth: number };
 
-type Pt = { x: number; y: number; vx: number; vy: number };
+const X_GAP = 120;
+const Y_LEVEL = 96;
 
 /**
- * Tiny deterministic force-directed layout (no deps, no randomness → stable
- * across renders and SSR-safe). O(n²) per tick — fine for referral-sized graphs.
+ * Tidy top-down tree layout (Reingold–Tilford style): leaves get evenly-spaced
+ * x slots, parents centre over their children, depth → y. Deterministic and
+ * dependency-free (so it's SSR-safe with no hydration mismatch). Handles a
+ * forest (multiple roots) and guards against cycles / multiple parents.
  */
-function computeLayout(
-  nodes: GraphNode[],
-  links: GraphLink[],
-): Map<string, { x: number; y: number }> {
-  const n = nodes.length;
-  const idx = new Map(nodes.map((node, i) => [node.id, i]));
-  const p: Pt[] = nodes.map((_, i) => ({
-    x: W / 2 + Math.cos((2 * Math.PI * i) / Math.max(1, n)) * 150,
-    y: H / 2 + Math.sin((2 * Math.PI * i) / Math.max(1, n)) * 150,
-    vx: 0,
-    vy: 0,
-  }));
-  const pairs = links
-    .map((l) => [idx.get(l.source), idx.get(l.target)] as [number | undefined, number | undefined])
-    .filter((pair): pair is [number, number] => pair[0] != null && pair[1] != null);
-
-  const REP = 9000;
-  const SPRING = 0.03;
-  const DIST = 95;
-  const ITERATIONS = 350;
-
-  for (let it = 0; it < ITERATIONS; it++) {
-    for (let i = 0; i < n; i++) {
-      for (let j = i + 1; j < n; j++) {
-        const dx = p[i].x - p[j].x;
-        const dy = p[i].y - p[j].y;
-        const d2 = dx * dx + dy * dy + 0.01;
-        const d = Math.sqrt(d2);
-        const f = REP / d2;
-        const fx = (f * dx) / d;
-        const fy = (f * dy) / d;
-        p[i].vx += fx;
-        p[i].vy += fy;
-        p[j].vx -= fx;
-        p[j].vy -= fy;
-      }
-    }
-    for (const [a, b] of pairs) {
-      const dx = p[b].x - p[a].x;
-      const dy = p[b].y - p[a].y;
-      const d = Math.sqrt(dx * dx + dy * dy) + 0.01;
-      const f = SPRING * (d - DIST);
-      const fx = (f * dx) / d;
-      const fy = (f * dy) / d;
-      p[a].vx += fx;
-      p[a].vy += fy;
-      p[b].vx -= fx;
-      p[b].vy -= fy;
-    }
-    for (let i = 0; i < n; i++) {
-      p[i].vx += (W / 2 - p[i].x) * 0.002;
-      p[i].vy += (H / 2 - p[i].y) * 0.002;
-      p[i].vx *= 0.86;
-      p[i].vy *= 0.86;
-      p[i].x += p[i].vx;
-      p[i].y += p[i].vy;
-    }
+function computeTreeLayout(nodes: GraphNode[], links: GraphLink[]): Map<string, Placed> {
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  const childrenOf = new Map<string, string[]>();
+  const parentOf = new Map<string, string>();
+  for (const l of links) {
+    if (!byId.has(l.source) || !byId.has(l.target)) continue;
+    if (!childrenOf.has(l.source)) childrenOf.set(l.source, []);
+    childrenOf.get(l.source)!.push(l.target);
+    if (!parentOf.has(l.target)) parentOf.set(l.target, l.source); // first parent wins
   }
-  return new Map(nodes.map((node, i) => [node.id, { x: p[i].x, y: p[i].y }]));
+
+  const pos = new Map<string, Placed>();
+  const visited = new Set<string>();
+  let leaf = 0;
+
+  const place = (id: string, depth: number): number => {
+    visited.add(id);
+    const kids = (childrenOf.get(id) ?? []).filter((c) => byId.has(c) && !visited.has(c));
+    let x: number;
+    if (kids.length === 0) {
+      x = leaf * X_GAP;
+      leaf += 1;
+    } else {
+      const xs = kids.map((c) => place(c, depth + 1));
+      x = (Math.min(...xs) + Math.max(...xs)) / 2;
+    }
+    pos.set(id, { x, y: depth * Y_LEVEL, depth });
+    return x;
+  };
+
+  // Roots = nodes nobody invited; then any stragglers left by a cycle.
+  for (const n of nodes) if (!parentOf.has(n.id) && !visited.has(n.id)) place(n.id, 0);
+  for (const n of nodes) if (!visited.has(n.id)) place(n.id, 0);
+  return pos;
+}
+
+function truncate(s: string, n = 16): string {
+  return s.length > n ? `${s.slice(0, n - 1)}…` : s;
 }
 
 export function InvitationGraph({ nodes, links }: { nodes: GraphNode[]; links: GraphLink[] }) {
   const [hover, setHover] = useState<string | null>(null);
-  const positions = useMemo(() => computeLayout(nodes, links), [nodes, links]);
+  const pos = useMemo(() => computeTreeLayout(nodes, links), [nodes, links]);
 
   if (nodes.length === 0) {
     return <p className="text-sm text-slate-500">No invitations yet.</p>;
   }
 
-  const xs = [...positions.values()].map((q) => q.x);
-  const ys = [...positions.values()].map((q) => q.y);
-  const pad = 52;
-  const minX = Math.min(...xs) - pad;
-  const minY = Math.min(...ys) - pad;
-  const vw = Math.max(1, Math.max(...xs) + pad - minX);
-  const vh = Math.max(1, Math.max(...ys) + pad - minY);
+  const pts = [...pos.values()];
+  const padX = 80;
+  const padY = 40;
+  const minX = Math.min(...pts.map((p) => p.x)) - padX;
+  const minY = Math.min(...pts.map((p) => p.y)) - padY;
+  const vw = Math.max(1, Math.max(...pts.map((p) => p.x)) + padX - minX);
+  const vh = Math.max(1, Math.max(...pts.map((p) => p.y)) + padY + 20 - minY);
 
   const active = hover
     ? new Set(
@@ -103,47 +84,32 @@ export function InvitationGraph({ nodes, links }: { nodes: GraphNode[]; links: G
   return (
     <svg
       viewBox={`${minX} ${minY} ${vw} ${vh}`}
-      className="h-[440px] w-full"
+      className="w-full"
+      style={{ aspectRatio: `${vw} / ${vh}`, maxHeight: "70vh" }}
       role="img"
-      aria-label="Invitation network graph"
+      aria-label="Invitation tree"
     >
-      <defs>
-        <marker
-          id="inv-arrow"
-          viewBox="0 0 10 10"
-          refX="9"
-          refY="5"
-          markerWidth="6"
-          markerHeight="6"
-          orient="auto-start-reverse"
-        >
-          <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8" />
-        </marker>
-      </defs>
-
       {links.map((l, i) => {
-        const a = positions.get(l.source);
-        const b = positions.get(l.target);
+        const a = pos.get(l.source);
+        const b = pos.get(l.target);
         if (!a || !b) return null;
         const dim = active && !(active.has(l.source) && active.has(l.target));
+        const my = (a.y + b.y) / 2;
         return (
-          <line
+          <path
             key={i}
-            x1={a.x}
-            y1={a.y}
-            x2={b.x}
-            y2={b.y}
+            d={`M ${a.x},${a.y} C ${a.x},${my} ${b.x},${my} ${b.x},${b.y}`}
+            fill="none"
             stroke={l.paid ? "#10b981" : "#cbd5e1"}
-            strokeWidth={1.5}
-            markerEnd="url(#inv-arrow)"
+            strokeWidth={1.6}
             opacity={dim ? 0.12 : 0.85}
           />
         );
       })}
 
       {nodes.map((node) => {
-        const q = positions.get(node.id);
-        if (!q) return null;
+        const p = pos.get(node.id);
+        if (!p) return null;
         const r = 7 + Math.min(18, node.invites * 3);
         const isInviter = node.invites > 0;
         const dim = active && !active.has(node.id);
@@ -155,22 +121,23 @@ export function InvitationGraph({ nodes, links }: { nodes: GraphNode[]; links: G
             onMouseLeave={() => setHover(null)}
           >
             <circle
-              cx={q.x}
-              cy={q.y}
+              cx={p.x}
+              cy={p.y}
               r={r}
               fill={isInviter ? "#6366f1" : "#ffffff"}
               stroke={isInviter ? "#4338ca" : "#94a3b8"}
               strokeWidth={1.5}
             />
             <text
-              x={q.x}
-              y={q.y - r - 4}
+              x={p.x}
+              y={p.y + r + 13}
               textAnchor="middle"
               className="fill-slate-700"
               style={{ fontSize: 11 }}
             >
-              {node.label}
+              {truncate(node.label)}
               {node.invites > 0 ? ` (${node.invites})` : ""}
+              <title>{node.label}</title>
             </text>
           </g>
         );
