@@ -2,23 +2,25 @@ import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
-type Bucket = { posts: number; likes: number; dealResults: number };
-type CachedResult = {
-  data: Record<string, unknown>;
-  fetchedAt: number;
-};
-
-const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
-const cache = new Map<string, CachedResult>();
+/**
+ * Dashboard overview metrics, computed server-side with the service-role key
+ * (behind requireAdmin). Service-role is required: a normal session hits RLS
+ * and sees only its own row, which undercounts every aggregate.
+ *
+ * Posts: available count, status breakdown, per-day created count (last 7 days),
+ * and the category + suburb split of currently-available posts (English names).
+ * Users: active count (excludes deleted/banned) + suburb + app-language splits.
+ */
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
-function startOfTodayIso(): string {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString();
+function categoryLabel(row: { id: string | number; name: unknown; slug: string | null }): string {
+  if (row.name && typeof row.name === "object") {
+    return (row.name as Record<string, string>).en ?? row.slug ?? `#${row.id}`;
+  }
+  return (row.name as string | null) ?? row.slug ?? `#${row.id}`;
 }
 
 export async function GET(req: Request) {
@@ -27,160 +29,178 @@ export async function GET(req: Request) {
 
   const supabaseUrl = env("EXPO_PUBLIC_SUPABASE_URL") || env("NEXT_PUBLIC_SUPABASE_URL");
   const serviceRoleKey = env("SUPABASE_SERVICE_ROLE_KEY") || env("SUPABASE_SECRET_KEY");
-
   if (!supabaseUrl || !serviceRoleKey) {
     return NextResponse.json(
       {
         error:
-          "Missing server key. Set SUPABASE_SERVICE_ROLE_KEY in .env to the legacy service_role JWT from Supabase Dashboard > Settings > API > Legacy API Keys.",
+          "Missing server key. Set SUPABASE_SERVICE_ROLE_KEY in .env (Supabase > Settings > API).",
       },
       { status: 500 },
     );
-  }
-
-  const rangeParam = Number(new URL(req.url).searchParams.get("range") ?? "30");
-  const range = [7, 14, 30].includes(rangeParam) ? rangeParam : 30;
-
-  const cacheKey = `overview-${range}`;
-  const cached = cache.get(cacheKey);
-  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-    return NextResponse.json(cached.data);
   }
 
   const sb = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const todayISO = startOfTodayIso();
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - range);
-  const cutoffISO = cutoff.toISOString();
+  // Last 7 calendar days (UTC), oldest first.
+  const dayKeys: string[] = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setUTCDate(d.getUTCDate() - i);
+    dayKeys.push(d.toISOString().slice(0, 10));
+  }
+  const windowStartISO = `${dayKeys[0]}T00:00:00.000Z`;
 
   try {
     const [
-      { count: totalUsers, error: e1 },
-      { count: todayUsers, error: e2 },
-      { count: totalPosts, error: e3 },
-      { count: todayPosts, error: e4 },
-      { count: totalDealResults, error: e5 },
-      { count: todayDealResults, error: e6 },
-      { count: totalLikes, error: e7 },
-      { count: todayLikes, error: e8 },
-      { count: totalMessages, error: e9 },
-      { count: todayMessages, error: e10 },
-      { count: totalMeetups, error: e11 },
-      { count: todayMeetups, error: e12 },
-      { data: allPosts, error: e13 },
-      { data: dailyPosts, error: e14 },
-      { data: dailyLikes, error: e15 },
-      { data: dailyDealResults, error: e16 },
+      { count: totalPosts, error: e1 },
+      { count: postsLast7d, error: e2 },
+      { count: totalUsersAll, error: e3 },
+      { count: activeUsers, error: e3b },
+      { data: statusRows, error: e4 },
+      { data: languageRows, error: e5 },
+      { data: suburbRows, error: e6 },
+      { data: suburbNames, error: e7 },
+      { data: windowPosts, error: e8 },
+      { data: categoryRows, error: e9 },
+      { data: availablePosts, count: availableCount, error: e10 },
     ] = await Promise.all([
-      sb.from("profiles").select("*", { count: "exact", head: true }),
-      sb
-        .from("profiles")
-        .select("*", { count: "exact", head: true })
-        .gte("suburb_verified_at", todayISO),
       sb.from("posts").select("*", { count: "exact", head: true }),
-      sb.from("posts").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
-      sb.from("posts").select("*", { count: "exact", head: true }).eq("status", "sold"),
       sb
         .from("posts")
         .select("*", { count: "exact", head: true })
-        .eq("status", "sold")
-        .gte("updated_at", todayISO),
-      sb.from("post_interests").select("*", { count: "exact", head: true }),
+        .gte("created_at", windowStartISO),
+      sb.from("profiles").select("*", { count: "exact", head: true }),
+      // User metrics exclude deleted (is_deleted / deleted_at) and banned accounts.
       sb
-        .from("post_interests")
+        .from("profiles")
         .select("*", { count: "exact", head: true })
-        .gte("created_at", todayISO),
-      sb.from("messages").select("*", { count: "exact", head: true }),
-      sb.from("messages").select("*", { count: "exact", head: true }).gte("created_at", todayISO),
-      sb.from("meetup_schedules").select("*", { count: "exact", head: true }).eq("status", "met"),
-      sb
-        .from("meetup_schedules")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "met")
-        .gte("updated_at", todayISO),
+        .eq("is_deleted", false)
+        .eq("is_banned", false)
+        .is("deleted_at", null),
       sb.from("posts").select("status"),
-      sb.from("posts").select("created_at").gte("created_at", cutoffISO),
-      sb.from("post_interests").select("created_at").gte("created_at", cutoffISO),
-      sb.from("posts").select("updated_at").eq("status", "sold").gte("updated_at", cutoffISO),
+      sb
+        .from("profiles")
+        .select("language")
+        .eq("is_deleted", false)
+        .eq("is_banned", false)
+        .is("deleted_at", null),
+      sb
+        .from("profiles")
+        .select("verified_suburb_id")
+        .eq("is_deleted", false)
+        .eq("is_banned", false)
+        .is("deleted_at", null),
+      sb.from("suburbs").select("id, name"),
+      sb.from("posts").select("created_at").gte("created_at", windowStartISO),
+      sb.from("categories").select("id, name, slug"),
+      sb
+        .from("posts")
+        .select("category_id, suburb_id", { count: "exact" })
+        .eq("status", "available"),
     ]);
 
-    const firstErr =
-      e1 ??
-      e2 ??
-      e3 ??
-      e4 ??
-      e5 ??
-      e6 ??
-      e7 ??
-      e8 ??
-      e9 ??
-      e10 ??
-      e11 ??
-      e12 ??
-      e13 ??
-      e14 ??
-      e15 ??
-      e16;
+    const firstErr = e1 ?? e2 ?? e3 ?? e3b ?? e4 ?? e5 ?? e6 ?? e7 ?? e8 ?? e9 ?? e10;
     if (firstErr) {
       return NextResponse.json(
         {
-          error: `Supabase query failed: ${firstErr.message || "(empty)"} (code: ${(firstErr as unknown as { code?: string }).code ?? "unknown"}).`,
+          error: `Supabase query failed: ${firstErr.message || "(empty)"} (code: ${(firstErr as { code?: string }).code ?? "unknown"}).`,
         },
         { status: 500 },
       );
     }
 
-    const statusCounts: Record<string, number> = {};
-    allPosts?.forEach((p: { status: string }) => {
-      statusCounts[p.status] = (statusCounts[p.status] ?? 0) + 1;
-    });
-
-    const buckets: Record<string, Bucket> = {};
-    for (let i = 0; i < range; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() - (range - 1 - i));
-      buckets[d.toISOString().slice(0, 10)] = { posts: 0, likes: 0, dealResults: 0 };
-    }
-
-    dailyPosts?.forEach((r: { created_at: string }) => {
-      const k = r.created_at.slice(0, 10);
-      if (buckets[k]) buckets[k].posts++;
-    });
-    dailyLikes?.forEach((r: { created_at: string }) => {
-      const k = r.created_at.slice(0, 10);
-      if (buckets[k]) buckets[k].likes++;
-    });
-    dailyDealResults?.forEach((r: { updated_at: string }) => {
-      const k = r.updated_at.slice(0, 10);
-      if (buckets[k]) buckets[k].dealResults++;
-    });
-
-    const result = {
-      kpis: {
-        totalUsers: totalUsers ?? 0,
-        todayUsers: todayUsers ?? 0,
-        totalPosts: totalPosts ?? 0,
-        todayPosts: todayPosts ?? 0,
-        totalDealResults: totalDealResults ?? 0,
-        todayDealResults: todayDealResults ?? 0,
-        totalLikes: totalLikes ?? 0,
-        todayLikes: todayLikes ?? 0,
-        totalMessages: totalMessages ?? 0,
-        todayMessages: todayMessages ?? 0,
-        totalMeetups: totalMeetups ?? 0,
-        todayMeetups: todayMeetups ?? 0,
-      },
-      statusDist: Object.entries(statusCounts).map(([name, value]) => ({ name, value })),
-      dailyData: Object.entries(buckets).map(([date, v]) => ({ date: date.slice(5), ...v })),
-      cachedAt: new Date().toISOString(),
+    const tally = (rows: unknown[] | null, key: string, fallback: string) => {
+      const m = new Map<string, number>();
+      for (const r of rows ?? []) {
+        const v = (r as Record<string, unknown>)[key];
+        const label = v == null || v === "" ? fallback : String(v);
+        m.set(label, (m.get(label) ?? 0) + 1);
+      }
+      return m;
     };
 
-    cache.set(cacheKey, { data: result, fetchedAt: Date.now() });
+    const byStatus = [...tally(statusRows, "status", "(unknown)").entries()]
+      .map(([status, count]) => ({ status, count }))
+      .sort((a, b) => b.count - a.count);
 
-    return NextResponse.json(result);
+    const byLanguage = [...tally(languageRows, "language", "(not set)").entries()]
+      .map(([code, count]) => ({ code, count }))
+      .sort((a, b) => b.count - a.count);
+
+    const nameById = new Map<string, string>();
+    for (const s of suburbNames ?? []) {
+      const row = s as { id: string | number; name: string | null };
+      if (row.name) nameById.set(String(row.id), row.name);
+    }
+    const suburbCounts = new Map<string, number>();
+    for (const r of suburbRows ?? []) {
+      const id = (r as { verified_suburb_id: string | number | null }).verified_suburb_id;
+      const label = id == null ? "(not set)" : (nameById.get(String(id)) ?? `Suburb #${id}`);
+      suburbCounts.set(label, (suburbCounts.get(label) ?? 0) + 1);
+    }
+    const bySuburb = [...suburbCounts.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Posts created per day (last 7 days).
+    const perDayCount = new Map<string, number>(dayKeys.map((d) => [d, 0]));
+    for (const p of windowPosts ?? []) {
+      const day = (p as { created_at: string }).created_at.slice(0, 10);
+      if (perDayCount.has(day)) perDayCount.set(day, (perDayCount.get(day) ?? 0) + 1);
+    }
+    const dailyData = dayKeys.map((day) => ({
+      date: day.slice(5),
+      count: perDayCount.get(day) ?? 0,
+    }));
+
+    // Currently-available posts by category (English names).
+    const catName = new Map<string, string>();
+    for (const c of categoryRows ?? []) {
+      const row = c as { id: string | number; name: unknown; slug: string | null };
+      catName.set(String(row.id), categoryLabel(row));
+    }
+    const availByCat = new Map<string, number>();
+    for (const p of availablePosts ?? []) {
+      const id = (p as { category_id: string | number | null }).category_id;
+      const name = id == null ? "Uncategorised" : (catName.get(String(id)) ?? "Uncategorised");
+      availByCat.set(name, (availByCat.get(name) ?? 0) + 1);
+    }
+    const byCategory = [...availByCat.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Currently-available posts by suburb (reuses the suburb id -> name map).
+    const availBySuburb = new Map<string, number>();
+    for (const p of availablePosts ?? []) {
+      const id = (p as { suburb_id: string | number | null }).suburb_id;
+      const label = id == null ? "(not set)" : (nameById.get(String(id)) ?? `Suburb #${id}`);
+      availBySuburb.set(label, (availBySuburb.get(label) ?? 0) + 1);
+    }
+    const postsBySuburb = [...availBySuburb.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return NextResponse.json({
+      posts: {
+        total: totalPosts ?? 0,
+        available: availableCount ?? 0,
+        last7d: postsLast7d ?? 0,
+        byStatus,
+        daily: dailyData,
+        byCategory,
+        bySuburb: postsBySuburb,
+      },
+      users: {
+        active: activeUsers ?? 0,
+        excluded: (totalUsersAll ?? 0) - (activeUsers ?? 0),
+        bySuburb,
+        byLanguage,
+      },
+      generatedAt: new Date().toISOString(),
+    });
   } catch (err) {
     return NextResponse.json(
       { error: `Unexpected error: ${err instanceof Error ? err.message : String(err)}` },
