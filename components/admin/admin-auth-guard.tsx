@@ -17,7 +17,7 @@ import {
 } from "react";
 
 type AdminAuthCtx = {
-  email: string;
+  identity: string;
   logout: () => Promise<void>;
 };
 
@@ -32,7 +32,7 @@ export function useAdminAuth(): AdminAuthCtx {
 export function AdminAuthGuard({ children }: { children: ReactNode }) {
   const router = useRouter();
   const configured = useMemo(() => isAdminAuthConfigured(), []);
-  const [email, setEmail] = useState<string | null>(null);
+  const [identity, setIdentity] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 
     sb.auth.getUser().then(async ({ data, error }) => {
       if (!mounted) return;
-      if (error || !data.user?.email) {
+      if (error || !data.user?.id) {
         router.replace("/admin-super/admin-login");
         return;
       }
@@ -59,7 +59,8 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
         router.replace("/admin-super/admin-login");
         return;
       }
-      setEmail(data.user.email);
+      // Phone-OTP admins have no email; fall back to phone, then user id.
+      setIdentity(data.user.phone ?? data.user.email ?? data.user.id);
       setChecking(false);
     });
 
@@ -90,7 +91,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!email) return null;
+  if (!identity) return null;
 
-  return <Ctx.Provider value={{ email, logout }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ identity, logout }}>{children}</Ctx.Provider>;
 }

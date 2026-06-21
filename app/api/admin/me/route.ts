@@ -6,5 +6,5 @@ import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 export async function GET(req: Request) {
   const gate = await requireAdmin(req);
   if (gate instanceof NextResponse) return gate;
-  return NextResponse.json({ email: gate.email });
+  return NextResponse.json({ userId: gate.userId, phone: gate.phone });
 }

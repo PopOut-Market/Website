@@ -6,6 +6,7 @@ import { useAdminAuth } from "./admin-auth-guard";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin-super/dashboard", icon: "📊" },
+  { label: "Reward review", href: "/admin-super/dashboard/reward-review", icon: "🪙" },
   { label: "Geographic", href: "/admin-super/dashboard/geographic", icon: "🗺️" },
   { label: "Categories", href: "/admin-super/dashboard/categories", icon: "📦" },
   { label: "Likes", href: "/admin-super/dashboard/likes", icon: "❤️" },
@@ -16,7 +17,7 @@ const NAV_ITEMS = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
-  const { email, logout } = useAdminAuth();
+  const { identity, logout } = useAdminAuth();
 
   function isActive(href: string) {
     if (href === "/admin-super/dashboard") return pathname === href;
@@ -47,8 +48,8 @@ export function AdminSidebar() {
       </nav>
 
       <div className="border-t border-slate-200 px-3 py-3">
-        <p className="mb-2 truncate text-xs text-slate-500" title={email}>
-          {email}
+        <p className="mb-2 truncate text-xs text-slate-500" title={identity}>
+          {identity}
         </p>
         <button
           type="button"

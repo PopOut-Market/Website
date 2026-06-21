@@ -4,7 +4,7 @@ export default function AdminUserLoginPage() {
   return (
     <AdminLoginForm
       title="Admin Login"
-      description="Use your internal admin account to manage users, data, and reports."
+      description="Sign in with your authorized admin mobile number — we'll text you a one-time code."
       successRedirectTo="/admin-super/dashboard"
     />
   );
