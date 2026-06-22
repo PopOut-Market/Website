@@ -8,10 +8,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 
-// Only these two accounts may request an OTP. Both are present in the
+// Only these accounts may request an OTP. All are present in the
 // server-side `reward_admins` allowlist (the real gate); this client-side
 // restriction just avoids sending SMS codes to arbitrary numbers.
-const ALLOWED_PHONES = ["+61466807771", "+61481690673"] as const;
+// Sooyoung (operator), Eric, Jun.
+const ALLOWED_PHONES = [
+  "+61466807771",
+  "+61481690673",
+  "+61422054574",
+] as const;
 
 function normalizePhone(input: string): string {
   const trimmed = input.trim();
