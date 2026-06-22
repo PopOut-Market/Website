@@ -12,11 +12,7 @@ import { FormEvent, useMemo, useState } from "react";
 // server-side `reward_admins` allowlist (the real gate); this client-side
 // restriction just avoids sending SMS codes to arbitrary numbers.
 // Sooyoung (operator), Eric, Jun.
-const ALLOWED_PHONES = [
-  "+61466807771",
-  "+61481690673",
-  "+61422054574",
-] as const;
+const ALLOWED_PHONES = ["+61466807771", "+61481690673", "+61422054574"] as const;
 
 function normalizePhone(input: string): string {
   const trimmed = input.trim();
