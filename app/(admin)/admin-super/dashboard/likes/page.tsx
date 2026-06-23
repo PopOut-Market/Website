@@ -1,10 +1,6 @@
 "use client";
 
 import { KpiCard } from "@/components/admin/kpi-card";
-import {
-  getAdminAuthBrowserClient,
-  isAdminAuthConfigured,
-} from "@/lib/supabase/admin-auth-browser-client";
 import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -25,9 +21,9 @@ export default function LikesPage() {
   const [totalLikes, setTotalLikes] = useState(0);
   const [todayLikes, setTodayLikes] = useState(0);
   const [avgPerPost, setAvgPerPost] = useState("0");
+  const [topPostLikes, setTopPostLikes] = useState(0);
   const [catData, setCatData] = useState<{ name: string; likes: number }[]>([]);
   const [trendData, setTrendData] = useState<{ date: string; likes: number }[]>([]);
-  const [topPosts, setTopPosts] = useState<TopPost[]>([]);
   const [topPostsAll, setTopPostsAll] = useState<TopPost[] | null>(null);
   const [topPostsMonth, setTopPostsMonth] = useState<TopPost[] | null>(null);
   const [topRange, setTopRange] = useState<"all" | "month">("all");
@@ -35,96 +31,25 @@ export default function LikesPage() {
   const [topLoading, setTopLoading] = useState(false);
 
   useEffect(() => {
-    if (!isAdminAuthConfigured()) return;
-    const sb = getAdminAuthBrowserClient();
-
     async function load() {
       setLoading(true);
-
-      const todayISO = new Date();
-      todayISO.setHours(0, 0, 0, 0);
-      const cutoff30 = new Date();
-      cutoff30.setDate(cutoff30.getDate() - 30);
-
-      const [{ data: interests }, { data: categories }, { data: posts }] = await Promise.all([
-        sb.from("post_interests").select("created_at").gte("created_at", cutoff30.toISOString()),
-        sb.from("categories").select("id, slug").eq("is_active", true),
-        sb
-          .from("posts")
-          .select("id, raw_title, category_id, price_cents, interest_count, created_at")
-          .order("interest_count", { ascending: false }),
-      ]);
-
-      const catMap = new Map<number, string>();
-      categories?.forEach((c: { id: number; slug: string }) => catMap.set(c.id, c.slug));
-
-      const safePosts =
-        posts?.map(
-          (p: {
-            id: number;
-            raw_title: string | null;
-            category_id: number;
-            price_cents: number | null;
-            interest_count: number | null;
-            created_at: string;
-          }) => ({
-            ...p,
-            raw_title: p.raw_title ?? "",
-            price_cents: p.price_cents ?? 0,
-            interest_count: p.interest_count ?? 0,
-          }),
-        ) ?? [];
-
-      // Use a single source of truth: posts.interest_count
-      const totalLikesFromPosts = safePosts.reduce((sum, p) => sum + p.interest_count, 0);
-      setTotalLikes(totalLikesFromPosts);
-      setAvgPerPost(
-        safePosts.length > 0 ? (totalLikesFromPosts / safePosts.length).toFixed(1) : "0",
-      );
-
-      // "Today likes": prefer real event count if accessible; otherwise fall back to 0.
-      const todayFromEvents =
-        interests?.filter((r: { created_at: string }) => r.created_at >= todayISO.toISOString())
-          .length ?? 0;
-      setTodayLikes(todayFromEvents);
-
-      const catLikes: Record<string, number> = {};
-      safePosts.forEach((p) => {
-        const cat = catMap.get(p.category_id) ?? "unknown";
-        catLikes[cat] = (catLikes[cat] ?? 0) + p.interest_count;
-      });
-      const catLikesSorted = Object.entries(catLikes)
-        .map(([name, likes]) => ({ name, likes }))
-        .sort((a, b) => b.likes - a.likes);
-      setCatData(catLikesSorted);
-
-      // Daily trend
-      const buckets: Record<string, number> = {};
-      for (let i = 0; i < 30; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() - (29 - i));
-        buckets[d.toISOString().slice(0, 10)] = 0;
+      try {
+        const res = await adminApiFetch("/api/admin/likes", { cache: "no-store" });
+        if (res.ok) {
+          const json = await res.json();
+          setTotalLikes(json.total ?? 0);
+          setTodayLikes(json.today ?? 0);
+          setAvgPerPost(json.avgPerPost ?? "0");
+          setTopPostLikes(json.topPostLikes ?? 0);
+          setCatData(json.byCategory ?? []);
+          setTrendData(json.trend ?? []);
+        }
+      } catch {
+        /* network error — leave zeroed */
+      } finally {
+        setLoading(false);
       }
-      if (interests && interests.length > 0) {
-        interests.forEach((r: { created_at: string }) => {
-          const k = r.created_at.slice(0, 10);
-          if (buckets[k] !== undefined) buckets[k]++;
-        });
-      } else {
-        // Fallback when post_interests is not visible because of RLS:
-        // distribute by post created day using interest_count so chart is not blank.
-        safePosts.forEach((p) => {
-          const k = p.created_at.slice(0, 10);
-          if (buckets[k] !== undefined) buckets[k] += p.interest_count;
-        });
-      }
-      setTrendData(
-        Object.entries(buckets).map(([date, likes]) => ({ date: date.slice(5), likes })),
-      );
-
-      setLoading(false);
     }
-
     load();
   }, []);
 
@@ -159,8 +84,7 @@ export default function LikesPage() {
     fetchTopLiked(topRange);
   }, [topRange, fetchTopLiked]);
 
-  const displayedTopPosts =
-    topRange === "month" ? (topPostsMonth ?? []) : (topPostsAll ?? topPosts);
+  const displayedTopPosts = topRange === "month" ? (topPostsMonth ?? []) : (topPostsAll ?? []);
   const topTableLoading = topLoading;
 
   return (
@@ -173,7 +97,7 @@ export default function LikesPage() {
         <KpiCard label="Total Likes" total={totalLikes} loading={loading} />
         <KpiCard label="Today Likes" total={todayLikes} loading={loading} />
         <KpiCard label="Avg per Post" total={avgPerPost} loading={loading} />
-        <KpiCard label="Top Post Likes" total={topPosts[0]?.likes ?? 0} loading={loading} />
+        <KpiCard label="Top Post Likes" total={topPostLikes} loading={loading} />
       </div>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">

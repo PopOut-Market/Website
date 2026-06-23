@@ -13,7 +13,6 @@ const NAV_ITEMS = [
   { label: "Geographic", href: "/admin-super/dashboard/geographic", icon: "🗺️" },
   { label: "Categories", href: "/admin-super/dashboard/categories", icon: "📦" },
   { label: "Likes", href: "/admin-super/dashboard/likes", icon: "❤️" },
-  { label: "Students", href: "/admin-super/dashboard/students", icon: "🎓" },
   { label: "Reports", href: "/admin-super/dashboard/reports", icon: "🚩" },
   { label: "Feedback", href: "/admin-super/dashboard/feedback", icon: "💬" },
 ] as const;

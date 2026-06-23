@@ -5,10 +5,12 @@ node_modules/
 .next/
 out/
 
-# Env (keep .env.local.example)
+# Env — NEVER commit secrets. Ignore every .env variant (allow only *.example)
 .env
-.env.local
-.env.*.local
+.env.*
+*.env
+!.env.example
+!.env.*.example
 
 # Debug / IDE
 .cursor/
