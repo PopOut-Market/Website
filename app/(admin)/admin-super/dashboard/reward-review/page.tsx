@@ -5,6 +5,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { getPostImageUrl } from "@/lib/supabase/post-image-url";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -17,11 +18,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
  * seller; deny refuses the reward with an internal reason. Neither touches the
  * listing.
  *
- * Both reads and writes call SECURITY DEFINER RPCs DIRECTLY from the signed-in
- * reviewer's Supabase session (granted to `authenticated`, self-gated on
- * `reward_admins`). There is intentionally no server route and no service-role
- * key here — the mutation happens server-side inside Postgres.
+ * Layout: the queue is grouped BY SELLER. Each seller is one expandable row;
+ * expanding shows that seller's pending listings. A seller may have at most
+ * APPROVED_CAP (6) approved claims — once reached, Approve is disabled for all
+ * of their remaining listings. NOTE: this cap is enforced in the UI only. The
+ * write still goes through the SECURITY DEFINER `admin_review_claim` RPC, which
+ * does not enforce it; a hard guarantee needs that RPC changed.
+ *
+ * Reads/writes call the RPCs DIRECTLY from the signed-in reviewer's Supabase
+ * session (granted to `authenticated`, self-gated on `reward_admins`). The
+ * per-seller approved counts come from a read-only service-role route.
  */
+
+const APPROVED_CAP = 6;
 
 type OtherListing = {
   post_id: string;
@@ -44,7 +53,14 @@ type Claim = {
   other_listings: OtherListing[] | null;
 };
 
+type SellerGroup = {
+  sellerId: string;
+  nickname: string;
+  claims: Claim[];
+};
+
 const PAGE_SIZE = 50;
+const UNKNOWN_SELLER = "__unknown__";
 
 const REJECT_CODES = [
   { value: "not_own_photos", label: "Not their own photos" },
@@ -69,8 +85,30 @@ function createdMs(c: Claim): number {
   return Number.isFinite(t) ? t : 0;
 }
 
+// Group claims by seller, preserving oldest-first order (groups float up by the
+// age of their oldest pending claim, since `ordered` is already oldest-first).
+function groupBySeller(ordered: Claim[]): SellerGroup[] {
+  const map = new Map<string, SellerGroup>();
+  for (const c of ordered) {
+    const id = c.seller?.id ?? UNKNOWN_SELLER;
+    const existing = map.get(id);
+    if (existing) {
+      existing.claims.push(c);
+    } else {
+      map.set(id, {
+        sellerId: id,
+        nickname: c.seller?.nickname ?? "Unknown seller",
+        claims: [c],
+      });
+    }
+  }
+  return [...map.values()];
+}
+
 export default function RewardReviewPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
+  const [approvedCounts, setApprovedCounts] = useState<Record<string, number>>({});
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +116,18 @@ export default function RewardReviewPage() {
   const [hasMore, setHasMore] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const fetchApprovedCounts = useCallback(async () => {
+    try {
+      const res = await adminApiFetch("/api/admin/reward-approved-counts", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        setApprovedCounts(json.counts ?? {});
+      }
+    } catch {
+      /* non-fatal — cap just won't pre-populate */
+    }
+  }, []);
 
   const fetchPage = useCallback(async (nextOffset: number, append: boolean) => {
     if (!isAdminAuthConfigured()) {
@@ -112,7 +162,8 @@ export default function RewardReviewPage() {
 
   useEffect(() => {
     fetchPage(0, false);
-  }, [fetchPage]);
+    fetchApprovedCounts();
+  }, [fetchPage, fetchApprovedCounts]);
 
   useEffect(
     () => () => {
@@ -121,19 +172,36 @@ export default function RewardReviewPage() {
     [],
   );
 
-  const handleReviewed = useCallback((claimId: number, message: string) => {
-    setClaims((prev) => prev.filter((c) => c.claim_id !== claimId));
-    // The server's pending set shrank by one, so pull the paging offset back in
-    // step — otherwise the next "Load more" would skip unreviewed claims.
-    setOffset((o) => Math.max(0, o - 1));
-    setToast(message);
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 4000);
+  const handleReviewed = useCallback(
+    (claimId: number, ownerId: string | null, approved: boolean, message: string) => {
+      setClaims((prev) => prev.filter((c) => c.claim_id !== claimId));
+      // The server's pending set shrank by one, so pull the paging offset back in
+      // step — otherwise the next "Load more" would skip unreviewed claims.
+      setOffset((o) => Math.max(0, o - 1));
+      // An approval consumes one of the seller's 6 slots — reflect it locally so
+      // the rest of their listings disable Approve the moment the cap is hit.
+      if (approved && ownerId) {
+        setApprovedCounts((prev) => ({ ...prev, [ownerId]: (prev[ownerId] ?? 0) + 1 }));
+      }
+      setToast(message);
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+      toastTimer.current = setTimeout(() => setToast(null), 4000);
+    },
+    [],
+  );
+
+  const toggleExpand = useCallback((sellerId: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(sellerId)) next.delete(sellerId);
+      else next.add(sellerId);
+      return next;
+    });
   }, []);
 
-  // Guarantee oldest-first at the top, stable across removals + pagination
-  // (the RPC already returns oldest-first; this keeps it certain client-side).
+  // Oldest-first at the top, stable across removals + pagination.
   const ordered = [...claims].sort((a, b) => createdMs(a) - createdMs(b));
+  const groups = groupBySeller(ordered);
 
   return (
     <div className="space-y-6">
@@ -141,16 +209,19 @@ export default function RewardReviewPage() {
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Reward review</h1>
         <p className="mt-1 text-sm text-slate-600">
           Approve or deny the <span className="font-medium">+10&nbsp;coin</span> reward for newly
-          posted listings. This does not affect the listing itself — it stays live either way.
+          posted listings, grouped by seller. Each seller can earn at most{" "}
+          <span className="font-medium">{APPROVED_CAP}</span> approvals — after that, Approve is
+          locked. This never affects the listing itself.
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <KpiCard
           label="Pending claims"
           total={hasMore ? `${claims.length}+` : claims.length}
           loading={loading}
         />
+        <KpiCard label="Sellers in queue" total={groups.length} loading={loading} />
       </div>
 
       {toast && (
@@ -168,7 +239,7 @@ export default function RewardReviewPage() {
       {loading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-48 animate-pulse rounded-xl bg-slate-100" />
+            <div key={i} className="h-20 animate-pulse rounded-xl bg-slate-100" />
           ))}
         </div>
       ) : claims.length === 0 && !error ? (
@@ -179,10 +250,24 @@ export default function RewardReviewPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {ordered.map((claim) => (
-            <ClaimCard key={claim.claim_id} claim={claim} onReviewed={handleReviewed} />
-          ))}
+        <div className="space-y-3">
+          {groups.map((group) => {
+            const confirmed =
+              group.sellerId === UNKNOWN_SELLER ? 0 : (approvedCounts[group.sellerId] ?? 0);
+            const atCap = group.sellerId !== UNKNOWN_SELLER && confirmed >= APPROVED_CAP;
+            const isOpen = expanded.has(group.sellerId);
+            return (
+              <SellerRow
+                key={group.sellerId}
+                group={group}
+                confirmed={confirmed}
+                atCap={atCap}
+                isOpen={isOpen}
+                onToggle={() => toggleExpand(group.sellerId)}
+                onReviewed={handleReviewed}
+              />
+            );
+          })}
           {hasMore && (
             <div className="flex justify-center pt-2">
               <button
@@ -201,12 +286,77 @@ export default function RewardReviewPage() {
   );
 }
 
+function SellerRow({
+  group,
+  confirmed,
+  atCap,
+  isOpen,
+  onToggle,
+  onReviewed,
+}: {
+  group: SellerGroup;
+  confirmed: number;
+  atCap: boolean;
+  isOpen: boolean;
+  onToggle: () => void;
+  onReviewed: (claimId: number, ownerId: string | null, approved: boolean, message: string) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center gap-3 px-5 py-4 text-left transition hover:bg-slate-50"
+      >
+        <span className="text-slate-400">{isOpen ? "▾" : "▸"}</span>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-600">
+          {(group.nickname.trim()[0] ?? "?").toUpperCase()}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold text-slate-900">{group.nickname}</p>
+          <p className="text-xs text-slate-400">
+            {group.claims.length} pending listing{group.claims.length === 1 ? "" : "s"}
+          </p>
+        </div>
+        <span
+          className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+            atCap ? "bg-rose-100 text-rose-700" : "bg-slate-100 text-slate-600"
+          }`}
+        >
+          {confirmed}/{APPROVED_CAP} confirmed{atCap ? " · cap reached" : ""}
+        </span>
+      </button>
+
+      {isOpen && (
+        <div className="space-y-4 border-t border-slate-100 bg-slate-50/50 p-4">
+          {atCap && (
+            <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
+              This seller already has {confirmed} approved listings (cap is {APPROVED_CAP}). Approve
+              is locked; you can still deny.
+            </p>
+          )}
+          {group.claims.map((claim) => (
+            <ClaimCard
+              key={claim.claim_id}
+              claim={claim}
+              approveLocked={atCap}
+              onReviewed={onReviewed}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ClaimCard({
   claim,
+  approveLocked,
   onReviewed,
 }: {
   claim: Claim;
-  onReviewed: (claimId: number, message: string) => void;
+  approveLocked: boolean;
+  onReviewed: (claimId: number, ownerId: string | null, approved: boolean, message: string) => void;
 }) {
   const [rejecting, setRejecting] = useState(false);
   const [code, setCode] = useState<RejectCode>("not_own_photos");
@@ -245,6 +395,8 @@ function ClaimCard({
       const alreadyDecided = result?.changed === false;
       onReviewed(
         claim.claim_id,
+        claim.seller?.id ?? null,
+        approve && !alreadyDecided,
         alreadyDecided
           ? "This claim was already reviewed by someone else."
           : approve
@@ -298,9 +450,7 @@ function ClaimCard({
               </span>
             )}
           </div>
-          <p className="mt-1 text-xs text-slate-400">
-            {claim.seller?.nickname ?? "Unknown seller"} · {formatDate(claim.created_at)}
-          </p>
+          <p className="mt-1 text-xs text-slate-400">{formatDate(claim.created_at)}</p>
           {claim.description && (
             <p className="mt-2 line-clamp-3 whitespace-pre-wrap text-sm text-slate-700">
               {claim.description}
@@ -354,10 +504,15 @@ function ClaimCard({
             <button
               type="button"
               onClick={() => review(true)}
-              disabled={busy !== null}
+              disabled={busy !== null || approveLocked}
+              title={approveLocked ? `Seller reached the ${APPROVED_CAP}-approval cap` : undefined}
               className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
             >
-              {busy === "approve" ? "Approving…" : "Approve +10 coins"}
+              {approveLocked
+                ? "Approve locked"
+                : busy === "approve"
+                  ? "Approving…"
+                  : "Approve +10 coins"}
             </button>
             <button
               type="button"
