@@ -6,7 +6,7 @@ import {
 } from "@/lib/supabase/admin-auth-browser-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 
 // Only these accounts may request an OTP. All are present in the
 // server-side `reward_admins` allowlist (the real gate); this client-side
@@ -14,10 +14,12 @@ import { FormEvent, useMemo, useState } from "react";
 // Sooyoung (operator), Eric, Jun.
 const ALLOWED_PHONES = ["+61466807771", "+61481690673", "+61422054574"] as const;
 
-function normalizePhone(input: string): string {
-  const trimmed = input.trim();
-  const plus = trimmed.startsWith("+") ? "+" : "";
-  return plus + trimmed.replace(/\D/g, "");
+// The UI shows a fixed "+61" prefix, so users only type their local mobile
+// number (e.g. "481789123"). This turns the local digits into a full E.164
+// number, stripping any leading 0 from the Australian 04xx format.
+function toFullPhone(localDigits: string): string {
+  const digits = localDigits.replace(/\D/g, "").replace(/^0+/, "");
+  return "+61" + digits;
 }
 
 type AdminLoginFormProps = {
@@ -35,16 +37,21 @@ export function AdminLoginForm({
   const configured = useMemo(() => isAdminAuthConfigured(), []);
 
   const [step, setStep] = useState<"phone" | "otp">("phone");
+  // `phone` holds only the local digits typed after the fixed "+61" prefix.
   const [phone, setPhone] = useState("");
+  // The full E.164 number the code was sent to (used for display + verify).
+  const [fullPhone, setFullPhone] = useState("");
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
+  // Guards against the OTP auto-submit firing twice (e.g. iOS autofill).
+  const verifyingRef = useRef(false);
 
   async function sendCode(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!configured) return;
 
-    const normalized = normalizePhone(phone);
+    const normalized = toFullPhone(phone);
     if (!ALLOWED_PHONES.includes(normalized as (typeof ALLOWED_PHONES)[number])) {
       setErrorText("This phone number is not authorized for admin access.");
       return;
@@ -62,24 +69,25 @@ export function AdminLoginForm({
         setErrorText(error.message);
         return;
       }
-      setPhone(normalized);
+      setFullPhone(normalized);
       setStep("otp");
     } finally {
       setSubmitting(false);
     }
   }
 
-  async function verifyCode(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!configured) return;
+  async function runVerify(token: string) {
+    if (!configured || verifyingRef.current) return;
+    if (token.length !== 6) return;
 
+    verifyingRef.current = true;
     setSubmitting(true);
     setErrorText(null);
     try {
       const supabase = getAdminAuthBrowserClient();
       const { error } = await supabase.auth.verifyOtp({
-        phone: normalizePhone(phone),
-        token: code.trim(),
+        phone: fullPhone,
+        token,
         type: "sms",
       });
       if (error) {
@@ -89,8 +97,26 @@ export function AdminLoginForm({
       router.replace(successRedirectTo);
       router.refresh();
     } finally {
+      verifyingRef.current = false;
       setSubmitting(false);
     }
+  }
+
+  function onCodeChange(raw: string) {
+    // Sanitize to digits and cap at 6 — this also neutralizes the iOS
+    // one-time-code autofill bug that otherwise inserts the code twice.
+    const next = raw.replace(/\D/g, "").slice(0, 6);
+    setCode(next);
+    // Auto-submit as soon as 6 digits are present (autofill tap or typing),
+    // so no "Verify" click is needed.
+    if (next.length === 6) {
+      void runVerify(next);
+    }
+  }
+
+  function verifyCode(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void runVerify(code);
   }
 
   return (
@@ -115,16 +141,23 @@ export function AdminLoginForm({
           <form onSubmit={sendCode} className="mt-6 space-y-4">
             <label className="block text-sm">
               <span className="mb-1 block font-medium text-slate-800">Mobile number</span>
-              <input
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-                placeholder="+61 4XX XXX XXX"
-                required
-              />
+              <div className="flex w-full items-stretch rounded-xl border border-slate-300 transition focus-within:border-slate-500 focus-within:ring-2 focus-within:ring-slate-200">
+                <span className="flex select-none items-center rounded-l-xl border-r border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-600">
+                  +61
+                </span>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  value={phone}
+                  onChange={(event) =>
+                    setPhone(event.target.value.replace(/\D/g, "").replace(/^0+/, "").slice(0, 9))
+                  }
+                  className="w-full rounded-r-xl bg-transparent px-3 py-2 text-slate-900 outline-none"
+                  placeholder="4XX XXX XXX"
+                  required
+                />
+              </div>
             </label>
 
             {errorText ? (
@@ -149,8 +182,9 @@ export function AdminLoginForm({
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"
+                maxLength={6}
                 value={code}
-                onChange={(event) => setCode(event.target.value)}
+                onChange={(event) => onCodeChange(event.target.value)}
                 className="w-full rounded-xl border border-slate-300 px-3 py-2 tracking-widest text-slate-900 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                 placeholder="123456"
                 required
@@ -158,7 +192,7 @@ export function AdminLoginForm({
             </label>
 
             <p className="text-xs text-slate-500">
-              Sent to {phone}.{" "}
+              Sent to {fullPhone}.{" "}
               <button
                 type="button"
                 onClick={() => {
