@@ -115,5 +115,9 @@ jobs:
           npm start &
           npx --yes wait-on http://localhost:3000 --timeout 60000
 
+      # Pinned to an exact version: `linkinator@6` (floating) started crashing on the
+      # runner with "unsettled top-level await" (exit 13) after a Node bump — a tooling
+      # crash unrelated to any real broken link. 7.6.1 is the maintained line and runs
+      # clean; pin it exactly so a future floating release can't silently break CI again.
       - name: Check internal links (linkinator)
-        run: npx --yes linkinator@6 http://localhost:3000 --recurse --skip "^(?!https?://localhost:3000)"
+        run: npx --yes linkinator@7.6.1 http://localhost:3000 --recurse --skip "^(?!https?://localhost:3000)"
