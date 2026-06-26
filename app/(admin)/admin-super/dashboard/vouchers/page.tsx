@@ -4,12 +4,23 @@ import { KpiCard } from "@/components/admin/kpi-card";
 import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useEffect, useState } from "react";
 
+type ProductStat = {
+  id: string;
+  retailer: string;
+  valueCents: number;
+  coinCost: number;
+  isActive: boolean;
+  total: number;
+  remaining: number;
+  revealed: number;
+};
 type Recipient = { nickname: string; count: number; lastAt: string | null };
-type Recent = { id: string; nickname: string; revealedAt: string | null };
+type Recent = { id: string; nickname: string; revealedAt: string | null; product: string };
 type Data = {
   total: number;
   remaining: number;
   revealed: number;
+  products: ProductStat[];
   recipients: Recipient[];
   recent: Recent[];
 };
@@ -18,6 +29,10 @@ function fmt(iso: string | null): string {
   if (!iso) return "—";
   const t = new Date(iso).getTime();
   return Number.isFinite(t) ? new Date(t).toLocaleString() : "—";
+}
+
+function money(cents: number): string {
+  return cents % 100 === 0 ? `$${cents / 100}` : `$${(cents / 100).toFixed(2)}`;
 }
 
 export default function VouchersPage() {
@@ -39,18 +54,15 @@ export default function VouchersPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const products = data?.products ?? [];
+
   return (
     <div className="space-y-6">
       <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Vouchers</h1>
-          <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-            $5 Woolworths
-          </span>
-        </div>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Vouchers</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Each voucher is a $5 Woolworths gift card. How many remain, how many were revealed, and
-          who revealed them.
+          Gift-card pool, broken down by product. How many remain, how many were revealed, and who
+          revealed them.
         </p>
       </div>
 
@@ -60,11 +72,64 @@ export default function VouchersPage() {
         </div>
       )}
 
+      {/* Overall roll-up across every product */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <KpiCard label="Remaining" total={data?.remaining ?? 0} loading={loading} />
         <KpiCard label="Revealed" total={data?.revealed ?? 0} loading={loading} />
         <KpiCard label="Total" total={data?.total ?? 0} loading={loading} />
       </div>
+
+      {/* Per-product breakdown */}
+      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 text-sm font-semibold text-slate-900">By product</h2>
+        {loading ? (
+          <div className="h-24 animate-pulse rounded-lg bg-slate-100" />
+        ) : products.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-100 text-left text-xs uppercase tracking-wide text-slate-400">
+                  <th className="pb-2 font-medium">Product</th>
+                  <th className="pb-2 text-right font-medium">Remaining</th>
+                  <th className="pb-2 text-right font-medium">Revealed</th>
+                  <th className="pb-2 text-right font-medium">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {products.map((p) => (
+                  <tr key={p.id}>
+                    <td className="py-2.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium text-slate-800">
+                          {money(p.valueCents)} {p.retailer}
+                        </span>
+                        <span className="text-xs text-slate-400">{p.coinCost} coins</span>
+                        {!p.isActive && (
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+                            inactive
+                          </span>
+                        )}
+                        {p.isActive && p.remaining === 0 && (
+                          <span className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700">
+                            out of stock
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2.5 text-right font-semibold tabular-nums text-slate-900">
+                      {p.remaining}
+                    </td>
+                    <td className="py-2.5 text-right tabular-nums text-slate-600">{p.revealed}</td>
+                    <td className="py-2.5 text-right tabular-nums text-slate-600">{p.total}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400">No voucher products configured.</p>
+        )}
+      </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -95,7 +160,12 @@ export default function VouchersPage() {
             <div className="max-h-96 divide-y divide-slate-100 overflow-y-auto">
               {data.recent.map((r) => (
                 <div key={r.id} className="flex items-center justify-between gap-2 py-2">
-                  <span className="text-sm font-medium text-slate-700">{r.nickname}</span>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span className="truncate text-sm font-medium text-slate-700">{r.nickname}</span>
+                    <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                      {r.product}
+                    </span>
+                  </div>
                   <span className="shrink-0 text-xs text-slate-400">{fmt(r.revealedAt)}</span>
                 </div>
               ))}
