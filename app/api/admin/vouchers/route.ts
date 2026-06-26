@@ -74,7 +74,10 @@ export async function GET(req: Request) {
     const products = await Promise.all(
       catalog.map(async (p) => {
         const [totalRes, remainingRes, revealedRes] = await Promise.all([
-          sb.from("reward_vouchers").select("*", { count: "exact", head: true }).eq("product_id", p.id),
+          sb
+            .from("reward_vouchers")
+            .select("*", { count: "exact", head: true })
+            .eq("product_id", p.id),
           sb
             .from("reward_vouchers")
             .select("*", { count: "exact", head: true })
@@ -127,7 +130,10 @@ export async function GET(req: Request) {
 
     // Aggregated by recipient (rows are newest-first, so the first seen per recipient
     // is their latest reveal).
-    const byRecipient = new Map<string, { nickname: string; count: number; lastAt: string | null }>();
+    const byRecipient = new Map<
+      string,
+      { nickname: string; count: number; lastAt: string | null }
+    >();
     for (const r of rows) {
       const key = r.revealed_to ?? "(unknown)";
       const existing = byRecipient.get(key);
