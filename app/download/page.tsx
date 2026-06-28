@@ -88,6 +88,24 @@ export default function DownloadPage() {
           </a>
         </div>
 
+        {/* QR to this page — shown on larger screens so desktop visitors can scan
+            and continue on their phone (where the store badges open natively). */}
+        <div className="mt-8 hidden flex-col items-center sm:mt-12 sm:flex">
+          <div className="rounded-2xl border border-black/10 bg-white p-4 shadow-card">
+            <Image
+              src="/download-qr.svg"
+              alt="Scan this QR code to open popoutmarket.com.au/download on your phone"
+              width={220}
+              height={220}
+              unoptimized
+              className="h-[220px] w-[220px]"
+            />
+          </div>
+          <p className="mt-3 text-sm font-medium text-gray-700">
+            Scan to open this page on your phone
+          </p>
+        </div>
+
         <p className="mt-8 max-w-sm text-xs leading-relaxed text-gray-400 sm:mt-10">
           If a button doesn&apos;t open the store, open this page in your browser (such as Safari or
           Chrome) and tap it again.

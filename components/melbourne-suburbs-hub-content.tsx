@@ -1,6 +1,7 @@
 "use client";
 
 import { useSiteShell } from "@/components/site-chrome-context";
+import { MELBOURNE_REGIONS } from "@/lib/melbourne-regions";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS, type MarketSuburb } from "@/lib/site-suburbs";
 import { suburbSeoPath } from "@/lib/suburb-seo-pages";
@@ -18,6 +19,9 @@ type HubCopy = {
   cardTitle: string;
   cardHint: string;
   cta: string;
+  regionsTitle: string;
+  regionsHint: string;
+  suburbCount: (n: number) => string;
 };
 
 function hubCopy(locale: string): HubCopy {
@@ -70,6 +74,10 @@ function hubCopy(locale: string): HubCopy {
         cardTitle: "选择你关心的区域",
         cardHint: "点击任一 suburb 进入对应专属页面",
         cta: "查看该区域",
+        regionsTitle: "按大区浏览墨尔本其他区域",
+        regionsHint:
+          "除上述核心区域外，PopOut 已覆盖大墨尔本数百个 suburb。点击大区查看该区包含的所有 suburb。",
+        suburbCount: (n) => `${n} 个 suburb`,
       };
     case "zh-Hant":
       return {
@@ -119,6 +127,10 @@ function hubCopy(locale: string): HubCopy {
         cardTitle: "選擇你關心的區域",
         cardHint: "點擊任一 suburb 進入對應專屬頁面",
         cta: "查看此區域",
+        regionsTitle: "依大區瀏覽墨爾本其他區域",
+        regionsHint:
+          "除上述核心區域外，PopOut 已涵蓋大墨爾本數百個 suburb。點擊大區查看該區包含的所有 suburb。",
+        suburbCount: (n) => `${n} 個 suburb`,
       };
     default:
       return {
@@ -168,6 +180,10 @@ function hubCopy(locale: string): HubCopy {
         cardTitle: "Choose a Melbourne suburb",
         cardHint: "Open any suburb page to view local second-hand insights",
         cta: "View suburb page",
+        regionsTitle: "Browse other Melbourne regions",
+        regionsHint:
+          "Beyond the core suburbs above, PopOut covers hundreds of suburbs across Greater Melbourne. Open a region to see every suburb it includes.",
+        suburbCount: (n) => `${n} suburbs`,
       };
   }
 }
@@ -302,6 +318,27 @@ export function MelbourneSuburbsHubContent() {
                 <span className="mt-3 inline-flex items-center rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition group-hover:bg-brand-600">
                   {copy.cta}
                 </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">{copy.regionsTitle}</h2>
+            <p className="mt-1 text-sm text-gray-600">{copy.regionsHint}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {MELBOURNE_REGIONS.map((region) => (
+              <Link
+                key={region.slug}
+                href={localizePath(`/melbourne-suburbs/${region.slug}`)}
+                className="group rounded-2xl border border-black/5 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-200"
+              >
+                <p className="text-base font-semibold text-gray-900">{region.names[locale]}</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  {copy.suburbCount(region.suburbs.length)}
+                </p>
               </Link>
             ))}
           </div>

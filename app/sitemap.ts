@@ -22,6 +22,15 @@ const INDEXABLE_PATHS = [
   "/melbourne-suburbs/fitzroy",
   "/melbourne-suburbs/north-melbourne",
   "/melbourne-suburbs/south-wharf",
+  "/melbourne-suburbs/inner-north",
+  "/melbourne-suburbs/inner-east",
+  "/melbourne-suburbs/inner-south",
+  "/melbourne-suburbs/eastern",
+  "/melbourne-suburbs/south-east",
+  "/melbourne-suburbs/bayside",
+  "/melbourne-suburbs/northern",
+  "/melbourne-suburbs/north-west",
+  "/melbourne-suburbs/western",
   "/melbourne-graduation-move-out-guide-2026",
 ] as const;
 

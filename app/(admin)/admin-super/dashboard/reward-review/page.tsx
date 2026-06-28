@@ -59,6 +59,24 @@ type SellerGroup = {
   claims: Claim[];
 };
 
+type ApprovedItem = {
+  claimId: number;
+  ownerId: string | null;
+  nickname: string;
+  postId: number | null;
+  title: string | null;
+  priceCents: number | null;
+  thumbnailPath: string | null;
+  decidedAt: string | null;
+  reviewer: string | null;
+};
+
+type HistorySummary = {
+  totalApproved: number;
+  sellersApproved: number;
+  perSeller: { ownerId: string; nickname: string; count: number }[];
+};
+
 const PAGE_SIZE = 50;
 const UNKNOWN_SELLER = "__unknown__";
 
@@ -116,6 +134,10 @@ export default function RewardReviewPage() {
   const [hasMore, setHasMore] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [approvedItems, setApprovedItems] = useState<ApprovedItem[]>([]);
+  const [historySummary, setHistorySummary] = useState<HistorySummary | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [historyExpanded, setHistoryExpanded] = useState<Set<string>>(new Set());
 
   const fetchApprovedCounts = useCallback(async () => {
     try {
@@ -126,6 +148,21 @@ export default function RewardReviewPage() {
       }
     } catch {
       /* non-fatal — cap just won't pre-populate */
+    }
+  }, []);
+
+  const fetchHistory = useCallback(async () => {
+    try {
+      const res = await adminApiFetch("/api/admin/reward-history", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        setApprovedItems(json.approved ?? []);
+        setHistorySummary(json.summary ?? null);
+      }
+    } catch {
+      /* non-fatal — history just won't show */
+    } finally {
+      setHistoryLoading(false);
     }
   }, []);
 
@@ -163,7 +200,8 @@ export default function RewardReviewPage() {
   useEffect(() => {
     fetchPage(0, false);
     fetchApprovedCounts();
-  }, [fetchPage, fetchApprovedCounts]);
+    fetchHistory();
+  }, [fetchPage, fetchApprovedCounts, fetchHistory]);
 
   useEffect(
     () => () => {
@@ -183,11 +221,14 @@ export default function RewardReviewPage() {
       if (approved && ownerId) {
         setApprovedCounts((prev) => ({ ...prev, [ownerId]: (prev[ownerId] ?? 0) + 1 }));
       }
+      // An approval moves the listing into the history list below — refresh it so
+      // the running record + totals reflect the decision immediately.
+      if (approved) fetchHistory();
       setToast(message);
       if (toastTimer.current) clearTimeout(toastTimer.current);
       toastTimer.current = setTimeout(() => setToast(null), 4000);
     },
-    [],
+    [fetchHistory],
   );
 
   const toggleExpand = useCallback((sellerId: string) => {
@@ -199,9 +240,58 @@ export default function RewardReviewPage() {
     });
   }, []);
 
+  const toggleHistoryExpand = useCallback((sellerId: string) => {
+    setHistoryExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(sellerId)) next.delete(sellerId);
+      else next.add(sellerId);
+      return next;
+    });
+  }, []);
+
   // Oldest-first at the top, stable across removals + pagination.
   const ordered = [...claims].sort((a, b) => createdMs(a) - createdMs(b));
   const groups = groupBySeller(ordered);
+
+  // Split rule (UI-only, no backend/rule change): a seller belongs in the
+  // actionable TOP queue only if they still have room under the 6-approval cap
+  // AND have pending listings — i.e. approved < CAP and pending > 0. Once a seller
+  // reaches the cap (>= CAP approved) they drop to the bottom list even if pending
+  // claims remain, because those can't be approved anyway (Approve is locked).
+  const pendingCountById = new Map(groups.map((g) => [g.sellerId, g.claims.length]));
+  const actionableGroups = groups.filter(
+    (g) => g.sellerId === UNKNOWN_SELLER || (approvedCounts[g.sellerId] ?? 0) < APPROVED_CAP,
+  );
+  const topSellerIds = new Set(actionableGroups.map((g) => g.sellerId));
+  const actionablePending = actionableGroups.reduce((n, g) => n + g.claims.length, 0);
+
+  // Bottom list = every seller NOT in the actionable top queue, built from the
+  // approved-items feed (already newest-first) so the most recently-approved
+  // seller sorts to the top. Includes at-cap sellers whose pending overflow is
+  // shown as a badge (informational — not actionable here).
+  const approvedBySeller = new Map<
+    string,
+    { ownerId: string; nickname: string; items: ApprovedItem[]; lastApprovedAt: string | null }
+  >();
+  for (const it of approvedItems) {
+    const id = it.ownerId ?? UNKNOWN_SELLER;
+    const ex = approvedBySeller.get(id);
+    if (ex) ex.items.push(it);
+    else
+      approvedBySeller.set(id, {
+        ownerId: id,
+        nickname: it.nickname,
+        items: [it],
+        lastApprovedAt: it.decidedAt,
+      });
+  }
+  const reviewedRoster = [...approvedBySeller.values()]
+    .filter((s) => s.ownerId !== UNKNOWN_SELLER && !topSellerIds.has(s.ownerId))
+    .sort((a, b) => {
+      const ta = a.lastApprovedAt ? new Date(a.lastApprovedAt).getTime() : 0;
+      const tb = b.lastApprovedAt ? new Date(b.lastApprovedAt).getTime() : 0;
+      return tb - ta;
+    });
 
   return (
     <div className="space-y-6">
@@ -215,13 +305,23 @@ export default function RewardReviewPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KpiCard
-          label="Pending claims"
-          total={hasMore ? `${claims.length}+` : claims.length}
+          label="To review"
+          total={hasMore ? `${actionablePending}+` : actionablePending}
           loading={loading}
         />
-        <KpiCard label="Sellers in queue" total={groups.length} loading={loading} />
+        <KpiCard label="Sellers to review" total={actionableGroups.length} loading={loading} />
+        <KpiCard
+          label="Approved (all-time)"
+          total={historySummary?.totalApproved ?? 0}
+          loading={historyLoading}
+        />
+        <KpiCard
+          label="Sellers approved"
+          total={historySummary?.sellersApproved ?? 0}
+          loading={historyLoading}
+        />
       </div>
 
       {toast && (
@@ -236,22 +336,30 @@ export default function RewardReviewPage() {
         </div>
       )}
 
+      <div>
+        <h2 className="text-lg font-semibold text-slate-900">Pending review</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Sellers still under the {APPROVED_CAP}-cap with listings awaiting a decision. Expand to
+          approve or deny. Sellers already at the cap move to the list below.
+        </p>
+      </div>
+
       {loading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="h-20 animate-pulse rounded-xl bg-slate-100" />
           ))}
         </div>
-      ) : claims.length === 0 && !error ? (
+      ) : actionableGroups.length === 0 && !error ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center shadow-sm">
           <div className="mb-3 text-4xl">🎉</div>
           <p className="text-sm text-slate-600">
-            No pending reward claims — you&apos;re all caught up.
+            Nothing to review — every seller with pending listings is already at the cap.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {groups.map((group) => {
+          {actionableGroups.map((group) => {
             const confirmed =
               group.sellerId === UNKNOWN_SELLER ? 0 : (approvedCounts[group.sellerId] ?? 0);
             const atCap = group.sellerId !== UNKNOWN_SELLER && confirmed >= APPROVED_CAP;
@@ -282,6 +390,114 @@ export default function RewardReviewPage() {
           )}
         </div>
       )}
+
+      {/* Reviewed sellers — everyone with 0 pending. Sorted by most-recent
+          approval (newest at top); click a seller to expand their approved
+          listings. A seller re-enters the queue above the moment a new listing
+          is posted, and drops back to the top here once it's approved. */}
+      <section className="space-y-4 pt-2">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">Reviewed &amp; at-cap</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Sellers you&apos;re done with — fully reviewed, or already at the {APPROVED_CAP}-cap
+            (extra pending shown but can&apos;t be approved). Most recently approved first; click to
+            expand.
+            {historySummary
+              ? ` ${historySummary.totalApproved} approved across ${historySummary.sellersApproved} seller${
+                  historySummary.sellersApproved === 1 ? "" : "s"
+                }.`
+              : ""}
+          </p>
+        </div>
+
+        {historyLoading && reviewedRoster.length === 0 ? (
+          <div className="h-24 animate-pulse rounded-xl bg-slate-100" />
+        ) : reviewedRoster.length === 0 ? (
+          <p className="text-sm text-slate-400">No fully-reviewed sellers yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {reviewedRoster.map((s) => {
+              const approved = approvedCounts[s.ownerId] ?? s.items.length;
+              const atCap = approved >= APPROVED_CAP;
+              const pending = pendingCountById.get(s.ownerId) ?? 0;
+              const isOpen = historyExpanded.has(s.ownerId);
+              return (
+                <div
+                  key={s.ownerId}
+                  className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleHistoryExpand(s.ownerId)}
+                    className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition hover:bg-slate-50"
+                  >
+                    <span className="text-slate-400">{isOpen ? "▾" : "▸"}</span>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-600">
+                      {(s.nickname.trim()[0] ?? "?").toUpperCase()}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900">
+                      {s.nickname}
+                    </span>
+                    <span className="hidden text-xs text-slate-400 sm:inline">
+                      {s.items.length} listing{s.items.length === 1 ? "" : "s"}
+                    </span>
+                    {pending > 0 && (
+                      <span
+                        className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
+                        title="Pending listings over the cap — can't be approved"
+                      >
+                        {pending} pending
+                      </span>
+                    )}
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums ${
+                        atCap ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"
+                      }`}
+                      title="Approved / cap"
+                    >
+                      {approved}/{APPROVED_CAP}
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <ul className="divide-y divide-slate-100 border-t border-slate-100 bg-slate-50/50">
+                      {s.items.map((it) => {
+                        const thumb = getPostImageUrl(it.thumbnailPath);
+                        return (
+                          <li key={it.claimId} className="flex items-center gap-3 px-5 py-2.5">
+                            {thumb ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={thumb}
+                                alt=""
+                                className="h-10 w-10 shrink-0 rounded-md border border-slate-200 object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-base">
+                                🖼️
+                              </div>
+                            )}
+                            <span className="min-w-0 flex-1 truncate text-sm text-slate-700">
+                              {it.title ?? "(untitled)"}
+                            </span>
+                            <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-600">
+                              {priceLabel(it.priceCents)}
+                            </span>
+                            <span className="hidden shrink-0 text-xs text-slate-400 sm:inline">
+                              {formatDate(it.decidedAt)}
+                              {it.reviewer ? ` · ${it.reviewer}` : ""}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
