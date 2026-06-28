@@ -48,6 +48,10 @@ const homeJsonLd = {
       areaServed: {
         "@type": "City",
         name: "Melbourne",
+        containedInPlace: {
+          "@type": "Country",
+          name: "Australia",
+        },
       },
       sameAs: [
         APP_STORE_URL,
@@ -67,6 +71,10 @@ const homeJsonLd = {
       areaServed: {
         "@type": "City",
         name: "Melbourne",
+        containedInPlace: {
+          "@type": "Country",
+          name: "Australia",
+        },
       },
       availableLanguage: ["en", "zh-Hans", "zh-Hant", "ko", "ja", "vi", "fr", "es"],
       offers: {

@@ -28,6 +28,7 @@ import { COPY, LANGUAGE_LIBRARY, LOCALES, type Locale } from "@/lib/site-i18n";
 import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
 import { localeFromPathname, stripLocalePrefix, toLocalePath } from "@/lib/site-locale-routing";
 import { localizedTitle } from "@/lib/site-seo-copy";
+import { MELBOURNE_REGIONS } from "@/lib/melbourne-regions";
 
 function FooterSocialLink({
   href,
@@ -130,6 +131,27 @@ function footerFaqLabel(locale: Locale): string {
       return "FAQ";
     default:
       return "FAQ";
+  }
+}
+
+function regionsLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+      return "墨尔本各区二手";
+    case "zh-Hant":
+      return "墨爾本各區二手";
+    case "ko":
+      return "멜버른 지역별 중고거래";
+    case "ja":
+      return "メルボルンのエリア別中古";
+    case "vi":
+      return "Đồ cũ theo khu vực Melbourne";
+    case "fr":
+      return "Quartiers de Melbourne";
+    case "es":
+      return "Zonas de Melbourne";
+    default:
+      return "Melbourne regions";
   }
 }
 
@@ -612,6 +634,23 @@ export function SiteChrome({
                     />
                   </svg>
                 </Link>
+              </div>
+
+              <div className="mt-5">
+                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-500 min-[760px]:text-left">
+                  {regionsLabel(locale)}
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-2 min-[760px]:justify-start">
+                  {MELBOURNE_REGIONS.map((region) => (
+                    <Link
+                      key={region.slug}
+                      href={withLocale(`/melbourne-suburbs/${region.slug}`)}
+                      className="inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-black/70 transition-colors hover:border-brand-500 hover:text-brand-700"
+                    >
+                      {region.names[locale]}
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               <nav

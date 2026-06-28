@@ -26,10 +26,10 @@ type PageContent = {
 // en / zh-Hans / ko have full localized copy; other locales fall back to en.
 const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   es: {
-    title: "App de segunda mano Melbourne | Comprar y vender usado · PopOut Market",
+    title: "App de segunda mano en Melbourne, Australia | Comprar y vender · PopOut Market",
     description:
-      "PopOut Market es una app de segunda mano en Melbourne para comprar y vender cerca: muebles, electrodomésticos y bicis. Búsqueda por barrio, chat multilingüe con traducción y trato en persona más seguro, ideal para estudiantes.",
-    h1: "App de segunda mano en Melbourne",
+      "PopOut Market es una app de segunda mano en Melbourne, Australia, para comprar y vender cerca: muebles, electrodomésticos y bicis. Búsqueda por barrio, chat multilingüe con traducción y trato en persona más seguro. Ya en Melbourne y pronto en más ciudades de Australia.",
+    h1: "App de segunda mano en Melbourne, Australia",
     inLanguage: "es",
     aboutThing: "app de segunda mano en Melbourne",
     sections: [
@@ -99,10 +99,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     ],
   },
   fr: {
-    title: "Appli d'occasion Melbourne | Acheter et vendre d'occasion · PopOut Market",
+    title: "Appli d'occasion à Melbourne, Australie | Acheter et vendre · PopOut Market",
     description:
-      "PopOut Market est une appli d'occasion à Melbourne pour acheter et vendre près de chez vous : meubles, électroménager, vélos. Recherche par quartier, chat multilingue traduit, transactions en main propre plus sûres, idéale pour les étudiants.",
-    h1: "Appli d'occasion à Melbourne",
+      "PopOut Market est une appli d'occasion à Melbourne, en Australie, pour acheter et vendre près de chez vous : meubles, électroménager, vélos. Recherche par quartier, chat multilingue traduit, transactions en main propre plus sûres. Disponible à Melbourne, bientôt dans d'autres villes australiennes.",
+    h1: "Appli d'occasion à Melbourne, Australie",
     inLanguage: "fr",
     aboutThing: "appli d'occasion à Melbourne",
     sections: [
@@ -166,10 +166,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     ],
   },
   vi: {
-    title: "App đồ cũ Melbourne | Mua bán đồ cũ tại địa phương · PopOut Market",
+    title: "App đồ cũ tại Melbourne, Úc | Mua bán đồ cũ tại địa phương · PopOut Market",
     description:
-      "PopOut Market là app đồ cũ Melbourne để mua bán đồ second-hand ngay gần bạn: nội thất cũ, đồ điện cũ, xe đạp. Tìm theo khu (suburb), chat đa ngôn ngữ có dịch tự động, giao dịch gặp mặt an toàn, hợp du học sinh thanh lý.",
-    h1: "App đồ cũ Melbourne",
+      "PopOut Market là app đồ cũ tại Melbourne, Úc để mua bán đồ second-hand ngay gần bạn: nội thất cũ, đồ điện cũ, xe đạp. Tìm theo khu (suburb), chat đa ngôn ngữ có dịch tự động, giao dịch gặp mặt an toàn. Hiện đã có mặt tại Melbourne, sắp mở rộng tới nhiều thành phố khác ở Úc.",
+    h1: "App đồ cũ tại Melbourne, Úc",
     inLanguage: "vi",
     aboutThing: "ứng dụng đồ cũ Melbourne",
     sections: [
@@ -233,10 +233,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     ],
   },
   "zh-Hant": {
-    title: "墨爾本二手 App | 二手交易平台與同城二手買賣 · PopOut Market",
+    title: "澳洲墨爾本二手 App | 二手交易平台與同城二手買賣 · PopOut Market",
     description:
-      "PopOut Market 是墨爾本的二手 App 與同城二手平台：免費買賣二手家具、電器、數碼、單車等中古好物，按社區發現附近物品，支援多語言聊天與翻譯、更安全的當面交易，適合留學生搬家與畢業清倉，也是旋轉拍賣（Carousell）的在地替代。",
-    h1: "墨爾本二手 App",
+      "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手平台：免費買賣二手家具、電器、數碼、單車等中古好物，按社區發現附近物品，支援多語言聊天與翻譯、更安全的當面交易，適合留學生搬家與畢業清倉，也是旋轉拍賣（Carousell）的在地替代。現已上線墨爾本，更多澳洲城市陸續開放，敬請期待。",
+    h1: "澳洲墨爾本二手 App",
     inLanguage: "zh-TW",
     aboutThing: "墨爾本二手 App",
     sections: [
@@ -300,10 +300,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     ],
   },
   ja: {
-    title: "メルボルンの中古アプリ | 地元で売買できるフリマアプリ・PopOut Market",
+    title: "オーストラリア・メルボルンの中古アプリ | 地元フリマアプリ・PopOut Market",
     description:
-      "PopOut Marketはメルボルンの中古アプリ・フリマアプリです。中古の家具や家電、自転車などを無料で売買でき、エリア別に近所の掘り出し物を探せます。多言語チャットと安全な手渡し取引に対応し、留学生の引っ越しや卒業前の不用品処分にもぴったりです。",
-    h1: "メルボルンの中古アプリ",
+      "PopOut Marketはオーストラリア（Australia）メルボルンの中古アプリ・フリマアプリです。中古の家具や家電、自転車などを無料で売買でき、エリア別に近所の掘り出し物を探せます。多言語チャットと安全な手渡し取引に対応。現在はメルボルンで提供中、今後オーストラリアの他都市にも順次拡大予定です。",
+    h1: "オーストラリア・メルボルンの中古アプリ",
     inLanguage: "ja",
     aboutThing: "メルボルンの中古アプリ",
     sections: [
@@ -367,10 +367,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     ],
   },
   en: {
-    title: "Melbourne Second-Hand App | Buy & Sell Locally with PopOut Market",
+    title: "Melbourne, Australia Second-Hand App | Buy & Sell Locally · PopOut Market",
     description:
-      "PopOut Market is a Melbourne second-hand app for local buying and selling, with suburb-based discovery, multilingual communication, and safer meetup workflows.",
-    h1: "Melbourne Second-Hand App",
+      "PopOut Market is a Melbourne, Australia second-hand app for local buying and selling, with suburb-based discovery, multilingual communication, and safer meetup workflows. Live in Melbourne now, with more Australian cities coming soon.",
+    h1: "Melbourne, Australia Second-Hand App",
     aboutThing: "Melbourne second-hand app",
     inLanguage: "en-AU",
     sections: [
@@ -427,10 +427,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   },
 
   "zh-Hans": {
-    title: "墨尔本二手App | 二手交易软件与同城二手平台 · PopOut Market",
+    title: "澳洲墨尔本二手App | 二手交易软件与同城二手平台 · PopOut Market",
     description:
-      "PopOut Market 是墨尔本的二手交易 App（二手软件 / 二手应用）和同城二手平台：免费买卖二手家具、电器、数码、自行车等闲置，按社区发现身边好物，多语言沟通 + 更安全的当面交易，适合留学生搬家和毕业清仓。",
-    h1: "墨尔本二手 App",
+      "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易 App（二手软件 / 二手应用）和同城二手平台：免费买卖二手家具、电器、数码、自行车等闲置，按社区发现身边好物，多语言沟通 + 更安全的当面交易，适合留学生搬家和毕业清仓。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。",
+    h1: "澳洲墨尔本二手 App",
     aboutThing: "墨尔本二手App",
     inLanguage: "zh-CN",
     sections: [
@@ -491,10 +491,10 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   },
 
   ko: {
-    title: "멜버른 중고거래 앱 | 중고 거래 플랫폼·동네 중고마켓 · PopOut Market",
+    title: "호주 멜버른 중고거래 앱 | 중고 거래 플랫폼·동네 중고마켓 · PopOut Market",
     description:
-      "PopOut Market는 멜버른 중고거래 앱이자 동네 중고마켓·중고 거래 플랫폼입니다. 중고 가구, 가전, 전자기기, 자전거를 무료로 사고팔고, 동네별로 가까운 물건을 찾고, 다국어 채팅과 안전한 직거래로 거래하세요. 유학생 이사·졸업 정리에 딱 맞습니다.",
-    h1: "멜버른 중고거래 앱",
+      "PopOut Market는 호주(Australia) 멜버른 중고거래 앱이자 동네 중고마켓·중고 거래 플랫폼입니다. 중고 가구, 가전, 전자기기, 자전거를 무료로 사고팔고, 동네별로 가까운 물건을 찾고, 다국어 채팅과 안전한 직거래로 거래하세요. 유학생 이사·졸업 정리에 딱 맞고, 호주 내 더 많은 도시로 확대될 예정입니다.",
+    h1: "호주 멜버른 중고거래 앱",
     aboutThing: "멜버른 중고거래 앱",
     inLanguage: "ko",
     sections: [
