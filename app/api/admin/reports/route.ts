@@ -17,6 +17,11 @@ type ReportRow = {
   reporterName: string;
   // target description: post title (post reports) or reported user nickname (user reports)
   target: string;
+  // ids the client uses to lazily load expand detail
+  postId: number | null;
+  conversationId: string | null;
+  reporterId: string | null;
+  reportedId: string | null;
 };
 
 export async function GET(req: Request) {
@@ -41,7 +46,9 @@ export async function GET(req: Request) {
       .order("created_at", { ascending: false }),
     sb
       .from("user_reports")
-      .select("id, reporter_id, reported_id, reason, details, status, admin_notes, created_at")
+      .select(
+        "id, reporter_id, reported_id, conversation_id, reason, details, status, admin_notes, created_at",
+      )
       .order("created_at", { ascending: false }),
   ]);
 
@@ -64,6 +71,7 @@ export async function GET(req: Request) {
     id: string;
     reporter_id: string | null;
     reported_id: string | null;
+    conversation_id: string | null;
     reason: string;
     details: string | null;
     status: string;
@@ -112,6 +120,10 @@ export async function GET(req: Request) {
       created_at: r.created_at,
       reporterName: (r.reporter_id && nameMap.get(r.reporter_id)) || "Unknown",
       target: titleMap.get(r.post_id) ?? `Post #${r.post_id}`,
+      postId: r.post_id,
+      conversationId: null,
+      reporterId: r.reporter_id,
+      reportedId: null,
     })),
     ...userReports.map((r) => ({
       id: r.id,
@@ -123,6 +135,10 @@ export async function GET(req: Request) {
       created_at: r.created_at,
       reporterName: (r.reporter_id && nameMap.get(r.reporter_id)) || "Unknown",
       target: (r.reported_id && nameMap.get(r.reported_id)) || "Unknown user",
+      postId: null,
+      conversationId: r.conversation_id,
+      reporterId: r.reporter_id,
+      reportedId: r.reported_id,
     })),
   ].sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 
