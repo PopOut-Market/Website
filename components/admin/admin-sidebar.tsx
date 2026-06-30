@@ -7,6 +7,8 @@ import { useAdminAuth } from "./admin-auth-guard";
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin-super/dashboard", icon: "📊" },
   { label: "Reward review", href: "/admin-super/dashboard/reward-review", icon: "🪙" },
+  { label: "Appeals", href: "/admin-super/dashboard/appeals", icon: "⚖️" },
+  { label: "Listing moderation", href: "/admin-super/dashboard/moderation", icon: "🚫" },
   { label: "User management", href: "/admin-super/dashboard/users", icon: "👥" },
   { label: "Invitations", href: "/admin-super/dashboard/invitations", icon: "🔗" },
   { label: "My accounts", href: "/admin-super/dashboard/accounts", icon: "🗂️" },
