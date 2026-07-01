@@ -172,7 +172,11 @@ export default function AppealsPage() {
           total={hasMore ? `${autoCount}+` : autoCount}
           loading={loading}
         />
-        <KpiCard label="Manual" total={hasMore ? `${manualCount}+` : manualCount} loading={loading} />
+        <KpiCard
+          label="Manual"
+          total={hasMore ? `${manualCount}+` : manualCount}
+          loading={loading}
+        />
       </div>
 
       {toast && (
@@ -302,9 +306,7 @@ function AppealCard({
         </div>
         <span
           className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
-            appeal.source === "auto"
-              ? "bg-amber-100 text-amber-700"
-              : "bg-slate-100 text-slate-600"
+            appeal.source === "auto" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"
           }`}
           title={appeal.source === "auto" ? "Automatic / community takedown" : "Manual takedown"}
         >

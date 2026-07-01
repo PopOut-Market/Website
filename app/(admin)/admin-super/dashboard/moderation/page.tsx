@@ -322,12 +322,15 @@ export default function ListingModerationPage() {
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Restrict listing</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Hides the listing. Pick a reason (required). The note is operator-only and never shown to
-            the seller.
+            Hides the listing. Pick a reason (required). The note is operator-only and never shown
+            to the seller.
           </p>
         </div>
         <div>
-          <label htmlFor="restrict-reason" className="mb-1 block text-xs font-medium text-slate-700">
+          <label
+            htmlFor="restrict-reason"
+            className="mb-1 block text-xs font-medium text-slate-700"
+          >
             Reason (required)
           </label>
           <select
@@ -364,11 +367,7 @@ export default function ListingModerationPage() {
           onClick={restrict}
           disabled={!validId || !reason || busyAny || unauthorized}
           title={
-            !validId
-              ? "Enter a numeric listing ID"
-              : !reason
-                ? "Pick a reason first"
-                : undefined
+            !validId ? "Enter a numeric listing ID" : !reason ? "Pick a reason first" : undefined
           }
           className="inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
         >
