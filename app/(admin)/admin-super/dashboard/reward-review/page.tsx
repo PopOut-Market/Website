@@ -89,8 +89,31 @@ const REJECT_CODES = [
     label: "Not a serious listing",
     hint: "joke, test, filler, or absurd-priced listing — not a genuine item for sale",
   },
+  {
+    value: "item_not_available",
+    label: "Item not actually available to sell",
+    hint: "the listing's own photos show the item still belongs to a shop (store racks/shelves, sales floor, or held up in-store). Tags alone are never the signal — give ambiguous photos the benefit of the doubt.",
+  },
 ] as const;
 type RejectCode = (typeof REJECT_CODES)[number]["value"];
+
+// Documented RPC guard: reward_review_claim / admin_review_claim raises this
+// (on both approve AND reject) when the claim's listing is currently restricted.
+// It's a deliberate guard, not a failure — surface the fix, not a raw error.
+const POST_RESTRICTED_CODE = "REWARDS_POST_RESTRICTED";
+const POST_RESTRICTED_MESSAGE =
+  "This listing is currently taken down. Reinstate it first, then decide the claim.";
+
+// `guard` errors are deliberate backend refusals (e.g. the listing is restricted),
+// not failures — the UI renders them as an amber notice instead of a red error.
+type ReviewError = { text: string; guard: boolean };
+function toReviewError(rawMessage: string | null | undefined): ReviewError {
+  const raw = (rawMessage ?? "").trim();
+  if (raw.toUpperCase().includes(POST_RESTRICTED_CODE)) {
+    return { text: POST_RESTRICTED_MESSAGE, guard: true };
+  }
+  return { text: raw || "Action failed.", guard: false };
+}
 
 const aud = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" });
 function priceLabel(cents: number | null | undefined): string {
@@ -583,7 +606,7 @@ function ClaimCard({
   const [code, setCode] = useState<RejectCode>("not_own_photos");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState<null | "approve" | "reject">(null);
-  const [err, setErr] = useState<string | null>(null);
+  const [err, setErr] = useState<ReviewError | null>(null);
 
   const photos = (claim.photos ?? [])
     .map((p) => getPostImageUrl(p))
@@ -609,7 +632,7 @@ function ClaimCard({
             },
       );
       if (error) {
-        setErr(error.message || "Action failed.");
+        setErr(toReviewError(error.message));
         setBusy(null);
         return;
       }
@@ -628,7 +651,7 @@ function ClaimCard({
             : `Reward denied (${REJECT_CODES.find((r) => r.value === code)?.label}).`,
       );
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Action failed.");
+      setErr(toReviewError(e instanceof Error ? e.message : null));
       setBusy(null);
     }
   }
@@ -718,8 +741,14 @@ function ClaimCard({
 
       <div className="mt-4 border-t border-slate-100 pt-4">
         {err && (
-          <p className="mb-2 rounded-lg border border-rose-300 bg-rose-50 px-3 py-1.5 text-sm text-rose-700">
-            {err}
+          <p
+            className={`mb-2 rounded-lg border px-3 py-1.5 text-sm ${
+              err.guard
+                ? "border-amber-300 bg-amber-50 text-amber-800"
+                : "border-rose-300 bg-rose-50 text-rose-700"
+            }`}
+          >
+            {err.text}
           </p>
         )}
 
@@ -783,6 +812,10 @@ function ClaimCard({
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
               />
             </div>
+            <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+              Also taking this listing down? Deny the reward here first, then restrict — restricting
+              first silently cancels this pending claim without naming the rule.
+            </p>
             <div className="flex items-center gap-2">
               <button
                 type="button"

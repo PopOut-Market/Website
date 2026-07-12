@@ -55,6 +55,7 @@ export const RESTRICT_REASON_CODES = [
   "fake_or_misleading",
   "spam",
   "other",
+  "item_not_available",
 ] as const;
 export type RestrictReasonCode = (typeof RESTRICT_REASON_CODES)[number];
 
@@ -65,6 +66,7 @@ export const RESTRICTION_REASON_LABELS: Record<string, string> = {
   fake_or_misleading: "Fake or misleading",
   spam: "Spam",
   other: "Other",
+  item_not_available: "Item not available to sell",
   community_reports: "Community reports",
 };
 
