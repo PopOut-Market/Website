@@ -70,7 +70,22 @@ function localeFromAcceptLanguageHeader(headerValue: string | null): Locale | nu
 // must be enforced in ONE place only — the Netlify domain settings. Set the
 // primary domain to www there to match the canonical/metadataBase in lib/seo.ts.
 
-export function middleware(request: NextRequest) {
+// The Referer header is client/bot-controlled and frequently malformed
+// (non-absolute, empty-ish, or an app scheme). `new URL()` throws on bad input,
+// so parse it defensively — a referer we can't read simply contributes no
+// locale. An unguarded parse here previously crashed the edge function on every
+// request that carried a garbage referer (visitors got a 500 instead of the site).
+function localeFromReferer(referer: string | null): Locale | null {
+  if (!referer) return null;
+  try {
+    const first = new URL(referer).pathname.split("/").filter(Boolean)[0];
+    return localeFromSegment(first);
+  } catch {
+    return null;
+  }
+}
+
+function resolveLocaleRouting(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   // Keep API, Next internals, admin routes, static assets, and the standalone
@@ -95,10 +110,7 @@ export function middleware(request: NextRequest) {
   const locale = localeFromSegment(firstSegment);
 
   const cookieLocale = request.cookies.get("popout_locale")?.value;
-  const referer = request.headers.get("referer");
-  const refererLocale = referer
-    ? localeFromSegment(new URL(referer).pathname.split("/").filter(Boolean)[0])
-    : null;
+  const refererLocale = localeFromReferer(request.headers.get("referer"));
   const fallbackLocale =
     localeFromSegment(cookieLocale) ??
     refererLocale ??
@@ -144,6 +156,20 @@ export function middleware(request: NextRequest) {
     });
   }
   return response;
+}
+
+export function middleware(request: NextRequest) {
+  try {
+    return resolveLocaleRouting(request);
+  } catch {
+    // This middleware runs on EVERY request (matcher `/:path*`). An uncaught
+    // throw crashes the Netlify edge function and shows visitors the generic
+    // "edge function has crashed" page instead of the site. Never let a routing
+    // error do that: on any unexpected failure, pass the request through
+    // untouched — worst case it isn't locale-redirected, which is invisible to
+    // real users and far better than a 500.
+    return NextResponse.next();
+  }
 }
 
 export const config = {
