@@ -55,7 +55,10 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
       const res = await adminApiFetch("/api/admin/me").catch(() => null);
       if (!mounted) return;
       if (!res || !res.ok) {
-        await sb.auth.signOut().catch(() => {});
+        // scope: "local" ends only this browser's session. A global sign-out
+        // would revoke every session on the account (e.g. the admin's PopOut
+        // mobile app), which must never happen from the admin website.
+        await sb.auth.signOut({ scope: "local" }).catch(() => {});
         router.replace("/admin-super/admin-login");
         return;
       }
@@ -78,7 +81,10 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     if (!configured) return;
-    await getAdminAuthBrowserClient().auth.signOut();
+    // scope: "local" clears only this browser's session/storage. The default
+    // (scope: "global") would delete every session on the account server-side,
+    // logging the admin out of the PopOut mobile app on their phone too.
+    await getAdminAuthBrowserClient().auth.signOut({ scope: "local" });
     router.replace("/admin-super/admin-login");
     router.refresh();
   }, [configured, router]);
