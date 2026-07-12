@@ -13,9 +13,6 @@ const NAV_ITEMS = [
   { label: "Invitations", href: "/admin-super/dashboard/invitations", icon: "🔗" },
   { label: "My accounts", href: "/admin-super/dashboard/accounts", icon: "🗂️" },
   { label: "Vouchers", href: "/admin-super/dashboard/vouchers", icon: "🎟️" },
-  { label: "Geographic", href: "/admin-super/dashboard/geographic", icon: "🗺️" },
-  { label: "Categories", href: "/admin-super/dashboard/categories", icon: "📦" },
-  { label: "Likes", href: "/admin-super/dashboard/likes", icon: "❤️" },
   { label: "Reports", href: "/admin-super/dashboard/reports", icon: "🚩" },
   { label: "Feedback", href: "/admin-super/dashboard/feedback", icon: "💬" },
 ] as const;
