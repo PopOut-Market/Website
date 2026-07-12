@@ -77,7 +77,15 @@ type HistorySummary = {
   perSeller: { ownerId: string; nickname: string; count: number }[];
 };
 
-const PAGE_SIZE = 50;
+// The pending queue is pulled in FULL, not paginated. The RPC is paged only as a
+// transport detail (loop until a short page returns). Paginating for display was
+// the source of the instability: the 6-cap split is computed client-side, so a
+// single 50-row page could be filled entirely by at-cap sellers' claims — leaving
+// the actionable queue falsely empty ("0+") with the reachable claims stranded on
+// later pages that the empty state gave no way to load. Loading everything makes
+// every count exact and removes the offset/hasMore/Load-more machinery entirely.
+const PENDING_PAGE_SIZE = 50; // proven page size the RPC honours
+const MAX_PENDING_PAGES = 40; // safety ceiling — 2000 pending claims
 const UNKNOWN_SELLER = "__unknown__";
 
 const REJECT_CODES = [
@@ -156,10 +164,10 @@ export default function RewardReviewPage() {
   const [approvedCounts, setApprovedCounts] = useState<Record<string, number>>({});
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  // True only if the safety ceiling was hit (more pending claims exist than we
+  // loaded) — the one case where the "To review" count is shown as approximate.
+  const [truncated, setTruncated] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [approvedItems, setApprovedItems] = useState<ApprovedItem[]>([]);
@@ -194,42 +202,52 @@ export default function RewardReviewPage() {
     }
   }, []);
 
-  const fetchPage = useCallback(async (nextOffset: number, append: boolean) => {
+  // Pull the ENTIRE pending queue (loop the RPC's pages until a short page ends
+  // it). The approved counts drive the cap-split, so we await them alongside the
+  // queue and only drop the skeleton once BOTH are in — otherwise at-cap sellers
+  // would flash into the actionable list before the counts arrive to move them.
+  const load = useCallback(async () => {
     if (!isAdminAuthConfigured()) {
       setError("Supabase is not configured.");
       setLoading(false);
       return;
     }
-    if (append) setLoadingMore(true);
-    else setLoading(true);
+    setLoading(true);
     setError(null);
+    const countsPromise = fetchApprovedCounts();
     try {
       const sb = getAdminAuthBrowserClient();
-      const { data, error } = await sb.rpc("admin_list_pending_claims", {
-        p_limit: PAGE_SIZE,
-        p_offset: nextOffset,
-      });
-      if (error) {
-        setError(error.message || "Failed to load claims.");
-        return;
+      const all: Claim[] = [];
+      let hitCeiling = false;
+      for (let page = 0; page < MAX_PENDING_PAGES; page++) {
+        const { data, error } = await sb.rpc("admin_list_pending_claims", {
+          p_limit: PENDING_PAGE_SIZE,
+          p_offset: page * PENDING_PAGE_SIZE,
+        });
+        if (error) {
+          setError(error.message || "Failed to load claims.");
+          setClaims([]);
+          return;
+        }
+        const rows = Array.isArray(data) ? (data as Claim[]) : [];
+        all.push(...rows);
+        if (rows.length < PENDING_PAGE_SIZE) break;
+        if (page === MAX_PENDING_PAGES - 1) hitCeiling = true;
       }
-      const rows = Array.isArray(data) ? (data as Claim[]) : [];
-      setClaims((prev) => (append ? [...prev, ...rows] : rows));
-      setOffset(nextOffset + rows.length);
-      setHasMore(rows.length === PAGE_SIZE);
+      setClaims(all);
+      setTruncated(hitCeiling);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load claims.");
     } finally {
-      if (append) setLoadingMore(false);
-      else setLoading(false);
+      await countsPromise;
+      setLoading(false);
     }
-  }, []);
+  }, [fetchApprovedCounts]);
 
   useEffect(() => {
-    fetchPage(0, false);
-    fetchApprovedCounts();
+    load();
     fetchHistory();
-  }, [fetchPage, fetchApprovedCounts, fetchHistory]);
+  }, [load, fetchHistory]);
 
   useEffect(
     () => () => {
@@ -241,9 +259,6 @@ export default function RewardReviewPage() {
   const handleReviewed = useCallback(
     (claimId: number, ownerId: string | null, approved: boolean, message: string) => {
       setClaims((prev) => prev.filter((c) => c.claim_id !== claimId));
-      // The server's pending set shrank by one, so pull the paging offset back in
-      // step — otherwise the next "Load more" would skip unreviewed claims.
-      setOffset((o) => Math.max(0, o - 1));
       // An approval consumes one of the seller's 6 slots — reflect it locally so
       // the rest of their listings disable Approve the moment the cap is hit.
       if (approved && ownerId) {
@@ -336,7 +351,7 @@ export default function RewardReviewPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KpiCard
           label="To review"
-          total={hasMore ? `${actionablePending}+` : actionablePending}
+          total={truncated ? `${actionablePending}+` : actionablePending}
           loading={loading}
         />
         <KpiCard label="Sellers to review" total={actionableGroups.length} loading={loading} />
@@ -382,7 +397,9 @@ export default function RewardReviewPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center shadow-sm">
           <div className="mb-3 text-4xl">🎉</div>
           <p className="text-sm text-slate-600">
-            Nothing to review — every seller with pending listings is already at the cap.
+            {claims.length === 0
+              ? "Nothing to review — no listings are awaiting a reward decision right now."
+              : "Nothing to review — every seller with pending listings is already at the cap."}
           </p>
         </div>
       ) : (
@@ -404,18 +421,6 @@ export default function RewardReviewPage() {
               />
             );
           })}
-          {hasMore && (
-            <div className="flex justify-center pt-2">
-              <button
-                type="button"
-                onClick={() => fetchPage(offset, true)}
-                disabled={loadingMore}
-                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
-              >
-                {loadingMore ? "Loading…" : "Load more"}
-              </button>
-            </div>
-          )}
         </div>
       )}
 
