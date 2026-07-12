@@ -84,6 +84,11 @@ const REJECT_CODES = [
   { value: "not_own_photos", label: "Not their own photos" },
   { value: "community_safety", label: "Community safety" },
   { value: "duplicate", label: "Duplicate listing" },
+  {
+    value: "not_serious",
+    label: "Not a serious listing",
+    hint: "joke, test, filler, or absurd-priced listing — not a genuine item for sale",
+  },
 ] as const;
 type RejectCode = (typeof REJECT_CODES)[number]["value"];
 
@@ -584,6 +589,10 @@ function ClaimCard({
     .map((p) => getPostImageUrl(p))
     .filter((u): u is string => Boolean(u));
 
+  const selectedReason = REJECT_CODES.find((r) => r.value === code);
+  const rejectHint =
+    selectedReason && "hint" in selectedReason ? selectedReason.hint : null;
+
   async function review(approve: boolean) {
     setBusy(approve ? "approve" : "reject");
     setErr(null);
@@ -760,6 +769,9 @@ function ClaimCard({
                   </option>
                 ))}
               </select>
+              {rejectHint && (
+                <p className="mt-1 text-xs text-slate-500">{rejectHint}</p>
+              )}
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-slate-700">
