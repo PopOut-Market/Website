@@ -36,3 +36,7 @@ WEBSITE-AUDIT-FINDINGS.md
 
 # Claude Code local settings
 .claude/
+
+# Gift-card / voucher exports — contain LIVE redeemable URLs (bearer secrets). NEVER commit.
+voucher_*.csv
+*_val*.csv

@@ -4,8 +4,8 @@ import { KpiCard } from "@/components/admin/kpi-card";
 import {
   type GraphLink,
   type GraphNode,
-  InvitationGraph,
-} from "@/components/admin/invitation-graph";
+  InvitationLeaderboard,
+} from "@/components/admin/invitation-leaderboard";
 import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import { useEffect, useState } from "react";
 
@@ -31,14 +31,18 @@ export default function InvitationsPage() {
   }, []);
 
   const inviters = data ? data.nodes.filter((n) => n.invites > 0).length : 0;
+  const paidRate =
+    data && data.links.length > 0
+      ? `${Math.round((data.links.filter((l) => l.paid).length / data.links.length) * 100)}%`
+      : "0%";
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Invitations</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Who invited whom — the referral tree from reward invitations. Arrows point from inviter to
-          invitee.
+          Top referrers from reward invitations, ranked. Click a row to see exactly who that person
+          invited and which rewards were paid.
         </p>
       </div>
 
@@ -48,9 +52,10 @@ export default function InvitationsPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KpiCard label="Invitations" total={data?.links.length ?? 0} loading={loading} />
         <KpiCard label="Inviters" total={inviters} loading={loading} />
+        <KpiCard label="Reward paid rate" total={paidRate} loading={loading} />
         <KpiCard label="Pending (phone-only)" total={data?.pending ?? 0} loading={loading} />
       </div>
 
@@ -59,20 +64,13 @@ export default function InvitationsPage() {
           <div className="h-72 animate-pulse rounded-lg bg-slate-100" />
         ) : data ? (
           <>
-            <InvitationGraph nodes={data.nodes} links={data.links} />
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-2.5 w-2.5 rounded-full bg-indigo-500" /> inviter
-                (size = # invites)
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-2.5 w-2.5 rounded-full border border-slate-400 bg-white" />{" "}
-                invitee
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="inline-block h-0.5 w-4 bg-emerald-500" /> reward paid
-              </span>
-            </div>
+            <InvitationLeaderboard nodes={data.nodes} links={data.links} />
+            <p className="mt-3 text-xs text-slate-500">
+              <span className="font-medium text-slate-600">Paid %</span> = rewards paid ÷ invitees
+              who joined · <span className="font-medium text-slate-600">Reach</span> = total
+              downstream invitees (their invitees&rsquo; invitees…). Click any row to expand that
+              referrer&rsquo;s tree.
+            </p>
           </>
         ) : null}
       </section>
