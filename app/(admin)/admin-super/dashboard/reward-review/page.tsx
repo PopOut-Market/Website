@@ -6,28 +6,40 @@ import {
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
 import { adminApiFetch } from "@/lib/supabase/admin-fetch";
+import {
+  postIdArg,
+  RESTRICT_REASON_CODES,
+  RESTRICTION_REASON_LABELS,
+  unwrapRpc,
+  type RestrictReasonCode,
+} from "@/lib/supabase/admin-rpc";
 import { getPostImageUrl } from "@/lib/supabase/post-image-url";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Reward review — NOT listing moderation.
+ * Review queue — every newly posted listing lands here for a hygiene decision.
  *
- * A listing goes live the moment it is posted and is never blocked here. What
- * gets reviewed is whether the listing earns its +10 coin reward. The queue is
- * `reward_listing_claims` rows with status='pending'. Approve credits the
- * seller; deny refuses the reward with an internal reason. Neither touches the
- * listing.
+ * The queue is `reward_listing_claims` rows with status='pending' — one per new
+ * listing, so EVERY seller with pending listings appears (nobody is hidden by
+ * their approval count). For each listing an admin can:
+ *   - Approve the +10 coin reward — only while the seller is under APPROVED_CAP
+ *     (6); once at the cap, Approve is locked but the listing still shows.
+ *   - Deny the reward — refuses the +10 with an internal reason; the listing is
+ *     left untouched and live.
+ *   - Restrict the listing — hides it and lets the seller appeal (this is the
+ *     platform-hygiene action). Restricting cancels the pending reward claim
+ *     server-side, so the listing leaves the queue.
  *
- * Layout: the queue is grouped BY SELLER. Each seller is one expandable row;
- * expanding shows that seller's pending listings. A seller may have at most
- * APPROVED_CAP (6) approved claims — once reached, Approve is disabled for all
- * of their remaining listings. NOTE: this cap is enforced in the UI only. The
- * write still goes through the SECURITY DEFINER `admin_review_claim` RPC, which
- * does not enforce it; a hard guarantee needs that RPC changed.
+ * The APPROVED_CAP is a REWARD cap enforced in the UI only. The write still goes
+ * through the SECURITY DEFINER `admin_review_claim` RPC, which does not enforce
+ * it; a hard guarantee needs that RPC changed.
  *
- * Reads/writes call the RPCs DIRECTLY from the signed-in reviewer's Supabase
- * session (granted to `authenticated`, self-gated on `reward_admins`). The
- * per-seller approved counts come from a read-only service-role route.
+ * Layout: grouped BY SELLER — each seller is one expandable row showing their
+ * pending listings. Reads/writes call the RPCs DIRECTLY from the signed-in
+ * reviewer's Supabase session (granted to `authenticated`, self-gated on
+ * `reward_admins`) — `admin_review_claim` for reward, `admin_restrict_post` for
+ * restriction (the same RPC the standalone moderation page uses). The per-seller
+ * approved counts come from a read-only service-role route.
  */
 
 const APPROVED_CAP = 6;
@@ -292,26 +304,21 @@ export default function RewardReviewPage() {
     });
   }, []);
 
-  // Oldest-first at the top, stable across removals + pagination.
+  // Oldest-first at the top, stable across removals.
   const ordered = [...claims].sort((a, b) => createdMs(a) - createdMs(b));
   const groups = groupBySeller(ordered);
 
-  // Split rule (UI-only, no backend/rule change): a seller belongs in the
-  // actionable TOP queue only if they still have room under the 6-approval cap
-  // AND have pending listings — i.e. approved < CAP and pending > 0. Once a seller
-  // reaches the cap (>= CAP approved) they drop to the bottom list even if pending
-  // claims remain, because those can't be approved anyway (Approve is locked).
-  const pendingCountById = new Map(groups.map((g) => [g.sellerId, g.claims.length]));
-  const actionableGroups = groups.filter(
-    (g) => g.sellerId === UNKNOWN_SELLER || (approvedCounts[g.sellerId] ?? 0) < APPROVED_CAP,
-  );
-  const topSellerIds = new Set(actionableGroups.map((g) => g.sellerId));
-  const actionablePending = actionableGroups.reduce((n, g) => n + g.claims.length, 0);
+  // Every seller with pending listings is in the queue — no cap-based hiding. The
+  // 6-approval cap only locks the Approve button per seller (handled by `atCap`
+  // below); at-cap sellers still appear so their new listings can be denied or
+  // restricted. `pendingTotal` is the exact count of listings awaiting a decision.
+  const queueGroups = groups;
+  const queueSellerIds = new Set(queueGroups.map((g) => g.sellerId));
+  const pendingTotal = queueGroups.reduce((n, g) => n + g.claims.length, 0);
 
-  // Bottom list = every seller NOT in the actionable top queue, built from the
-  // approved-items feed (already newest-first) so the most recently-approved
-  // seller sorts to the top. Includes at-cap sellers whose pending overflow is
-  // shown as a badge (informational — not actionable here).
+  // Bottom list = sellers with approvals but nothing currently pending (they'd be
+  // in the queue above otherwise). Built from the approved-items feed (already
+  // newest-first) so the most recently-approved seller sorts to the top.
   const approvedBySeller = new Map<
     string,
     { ownerId: string; nickname: string; items: ApprovedItem[]; lastApprovedAt: string | null }
@@ -329,7 +336,7 @@ export default function RewardReviewPage() {
       });
   }
   const reviewedRoster = [...approvedBySeller.values()]
-    .filter((s) => s.ownerId !== UNKNOWN_SELLER && !topSellerIds.has(s.ownerId))
+    .filter((s) => s.ownerId !== UNKNOWN_SELLER && !queueSellerIds.has(s.ownerId))
     .sort((a, b) => {
       const ta = a.lastApprovedAt ? new Date(a.lastApprovedAt).getTime() : 0;
       const tb = b.lastApprovedAt ? new Date(b.lastApprovedAt).getTime() : 0;
@@ -339,22 +346,23 @@ export default function RewardReviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Reward review</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Review queue</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Approve or deny the <span className="font-medium">+10&nbsp;coin</span> reward for newly
-          posted listings, grouped by seller. Each seller can earn at most{" "}
-          <span className="font-medium">{APPROVED_CAP}</span> approvals — after that, Approve is
-          locked. This never affects the listing itself.
+          Every newly posted listing lands here, grouped by seller. Reward it (
+          <span className="font-medium">+10&nbsp;coins</span>, up to{" "}
+          <span className="font-medium">{APPROVED_CAP}</span> per seller) — or, if it breaks the
+          rules, <span className="font-medium">restrict</span> it with a reason. Denying only
+          refuses the reward; restricting hides the listing and lets the seller appeal.
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <KpiCard
           label="To review"
-          total={truncated ? `${actionablePending}+` : actionablePending}
+          total={truncated ? `${pendingTotal}+` : pendingTotal}
           loading={loading}
         />
-        <KpiCard label="Sellers to review" total={actionableGroups.length} loading={loading} />
+        <KpiCard label="Sellers to review" total={queueGroups.length} loading={loading} />
         <KpiCard
           label="Approved (all-time)"
           total={historySummary?.totalApproved ?? 0}
@@ -382,8 +390,9 @@ export default function RewardReviewPage() {
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Pending review</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Sellers still under the {APPROVED_CAP}-cap with listings awaiting a decision. Expand to
-          approve or deny. Sellers already at the cap move to the list below.
+          Every seller with listings awaiting a decision. Expand a seller to reward, deny, or
+          restrict each listing. Once a seller hits the {APPROVED_CAP}-cap, Approve locks — but you
+          can always deny or restrict.
         </p>
       </div>
 
@@ -393,18 +402,16 @@ export default function RewardReviewPage() {
             <div key={i} className="h-20 animate-pulse rounded-xl bg-slate-100" />
           ))}
         </div>
-      ) : actionableGroups.length === 0 && !error ? (
+      ) : queueGroups.length === 0 && !error ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center shadow-sm">
           <div className="mb-3 text-4xl">🎉</div>
           <p className="text-sm text-slate-600">
-            {claims.length === 0
-              ? "Nothing to review — no listings are awaiting a reward decision right now."
-              : "Nothing to review — every seller with pending listings is already at the cap."}
+            Nothing to review — no listings are awaiting a decision right now.
           </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {actionableGroups.map((group) => {
+          {queueGroups.map((group) => {
             const confirmed =
               group.sellerId === UNKNOWN_SELLER ? 0 : (approvedCounts[group.sellerId] ?? 0);
             const atCap = group.sellerId !== UNKNOWN_SELLER && confirmed >= APPROVED_CAP;
@@ -427,14 +434,13 @@ export default function RewardReviewPage() {
       {/* Reviewed sellers — everyone with 0 pending. Sorted by most-recent
           approval (newest at top); click a seller to expand their approved
           listings. A seller re-enters the queue above the moment a new listing
-          is posted, and drops back to the top here once it's approved. */}
+          is posted, and drops back to the top here once it's decided. */}
       <section className="space-y-4 pt-2">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Reviewed &amp; at-cap</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Reviewed sellers</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Sellers you&apos;re done with — fully reviewed, or already at the {APPROVED_CAP}-cap
-            (extra pending shown but can&apos;t be approved). Most recently approved first; click to
-            expand.
+            Sellers you&apos;re done with — approvals on record and nothing currently pending. Most
+            recently approved first; click to expand.
             {historySummary
               ? ` ${historySummary.totalApproved} approved across ${historySummary.sellersApproved} seller${
                   historySummary.sellersApproved === 1 ? "" : "s"
@@ -452,7 +458,6 @@ export default function RewardReviewPage() {
             {reviewedRoster.map((s) => {
               const approved = approvedCounts[s.ownerId] ?? s.items.length;
               const atCap = approved >= APPROVED_CAP;
-              const pending = pendingCountById.get(s.ownerId) ?? 0;
               const isOpen = historyExpanded.has(s.ownerId);
               return (
                 <div
@@ -474,14 +479,6 @@ export default function RewardReviewPage() {
                     <span className="hidden text-xs text-slate-400 sm:inline">
                       {s.items.length} listing{s.items.length === 1 ? "" : "s"}
                     </span>
-                    {pending > 0 && (
-                      <span
-                        className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
-                        title="Pending listings over the cap — can't be approved"
-                      >
-                        {pending} pending
-                      </span>
-                    )}
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums ${
                         atCap ? "bg-rose-100 text-rose-700" : "bg-emerald-100 text-emerald-700"
@@ -581,7 +578,7 @@ function SellerRow({
           {atCap && (
             <p className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
               This seller already has {confirmed} approved listings (cap is {APPROVED_CAP}). Approve
-              is locked; you can still deny.
+              is locked; you can still deny the reward or restrict a listing.
             </p>
           )}
           {group.claims.map((claim) => (
@@ -607,10 +604,14 @@ function ClaimCard({
   approveLocked: boolean;
   onReviewed: (claimId: number, ownerId: string | null, approved: boolean, message: string) => void;
 }) {
-  const [rejecting, setRejecting] = useState(false);
+  // One panel open at a time: "deny" refuses the reward, "restrict" takes the
+  // listing down. Both are internal-only; neither is shown to the seller.
+  const [panel, setPanel] = useState<null | "deny" | "restrict">(null);
   const [code, setCode] = useState<RejectCode>("not_own_photos");
   const [note, setNote] = useState("");
-  const [busy, setBusy] = useState<null | "approve" | "reject">(null);
+  const [restrictReason, setRestrictReason] = useState<RestrictReasonCode | "">("");
+  const [restrictNote, setRestrictNote] = useState("");
+  const [busy, setBusy] = useState<null | "approve" | "reject" | "restrict">(null);
   const [err, setErr] = useState<ReviewError | null>(null);
 
   const photos = (claim.photos ?? [])
@@ -654,6 +655,41 @@ function ClaimCard({
           : approve
             ? "Approved — seller credited +10 coins."
             : `Reward denied (${REJECT_CODES.find((r) => r.value === code)?.label}).`,
+      );
+    } catch (e) {
+      setErr(toReviewError(e instanceof Error ? e.message : null));
+      setBusy(null);
+    }
+  }
+
+  // Restrict the listing (hide it + let the seller appeal), mirroring the
+  // standalone moderation page. Restricting cancels the pending reward claim
+  // server-side, so the card leaves the queue whether or not it was rewardable.
+  // approved=false → no credit and no cap bump on the way out.
+  async function restrict() {
+    if (!restrictReason) return;
+    setBusy("restrict");
+    setErr(null);
+    try {
+      const sb = getAdminAuthBrowserClient();
+      const { data, error } = await sb.rpc("admin_restrict_post", {
+        p_post_id: postIdArg(claim.post_id),
+        p_reason_code: restrictReason,
+        p_note: restrictNote.trim() || null,
+      });
+      if (error) {
+        setErr(toReviewError(error.message));
+        setBusy(null);
+        return;
+      }
+      const result = unwrapRpc<{ changed?: boolean }>(data);
+      onReviewed(
+        claim.claim_id,
+        claim.seller?.id ?? null,
+        false,
+        result?.changed === false
+          ? "This listing was already restricted."
+          : `Listing restricted — ${RESTRICTION_REASON_LABELS[restrictReason]}. Reward claim cancelled.`,
       );
     } catch (e) {
       setErr(toReviewError(e instanceof Error ? e.message : null));
@@ -757,8 +793,8 @@ function ClaimCard({
           </p>
         )}
 
-        {!rejecting ? (
-          <div className="flex items-center gap-2">
+        {panel === null ? (
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => review(true)}
@@ -775,7 +811,7 @@ function ClaimCard({
             <button
               type="button"
               onClick={() => {
-                setRejecting(true);
+                setPanel("deny");
                 setErr(null);
               }}
               disabled={busy !== null}
@@ -783,9 +819,24 @@ function ClaimCard({
             >
               Deny reward
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPanel("restrict");
+                setErr(null);
+              }}
+              disabled={busy !== null}
+              className="inline-flex items-center justify-center rounded-lg border border-rose-300 bg-white px-4 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:opacity-50"
+            >
+              Restrict listing
+            </button>
           </div>
-        ) : (
+        ) : panel === "deny" ? (
           <div className="space-y-3 rounded-lg bg-slate-50 p-3">
+            <p className="text-xs font-medium text-slate-700">
+              Deny the +10 reward — the listing stays live. To take the listing down instead, use
+              Restrict.
+            </p>
             <div>
               <label className="mb-1 block text-xs font-medium text-slate-700">
                 Reason (internal — never shown to the seller)
@@ -817,10 +868,6 @@ function ClaimCard({
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
               />
             </div>
-            <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-              Also taking this listing down? Deny the reward here first, then restrict — restricting
-              first silently cancels this pending claim without naming the rule.
-            </p>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -833,7 +880,67 @@ function ClaimCard({
               <button
                 type="button"
                 onClick={() => {
-                  setRejecting(false);
+                  setPanel(null);
+                  setErr(null);
+                }}
+                disabled={busy !== null}
+                className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3 rounded-lg border border-rose-200 bg-rose-50/60 p-3">
+            <p className="text-xs font-medium text-rose-800">
+              Restrict hides the listing and lets the seller appeal. The pending reward claim is
+              cancelled. Pick a reason (required); the note is operator-only.
+            </p>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Reason (required)
+              </label>
+              <select
+                value={restrictReason}
+                onChange={(e) => setRestrictReason(e.target.value as RestrictReasonCode | "")}
+                disabled={busy !== null}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              >
+                <option value="">Select a reason…</option>
+                {RESTRICT_REASON_CODES.map((r) => (
+                  <option key={r} value={r}>
+                    {RESTRICTION_REASON_LABELS[r]}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-700">
+                Internal note (optional)
+              </label>
+              <textarea
+                value={restrictNote}
+                onChange={(e) => setRestrictNote(e.target.value)}
+                rows={2}
+                disabled={busy !== null}
+                placeholder="Operator-only note…"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={restrict}
+                disabled={busy !== null || !restrictReason}
+                title={!restrictReason ? "Pick a reason first" : undefined}
+                className="inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
+              >
+                {busy === "restrict" ? "Restricting…" : "Confirm restrict"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPanel(null);
                   setErr(null);
                 }}
                 disabled={busy !== null}
