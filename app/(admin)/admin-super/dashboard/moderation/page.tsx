@@ -4,6 +4,7 @@ import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
+import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import {
   formatAudCents,
   isNotAuthorized,
@@ -19,13 +20,18 @@ import { getPostImageUrl } from "@/lib/supabase/post-image-url";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Listing moderation — restrict or reinstate a single listing by ID.
+ * Listing moderation — restrict or reinstate a single listing.
  *
- * There is no admin listing browser, so the entry point is a numeric listing-ID
- * input. A best-effort preview via the anon `get_post_detail` RPC helps the
- * operator confirm they have the right listing (it returns nothing for deleted,
- * unavailable, or already-restricted posts — the action is still available by
- * ID in that case).
+ * A listing is always the target of an action by its numeric ID, but the
+ * operator can find that ID three ways (tabbed lookup):
+ *   - By ID     — a best-effort preview via the anon `get_post_detail` RPC.
+ *   - By title  — search `posts.raw_title`.
+ *   - By seller — search `profiles.nickname`.
+ * Title/seller search goes through the service-role `/api/admin/search-posts`
+ * route (behind requireAdmin), so it surfaces EVERY listing — including
+ * restricted, sold, or otherwise unavailable ones that the anon RPCs hide.
+ * Picking a result fills the target ID and preview; the restrict/reinstate flow
+ * below is unchanged and always acts on that single ID.
  *
  * Restrict/reinstate call the admin RPCs directly from the signed-in admin's
  * Supabase session, mirroring reward-review. The backend handles idempotency
@@ -50,7 +56,23 @@ type Preview = {
   photoUrls: string[];
 };
 
-type Busy = null | "restrict" | "reinstate" | "lookup";
+/** Row shape returned by `/api/admin/search-posts`. */
+type SearchResult = {
+  id: string;
+  title: string | null;
+  priceCents: number | null;
+  status: string | null;
+  sellerId: string | null;
+  sellerNickname: string | null;
+  thumbnailPath: string | null;
+  updatedAt: string | null;
+  createdAt: string | null;
+};
+
+type LookupMode = "id" | "title" | "seller";
+type Busy = null | "restrict" | "reinstate" | "lookup" | "search";
+
+const SEARCH_MIN_LEN = 2;
 
 export default function ListingModerationPage() {
   const [postId, setPostId] = useState("");
@@ -62,6 +84,22 @@ export default function ListingModerationPage() {
 
   const [preview, setPreview] = useState<Preview | null>(null);
   const [previewNote, setPreviewNote] = useState<string | null>(null);
+
+  // Tabbed lookup: search-by-text lives alongside the by-ID preview.
+  const [lookupMode, setLookupMode] = useState<LookupMode>("id");
+  const [searchQuery, setSearchQuery] = useState("");
+  // The query the current results actually belong to. "Load more" is only valid
+  // while the box still matches it, so editing the text can't append a mismatched
+  // page (a new query at the previous query's offset).
+  const [committedQuery, setCommittedQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchNote, setSearchNote] = useState<string | null>(null);
+  const [searchOffset, setSearchOffset] = useState(0);
+  const [searchHasMore, setSearchHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  // Listings acted on this session (id -> outcome), so a search row reflects the
+  // action instead of showing its now-stale pre-action status.
+  const [actedById, setActedById] = useState<Record<string, "restricted" | "reinstated">>({});
 
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -83,8 +121,11 @@ export default function ListingModerationPage() {
     setUnauthorized(true);
     setPreview(null);
     setPreviewNote(null);
+    setSearchResults([]);
+    setSearchHasMore(false);
     setError(UNAUTHORIZED_MESSAGE);
     setBusy(null);
+    setLoadingMore(false);
   }, []);
 
   const trimmedId = postId.trim();
@@ -151,6 +192,98 @@ export default function ListingModerationPage() {
     [postId, unauthorized, handleUnauthorized],
   );
 
+  const runSearch = useCallback(
+    async (append: boolean) => {
+      if (unauthorized || lookupMode === "id") return;
+      const query = searchQuery.trim();
+      if (query.length < SEARCH_MIN_LEN) {
+        setSearchResults([]);
+        setSearchHasMore(false);
+        setSearchNote(`Enter at least ${SEARCH_MIN_LEN} characters to search.`);
+        return;
+      }
+      // Never page a query the visible results don't belong to.
+      if (append && query !== committedQuery) return;
+      if (!isAdminAuthConfigured()) {
+        setError("Supabase is not configured.");
+        return;
+      }
+      const nextOffset = append ? searchOffset : 0;
+      if (append) setLoadingMore(true);
+      else {
+        setBusy("search");
+        setSearchNote(null);
+        setCommittedQuery(query);
+        setActedById({});
+      }
+      try {
+        const params = new URLSearchParams({
+          q: query,
+          mode: lookupMode,
+          offset: String(nextOffset),
+        });
+        const res = await adminApiFetch(`/api/admin/search-posts?${params.toString()}`);
+        if (res.status === 401 || res.status === 403) {
+          handleUnauthorized();
+          return;
+        }
+        const json = (await res.json().catch(() => null)) as {
+          results?: SearchResult[];
+          hasMore?: boolean;
+          error?: string;
+        } | null;
+        if (!res.ok) {
+          if (!append) {
+            setSearchResults([]);
+            setSearchHasMore(false);
+          }
+          setSearchNote(json?.error ?? "Search failed.");
+          return;
+        }
+        const rows = Array.isArray(json?.results) ? json.results : [];
+        setSearchResults((prev) => (append ? [...prev, ...rows] : rows));
+        setSearchOffset(nextOffset + rows.length);
+        setSearchHasMore(Boolean(json?.hasMore));
+        setSearchNote(!append && rows.length === 0 ? "No listings found." : null);
+      } catch (e) {
+        setSearchNote(e instanceof Error ? e.message : "Search failed.");
+      } finally {
+        if (append) setLoadingMore(false);
+        else setBusy(null);
+      }
+    },
+    [searchQuery, committedQuery, lookupMode, searchOffset, unauthorized, handleUnauthorized],
+  );
+
+  const selectResult = useCallback((r: SearchResult) => {
+    setPostId(r.id);
+    setError(null);
+    setPreviewNote(null);
+    setPreview({
+      id: r.id,
+      title: (r.title ?? "").trim() || "(untitled)",
+      priceCents: r.priceCents,
+      status: r.status?.trim() || null,
+      sellerNickname: r.sellerNickname?.trim() || null,
+      photoUrls: [getPostImageUrl(r.thumbnailPath, r.updatedAt)].filter((u): u is string =>
+        Boolean(u),
+      ),
+    });
+  }, []);
+
+  const switchMode = useCallback((mode: LookupMode) => {
+    setLookupMode(mode);
+    // Results belong to a specific mode/query — clear them on a tab switch so a
+    // stale seller list doesn't linger under the title tab. The picked listing
+    // (postId + preview) is intentionally kept.
+    setSearchResults([]);
+    setSearchHasMore(false);
+    setSearchOffset(0);
+    setSearchNote(null);
+    setCommittedQuery("");
+    setActedById({});
+  }, []);
+
   async function restrict() {
     if (!validId || !reason || busy !== null || unauthorized) return;
     setBusy("restrict");
@@ -182,6 +315,8 @@ export default function ListingModerationPage() {
       // "no preview available" copy (which reads like a soft error after success).
       setPreview(null);
       setPreviewNote("This listing is now restricted.");
+      // Reflect it on the matching search row (whatever tab it was found from).
+      setActedById((prev) => ({ ...prev, [trimmedId]: "restricted" }));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to restrict the listing.");
     } finally {
@@ -207,11 +342,16 @@ export default function ListingModerationPage() {
         return;
       }
       const result = unwrapRpc<{ post_id?: number; changed?: boolean }>(data);
+      const nothingToDo = result?.changed === false;
       showToast(
-        result?.changed === false
+        nothingToDo
           ? "Nothing to reinstate — this listing isn't currently restricted."
           : "Listing reinstated. The seller has been notified.",
       );
+      // Only mark the search row when a restriction was actually lifted.
+      if (!nothingToDo) {
+        setActedById((prev) => ({ ...prev, [trimmedId]: "reinstated" }));
+      }
       void lookup(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to reinstate the listing.");
@@ -221,14 +361,15 @@ export default function ListingModerationPage() {
   }
 
   const busyAny = busy !== null;
+  const searchDisabled = busyAny || loadingMore || unauthorized;
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Listing moderation</h1>
         <p className="mt-1 text-sm text-slate-600">
-          Restrict a listing (hides it and lets the seller appeal) or reinstate one by listing ID.
-          Enter the ID to preview, then choose an action.
+          Restrict a listing (hides it and lets the seller appeal) or reinstate one. Find a listing
+          by ID, title, or seller, then choose an action.
         </p>
       </div>
 
@@ -244,37 +385,133 @@ export default function ListingModerationPage() {
         </div>
       )}
 
-      {/* Listing lookup */}
+      {/* Listing lookup — by ID, title, or seller */}
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <label htmlFor="post-id" className="mb-1 block text-xs font-medium text-slate-700">
-          Listing ID
-        </label>
-        <div className="flex flex-wrap items-start gap-2">
-          <input
-            id="post-id"
-            inputMode="numeric"
-            value={postId}
-            onChange={(e) => {
-              setPostId(e.target.value);
-              setPreviewNote(null);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") void lookup(false);
-            }}
-            disabled={busyAny || unauthorized}
-            placeholder="e.g. 12345"
-            className="w-48 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
-          />
-          <button
-            type="button"
-            onClick={() => void lookup(false)}
-            disabled={!validId || busyAny || unauthorized}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
-          >
-            {busy === "lookup" ? "Looking up…" : "Look up"}
-          </button>
+        <div
+          role="group"
+          aria-label="Find a listing by"
+          className="mb-4 inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-sm"
+        >
+          {(
+            [
+              ["id", "By ID"],
+              ["title", "By title"],
+              ["seller", "By seller"],
+            ] as [LookupMode, string][]
+          ).map(([mode, label]) => (
+            <button
+              key={mode}
+              type="button"
+              aria-pressed={lookupMode === mode}
+              onClick={() => switchMode(mode)}
+              disabled={busyAny || loadingMore}
+              className={`rounded-md px-3 py-1.5 font-medium transition disabled:opacity-50 ${
+                lookupMode === mode
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        {previewNote && <p className="mt-2 text-xs text-slate-500">{previewNote}</p>}
+
+        {lookupMode === "id" ? (
+          <>
+            <label htmlFor="post-id" className="mb-1 block text-xs font-medium text-slate-700">
+              Listing ID
+            </label>
+            <div className="flex flex-wrap items-start gap-2">
+              <input
+                id="post-id"
+                inputMode="numeric"
+                value={postId}
+                onChange={(e) => {
+                  setPostId(e.target.value);
+                  setPreviewNote(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") void lookup(false);
+                }}
+                disabled={busyAny || unauthorized}
+                placeholder="e.g. 12345"
+                className="w-48 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              />
+              <button
+                type="button"
+                onClick={() => void lookup(false)}
+                disabled={!validId || busyAny || unauthorized}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              >
+                {busy === "lookup" ? "Looking up…" : "Look up"}
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <label htmlFor="search-q" className="mb-1 block text-xs font-medium text-slate-700">
+              {lookupMode === "title" ? "Listing title" : "Seller nickname"}
+            </label>
+            <div className="flex flex-wrap items-start gap-2">
+              <input
+                id="search-q"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") void runSearch(false);
+                }}
+                disabled={searchDisabled}
+                placeholder={
+                  lookupMode === "title" ? "e.g. bike, sofa, iphone" : "e.g. sooyoung"
+                }
+                className="w-72 max-w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              />
+              <button
+                type="button"
+                onClick={() => void runSearch(false)}
+                disabled={searchQuery.trim().length < SEARCH_MIN_LEN || searchDisabled}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              >
+                {busy === "search" ? "Searching…" : "Search"}
+              </button>
+            </div>
+            <p className="mt-1 text-xs text-slate-400">
+              Matches any part of the {lookupMode === "title" ? "title" : "seller nickname"}.
+              Includes restricted and sold listings.
+            </p>
+            {searchNote && <p className="mt-2 text-xs text-slate-500">{searchNote}</p>}
+
+            {searchResults.length > 0 && (
+              <ul className="mt-3 space-y-2">
+                {searchResults.map((r) => (
+                  <li key={r.id}>
+                    <SearchResultRow
+                      result={r}
+                      selected={validId && trimmedId === r.id}
+                      acted={actedById[r.id]}
+                      onSelect={() => selectResult(r)}
+                    />
+                  </li>
+                ))}
+                {searchHasMore && searchQuery.trim() === committedQuery && (
+                  <li className="flex justify-center pt-1">
+                    <button
+                      type="button"
+                      onClick={() => void runSearch(true)}
+                      disabled={searchDisabled}
+                      className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                    >
+                      {loadingMore ? "Loading…" : "Load more"}
+                    </button>
+                  </li>
+                )}
+              </ul>
+            )}
+          </>
+        )}
+
+        {/* Shared note about the selected/acted listing — visible in every tab. */}
+        {previewNote && <p className="mt-3 text-xs text-slate-500">{previewNote}</p>}
 
         {preview && (
           <div className="mt-4 flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:flex-row">
@@ -325,6 +562,9 @@ export default function ListingModerationPage() {
             Hides the listing. Pick a reason (required). The note is operator-only and never shown
             to the seller.
           </p>
+          {validId && (
+            <p className="mt-1 text-xs font-medium text-slate-500">Acting on listing #{trimmedId}</p>
+          )}
         </div>
         <div>
           <label
@@ -367,7 +607,7 @@ export default function ListingModerationPage() {
           onClick={restrict}
           disabled={!validId || !reason || busyAny || unauthorized}
           title={
-            !validId ? "Enter a numeric listing ID" : !reason ? "Pick a reason first" : undefined
+            !validId ? "Find a listing first" : !reason ? "Pick a reason first" : undefined
           }
           className="inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
         >
@@ -383,17 +623,92 @@ export default function ListingModerationPage() {
             Lifts an active restriction and makes the listing visible again. The seller is notified
             automatically.
           </p>
+          {validId && (
+            <p className="mt-1 text-xs font-medium text-slate-500">Acting on listing #{trimmedId}</p>
+          )}
         </div>
         <button
           type="button"
           onClick={reinstate}
           disabled={!validId || busyAny || unauthorized}
-          title={!validId ? "Enter a numeric listing ID" : undefined}
+          title={!validId ? "Find a listing first" : undefined}
           className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
         >
           {busy === "reinstate" ? "Reinstating…" : "Reinstate listing"}
         </button>
       </section>
     </div>
+  );
+}
+
+function SearchResultRow({
+  result,
+  selected,
+  acted,
+  onSelect,
+}: {
+  result: SearchResult;
+  selected: boolean;
+  acted?: "restricted" | "reinstated";
+  onSelect: () => void;
+}) {
+  const thumb = getPostImageUrl(result.thumbnailPath, result.updatedAt);
+  const title = (result.title ?? "").trim() || "(untitled)";
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition ${
+        selected
+          ? "border-slate-400 bg-slate-100"
+          : "border-slate-200 bg-white hover:bg-slate-50"
+      }`}
+    >
+      {thumb ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={thumb}
+          alt=""
+          className="h-12 w-12 shrink-0 rounded-md border border-slate-200 object-cover"
+        />
+      ) : (
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-slate-100 text-lg">
+          🖼️
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="truncate text-sm font-medium text-slate-900">{title}</span>
+          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+            {formatAudCents(result.priceCents)}
+          </span>
+          {acted ? (
+            <span
+              className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
+                acted === "restricted"
+                  ? "bg-rose-100 text-rose-700"
+                  : "bg-emerald-100 text-emerald-700"
+              }`}
+            >
+              {acted === "restricted" ? "Restricted" : "Reinstated"}
+            </span>
+          ) : (
+            result.status &&
+            result.status !== "available" && (
+              <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                {result.status}
+              </span>
+            )
+          )}
+        </div>
+        <p className="mt-0.5 truncate text-xs text-slate-500">
+          Listing #{result.id}
+          {result.sellerNickname ? ` · ${result.sellerNickname}` : ""}
+        </p>
+      </div>
+      <span className="shrink-0 text-xs font-medium text-slate-400">
+        {acted ? "✓" : selected ? "Selected" : "Select"}
+      </span>
+    </button>
   );
 }
