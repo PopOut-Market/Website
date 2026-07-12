@@ -139,7 +139,10 @@ export function ContactPageContent() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="contact-title" className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <label
+                htmlFor="contact-title"
+                className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+              >
                 {copy.titleLabel}
               </label>
               <input
@@ -156,7 +159,10 @@ export function ContactPageContent() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="contact-main" className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <label
+                htmlFor="contact-main"
+                className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+              >
                 {copy.mainLabel}
               </label>
               <textarea

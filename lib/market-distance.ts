@@ -1,7 +1,10 @@
 import { haversineMeters } from "@/lib/geo/meetup-point";
 import type { MarketProduct } from "@/lib/market-product";
 
-export function formatMarketDistanceKm(meters: number | null | undefined, kmSuffix: string): string {
+export function formatMarketDistanceKm(
+  meters: number | null | undefined,
+  kmSuffix: string,
+): string {
   if (meters == null || Number.isNaN(meters)) {
     return `— ${kmSuffix}`;
   }
@@ -16,7 +19,12 @@ export function applyUserGeolocationToProductDistances(
   userLng: number | undefined,
   kmSuffix: string,
 ): MarketProduct[] {
-  if (userLat == null || userLng == null || !Number.isFinite(userLat) || !Number.isFinite(userLng)) {
+  if (
+    userLat == null ||
+    userLng == null ||
+    !Number.isFinite(userLat) ||
+    !Number.isFinite(userLng)
+  ) {
     return products;
   }
   return products.map((p) => {

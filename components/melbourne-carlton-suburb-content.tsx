@@ -29,8 +29,7 @@ function getCopy(locale: string): CarltonCopy {
     case "zh-Hans":
       return {
         h1: "卡尔顿（Carlton）二手市场指南",
-        lead:
-          "卡尔顿是墨尔本内城区里学术氛围最浓的区域之一，毗邻墨尔本大学与RMIT相关校区，学生与年轻从业者占比高，二手交易需求长期活跃。",
+        lead: "卡尔顿是墨尔本内城区里学术氛围最浓的区域之一，毗邻墨尔本大学与RMIT相关校区，学生与年轻从业者占比高，二手交易需求长期活跃。",
         overviewTitle: "区域概况",
         overviewBody:
           "根据近年人口结构特征，Carlton整体呈年轻化，20-29岁人群占比较高。这里文化多元、生活节奏快，常见二手需求集中在寝具、书桌椅、教材、单车与小家电等“搬家高频品类”。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): CarltonCopy {
     case "zh-Hant":
       return {
         h1: "卡爾頓（Carlton）二手市場指南",
-        lead:
-          "Carlton 是墨爾本內城學術氛圍濃厚的區域之一，鄰近墨爾本大學與RMIT相關校區，學生與年輕工作族群比例高，二手交易長期活躍。",
+        lead: "Carlton 是墨爾本內城學術氛圍濃厚的區域之一，鄰近墨爾本大學與RMIT相關校區，學生與年輕工作族群比例高，二手交易長期活躍。",
         overviewTitle: "區域概況",
         overviewBody:
           "從近年人口結構來看，Carlton 整體偏年輕，20-29歲族群比例較高。此區文化多元、租住流動快，常見二手需求集中在寢具、書桌椅、教材、單車與小家電等高頻品類。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): CarltonCopy {
     default:
       return {
         h1: "Carlton Second-Hand Market Guide",
-        lead:
-          "Carlton is one of Melbourne's strongest student-oriented inner-city suburbs, close to major university zones and known for fast-moving second-hand demand.",
+        lead: "Carlton is one of Melbourne's strongest student-oriented inner-city suburbs, close to major university zones and known for fast-moving second-hand demand.",
         overviewTitle: "Area overview",
         overviewBody:
           "Carlton has a notably young resident mix, with strong student and early-career renter presence. Typical second-hand demand includes bedding, desks, chairs, textbooks, bikes, and small appliances.",

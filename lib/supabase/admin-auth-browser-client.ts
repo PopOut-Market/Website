@@ -29,8 +29,7 @@ export function isAdminAuthConfigured(): boolean {
  * requiring re-login next time. Refreshing the page keeps the session alive.
  */
 const sessionStorageAdapter = {
-  getItem: (key: string) =>
-    typeof window !== "undefined" ? sessionStorage.getItem(key) : null,
+  getItem: (key: string) => (typeof window !== "undefined" ? sessionStorage.getItem(key) : null),
   setItem: (key: string, value: string) => {
     if (typeof window !== "undefined") sessionStorage.setItem(key, value);
   },

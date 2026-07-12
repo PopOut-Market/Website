@@ -39,8 +39,7 @@ const DEMO_SCENES: DemoScene[] = [
 const PHASE_DELAY = [0, 600, 850, 500, 450, 0] as const;
 const HOLD_MS = 3000;
 
-const ease =
-  "transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]";
+const ease = "transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]";
 
 function SafetyGlowWrap({
   glow,
@@ -67,17 +66,9 @@ function SafetyGlowWrap({
 function MapIllustration({ area }: { area: string }) {
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/5 bg-surface-raised">
-      <svg
-        className="absolute inset-0 h-full w-full opacity-40"
-        aria-hidden
-      >
+      <svg className="absolute inset-0 h-full w-full opacity-40" aria-hidden>
         <defs>
-          <pattern
-            id="sz-grid"
-            width="24"
-            height="24"
-            patternUnits="userSpaceOnUse"
-          >
+          <pattern id="sz-grid" width="24" height="24" patternUnits="userSpaceOnUse">
             <path
               d="M 24 0 L 0 0 0 24"
               fill="none"
@@ -107,9 +98,7 @@ function MapIllustration({ area }: { area: string }) {
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
           </svg>
         </div>
-        <p className="text-center text-xs font-semibold text-gray-700">
-          {area}
-        </p>
+        <p className="text-center text-xs font-semibold text-gray-700">{area}</p>
       </div>
     </div>
   );
@@ -168,7 +157,11 @@ export function SafetyZoneDemo({ t }: { t: SiteCopy }) {
       clear();
       return;
     }
-    if (reduced) { setPhase(5); clear(); return; }
+    if (reduced) {
+      setPhase(5);
+      clear();
+      return;
+    }
     let cancelled = false;
 
     const advance = (p: number) => {
@@ -176,10 +169,7 @@ export function SafetyZoneDemo({ t }: { t: SiteCopy }) {
       if (p <= 5) {
         setPhase(p);
         const delay = p < 5 ? (PHASE_DELAY[p] ?? 600) : HOLD_MS;
-        timerRef.current = window.setTimeout(
-          () => (p < 5 ? advance(p + 1) : advance(6)),
-          delay,
-        );
+        timerRef.current = window.setTimeout(() => (p < 5 ? advance(p + 1) : advance(6)), delay);
       } else {
         setPhase(0);
         timerRef.current = window.setTimeout(() => {
@@ -208,20 +198,13 @@ export function SafetyZoneDemo({ t }: { t: SiteCopy }) {
   const isEnglishTitle = t.safetyZoneTitle === "Safer meetups. By design.";
 
   const vis = (atPhase: number) =>
-    phase >= atPhase
-      ? "translate-y-0 opacity-100"
-      : "translate-y-3 opacity-0";
+    phase >= atPhase ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0";
 
   const mapCard = (
     <div className="flex flex-col gap-3 p-5">
       <div className={`${ease} ${vis(1)}`}>
         <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <svg
-            className="h-3.5 w-3.5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden
-          >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
             <path
               fillRule="evenodd"
               d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.274 1.765 11.842 11.842 0 0 0 .976.544l.062.029.018.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"
@@ -244,9 +227,7 @@ export function SafetyZoneDemo({ t }: { t: SiteCopy }) {
           }`}
         >
           <div className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-brand-200 border-t-brand-600" />
-          <span className="text-xs font-medium text-brand-800">
-            {t.safetyZoneFinding}
-          </span>
+          <span className="text-xs font-medium text-brand-800">{t.safetyZoneFinding}</span>
         </div>
       </div>
     </div>

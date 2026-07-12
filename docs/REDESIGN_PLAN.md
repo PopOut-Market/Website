@@ -14,19 +14,21 @@ the web.
 
 ## 0. Locked decisions
 
-| Decision | Choice |
-|---|---|
-| Neutral identity | **Pure grey** (chroma 0), app-exact. Reverses the v1 warm-taupe ramp. |
-| Surface depth | **Flat-first + a small, rule-bound web-earned affordance allow-list** (below). |
-| Delivery | Full plan first (this doc) → approval → build. |
+| Decision         | Choice                                                                         |
+| ---------------- | ------------------------------------------------------------------------------ |
+| Neutral identity | **Pure grey** (chroma 0), app-exact. Reverses the v1 warm-taupe ramp.          |
+| Surface depth    | **Flat-first + a small, rule-bound web-earned affordance allow-list** (below). |
+| Delivery         | Full plan first (this doc) → approval → build.                                 |
 
 ### Web-earned affordance allow-list (the only deviations from app-flat)
+
 - **Hover:** border-color shift to brand `#FF8C00`. A **1–2px `translateY` lift is allowed on cards only** (listing/feature/hub cards), **never** on inline chrome micro-controls — those shift border color only. **Never** a shadow swap.
 - **Resting shadows:** soft, neutral-black, low opacity on cards.
 - **Section rhythm:** alternate section backgrounds within the grey ladder — **zero gradients**.
 - **Motion:** restrained scroll-in (fade + ≤8px translate), gated by `prefers-reduced-motion`.
 
 ### Kill-list (remove everywhere)
+
 4-stop orange text-gradient (→ flat `#FF8C00`) · `shadow-pop` orange glow · **all `blur-[…]`** (hero suburb, carousel coverflow, 5 demos) · pastel/brand `bg-gradient` washes · hover shadow-escalation · `font-extrabold`/`font-black` (cap 700) · floating rounded-pill header (→ flat full-width `#EEEEEE` bar) · `rounded-full` **buttons** · `backdrop-blur` · the global `Inter` + `Avenir Next`/`Nunito` font declarations.
 
 ---
@@ -60,7 +62,7 @@ All other sections reference these values; none restate them.
  */
 @theme {
   /* Brand orange — 500 anchor; 600 hover (true darken); 700 pressed = app brandPressed #CC3200. */
-  --color-brand-50:  #fff4e5;
+  --color-brand-50: #fff4e5;
   --color-brand-100: #ffe3bf;
   --color-brand-200: #ffce8a;
   --color-brand-300: #ffb85c;
@@ -72,7 +74,7 @@ All other sections reference these values; none restate them.
   --color-brand-900: #7a1e00;
 
   /* Pure-grey neutral ramp (chroma 0). Replaces the warm taupe ramp. */
-  --color-gray-50:  #f9f9f9; /* card / base surface (lightest) */
+  --color-gray-50: #f9f9f9; /* card / base surface (lightest) */
   --color-gray-100: #f3f3f3; /* raised surface */
   --color-gray-200: #eeeeee; /* chrome (flat header/footer bar) */
   --color-gray-300: #e8e8e8; /* page background */
@@ -85,78 +87,83 @@ All other sections reference these values; none restate them.
   --color-gray-950: #0d0d0d; /* body text darkest */
 
   /* Semantic surface aliases (optional spellings for the same ladder steps). */
-  --color-surface-base:       #f9f9f9;
-  --color-surface-raised:     #f3f3f3;
-  --color-surface-chrome:     #eeeeee;
+  --color-surface-base: #f9f9f9;
+  --color-surface-raised: #f3f3f3;
+  --color-surface-chrome: #eeeeee;
   --color-surface-background: #e8e8e8;
 
   /* Brand tint (soft orange fill behind dark/white text only). */
   --color-brand-tint: rgb(255 140 0 / 0.12);
 
   /* Secondary / semantic (used sparingly; never as small text on light). */
-  --color-info:    #00a6f4;  --color-info-tint: rgb(0 166 244 / 0.12);
+  --color-info: #00a6f4;
+  --color-info-tint: rgb(0 166 244 / 0.12);
   --color-success: #22c55e;
-  --color-error:   #ef4444;
+  --color-error: #ef4444;
   --color-warning: #f59e0b;
 
   /* Neutral, low-opacity, flat shadows. Stock tiers overridden to neutral too. */
   --shadow-2xs: 0 1px 1px 0 rgb(0 0 0 / 0.04);
-  --shadow-xs:  0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.06);
-  --shadow:     0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-md:  0 4px 12px -2px rgb(0 0 0 / 0.10);
-  --shadow-lg:  0 8px 24px -6px rgb(0 0 0 / 0.12);
-  --shadow-xl:  0 16px 40px -12px rgb(0 0 0 / 0.12);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 8px 24px -6px rgb(0 0 0 / 0.12);
+  --shadow-xl: 0 16px 40px -12px rgb(0 0 0 / 0.12);
 
   /* App-named set {small, card, medium, large}. */
-  --shadow-small:  0 1px 2px 0 rgb(0 0 0 / 0.06);
-  --shadow-card:   0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
-  --shadow-medium: 0 4px 12px -2px rgb(0 0 0 / 0.10);
-  --shadow-large:  0 8px 24px -6px rgb(0 0 0 / 0.12);
+  --shadow-small: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
+  --shadow-medium: 0 4px 12px -2px rgb(0 0 0 / 0.1);
+  --shadow-large: 0 8px 24px -6px rgb(0 0 0 / 0.12);
 
   /* Compat alias: the ~51 existing `shadow-soft` usages stay valid, now neutral+flat. */
-  --shadow-soft:   0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
+  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.06), 0 1px 1px -1px rgb(0 0 0 / 0.04);
   /* --shadow-pop intentionally REMOVED (orange glow killed). */
 
   /* NOTE: radius tokens are NOT overridden — see §2.5. */
 }
 
-:root { color-scheme: light; }
+:root {
+  color-scheme: light;
+}
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 ```
 
 **Why this is safe:** Tailwind v4 re-maps `bg-gray-*`, `text-gray-*`, `border-gray-*`, `bg-white`, and the stock `shadow-*` from their warm values to pure-grey/neutral **centrally** — so the bulk of the site recolors with **zero per-component edits**. Only the kill-list classes need find/replace.
 
 ### 2.2 Fonts
+
 - **Delete** the global `Inter` declaration (now done in `body` above) and the `.font-latin-rounded` body of `"Avenir Next"/"Nunito"`.
 - **Keep the class name** `.font-latin-rounded`; swap its contents to the system stack (so `lib/site-fonts.ts` and all `LOCALE_FONT_CLASS` consumers need **no change**):
 
 ```css
 .font-latin-rounded {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-               "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 ```
+
 - **Keep unchanged:** `.font-zh-hans`, `.font-zh-hant`, `.font-korean-rounded`, `.font-japanese-rounded`.
 
 ### 2.3 Type scale (system font, weight ≤ 700, ≤ 3 sizes per viewport)
 
-| Role | Size / line-height | Weight | Tailwind |
-|---|---|---|---|
-| caption / chip | 12 / 16 | 400–600 | `text-xs leading-4` |
-| meta / label | 14 / 20 | 400–600 | `text-sm leading-5` |
-| body | 16 / 24 | 400 | `text-base leading-6` |
-| lead | 18 / 28 | 400–600 | `text-lg leading-7` |
-| subtitle | 20 / 28 | 600 | `text-xl leading-7 font-semibold` |
-| section H2 | 24 / 32 | 700 | `text-2xl leading-8 font-bold` |
-| sub-display | 32 / 40 | 700 | `text-[2rem] leading-10 font-bold` |
-| display (app jump) | 44 / 48 | 700 | `text-[2.75rem] leading-[3rem] font-bold` |
-| **hero (web clamp)** | clamp 40→60 | 700 | `text-[clamp(2.5rem,6vw,3.75rem)] font-bold leading-[1.05] tracking-tight` |
+| Role                 | Size / line-height | Weight  | Tailwind                                                                   |
+| -------------------- | ------------------ | ------- | -------------------------------------------------------------------------- |
+| caption / chip       | 12 / 16            | 400–600 | `text-xs leading-4`                                                        |
+| meta / label         | 14 / 20            | 400–600 | `text-sm leading-5`                                                        |
+| body                 | 16 / 24            | 400     | `text-base leading-6`                                                      |
+| lead                 | 18 / 28            | 400–600 | `text-lg leading-7`                                                        |
+| subtitle             | 20 / 28            | 600     | `text-xl leading-7 font-semibold`                                          |
+| section H2           | 24 / 32            | 700     | `text-2xl leading-8 font-bold`                                             |
+| sub-display          | 32 / 40            | 700     | `text-[2rem] leading-10 font-bold`                                         |
+| display (app jump)   | 44 / 48            | 700     | `text-[2.75rem] leading-[3rem] font-bold`                                  |
+| **hero (web clamp)** | clamp 40→60        | 700     | `text-[clamp(2.5rem,6vw,3.75rem)] font-bold leading-[1.05] tracking-tight` |
 
 Hierarchy via **size + weight + space**, never color or decoration. **No `font-extrabold`/`font-black`.**
 
@@ -164,31 +171,31 @@ Hierarchy via **size + weight + space**, never color or decoration. **No `font-e
 
 Default 4px steps: `{0,4,8,12,16,24,32,48,64,96}` → Tailwind `{0,1,2,3,4,6,8,12,16,24}`.
 
-| Off-grid found | px | → Tailwind | Rule |
-|---|---|---|---|
-| `px-[1.05rem]` | 16.8 | `px-4` | — |
-| `px-[0.525rem]` | 8.4 | `px-2` | — |
-| `md:px-5` | 20 | `md:px-6` | — |
-| `gap-3.5` | 14 | `gap-4` | — |
-| `p-3.5` | 14 | `p-4` | — |
-| `py-2.5` | 10 | **`py-3`** if interactive (≥44px tap target), else `py-2` | tap-target is the tie-breaker |
-| `space-y-1.5` | 6 | `space-y-2` | — |
-| `mt-7` / `space-y-7` | 28 | `mt-6` (`24`) default; `mt-8` (`32`) at section breaks | — |
-| `space-y-5` | 20 | `space-y-6` | — |
-| `h-4.5 w-4.5` | 18 | `h-5 w-5` | icon |
-| `h-3.5 w-3.5` | 14 | `h-4 w-4` | icon |
+| Off-grid found       | px   | → Tailwind                                                | Rule                          |
+| -------------------- | ---- | --------------------------------------------------------- | ----------------------------- |
+| `px-[1.05rem]`       | 16.8 | `px-4`                                                    | —                             |
+| `px-[0.525rem]`      | 8.4  | `px-2`                                                    | —                             |
+| `md:px-5`            | 20   | `md:px-6`                                                 | —                             |
+| `gap-3.5`            | 14   | `gap-4`                                                   | —                             |
+| `p-3.5`              | 14   | `p-4`                                                     | —                             |
+| `py-2.5`             | 10   | **`py-3`** if interactive (≥44px tap target), else `py-2` | tap-target is the tie-breaker |
+| `space-y-1.5`        | 6    | `space-y-2`                                               | —                             |
+| `mt-7` / `space-y-7` | 28   | `mt-6` (`24`) default; `mt-8` (`32`) at section breaks    | —                             |
+| `space-y-5`          | 20   | `space-y-6`                                               | —                             |
+| `h-4.5 w-4.5`        | 18   | `h-5 w-5`                                                 | icon                          |
+| `h-3.5 w-3.5`        | 14   | `h-4 w-4`                                                 | icon                          |
 
 ### 2.5 Radius — canonical = **Tailwind v4 defaults** (do NOT override `--radius-*`)
 
 This deliberately rejects the draft idea of redefining `--radius-2xl` to 48 (which would silently resize all 109 existing card usages). Tailwind defaults already match the app's M3 intent:
 
-| Use | Class | px | App token |
-|---|---|---|---|
-| **Buttons** | `rounded-xl` | 12 | md |
-| **Cards** | `rounded-2xl` | 16 | lg | ← 109 existing usages **stay as-is** |
-| **Large feature cards / sheets** | `rounded-3xl` | 24 | xl |
-| **Chips / tags / avatars / status dots** | `rounded-full` | — | full |
-| small inner clips | `rounded-lg` | 8 | sm |
+| Use                                      | Class          | px  | App token |
+| ---------------------------------------- | -------------- | --- | --------- | ------------------------------------ |
+| **Buttons**                              | `rounded-xl`   | 12  | md        |
+| **Cards**                                | `rounded-2xl`  | 16  | lg        | ← 109 existing usages **stay as-is** |
+| **Large feature cards / sheets**         | `rounded-3xl`  | 24  | xl        |
+| **Chips / tags / avatars / status dots** | `rounded-full` | —   | full      |
+| small inner clips                        | `rounded-lg`   | 8   | sm        |
 
 Only change needed for radius: **`rounded-full` buttons → `rounded-xl`**, and replace stray arbitrary `rounded-[20px]`/`rounded-[24px]` with `rounded-3xl`. Avoid `rounded-[Npx]` going forward — use the named classes.
 
@@ -199,12 +206,11 @@ Only change needed for radius: **`rounded-full` buttons → `rounded-xl`**, and 
 export const RADIUS = { none: 0, xs: 4, sm: 8, md: 12, lg: 16, xl: 24, full: 9999 } as const;
 
 // Containers — snap onto the grid. Outer page padding 24 → up.
-export const SHELL_X   = "px-6 sm:px-8";                          // 24 → 32
+export const SHELL_X = "px-6 sm:px-8"; // 24 → 32
 export const INNER_MAX = "mx-auto w-full max-w-5xl px-4 sm:px-6 md:px-8"; // 16 → 24 → 32
 
 // Card — flat; bg chosen per the tonal-layering rule (§3 Card). Default sits on a non-white section.
-export const CARD_CLASS =
-  "rounded-2xl border border-black/5 bg-gray-50 shadow-card";
+export const CARD_CLASS = "rounded-2xl border border-black/5 bg-gray-50 shadow-card";
 
 // Primary CTA — soft rounded-rect, flat, pressed = brand-700 (#CC3200), with AA focus ring.
 export const PRIMARY_BUTTON_CLASS =
@@ -231,7 +237,7 @@ Every page composes these primitives; no page reinvents a button/card.
 
 - **Button** — base `inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 disabled:opacity-50`. Variants: `primary` (`bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700`), `secondary` (`bg-gray-50 border border-black/10 text-gray-900 hover:border-brand-500`), `ghost` (`hover:bg-gray-100`), `info` (rare, `text-info border hover:border-info`). Sizes `sm h-9 px-4 text-sm` / `md h-11 px-6 text-base` / `lg h-14 px-8 text-lg`.
 - **StoreBadge / StoreBadgeRow** — official assets only, never recolored/retyped; `h-12 w-auto`, min 40px, links to `APP_STORE_URL`/`GOOGLE_PLAY_URL`, descriptive `aria-label`. Place only on light tones (`#FFF`/`#F9F9F9`/`#EEEEEE`). Row: `flex flex-wrap items-center gap-4`.
-- **Card** — `rounded-2xl border border-black/5 [surface] shadow-card`. **Tonal rule:** card is one step lighter than its section. **White-section exception:** on a `bg-white` section a card cannot be lighter — keep the card `bg-white` and separate it with the hairline border + resting shadow (never go *darker*). Interactive variant adds `transition-[border-color,transform] hover:border-brand-500 hover:-translate-y-px motion-reduce:transform-none focus-visible:…` (lift is **cards only**).
+- **Card** — `rounded-2xl border border-black/5 [surface] shadow-card`. **Tonal rule:** card is one step lighter than its section. **White-section exception:** on a `bg-white` section a card cannot be lighter — keep the card `bg-white` and separate it with the hairline border + resting shadow (never go _darker_). Interactive variant adds `transition-[border-color,transform] hover:border-brand-500 hover:-translate-y-px motion-reduce:transform-none focus-visible:…` (lift is **cards only**).
 - **Badge / Chip / Tag** — `rounded-full`. Colored fills carry **near-black text** (`text-gray-900`) — never orange/blue as the small text. "New" badge `bg-brand-500 text-white text-xs`. Selected chip `bg-brand-tint text-gray-900 border border-brand-500`. Status: success/info tints with dark text.
 - **Section / SectionHeading / Eyebrow** — `Section` takes a `tone` prop (`white|50|100|200|300`) → `bg-*` + `py-16 sm:py-24`. Eyebrow `text-sm font-semibold uppercase tracking-wide text-gray-600` (neutral; if orange wanted use `text-brand-700` which passes AA). Heading uses the type scale.
 - **PhoneFrame** — device shell around a **real screenshot** (`alt` required), `rounded-[2.5rem] border border-black/10 bg-gray-900 p-2 shadow-medium`, inner screen `rounded-[2rem] overflow-hidden`, `Image fill object-cover`. No blur, no glow, ever. (Device corner radius is decorative geometry, exempt from the M3 scale.)
@@ -284,15 +290,15 @@ Background cadence (zero gradients): `#FFF → #F9F9F9 → #F3F3F3 → #FFF → 
 
 Run from repo root after the build. Each must return **zero** (except where noted):
 
-| Check | Command | Expect |
-|---|---|---|
-| No blur anywhere | `grep -rn "blur-\[" app components` | 0 |
-| No backdrop-blur | `grep -rn "backdrop-blur" app components` | 0 |
-| No gradients/clip-text | `grep -rn "bg-clip-text\|bg-gradient\|linear-gradient\|conic-gradient" app components` | 0 (audit each before removal) |
-| No orange glow | `grep -rn "shadow-pop" app components` | 0 |
-| Weight cap | `grep -rn "font-extrabold\|font-black\|font-\[8\|9" app components` | 0 |
-| Off-grid spacing | `grep -rn "\[1.05rem\]\|\[0.525rem\]\|-3.5\|-2.5\|-1.5\|mt-7\|space-y-7\|space-y-5\|-4.5 " app components` | 0 |
-| Rounded-full audit | `grep -rn "rounded-full" app components` | only chips/tags/avatars/dots remain |
+| Check                  | Command                                                                                                    | Expect                              |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| No blur anywhere       | `grep -rn "blur-\[" app components`                                                                        | 0                                   |
+| No backdrop-blur       | `grep -rn "backdrop-blur" app components`                                                                  | 0                                   |
+| No gradients/clip-text | `grep -rn "bg-clip-text\|bg-gradient\|linear-gradient\|conic-gradient" app components`                     | 0 (audit each before removal)       |
+| No orange glow         | `grep -rn "shadow-pop" app components`                                                                     | 0                                   |
+| Weight cap             | `grep -rn "font-extrabold\|font-black\|font-\[8\|9" app components`                                        | 0                                   |
+| Off-grid spacing       | `grep -rn "\[1.05rem\]\|\[0.525rem\]\|-3.5\|-2.5\|-1.5\|mt-7\|space-y-7\|space-y-5\|-4.5 " app components` | 0                                   |
+| Rounded-full audit     | `grep -rn "rounded-full" app components`                                                                   | only chips/tags/avatars/dots remain |
 
 **Blur enumeration (all 7 sites):** hero suburb (`home-page-content.tsx:77`, also `scale-[0.97]`), hero-carousel coverflow `filter: blur`, and the 5 demos (`safety-zone-demo`, `ai-post-demo`, `schedule-demo`, `student-verify-demo`, `translation-demo`). **Brand-gradient UI (not just text):** `student-verify-demo:250` avatar, `translation-demo:78` chat bubble → flat `brand-500` fill.
 
@@ -303,6 +309,7 @@ Run from repo root after the build. Each must return **zero** (except where note
 ---
 
 ## 8. Accessibility checklist (WCAG 2.1 AA)
+
 - `#FF8C00` & `#00A6F4` **never** as small text on light — only as fills behind white/dark text, or large (≥18.66px) bold accents. `#CC3200`/`brand-700` (≈ AA on white) allowed for eyebrows; default eyebrows to neutral grey.
 - Chips/tags/eyebrows on tint fills carry **near-black text**.
 - Focus-visible rings on all CTAs, inputs, links.
@@ -313,6 +320,7 @@ Run from repo root after the build. Each must return **zero** (except where note
 ---
 
 ## 9. Assets & open decisions needed from you (before build)
+
 1. **Real app screenshots** for the PhoneFrames (hero, how-it-works ×3, feature rows). The current demos are simulated UI.
 2. **Real store URLs + app IDs** — `APP_STORE_URL`/`GOOGLE_PLAY_URL` are placeholders (`id0000000000` / `com.example.popout`).
 3. **White-variant store-badge SVG** — only black exists; needed only if a `#FF8C00` band sits behind badges (otherwise we place badges on light surfaces and skip this).
@@ -321,6 +329,7 @@ Run from repo root after the build. Each must return **zero** (except where note
 ---
 
 ## 10. Proposed build sequence
+
 1. **Token layer** — `app/globals.css` `@theme` + `lib/site-config.ts` (§2). Build green; the whole site recolors to pure grey automatically. ← biggest visual shift, lowest risk.
 2. **Component kit** (§3) — Button, Card, StoreBadge, Chip, Section/Eyebrow, PhoneFrame, Stat, MotionReveal.
 3. **Global chrome** (§4) — flat header, footer, sticky mobile bar, language modal.

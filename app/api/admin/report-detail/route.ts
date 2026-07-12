@@ -119,7 +119,12 @@ export async function GET(req: Request) {
         .eq("id", conversationId)
         .maybeSingle();
       if (convErr) return NextResponse.json({ error: convErr.message }, { status: 500 });
-      const c = conv as { id: string; post_id: number | null; buyer_id: string | null; seller_id: string | null } | null;
+      const c = conv as {
+        id: string;
+        post_id: number | null;
+        buyer_id: string | null;
+        seller_id: string | null;
+      } | null;
 
       const [postRes, msgsRes] = await Promise.all([
         c?.post_id

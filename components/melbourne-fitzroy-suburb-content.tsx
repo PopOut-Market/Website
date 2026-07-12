@@ -29,8 +29,7 @@ function getCopy(locale: string): FitzroyCopy {
     case "zh-Hans":
       return {
         h1: "菲茨罗伊（Fitzroy）二手市场指南",
-        lead:
-          "Fitzroy 位于墨尔本内城区北侧，以独立文化、创意产业和复古消费场景闻名。这里聚集了大量年轻住户与创意从业者，二手交易风格鲜明、更新频繁。",
+        lead: "Fitzroy 位于墨尔本内城区北侧，以独立文化、创意产业和复古消费场景闻名。这里聚集了大量年轻住户与创意从业者，二手交易风格鲜明、更新频繁。",
         overviewTitle: "区域概况",
         overviewBody:
           "Fitzroy 的二手需求不仅集中在家具和日常家电，还包括古着服饰、装饰摆件、乐器和个性化通勤用品。区域内店铺与社区活动密度高，商品类型更偏向“实用 + 风格化”并存。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): FitzroyCopy {
     case "zh-Hant":
       return {
         h1: "菲茨羅伊（Fitzroy）二手市場指南",
-        lead:
-          "Fitzroy 位於墨爾本內城北側，以獨立文化、創意產業與復古消費場景聞名。區內聚集大量年輕住戶與創意從業者，二手交易風格鮮明且更新頻繁。",
+        lead: "Fitzroy 位於墨爾本內城北側，以獨立文化、創意產業與復古消費場景聞名。區內聚集大量年輕住戶與創意從業者，二手交易風格鮮明且更新頻繁。",
         overviewTitle: "區域概況",
         overviewBody:
           "Fitzroy 二手需求除了家具與日常家電，也涵蓋古著、裝飾擺件、樂器與個性化通勤用品。此區商品供給呈現「實用 + 風格化」並存的特點。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): FitzroyCopy {
     default:
       return {
         h1: "Fitzroy Second-Hand Market Guide",
-        lead:
-          "Fitzroy is one of Melbourne's most creative inner suburbs, known for independent culture, vintage retail energy, and a strong young-resident base.",
+        lead: "Fitzroy is one of Melbourne's most creative inner suburbs, known for independent culture, vintage retail energy, and a strong young-resident base.",
         overviewTitle: "Area overview",
         overviewBody:
           "Second-hand demand in Fitzroy goes beyond standard furniture and appliances. Popular categories include vintage clothing, decor pieces, music-related gear, and distinctive lifestyle items.",

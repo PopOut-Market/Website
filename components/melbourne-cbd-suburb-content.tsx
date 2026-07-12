@@ -29,8 +29,7 @@ function getCopy(locale: string): CbdCopy {
     case "zh-Hans":
       return {
         h1: "墨尔本中央商务区（Melbourne CBD）二手市场指南",
-        lead:
-          "墨尔本CBD是维多利亚州核心商业与文化区域，拥有密集高层建筑、交通枢纽与大学资源（如RMIT市中心校区），兼具商务与学术氛围。",
+        lead: "墨尔本CBD是维多利亚州核心商业与文化区域，拥有密集高层建筑、交通枢纽与大学资源（如RMIT市中心校区），兼具商务与学术氛围。",
         overviewTitle: "区域概况",
         overviewBody:
           "CBD及其周边城市核心地带常住与流动人口密集，上班族、学生、短租人群占比高，推动了本地二手交易的持续需求。常见品类包括办公家具、电子设备、出租公寓家具、学生教材与自行车等。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): CbdCopy {
     case "zh-Hant":
       return {
         h1: "墨爾本中央商務區（Melbourne CBD）二手市場指南",
-        lead:
-          "墨爾本CBD是維多利亞州核心商業與文化區域，擁有密集高樓、交通樞紐與大學資源（如RMIT市中心校區），兼具商務與學術氛圍。",
+        lead: "墨爾本CBD是維多利亞州核心商業與文化區域，擁有密集高樓、交通樞紐與大學資源（如RMIT市中心校區），兼具商務與學術氛圍。",
         overviewTitle: "區域概況",
         overviewBody:
           "CBD與周邊城市核心地帶常住與流動人口密集，上班族、學生與短租族群比例高，帶動在地二手交易需求。常見品類包含辦公家具、電子設備、公寓家具、教材與自行車等。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): CbdCopy {
     default:
       return {
         h1: "Melbourne CBD Second-Hand Market Guide",
-        lead:
-          "Melbourne CBD is one of Victoria's core business and cultural districts, with dense high-rise living, major transit hubs, and nearby university activity including RMIT's city campus.",
+        lead: "Melbourne CBD is one of Victoria's core business and cultural districts, with dense high-rise living, major transit hubs, and nearby university activity including RMIT's city campus.",
         overviewTitle: "Area overview",
         overviewBody:
           "The CBD and surrounding city-core precincts have high resident and visitor turnover. This supports strong second-hand demand for apartment furniture, electronics, study materials, and mobility items like bikes.",

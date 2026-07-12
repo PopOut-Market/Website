@@ -18,25 +18,29 @@ const DEMO_ITEMS: DemoItem[] = [
     emoji: "🪑",
     title: "Wooden Dining Table",
     category: "Furniture",
-    description: "Solid oak dining table, seats 4–6. Minor surface scratches, great condition overall.",
+    description:
+      "Solid oak dining table, seats 4–6. Minor surface scratches, great condition overall.",
   },
   {
     emoji: "🚲",
     title: "Mountain Bike — 21 Speed",
     category: "Sports & Outdoors",
-    description: "Shimano gears, front suspension fork. Tires recently replaced. Perfect for weekend rides.",
+    description:
+      "Shimano gears, front suspension fork. Tires recently replaced. Perfect for weekend rides.",
   },
   {
     emoji: "📱",
     title: "iPhone 14 Pro — 128 GB",
     category: "Electronics",
-    description: "Space Black, battery health 91%. Includes original box and charger. Screen in perfect condition.",
+    description:
+      "Space Black, battery health 91%. Includes original box and charger. Screen in perfect condition.",
   },
   {
     emoji: "🎸",
     title: "Acoustic Guitar — Yamaha F310",
     category: "Musical Instruments",
-    description: "Spruce top, meranti back and sides. Lightly used with a soft case. Sounds warm and full.",
+    description:
+      "Spruce top, meranti back and sides. Lightly used with a soft case. Sounds warm and full.",
   },
 ];
 
@@ -71,10 +75,18 @@ function ViewfinderCorners({ visible }: { visible: boolean }) {
   const show = visible ? "opacity-100 scale-100" : "opacity-0 scale-75";
   return (
     <>
-      <span className={`${base} ${show} left-3 top-3 rounded-tl-md border-l-[2.5px] border-t-[2.5px]`} />
-      <span className={`${base} ${show} right-3 top-3 rounded-tr-md border-r-[2.5px] border-t-[2.5px]`} />
-      <span className={`${base} ${show} bottom-3 left-3 rounded-bl-md border-b-[2.5px] border-l-[2.5px]`} />
-      <span className={`${base} ${show} bottom-3 right-3 rounded-br-md border-b-[2.5px] border-r-[2.5px]`} />
+      <span
+        className={`${base} ${show} left-3 top-3 rounded-tl-md border-l-[2.5px] border-t-[2.5px]`}
+      />
+      <span
+        className={`${base} ${show} right-3 top-3 rounded-tr-md border-r-[2.5px] border-t-[2.5px]`}
+      />
+      <span
+        className={`${base} ${show} bottom-3 left-3 rounded-bl-md border-b-[2.5px] border-l-[2.5px]`}
+      />
+      <span
+        className={`${base} ${show} bottom-3 right-3 rounded-br-md border-b-[2.5px] border-r-[2.5px]`}
+      />
     </>
   );
 }
@@ -137,8 +149,15 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
   }, []);
 
   useEffect(() => {
-    if (!active) { clear(); return; }
-    if (reduced) { setPhase(6); clear(); return; }
+    if (!active) {
+      clear();
+      return;
+    }
+    if (reduced) {
+      setPhase(6);
+      clear();
+      return;
+    }
     let cancelled = false;
 
     const advance = (p: number) => {
@@ -155,11 +174,8 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
       }
       if (p <= 6) {
         setPhase(p);
-        const delay = p < 6 ? PHASE_DELAY[p] ?? 600 : HOLD_MS;
-        timerRef.current = window.setTimeout(
-          () => (p < 6 ? advance(p + 1) : advance(7)),
-          delay,
-        );
+        const delay = p < 6 ? (PHASE_DELAY[p] ?? 600) : HOLD_MS;
+        timerRef.current = window.setTimeout(() => (p < 6 ? advance(p + 1) : advance(7)), delay);
       } else {
         setPhase(0);
         timerRef.current = window.setTimeout(() => {
@@ -175,7 +191,10 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
       advance(phase);
     }
 
-    return () => { cancelled = true; clear(); };
+    return () => {
+      cancelled = true;
+      clear();
+    };
   }, [active, itemIdx, reduced]);
 
   const item = DEMO_ITEMS[itemIdx]!;
@@ -198,13 +217,15 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
     <div className="flex flex-col gap-3.5 px-5 py-5">
       <div className={`${ease} ${vis(3)}`}>
         <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <AiStar />{t.aiPostDemoFieldTitle}
+          <AiStar />
+          {t.aiPostDemoFieldTitle}
         </p>
         <p className="mt-0.5 text-base font-semibold text-gray-900">{item.title}</p>
       </div>
       <div className={`${ease} ${vis(4)}`}>
         <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <AiStar />{t.marketPostCategoryLabel}
+          <AiStar />
+          {t.marketPostCategoryLabel}
         </p>
         <span className="mt-1 inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
           {item.category}
@@ -212,7 +233,8 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
       </div>
       <div className={`${ease} ${vis(5)}`}>
         <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <AiStar />{t.marketPostDescriptionHeading}
+          <AiStar />
+          {t.marketPostDescriptionHeading}
         </p>
         <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{item.description}</p>
       </div>

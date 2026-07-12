@@ -21,7 +21,13 @@ type ReportRow = {
   reportedId: string | null;
 };
 
-type Stats = { total: number; pending: number; reviewed: number; actioned: number; dismissed: number };
+type Stats = {
+  total: number;
+  pending: number;
+  reviewed: number;
+  actioned: number;
+  dismissed: number;
+};
 type ActionStatus = "pending" | "reviewed" | "actioned" | "dismissed";
 
 type PostDetail = {
@@ -158,7 +164,12 @@ export default function ReportsPage() {
       const res = await adminApiFetch("/api/admin/reports", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: row.id, kind: row.kind, status, admin_notes: noteFor[row.id] ?? "" }),
+        body: JSON.stringify({
+          id: row.id,
+          kind: row.kind,
+          status,
+          admin_notes: noteFor[row.id] ?? "",
+        }),
       });
       if (!res.ok) {
         alert("Update failed. Please try again.");
@@ -166,7 +177,9 @@ export default function ReportsPage() {
       }
       setRows((prev) => {
         const next = prev.map((r) =>
-          r.id === row.id ? { ...r, status, admin_notes: noteFor[row.id]?.trim() || r.admin_notes } : r,
+          r.id === row.id
+            ? { ...r, status, admin_notes: noteFor[row.id]?.trim() || r.admin_notes }
+            : r,
         );
         setStats(recomputeStats(next));
         return next;
@@ -205,7 +218,9 @@ export default function ReportsPage() {
             type="button"
             onClick={() => setFilter(s)}
             className={`rounded-md px-3 py-1 text-xs font-medium transition ${
-              filter === s ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              filter === s
+                ? "bg-slate-900 text-white"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             {s}
@@ -273,7 +288,9 @@ function ReportCard({
             <div className="flex flex-wrap items-center gap-2">
               <span
                 className={`rounded px-1.5 py-0.5 text-xs font-medium ${
-                  row.kind === "post" ? "bg-indigo-100 text-indigo-700" : "bg-rose-100 text-rose-700"
+                  row.kind === "post"
+                    ? "bg-indigo-100 text-indigo-700"
+                    : "bg-rose-100 text-rose-700"
                 }`}
               >
                 {row.kind === "post" ? "post report" : "user report"}
@@ -347,7 +364,9 @@ function ReportCard({
                 re-open
               </button>
               {row.admin_notes && (
-                <span className="block max-w-44 truncate text-xs text-slate-400">{row.admin_notes}</span>
+                <span className="block max-w-44 truncate text-xs text-slate-400">
+                  {row.admin_notes}
+                </span>
               )}
             </div>
           )}
@@ -425,7 +444,9 @@ function ChatThread({
               type="button"
               onClick={() => setLang(t.key)}
               className={`px-2 py-0.5 text-[11px] font-medium transition ${
-                lang === t.key ? "bg-slate-900 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+                lang === t.key
+                  ? "bg-slate-900 text-white"
+                  : "bg-white text-slate-600 hover:bg-slate-50"
               }`}
             >
               {t.label}
@@ -434,7 +455,9 @@ function ChatThread({
         </div>
       </div>
       {messages.length === 0 ? (
-        <p className="px-3 py-6 text-center text-sm text-slate-400">No messages in this conversation.</p>
+        <p className="px-3 py-6 text-center text-sm text-slate-400">
+          No messages in this conversation.
+        </p>
       ) : (
         <div className="max-h-[28rem] space-y-2 overflow-y-auto p-3">
           {messages.map((m) => {

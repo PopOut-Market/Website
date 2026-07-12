@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SuburbBoundaryMap } from "@/components/suburb-boundary-map";
-import { MARKET_POST_DETAIL_OTHER_ITEMS_MAX, type MarketPostDetail } from "@/lib/market-post-detail";
+import {
+  MARKET_POST_DETAIL_OTHER_ITEMS_MAX,
+  type MarketPostDetail,
+} from "@/lib/market-post-detail";
 import { PRIMARY_BUTTON_CLASS } from "@/lib/site-config";
 import { useEffect, useState } from "react";
 
@@ -107,12 +110,15 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
           : null;
   const [activePhoto, setActivePhoto] = useState(0);
 
-  const photos = detail.photoUrls.length > 0 ? detail.photoUrls : detail.imageUrl ? [detail.imageUrl] : [];
+  const photos =
+    detail.photoUrls.length > 0 ? detail.photoUrls : detail.imageUrl ? [detail.imageUrl] : [];
   const mainPhoto = photos[activePhoto] ?? detail.imageUrl;
 
   // Meet-up map: pin the exact point when set, otherwise centre on the listing's suburb.
   const meetupPoint = detail.meetupPoint;
-  const mapMarker: [number, number] | null = meetupPoint ? [meetupPoint.lat, meetupPoint.lng] : null;
+  const mapMarker: [number, number] | null = meetupPoint
+    ? [meetupPoint.lat, meetupPoint.lng]
+    : null;
   const mapCenter: [number, number] | null = meetupPoint
     ? [meetupPoint.lat, meetupPoint.lng]
     : detail.suburbCentroid
@@ -164,7 +170,13 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
                   i === activePhoto ? "border-brand-500" : "border-black/10"
                 }`}
               >
-                <Image src={url} alt={`${detail.title} ${i + 1}`} fill className="object-cover" sizes="64px" />
+                <Image
+                  src={url}
+                  alt={`${detail.title} ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="64px"
+                />
               </button>
             ))}
           </div>
@@ -204,7 +216,9 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
         </h1>
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <div className="flex items-center gap-x-3">
-            <p className="text-xl font-bold tabular-nums text-black sm:text-2xl">{detail.priceLabel}</p>
+            <p className="text-xl font-bold tabular-nums text-black sm:text-2xl">
+              {detail.priceLabel}
+            </p>
             {detail.offerLabel === "no" ? (
               <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-surface-raised px-2.5 py-1 text-xs font-semibold text-black/55 sm:text-sm">
                 <LockIcon />
@@ -229,7 +243,9 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
             <DescriptionIcon />
             {copy.marketPostDescriptionHeading}
           </h2>
-          <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-black/80 sm:text-lg">{desc}</p>
+          <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-black/80 sm:text-lg">
+            {desc}
+          </p>
         </div>
       ) : null}
 
@@ -266,14 +282,22 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
               >
                 <div className="relative aspect-square w-full bg-surface-raised">
                   {item.imageUrl ? (
-                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" sizes="220px" />
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                      sizes="220px"
+                    />
                   ) : (
                     <div className="flex h-full items-center justify-center text-black/30">—</div>
                   )}
                 </div>
                 <div className="p-2.5">
                   <p className="line-clamp-2 text-sm font-semibold text-black">{item.title}</p>
-                  <p className="mt-1 text-sm font-bold tabular-nums text-black">{item.priceLabel}</p>
+                  <p className="mt-1 text-sm font-bold tabular-nums text-black">
+                    {item.priceLabel}
+                  </p>
                 </div>
               </Link>
             ))}

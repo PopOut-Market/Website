@@ -155,7 +155,7 @@ export function createMockMarketProducts(
   kmSuffix: string,
 ): MarketProduct[] {
   return Array.from({ length: 30 }, (_, i) => {
-    const cents = 1_200 + ((i * 437) % 380) * 100 + (i * 61) % 9700;
+    const cents = 1_200 + ((i * 437) % 380) * 100 + ((i * 61) % 9700);
     const km = 0.4 + ((i * 19) % 87) / 10;
     const distanceLabel = `${km.toFixed(1)} ${kmSuffix}`;
     return {

@@ -4,13 +4,7 @@ import { BackNavLink } from "@/components/back-nav-link";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 
-function ChildSafetySection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function ChildSafetySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">{title}</h2>
@@ -37,16 +31,14 @@ export function ChildSafetyPageContent() {
             <p>Last updated: 27 May 2026</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">
-            {t.legalEnglishAuthoritative}
-          </p>
+          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <div className="space-y-3 text-sm leading-relaxed text-gray-700 sm:text-[0.95rem]">
               <p>
-                PopOut Market has zero tolerance for child sexual abuse and exploitation (CSAE)
-                and child sexual abuse material (CSAM). This page outlines our standards and
-                procedures to keep our platform safe.
+                PopOut Market has zero tolerance for child sexual abuse and exploitation (CSAE) and
+                child sexual abuse material (CSAM). This page outlines our standards and procedures
+                to keep our platform safe.
               </p>
             </div>
 
@@ -63,20 +55,19 @@ export function ChildSafetyPageContent() {
             <ChildSafetySection title="How We Prevent CSAE">
               <ul className="list-disc space-y-1 pl-5">
                 <li>
-                  <strong>Age requirement</strong>: PopOut Market is intended for users aged 18
-                  and over.
+                  <strong>Age requirement</strong>: PopOut Market is intended for users aged 18 and
+                  over.
                 </li>
                 <li>
                   <strong>Account verification</strong>: All users must verify their identity
                   through a valid Australian phone number.
                 </li>
                 <li>
-                  <strong>Content moderation</strong>: We use automated and manual review to
-                  detect prohibited content.
+                  <strong>Content moderation</strong>: We use automated and manual review to detect
+                  prohibited content.
                 </li>
                 <li>
-                  <strong>Restricted features</strong>: We do not allow content that targets
-                  minors.
+                  <strong>Restricted features</strong>: We do not allow content that targets minors.
                 </li>
               </ul>
             </ChildSafetySection>
@@ -96,8 +87,8 @@ export function ChildSafetyPageContent() {
                 <li>We immediately remove the content and suspend the involved account;</li>
                 <li>We preserve relevant evidence in compliance with Australian law;</li>
                 <li>
-                  We report to the Australian Centre to Counter Child Exploitation (ACCCE) and
-                  other relevant authorities as required; and
+                  We report to the Australian Centre to Counter Child Exploitation (ACCCE) and other
+                  relevant authorities as required; and
                 </li>
                 <li>We cooperate fully with law enforcement investigations.</li>
               </ol>
@@ -119,9 +110,7 @@ export function ChildSafetyPageContent() {
                 <br />
                 Response time: Within 48 hours
               </p>
-              <p>
-                For urgent reports involving immediate harm to a child, please contact:
-              </p>
+              <p>For urgent reports involving immediate harm to a child, please contact:</p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>ACCCE: report.cybercrime.gov.au</li>
                 <li>Australian Federal Police: 131 444 (emergency: 000)</li>

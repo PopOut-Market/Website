@@ -1,11 +1,7 @@
 import { marketImagesBucketName } from "@/lib/supabase/browser-client";
 
 function supabaseProjectOrigin(): string {
-  return (
-    process.env.EXPO_PUBLIC_SUPABASE_URL ??
-    process.env.NEXT_PUBLIC_SUPABASE_URL ??
-    ""
-  )
+  return (process.env.EXPO_PUBLIC_SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "")
     .trim()
     .replace(/\/$/, "");
 }

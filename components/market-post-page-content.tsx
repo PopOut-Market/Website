@@ -8,12 +8,19 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import type { Locale, SiteCopy } from "@/lib/site-i18n";
 import { DEFAULT_MARKET_SUBURB } from "@/lib/site-suburbs";
 import { fetchMarketPostDetail } from "@/lib/supabase/fetch-market-post-detail";
-import { getSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser-client";
+import {
+  getSupabaseBrowserClient,
+  isSupabaseBrowserConfigured,
+} from "@/lib/supabase/browser-client";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-function demoDetailFromPostId(postId: string, locale: Locale, t: SiteCopy): MarketPostDetail | null {
+function demoDetailFromPostId(
+  postId: string,
+  locale: Locale,
+  t: SiteCopy,
+): MarketPostDetail | null {
   const m = /^demo-(\d+)$/.exec(postId.trim());
   if (!m) return null;
   const index = Number(m[1]) - 1;
@@ -134,7 +141,9 @@ export function MarketPostPageContent() {
   if (!safePostId) {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
-        <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
+        <div
+          className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}
+        >
           <p className="max-w-md text-sm text-black/55">{t.marketPostNotFoundBody}</p>
           <Link
             href={backHref}
@@ -164,7 +173,9 @@ export function MarketPostPageContent() {
   if (fetchFailed) {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
-        <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
+        <div
+          className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}
+        >
           <p className="max-w-md text-sm text-black/55">{t.marketSupabaseLoadError}</p>
           <button
             type="button"
@@ -181,7 +192,9 @@ export function MarketPostPageContent() {
   if (!detail) {
     return (
       <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col py-8`}>
-        <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}>
+        <div
+          className={`${INNER_MAX} flex min-h-0 flex-1 flex-col items-center justify-center gap-3 text-center`}
+        >
           <h1 className="text-lg font-semibold text-black">{t.marketPostNotFoundTitle}</h1>
           <p className="max-w-md text-sm text-black/55">{t.marketPostNotFoundBody}</p>
           <Link

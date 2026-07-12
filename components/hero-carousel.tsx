@@ -23,14 +23,61 @@ type DemoShowcaseItem = {
 };
 
 const SHOWCASE: DemoShowcaseItem[] = [
-  { emoji: "🪑", gradient: "from-amber-50 to-orange-100", titleCopyKey: "demoListingWoodenDiningChair", titleFallback: "Wooden Dining Chair", price: "$45" },
-  { emoji: "🚲", gradient: "from-sky-50 to-blue-100", titleCopyKey: "demoListingMountainBike", titleFallback: "Mountain Bike", price: "$180" },
-  { emoji: "📱", gradient: "from-gray-50 to-gray-200", titleFallback: "iPhone 14 Pro", price: "$890" },
-  { emoji: "🎸", gradient: "from-rose-50 to-pink-100", titleCopyKey: "demoListingAcousticGuitar", titleFallback: "Acoustic Guitar", price: "$120" },
-  { emoji: "🎧", gradient: "from-violet-50 to-purple-100", titleCopyKey: "demoListingWirelessHeadphones", titleFallback: "Wireless Headphones", price: "$65" },
-  { emoji: "📚", gradient: "from-emerald-50 to-green-100", titleCopyKey: "demoListingTextbookBundle", titleFallback: "Textbook Bundle", price: "$30" },
-  { emoji: "⌚", gradient: "from-yellow-50 to-amber-100", titleCopyKey: "demoListingSmartWatch", titleFallback: "Smart Watch", price: "$210" },
-  { emoji: "🎮", gradient: "from-indigo-50 to-blue-100", titleCopyKey: "demoListingGameController", titleFallback: "Game Controller", price: "$55" },
+  {
+    emoji: "🪑",
+    gradient: "from-amber-50 to-orange-100",
+    titleCopyKey: "demoListingWoodenDiningChair",
+    titleFallback: "Wooden Dining Chair",
+    price: "$45",
+  },
+  {
+    emoji: "🚲",
+    gradient: "from-sky-50 to-blue-100",
+    titleCopyKey: "demoListingMountainBike",
+    titleFallback: "Mountain Bike",
+    price: "$180",
+  },
+  {
+    emoji: "📱",
+    gradient: "from-gray-50 to-gray-200",
+    titleFallback: "iPhone 14 Pro",
+    price: "$890",
+  },
+  {
+    emoji: "🎸",
+    gradient: "from-rose-50 to-pink-100",
+    titleCopyKey: "demoListingAcousticGuitar",
+    titleFallback: "Acoustic Guitar",
+    price: "$120",
+  },
+  {
+    emoji: "🎧",
+    gradient: "from-violet-50 to-purple-100",
+    titleCopyKey: "demoListingWirelessHeadphones",
+    titleFallback: "Wireless Headphones",
+    price: "$65",
+  },
+  {
+    emoji: "📚",
+    gradient: "from-emerald-50 to-green-100",
+    titleCopyKey: "demoListingTextbookBundle",
+    titleFallback: "Textbook Bundle",
+    price: "$30",
+  },
+  {
+    emoji: "⌚",
+    gradient: "from-yellow-50 to-amber-100",
+    titleCopyKey: "demoListingSmartWatch",
+    titleFallback: "Smart Watch",
+    price: "$210",
+  },
+  {
+    emoji: "🎮",
+    gradient: "from-indigo-50 to-blue-100",
+    titleCopyKey: "demoListingGameController",
+    titleFallback: "Game Controller",
+    price: "$55",
+  },
 ];
 
 const AUTO_INTERVAL = 3200;
@@ -120,9 +167,7 @@ function CarouselCard({
         <p className="line-clamp-2 min-h-[2.5rem] text-[0.95rem] font-semibold leading-snug text-black sm:text-base">
           {slide.title}
         </p>
-        <p className="text-lg font-bold tabular-nums text-black">
-          {slide.priceLabel}
-        </p>
+        <p className="text-lg font-bold tabular-nums text-black">{slide.priceLabel}</p>
       </div>
     </>
   );
@@ -313,9 +358,7 @@ export function HeroCarousel({ locale, noImageAria }: HeroCarouselProps) {
 
   const cardWidth = 220;
   // Clamp so a long drag can't fling cards past the rendered neighbours.
-  const dragFraction = isDragging
-    ? Math.max(-1, Math.min(1, dragOffset / cardWidth))
-    : 0;
+  const dragFraction = isDragging ? Math.max(-1, Math.min(1, dragOffset / cardWidth)) : 0;
 
   const cards: {
     slide: CarouselSlide;

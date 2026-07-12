@@ -336,7 +336,10 @@ function UserRow({
 
           {/* Available + sold listings */}
           <div className="grid gap-5 lg:grid-cols-2">
-            <PostList title={`Available posts (${user.counts.available})`} posts={user.availablePosts} />
+            <PostList
+              title={`Available posts (${user.counts.available})`}
+              posts={user.availablePosts}
+            />
             <PostList title={`Sold posts (${user.counts.sold})`} posts={user.soldPosts} />
           </div>
         </div>
@@ -352,9 +355,7 @@ function ReportStatusBadge({ status }: { status: string }) {
       : status === "dismissed"
         ? "bg-slate-100 text-slate-500"
         : "bg-amber-100 text-amber-700"; // pending / reviewed / other
-  return (
-    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${tone}`}>{status}</span>
-  );
+  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${tone}`}>{status}</span>;
 }
 
 function PostList({ title, posts }: { title: string; posts: UserPost[] }) {

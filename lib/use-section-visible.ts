@@ -25,13 +25,9 @@ const DEFAULTS: Required<SectionVisibleOptions> = {
  *
  * Accepts either a legacy numeric threshold or a full options object.
  */
-export function useSectionVisible(
-  arg?: number | SectionVisibleOptions,
-) {
+export function useSectionVisible(arg?: number | SectionVisibleOptions) {
   const opts =
-    typeof arg === "number"
-      ? { ...DEFAULTS, startThreshold: arg }
-      : { ...DEFAULTS, ...arg };
+    typeof arg === "number" ? { ...DEFAULTS, startThreshold: arg } : { ...DEFAULTS, ...arg };
 
   const { startThreshold, stopThreshold, pauseDelayMs } = opts;
 

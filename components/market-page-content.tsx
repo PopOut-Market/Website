@@ -6,11 +6,7 @@ import { useSiteShell } from "@/components/site-chrome-context";
 import { SUBURB_COORDS } from "@/lib/market-map";
 import { marketSuburbDbId } from "@/lib/market-suburb-ids";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
-import {
-  DEFAULT_MARKET_SUBURB,
-  MARKET_SUBURBS,
-  type MarketSuburb,
-} from "@/lib/site-suburbs";
+import { DEFAULT_MARKET_SUBURB, MARKET_SUBURBS, type MarketSuburb } from "@/lib/site-suburbs";
 import { suburbDisplayLabel } from "@/lib/suburb-display";
 import {
   getSupabaseBrowserClient,
@@ -61,9 +57,7 @@ export function MarketPageContent() {
   const searchParams = useSearchParams();
 
   const [suburbs, setSuburbs] = useState<ActiveSuburb[]>(SEED_SUBURBS);
-  const [selected, setSelected] = useState<ActiveSuburb>(() =>
-    seedSuburb(DEFAULT_MARKET_SUBURB),
-  );
+  const [selected, setSelected] = useState<ActiveSuburb>(() => seedSuburb(DEFAULT_MARKET_SUBURB));
 
   const [areaModalOpen, setAreaModalOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
@@ -196,7 +190,16 @@ export function MarketPageContent() {
               {t.marketSeoIntroNearLabel} {selectedLabel}
             </span>
             <span className="pointer-events-none absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-black/60 shadow-card transition-colors group-hover:text-black">
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <svg
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
               </svg>
             </span>
@@ -209,12 +212,7 @@ export function MarketPageContent() {
           </div>
         </div>
 
-        <MarketFeed
-          suburbId={selected.id}
-          suburbName={selected.name}
-          locale={locale}
-          t={t}
-        />
+        <MarketFeed suburbId={selected.id} suburbName={selected.name} locale={locale} t={t} />
       </div>
 
       {areaModalOpen ? (
@@ -228,7 +226,10 @@ export function MarketPageContent() {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 id="market-area-modal-title" className="text-lg font-semibold text-black sm:text-xl">
+                <h2
+                  id="market-area-modal-title"
+                  className="text-lg font-semibold text-black sm:text-xl"
+                >
                   {t.marketAreaModalTitle}
                 </h2>
                 <p className="mt-1 text-xs text-black/55 sm:text-sm">{t.marketAreaModalHint}</p>
@@ -259,7 +260,9 @@ export function MarketPageContent() {
                   >
                     <span className="flex items-center justify-between gap-2">
                       {suburb.name}
-                      {isSelected ? <span className="text-xs font-semibold text-brand-700">✓</span> : null}
+                      {isSelected ? (
+                        <span className="text-xs font-semibold text-brand-700">✓</span>
+                      ) : null}
                     </span>
                   </button>
                 );

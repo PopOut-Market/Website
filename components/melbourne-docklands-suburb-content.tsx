@@ -29,8 +29,7 @@ function getCopy(locale: string): DocklandsCopy {
     case "zh-Hans":
       return {
         h1: "码头区（Docklands）二手市场指南",
-        lead:
-          "Docklands 位于墨尔本 CBD 西北侧，是近年来发展迅速的滨水商住区，以高层公寓和商务配套见长。区域内年轻专业人士与家庭住户较多，二手交易需求稳定。",
+        lead: "Docklands 位于墨尔本 CBD 西北侧，是近年来发展迅速的滨水商住区，以高层公寓和商务配套见长。区域内年轻专业人士与家庭住户较多，二手交易需求稳定。",
         overviewTitle: "区域概况",
         overviewBody:
           "Docklands 的公寓型居住结构明显，常见二手交易品类集中在家具、电器、收纳用品和儿童相关用品。由于临近 CBD 与 South Wharf，跨区看货与取货也相对方便。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): DocklandsCopy {
     case "zh-Hant":
       return {
         h1: "碼頭區（Docklands）二手市場指南",
-        lead:
-          "Docklands 位於墨爾本 CBD 西北側，是近年發展快速的濱水商住區，以高層公寓與商務配套著稱。區內年輕專業人士與家庭住戶比例高，二手需求穩定。",
+        lead: "Docklands 位於墨爾本 CBD 西北側，是近年發展快速的濱水商住區，以高層公寓與商務配套著稱。區內年輕專業人士與家庭住戶比例高，二手需求穩定。",
         overviewTitle: "區域概況",
         overviewBody:
           "Docklands 具有明顯公寓型居住結構，常見二手品類包括家具、家電、收納用品與兒童用品。因鄰近 CBD 與 South Wharf，跨區看貨與取貨相對方便。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): DocklandsCopy {
     default:
       return {
         h1: "Docklands Second-Hand Market Guide",
-        lead:
-          "Docklands is a newer waterfront residential-business district northwest of Melbourne CBD, known for high-rise apartment living and a strong young professional and family mix.",
+        lead: "Docklands is a newer waterfront residential-business district northwest of Melbourne CBD, known for high-rise apartment living and a strong young professional and family mix.",
         overviewTitle: "Area overview",
         overviewBody:
           "Second-hand demand in Docklands is driven by apartment turnover and practical home setup needs. Common categories include furniture, appliances, storage solutions, and child-related items.",

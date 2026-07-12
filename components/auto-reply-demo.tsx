@@ -96,10 +96,42 @@ export function AutoReplyDemo({ t }: { t: SiteCopy }) {
   }, [active, reduced, clear]);
 
   const rows: Row[] = [
-    { name: "Tom", avatar: "🦙", thumb: "📦", ai: false, unread: true, message: t.autoReplyDemoMsgMeet, time: t.autoReplyDemoTimeNow },
-    { name: "Tom", avatar: "🦙", thumb: "🎧", ai: true, unread: false, message: t.autoReplyDemoMsgPrice, time: t.autoReplyDemoTimeNow },
-    { name: "Soojung", avatar: "🐻", thumb: "📚", ai: true, unread: false, message: t.autoReplyDemoMsgSelling, time: t.autoReplyDemoTimeNow },
-    { name: "Soojung", avatar: "🐻", thumb: "🪑", ai: true, unread: false, message: t.autoReplyDemoMsgGreeting, time: t.autoReplyDemoTime1Min },
+    {
+      name: "Tom",
+      avatar: "🦙",
+      thumb: "📦",
+      ai: false,
+      unread: true,
+      message: t.autoReplyDemoMsgMeet,
+      time: t.autoReplyDemoTimeNow,
+    },
+    {
+      name: "Tom",
+      avatar: "🦙",
+      thumb: "🎧",
+      ai: true,
+      unread: false,
+      message: t.autoReplyDemoMsgPrice,
+      time: t.autoReplyDemoTimeNow,
+    },
+    {
+      name: "Soojung",
+      avatar: "🐻",
+      thumb: "📚",
+      ai: true,
+      unread: false,
+      message: t.autoReplyDemoMsgSelling,
+      time: t.autoReplyDemoTimeNow,
+    },
+    {
+      name: "Soojung",
+      avatar: "🐻",
+      thumb: "🪑",
+      ai: true,
+      unread: false,
+      message: t.autoReplyDemoMsgGreeting,
+      time: t.autoReplyDemoTime1Min,
+    },
   ];
 
   // Heading: per-locale string; the *asterisked* span is brand-coloured.
@@ -204,7 +236,10 @@ export function AutoReplyDemo({ t }: { t: SiteCopy }) {
                         )}
                       </p>
                       {row.unread ? (
-                        <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-brand-500" aria-hidden />
+                        <span
+                          className="ml-auto h-2 w-2 shrink-0 rounded-full bg-brand-500"
+                          aria-hidden
+                        />
                       ) : null}
                     </div>
                   </div>

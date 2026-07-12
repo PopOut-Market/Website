@@ -19,9 +19,7 @@ export function SiteShellProvider({
   value: SiteShellValue;
   children: ReactNode;
 }) {
-  return (
-    <SiteShellContext.Provider value={value}>{children}</SiteShellContext.Provider>
-  );
+  return <SiteShellContext.Provider value={value}>{children}</SiteShellContext.Provider>;
 }
 
 export function useSiteShell(): SiteShellValue {

@@ -590,8 +590,7 @@ function ClaimCard({
     .filter((u): u is string => Boolean(u));
 
   const selectedReason = REJECT_CODES.find((r) => r.value === code);
-  const rejectHint =
-    selectedReason && "hint" in selectedReason ? selectedReason.hint : null;
+  const rejectHint = selectedReason && "hint" in selectedReason ? selectedReason.hint : null;
 
   async function review(approve: boolean) {
     setBusy(approve ? "approve" : "reject");
@@ -769,9 +768,7 @@ function ClaimCard({
                   </option>
                 ))}
               </select>
-              {rejectHint && (
-                <p className="mt-1 text-xs text-slate-500">{rejectHint}</p>
-              )}
+              {rejectHint && <p className="mt-1 text-xs text-slate-500">{rejectHint}</p>}
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-slate-700">

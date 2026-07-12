@@ -36,14 +36,49 @@ type ChatPair = {
 };
 
 const CHAT_PAIRS: ChatPair[] = [
-  { from: "zh-Hans", to: "ko",      fromText: "这个桌子还在吗？",                   toText: "이 테이블 아직 있나요?" },
-  { from: "vi",      to: "en",      fromText: "Bàn này còn không?",               toText: "Is this table still available?" },
-  { from: "ja",      to: "fr",      fromText: "このテーブルまだありますか？",           toText: "Cette table est-elle encore disponible ?" },
-  { from: "es",      to: "zh-Hans", fromText: "¿Esta mesa sigue disponible?",     toText: "这张桌子还在吗？" },
-  { from: "ko",      to: "ja",      fromText: "이 테이블 아직 있나요?",              toText: "このテーブルまだありますか？" },
-  { from: "en",      to: "vi",      fromText: "Is this table still available?",   toText: "Bàn này còn không?" },
-  { from: "zh-Hant", to: "es",      fromText: "這張桌子還在嗎？",                    toText: "¿Sigue disponible esta mesa?" },
-  { from: "fr",      to: "zh-Hant", fromText: "Cette table est-elle disponible ?", toText: "這張桌子還在嗎？" },
+  { from: "zh-Hans", to: "ko", fromText: "这个桌子还在吗？", toText: "이 테이블 아직 있나요?" },
+  {
+    from: "vi",
+    to: "en",
+    fromText: "Bàn này còn không?",
+    toText: "Is this table still available?",
+  },
+  {
+    from: "ja",
+    to: "fr",
+    fromText: "このテーブルまだありますか？",
+    toText: "Cette table est-elle encore disponible ?",
+  },
+  {
+    from: "es",
+    to: "zh-Hans",
+    fromText: "¿Esta mesa sigue disponible?",
+    toText: "这张桌子还在吗？",
+  },
+  {
+    from: "ko",
+    to: "ja",
+    fromText: "이 테이블 아직 있나요?",
+    toText: "このテーブルまだありますか？",
+  },
+  {
+    from: "en",
+    to: "vi",
+    fromText: "Is this table still available?",
+    toText: "Bàn này còn không?",
+  },
+  {
+    from: "zh-Hant",
+    to: "es",
+    fromText: "這張桌子還在嗎？",
+    toText: "¿Sigue disponible esta mesa?",
+  },
+  {
+    from: "fr",
+    to: "zh-Hant",
+    fromText: "Cette table est-elle disponible ?",
+    toText: "這張桌子還在嗎？",
+  },
 ];
 
 const CYCLE_MS = 4000;
@@ -77,11 +112,7 @@ function PhoneFrame({
               isRight
                 ? "rounded-br-md bg-brand-500 text-white"
                 : "rounded-bl-md bg-gray-100 text-gray-900"
-            } ${
-              visible
-                ? "translate-y-0 opacity-100"
-                : "translate-y-2 opacity-0"
-            }`}
+            } ${visible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
           >
             {bubble}
           </div>
@@ -122,13 +153,26 @@ export function TranslationDemo({ t }: { t: SiteCopy }) {
   const fadeRef = useRef<number | null>(null);
 
   const clear = useCallback(() => {
-    if (cycleRef.current !== null) { window.clearTimeout(cycleRef.current); cycleRef.current = null; }
-    if (fadeRef.current !== null) { window.clearTimeout(fadeRef.current); fadeRef.current = null; }
+    if (cycleRef.current !== null) {
+      window.clearTimeout(cycleRef.current);
+      cycleRef.current = null;
+    }
+    if (fadeRef.current !== null) {
+      window.clearTimeout(fadeRef.current);
+      fadeRef.current = null;
+    }
   }, []);
 
   useEffect(() => {
-    if (!active) { clear(); return; }
-    if (reduced) { setVisible(true); clear(); return; }
+    if (!active) {
+      clear();
+      return;
+    }
+    if (reduced) {
+      setVisible(true);
+      clear();
+      return;
+    }
     const run = () => {
       setVisible(false);
       fadeRef.current = window.setTimeout(() => {

@@ -190,7 +190,9 @@ function mapPostRowToDetail(
   const seller = raw.seller_nickname?.trim();
   const photoUrls = photoUrlsFrom(raw.photo_paths);
   const meetupPoint =
-    raw.has_meetup_location && typeof raw.meetup_lat === "number" && typeof raw.meetup_lng === "number"
+    raw.has_meetup_location &&
+    typeof raw.meetup_lat === "number" &&
+    typeof raw.meetup_lng === "number"
       ? { lat: raw.meetup_lat, lng: raw.meetup_lng }
       : null;
   const areaLabel =
@@ -209,7 +211,10 @@ function mapPostRowToDetail(
     sellerAvatarUrl: null,
     sellerVerifiedSuburbLabel: raw.seller_verified_suburb_name?.trim() || null,
     sellerVerifiedAtLabel: raw.seller_verified_freshness?.trim() || null,
-    distanceLabel: formatMarketDistanceKm(raw.distance_from_suburb_centroid_m ?? null, options.kmSuffix),
+    distanceLabel: formatMarketDistanceKm(
+      raw.distance_from_suburb_centroid_m ?? null,
+      options.kmSuffix,
+    ),
     meetupPoint,
     suburbId:
       typeof raw.listing_suburb_id === "number" && Number.isFinite(raw.listing_suburb_id)

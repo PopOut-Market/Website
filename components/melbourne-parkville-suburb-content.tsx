@@ -29,8 +29,7 @@ function getCopy(locale: string): ParkvilleCopy {
     case "zh-Hans":
       return {
         h1: "帕克维尔（Parkville）二手市场指南",
-        lead:
-          "帕克维尔位于墨尔本大学及医疗科研带周边，是学术与医疗资源高度集中的内城区。学生、实习生、研究人员与年轻租住群体共同构成了活跃的本地二手交易需求。",
+        lead: "帕克维尔位于墨尔本大学及医疗科研带周边，是学术与医疗资源高度集中的内城区。学生、实习生、研究人员与年轻租住群体共同构成了活跃的本地二手交易需求。",
         overviewTitle: "区域概况",
         overviewBody:
           "Parkville人口结构整体偏年轻，学习与工作节奏快，居住流动性较高。二手市场常见商品包括课本、电子设备、学习桌椅、床垫、沙发与厨房用品等高频生活品类。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): ParkvilleCopy {
     case "zh-Hant":
       return {
         h1: "帕克維爾（Parkville）二手市場指南",
-        lead:
-          "Parkville 位於墨爾本大學與醫療科研帶周邊，是學術與醫療資源高度集中的內城區。學生、實習生、研究人員與年輕租住族群共同形成活躍二手需求。",
+        lead: "Parkville 位於墨爾本大學與醫療科研帶周邊，是學術與醫療資源高度集中的內城區。學生、實習生、研究人員與年輕租住族群共同形成活躍二手需求。",
         overviewTitle: "區域概況",
         overviewBody:
           "Parkville 人口結構整體偏年輕，學習與工作節奏快，居住流動性高。常見二手品類包含教材、電子設備、桌椅、床墊、沙發與廚房用品。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): ParkvilleCopy {
     default:
       return {
         h1: "Parkville Second-Hand Market Guide",
-        lead:
-          "Parkville sits beside major university and medical precincts, creating strong second-hand demand from students, interns, researchers, and young renters.",
+        lead: "Parkville sits beside major university and medical precincts, creating strong second-hand demand from students, interns, researchers, and young renters.",
         overviewTitle: "Area overview",
         overviewBody:
           "Parkville has a generally young resident profile with fast-moving study and work cycles. Common second-hand demand includes textbooks, electronics, study desks, bedding, sofas, and kitchen essentials.",

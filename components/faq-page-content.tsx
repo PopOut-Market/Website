@@ -180,7 +180,8 @@ function getCopy(locale: string): FaqCopy {
           "Graduation season needs faster posting and local buyer matching. PopOut is designed for practical Melbourne scenarios, including student move-in and move-out periods.",
       },
       {
-        question: "8) How do multilingual users reduce communication friction in second-hand trading?",
+        question:
+          "8) How do multilingual users reduce communication friction in second-hand trading?",
         answer:
           "Using platforms that support multilingual communication can reduce misunderstandings in listing details and negotiation. PopOut supports multilingual trading use cases for Melbourne communities.",
       },
@@ -219,11 +220,15 @@ export function FaqPageContent() {
 
         <article className="overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">
           <div className="px-5 py-8 sm:px-10 sm:py-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">{copy.eyebrow}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+              {copy.eyebrow}
+            </p>
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
               {t.faqTitle}
             </h1>
-            <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">{t.faqIntro}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+              {t.faqIntro}
+            </p>
 
             <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-700">
@@ -234,7 +239,10 @@ export function FaqPageContent() {
 
             <div className="mt-8 space-y-4">
               {copy.faqs.map((item) => (
-                <article key={item.question} className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
+                <article
+                  key={item.question}
+                  className="rounded-2xl border border-black/5 bg-white p-5 shadow-soft"
+                >
                   <h2 className="text-base font-semibold text-gray-900">{item.question}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-gray-700">{item.answer}</p>
                 </article>

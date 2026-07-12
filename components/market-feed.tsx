@@ -104,18 +104,19 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
       }
       try {
         const client = getSupabaseBrowserClient();
-        const { products, hasLocalListing: hll, errorMessage } = await fetchMarketListings(
-          client,
-          {
-            suburbId,
-            locale,
-            sellerFallback: t.marketDemoSeller,
-            kmSuffix: t.marketKmShort,
-            offset: 0,
-            limit: PAGE_SIZE,
-            jitterSeed: seedRef.current!,
-          },
-        );
+        const {
+          products,
+          hasLocalListing: hll,
+          errorMessage,
+        } = await fetchMarketListings(client, {
+          suburbId,
+          locale,
+          sellerFallback: t.marketDemoSeller,
+          kmSuffix: t.marketKmShort,
+          offset: 0,
+          limit: PAGE_SIZE,
+          jitterSeed: seedRef.current!,
+        });
         if (gen !== genRef.current) {
           return;
         }
@@ -276,11 +277,7 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
       ) : null}
 
       {phase === "skeleton" ? (
-        <ul
-          className={GRID_CLASS}
-          role="status"
-          aria-label={t.marketSupabaseLoadingAria}
-        >
+        <ul className={GRID_CLASS} role="status" aria-label={t.marketSupabaseLoadingAria}>
           {Array.from({ length: 8 }).map((_, i) => (
             <li key={i} className="min-w-0">
               <div className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card">

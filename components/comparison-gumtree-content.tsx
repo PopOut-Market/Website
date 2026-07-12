@@ -127,7 +127,10 @@ export function ComparisonGumtreeContent() {
           <p className="mt-2 text-xs leading-relaxed text-gray-500">{copy.tableNote}</p>
           <div className="mt-4 space-y-3">
             {copy.features.map((feature) => (
-              <article key={feature.title} className="rounded-xl border border-black/5 bg-white p-4 shadow-card">
+              <article
+                key={feature.title}
+                className="rounded-xl border border-black/5 bg-white p-4 shadow-card"
+              >
                 <h3 className="text-sm font-semibold text-gray-900">{feature.title}</h3>
                 <p className="mt-2 text-sm text-gray-700">
                   <span className="font-semibold text-gray-900">PopOut:</span> {feature.popout}

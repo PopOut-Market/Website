@@ -92,7 +92,9 @@ export async function GET(req: Request) {
         .select(
           "id, nickname, created_at, last_active_at, is_banned, is_deleted, language, verified_suburb_id",
         ),
-      sb.from("posts").select("id, seller_id, raw_title, price_cents, status, thumbnail_path, created_at"),
+      sb
+        .from("posts")
+        .select("id, seller_id, raw_title, price_cents, status, thumbnail_path, created_at"),
       sb.from("post_reports").select("id, reporter_id, post_id, reason, status, created_at"),
       sb.from("user_reports").select("id, reporter_id, reported_id, reason, status, created_at"),
       sb.from("suburbs").select("id, name"),
@@ -108,7 +110,8 @@ export async function GET(req: Request) {
     }
 
     const suburbName = new Map<number, string>();
-    for (const s of (subRes.data ?? []) as { id: number; name: string }[]) suburbName.set(s.id, s.name);
+    for (const s of (subRes.data ?? []) as { id: number; name: string }[])
+      suburbName.set(s.id, s.name);
 
     // Index posts by seller, and post_id -> owner (to attribute post reports).
     const posts = (postRes.data ?? []) as PostRow[];
@@ -128,7 +131,8 @@ export async function GET(req: Request) {
     // Reports FILED BY a user (as reporter), across both report tables.
     const reportedByCount = new Map<string, number>();
     for (const r of [...postReports, ...userReports]) {
-      if (r.reporter_id) reportedByCount.set(r.reporter_id, (reportedByCount.get(r.reporter_id) ?? 0) + 1);
+      if (r.reporter_id)
+        reportedByCount.set(r.reporter_id, (reportedByCount.get(r.reporter_id) ?? 0) + 1);
     }
 
     // Reports AGAINST a user — post reports attributed via the post's owner, plus

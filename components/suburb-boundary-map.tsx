@@ -6,10 +6,7 @@ import {
   getSupabaseBrowserClient,
   isSupabaseBrowserConfigured,
 } from "@/lib/supabase/browser-client";
-import {
-  fetchSuburbBoundary,
-  type SuburbBoundary,
-} from "@/lib/supabase/fetch-suburb-boundary";
+import { fetchSuburbBoundary, type SuburbBoundary } from "@/lib/supabase/fetch-suburb-boundary";
 import { useEffect, useRef } from "react";
 
 const FILL_COLOR = "#404040"; // neutral grey — a faint wash over the selected suburb
@@ -17,8 +14,7 @@ const OUTLINE_COLOR = "#171717"; // near-black — a clearly visible dotted boun
 const MARKER_COLOR = "#ff8c00"; // brand orange — the meet-up pin
 
 // CARTO Voyager raster basemap — free, no API key. Attribution is required.
-const TILE_URL =
-  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+const TILE_URL = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const TILE_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
@@ -61,7 +57,7 @@ export function SuburbBoundaryMap({
     const hasMarker = markerLat !== null && markerLng !== null;
     const initialCenter: [number, number] = hasMarker
       ? [markerLat, markerLng]
-      : center ?? MELBOURNE_FALLBACK;
+      : (center ?? MELBOURNE_FALLBACK);
     const initialZoom = hasMarker ? MARKER_ZOOM : INITIAL_ZOOM;
 
     (async () => {
@@ -117,10 +113,7 @@ export function SuburbBoundaryMap({
       let boundary: SuburbBoundary | null = null;
       if (suburbId > 0 && isSupabaseBrowserConfigured()) {
         try {
-          boundary = await fetchSuburbBoundary(
-            getSupabaseBrowserClient(),
-            suburbId,
-          );
+          boundary = await fetchSuburbBoundary(getSupabaseBrowserClient(), suburbId);
         } catch {
           boundary = null;
         }

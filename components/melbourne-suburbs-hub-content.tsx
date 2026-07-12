@@ -273,9 +273,7 @@ export function MelbourneSuburbsHubContent() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.title}
         </h1>
-        <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">
-          {copy.intro}
-        </p>
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">{copy.intro}</p>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">

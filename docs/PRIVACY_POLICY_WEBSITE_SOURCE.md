@@ -4,10 +4,10 @@
 
 **Entity**
 
-- POPOUT MARKET PTY LTD  
-- ACN 696 464 945  
-- Effective Date: 16 June 2026  
-- Version: 1.6  
+- POPOUT MARKET PTY LTD
+- ACN 696 464 945
+- Effective Date: 16 June 2026
+- Version: 1.6
 
 ---
 
@@ -175,7 +175,7 @@ For privacy questions, requests or complaints, please contact:
 
 Privacy Officer  
 POPOUT MARKET PTY LTD  
-Email: privacy@popoutmarket.com.au  
+Email: privacy@popoutmarket.com.au
 
 ---
 

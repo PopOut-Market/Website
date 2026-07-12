@@ -29,8 +29,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
     case "zh-Hans":
       return {
         h1: "北墨尔本（North Melbourne）二手市场指南",
-        lead:
-          "North Melbourne 是距离 CBD 很近的内城区，住宅类型多样，既有传统联排住宅也有公寓租住社区。区域内年轻人、家庭和职场人群并存，二手需求长期稳定。",
+        lead: "North Melbourne 是距离 CBD 很近的内城区，住宅类型多样，既有传统联排住宅也有公寓租住社区。区域内年轻人、家庭和职场人群并存，二手需求长期稳定。",
         overviewTitle: "区域概况",
         overviewBody:
           "该区生活便利、通勤半径短，常见二手品类覆盖家具、电器、厨房用品、儿童相关用品，以及运动和通勤类物品。由于居住结构多元，买卖双方需求跨度较大，容易形成高匹配交易。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
     case "zh-Hant":
       return {
         h1: "北墨爾本（North Melbourne）二手市場指南",
-        lead:
-          "North Melbourne 是距離 CBD 很近的內城區，住宅型態多元，包含傳統聯排住宅與公寓租住社區。區內年輕住戶、家庭與上班族並存，二手需求長期穩定。",
+        lead: "North Melbourne 是距離 CBD 很近的內城區，住宅型態多元，包含傳統聯排住宅與公寓租住社區。區內年輕住戶、家庭與上班族並存，二手需求長期穩定。",
         overviewTitle: "區域概況",
         overviewBody:
           "此區通勤便利、生活機能完整，常見二手品類涵蓋家具、家電、廚房用品、兒童用品，以及運動與通勤類物件。因住戶結構多樣，買賣需求跨度大，媒合機會高。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
     default:
       return {
         h1: "North Melbourne Second-Hand Market Guide",
-        lead:
-          "North Melbourne is a close-to-CBD inner suburb with mixed housing stock, combining terrace homes and apartment rentals. Its resident mix creates steady second-hand demand across practical categories.",
+        lead: "North Melbourne is a close-to-CBD inner suburb with mixed housing stock, combining terrace homes and apartment rentals. Its resident mix creates steady second-hand demand across practical categories.",
         overviewTitle: "Area overview",
         overviewBody:
           "With convenient access and diverse households, common second-hand demand includes furniture, appliances, kitchen essentials, child-related items, and mobility or sport gear.",

@@ -4,10 +4,10 @@
 
 **Entity**
 
-- POPOUT MARKET PTY LTD  
-- ACN 696 464 945  
-- ABN 76 696 464 945  
-- Address: 1003/151 City Rd, Southbank VIC 3006, Australia  
+- POPOUT MARKET PTY LTD
+- ACN 696 464 945
+- ABN 76 696 464 945
+- Address: 1003/151 City Rd, Southbank VIC 3006, Australia
 
 ---
 

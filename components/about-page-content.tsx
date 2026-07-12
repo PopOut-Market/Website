@@ -119,7 +119,8 @@ function aboutSeoCopy(locale: Locale) {
   }
 
   return {
-    introHighlight: "Step outside and meet your neighbourhood: second-hand trading with more warmth in Melbourne.",
+    introHighlight:
+      "Step outside and meet your neighbourhood: second-hand trading with more warmth in Melbourne.",
     localTitle: "Neighbourhood-first by suburb and local living zones",
     localP1:
       "PopOut is not designed for endless city-wide scrolling first. We start by helping users discover active listings closer to daily life, with suburb-based filtering and local-first browsing.",
@@ -233,16 +234,7 @@ export function AboutPageContent() {
         name: "PopOut Market",
         applicationCategory: "MarketplaceApplication",
         operatingSystem: "iOS, Android",
-        availableLanguage: [
-          "en",
-          "zh-Hans",
-          "zh-Hant",
-          "ko",
-          "ja",
-          "vi",
-          "fr",
-          "es",
-        ],
+        availableLanguage: ["en", "zh-Hans", "zh-Hant", "ko", "ja", "vi", "fr", "es"],
         areaServed: {
           "@type": "City",
           name: "Melbourne",
@@ -357,7 +349,9 @@ export function AboutPageContent() {
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-gray-800">{t.aboutWhySafetyTitle}</h3>
+                      <h3 className="text-base font-semibold text-gray-800">
+                        {t.aboutWhySafetyTitle}
+                      </h3>
                       <p className="mt-2 text-[15px] leading-relaxed text-gray-600 sm:text-base">
                         {t.aboutWhySafetyBody}
                       </p>
@@ -379,8 +373,12 @@ export function AboutPageContent() {
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.localTitle}
                   </h2>
-                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">{extra.localP1}</p>
-                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">{extra.localP2}</p>
+                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {extra.localP1}
+                  </p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {extra.localP2}
+                  </p>
                 </section>
               </StaggerBlock>
 
@@ -408,19 +406,25 @@ export function AboutPageContent() {
                   </p>
                   <ul className="mt-6 space-y-6">
                     <li>
-                      <p className="text-sm font-semibold text-gray-800">{t.aboutPrivacyMinimalTitle}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {t.aboutPrivacyMinimalTitle}
+                      </p>
                       <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">
                         {t.aboutPrivacyMinimalBody}
                       </p>
                     </li>
                     <li>
-                      <p className="text-sm font-semibold text-gray-800">{t.aboutPrivacyStorageTitle}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {t.aboutPrivacyStorageTitle}
+                      </p>
                       <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">
                         {t.aboutPrivacyStorageBody}
                       </p>
                     </li>
                     <li>
-                      <p className="text-sm font-semibold text-gray-800">{t.aboutPrivacyNoTracesTitle}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {t.aboutPrivacyNoTracesTitle}
+                      </p>
                       <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">
                         {t.aboutPrivacyNoTracesBody}
                       </p>
@@ -445,8 +449,12 @@ export function AboutPageContent() {
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.studentTitle}
                   </h2>
-                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">{extra.studentP1}</p>
-                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">{extra.studentP2}</p>
+                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {extra.studentP1}
+                  </p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {extra.studentP2}
+                  </p>
                 </section>
               </StaggerBlock>
 
@@ -472,8 +480,12 @@ export function AboutPageContent() {
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.legalTitle}
                   </h2>
-                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">{extra.legalBody}</p>
-                  <h3 className="mt-6 text-base font-semibold tracking-tight text-gray-900">{extra.geoTitle}</h3>
+                  <p className="mt-3 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {extra.legalBody}
+                  </p>
+                  <h3 className="mt-6 text-base font-semibold tracking-tight text-gray-900">
+                    {extra.geoTitle}
+                  </h3>
                   <ul className="mt-3 list-disc space-y-2 pl-5 text-[15px] leading-relaxed text-gray-600 sm:text-base">
                     {extra.geoItems.map((item) => (
                       <li key={item}>{item}</li>

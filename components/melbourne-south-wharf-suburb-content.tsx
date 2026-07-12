@@ -29,8 +29,7 @@ function getCopy(locale: string): SouthWharfCopy {
     case "zh-Hans":
       return {
         h1: "南码头（South Wharf）二手市场指南",
-        lead:
-          "South Wharf 位于亚拉河畔，连接 CBD 与 Southbank，是近年持续发展的高品质商住区域。这里公寓新、生活配套集中，二手交易更偏向品质型与功能型需求。",
+        lead: "South Wharf 位于亚拉河畔，连接 CBD 与 Southbank，是近年持续发展的高品质商住区域。这里公寓新、生活配套集中，二手交易更偏向品质型与功能型需求。",
         overviewTitle: "区域概况",
         overviewBody:
           "South Wharf 的二手供需以中高品质家居用品为主，常见品类包括设计家具、厨房电器、儿童家具与居家升级类商品。由于区域人口规模相对更小，优质商品通常更依赖精准匹配。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): SouthWharfCopy {
     case "zh-Hant":
       return {
         h1: "南碼頭（South Wharf）二手市場指南",
-        lead:
-          "South Wharf 位於亞拉河畔，連接 CBD 與 Southbank，是近年持續發展的高品質商住區域。區內公寓新、配套完整，二手交易偏向品質與功能兼具的需求。",
+        lead: "South Wharf 位於亞拉河畔，連接 CBD 與 Southbank，是近年持續發展的高品質商住區域。區內公寓新、配套完整，二手交易偏向品質與功能兼具的需求。",
         overviewTitle: "區域概況",
         overviewBody:
           "South Wharf 的二手供需以中高品質家居用品為主，常見品類包含設計家具、廚房家電、兒童家具與居家升級用品。由於人口規模相對較小，優質商品更依賴精準媒合。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): SouthWharfCopy {
     default:
       return {
         h1: "South Wharf Second-Hand Market Guide",
-        lead:
-          "South Wharf is a riverside district linking Melbourne CBD and Southbank, with newer residential stock and a quality-focused second-hand buying pattern.",
+        lead: "South Wharf is a riverside district linking Melbourne CBD and Southbank, with newer residential stock and a quality-focused second-hand buying pattern.",
         overviewTitle: "Area overview",
         overviewBody:
           "Local second-hand demand often centers on better-condition home goods, including design-forward furniture, kitchen appliances, child-related items, and apartment-upgrade essentials.",

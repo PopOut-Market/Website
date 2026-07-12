@@ -29,8 +29,7 @@ function getCopy(locale: string): SouthbankCopy {
     case "zh-Hans":
       return {
         h1: "南岸（Southbank）二手市场指南",
-        lead:
-          "Southbank 是亚拉河沿岸的艺术与高密度住宅区域，兼具文化活动与公寓生活场景。区域内白领、创意从业者与家庭住户并存，形成了多元且持续的二手交易需求。",
+        lead: "Southbank 是亚拉河沿岸的艺术与高密度住宅区域，兼具文化活动与公寓生活场景。区域内白领、创意从业者与家庭住户并存，形成了多元且持续的二手交易需求。",
         overviewTitle: "区域概况",
         overviewBody:
           "Southbank 靠近城市核心交通与文娱设施，生活便利度高。常见二手交易品类包括沙发、床架、餐桌、小家电、儿童用品，以及部分艺术与创意相关物品。",
@@ -55,8 +54,7 @@ function getCopy(locale: string): SouthbankCopy {
     case "zh-Hant":
       return {
         h1: "南岸（Southbank）二手市場指南",
-        lead:
-          "Southbank 是亞拉河沿岸的藝術與高密度住宅區域，兼具文化活動與公寓生活場景。區內白領、創意從業者與家庭住戶並存，二手交易需求多元且持續。",
+        lead: "Southbank 是亞拉河沿岸的藝術與高密度住宅區域，兼具文化活動與公寓生活場景。區內白領、創意從業者與家庭住戶並存，二手交易需求多元且持續。",
         overviewTitle: "區域概況",
         overviewBody:
           "Southbank 鄰近市中心交通與文娛設施，生活便利。常見二手品類包括沙發、床架、餐桌、小家電、兒童用品，以及部分藝術與創意相關物件。",
@@ -81,8 +79,7 @@ function getCopy(locale: string): SouthbankCopy {
     default:
       return {
         h1: "Southbank Second-Hand Market Guide",
-        lead:
-          "Southbank is a riverside arts-and-residential district with dense apartment living. Its mix of professionals, creative workers, and families creates diverse second-hand demand.",
+        lead: "Southbank is a riverside arts-and-residential district with dense apartment living. Its mix of professionals, creative workers, and families creates diverse second-hand demand.",
         overviewTitle: "Area overview",
         overviewBody:
           "With strong transport access and high-rise housing, Southbank has steady turnover in practical household items. Common categories include sofas, bed frames, dining sets, small appliances, and family essentials.",

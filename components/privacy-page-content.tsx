@@ -4,13 +4,7 @@ import { BackNavLink } from "@/components/back-nav-link";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 
-function PrivacySection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function PrivacySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">{title}</h2>
@@ -40,78 +34,96 @@ export function PrivacyPageContent() {
             <p>Version: 1.6</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">
-            {t.legalEnglishAuthoritative}
-          </p>
+          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <PrivacySection title="Overview">
               <p>
-                POPOUT MARKET PTY LTD (&quot;we&quot;, &quot;us&quot;, or
-                &quot;our&quot;) is committed to protecting your privacy and handling personal
-                information in accordance with the Privacy Act 1988 (Cth) and the Australian
-                Privacy Principles (APPs).
+                POPOUT MARKET PTY LTD (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is
+                committed to protecting your privacy and handling personal information in accordance
+                with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs).
               </p>
               <p>
-                This Privacy Policy explains how we collect, use, disclose and store your
-                personal information when you use the Popout Market application, this website,
-                and related services.
+                This Privacy Policy explains how we collect, use, disclose and store your personal
+                information when you use the Popout Market application, this website, and related
+                services.
               </p>
             </PrivacySection>
 
             <PrivacySection title="Anonymity and Pseudonymity">
               <p>
-                Where practicable, you may interact with us using a pseudonym, such as a
-                nickname displayed on your public profile.
+                Where practicable, you may interact with us using a pseudonym, such as a nickname
+                displayed on your public profile.
               </p>
               <p>
-                However, because Popout Market is designed as a secure local marketplace, we
-                require certain identifying information, including a verified phone number and
-                verified suburb, to support user safety, fraud prevention and trusted
-                transactions. For that reason, full anonymity is not available when creating and
-                using an account.
+                However, because Popout Market is designed as a secure local marketplace, we require
+                certain identifying information, including a verified phone number and verified
+                suburb, to support user safety, fraud prevention and trusted transactions. For that
+                reason, full anonymity is not available when creating and using an account.
               </p>
             </PrivacySection>
 
             <PrivacySection title="What Personal Information We Collect">
               <p>We may collect the following categories of personal information:</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>Identity and contact information, such as your name, email address and phone number;</li>
-                <li>Account and profile information, including your suburb verification status and profile nickname;</li>
-                <li>Marketplace content, such as listing text, listing images, descriptions and chat messages;</li>
-                <li>Location information, limited to temporary GPS coordinates used to verify your suburb;</li>
-                <li>Technical information, such as IP address, device identifiers, crash logs and app usage diagnostics; and</li>
-                <li>Communications and support information, including messages you send to us and records of complaints or support requests.</li>
+                <li>
+                  Identity and contact information, such as your name, email address and phone
+                  number;
+                </li>
+                <li>
+                  Account and profile information, including your suburb verification status and
+                  profile nickname;
+                </li>
+                <li>
+                  Marketplace content, such as listing text, listing images, descriptions and chat
+                  messages;
+                </li>
+                <li>
+                  Location information, limited to temporary GPS coordinates used to verify your
+                  suburb;
+                </li>
+                <li>
+                  Technical information, such as IP address, device identifiers, crash logs and app
+                  usage diagnostics; and
+                </li>
+                <li>
+                  Communications and support information, including messages you send to us and
+                  records of complaints or support requests.
+                </li>
               </ul>
             </PrivacySection>
 
             <PrivacySection title="How We Collect Personal Information">
               <p>We collect personal information from two main sources:</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>Directly from you, when you create an account, submit listings, upload photos, send messages, contact support or otherwise use the application; and</li>
-                <li>Automatically from your device or application use, including technical data collected through our service providers and temporary GPS access used for suburb verification.</li>
+                <li>
+                  Directly from you, when you create an account, submit listings, upload photos,
+                  send messages, contact support or otherwise use the application; and
+                </li>
+                <li>
+                  Automatically from your device or application use, including technical data
+                  collected through our service providers and temporary GPS access used for suburb
+                  verification.
+                </li>
               </ul>
             </PrivacySection>
 
             <PrivacySection title="Website, Contact Form and Cookies">
+              <p>This Privacy Policy also applies to our website at www.popoutmarket.com.au.</p>
               <p>
-                This Privacy Policy also applies to our website at
-                www.popoutmarket.com.au.
-              </p>
-              <p>
-                When you use the contact form on our website, we collect the message
-                content you submit, together with your IP address, the page language and a
-                timestamp. We use this information to receive, review and respond to your
-                enquiry. The message is delivered to us by email through a third-party email
-                (SMTP) provider, and we retain the resulting email for as long as reasonably
-                necessary to handle your enquiry and keep records of our communications.
+                When you use the contact form on our website, we collect the message content you
+                submit, together with your IP address, the page language and a timestamp. We use
+                this information to receive, review and respond to your enquiry. The message is
+                delivered to us by email through a third-party email (SMTP) provider, and we retain
+                the resulting email for as long as reasonably necessary to handle your enquiry and
+                keep records of our communications.
               </p>
               <p>
                 Our website uses a single functional cookie, &quot;popout_locale&quot;, which
-                remembers your preferred language for up to 12 months. It is strictly
-                necessary for the multilingual website to work and is not used for
-                advertising, analytics or tracking. We do not use third-party advertising or
-                analytics trackers on the website.
+                remembers your preferred language for up to 12 months. It is strictly necessary for
+                the multilingual website to work and is not used for advertising, analytics or
+                tracking. We do not use third-party advertising or analytics trackers on the
+                website.
               </p>
             </PrivacySection>
 
@@ -121,9 +133,9 @@ export function PrivacyPageContent() {
                 every 30 days for around 10 seconds to verify your suburb.
               </p>
               <p>
-                The GPS coordinates collected for this purpose are used only for suburb
-                verification and are deleted immediately after verification. We retain your
-                verified suburb name, but we do not track or store your location history.
+                The GPS coordinates collected for this purpose are used only for suburb verification
+                and are deleted immediately after verification. We retain your verified suburb name,
+                but we do not track or store your location history.
               </p>
             </PrivacySection>
 
@@ -144,13 +156,13 @@ export function PrivacyPageContent() {
 
             <PrivacySection title="AI Features and Automated Decision-Making">
               <p>
-                We use third-party AI service providers, including OpenAI and Anthropic, to
-                support features such as listing generation, translation and content moderation.
+                We use third-party AI service providers, including OpenAI and Anthropic, to support
+                features such as listing generation, translation and content moderation.
               </p>
               <p>
-                Where practicable, we take steps to minimise the personal information sent to
-                those providers. For example, personal identifiers such as phone numbers are
-                removed before content is processed where this is reasonably possible.
+                Where practicable, we take steps to minimise the personal information sent to those
+                providers. For example, personal identifiers such as phone numbers are removed
+                before content is processed where this is reasonably possible.
               </p>
               <p>
                 We require these providers, under our contractual arrangements, not to use your
@@ -158,8 +170,8 @@ export function PrivacyPageContent() {
               </p>
               <p>
                 We also use automated systems to help detect fraud and moderate listings. In some
-                cases, these systems may suspend or hide listings that are flagged as suspicious
-                or non-compliant.
+                cases, these systems may suspend or hide listings that are flagged as suspicious or
+                non-compliant.
               </p>
               <p>
                 If an automated decision significantly affects your account or access to our
@@ -175,8 +187,8 @@ export function PrivacyPageContent() {
               </p>
               <p>
                 You may opt out of marketing communications at any time through the application
-                settings or, where applicable, by replying STOP to an SMS message. We aim to
-                process opt-out requests within 5 business days.
+                settings or, where applicable, by replying STOP to an SMS message. We aim to process
+                opt-out requests within 5 business days.
               </p>
             </PrivacySection>
 
@@ -187,9 +199,20 @@ export function PrivacyPageContent() {
               </p>
               <p>This may include the following overseas recipients:</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>Twilio (United States), for SMS one-time password verification using your phone number;</li>
-                <li>OpenAI and Anthropic (United States), for processing listing content or chat content used in AI-supported generation, translation or moderation; and</li>
-                <li>Supabase, for hosting, database and related infrastructure services. While primary data storage is intended to be located in Sydney, Australia, some support, administration or related service functions may involve overseas access or processing.</li>
+                <li>
+                  Twilio (United States), for SMS one-time password verification using your phone
+                  number;
+                </li>
+                <li>
+                  OpenAI and Anthropic (United States), for processing listing content or chat
+                  content used in AI-supported generation, translation or moderation; and
+                </li>
+                <li>
+                  Supabase, for hosting, database and related infrastructure services. While primary
+                  data storage is intended to be located in Sydney, Australia, some support,
+                  administration or related service functions may involve overseas access or
+                  processing.
+                </li>
               </ul>
               <p>
                 We take reasonable steps to ensure overseas recipients handle personal information
@@ -229,9 +252,8 @@ export function PrivacyPageContent() {
                 <li>Technical logs (IP address and device identifiers): 90 days.</li>
               </ul>
               <p>
-                When personal information is no longer required, we take reasonable steps to
-                delete or de-identify it, unless we are required or authorised by law to retain
-                it.
+                When personal information is no longer required, we take reasonable steps to delete
+                or de-identify it, unless we are required or authorised by law to retain it.
               </p>
             </PrivacySection>
 
@@ -249,8 +271,7 @@ export function PrivacyPageContent() {
 
             <PrivacySection title="Complaints">
               <p>
-                If you have a privacy complaint, you can contact us at
-                privacy@popoutmarket.com.au.
+                If you have a privacy complaint, you can contact us at privacy@popoutmarket.com.au.
               </p>
               <p>
                 We aim to acknowledge privacy complaints within 7 business days and provide a

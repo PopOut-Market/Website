@@ -53,8 +53,7 @@ const DEMO_STUDENTS: DemoStudent[] = [
 const PHASE_DELAY = [0, 700, 600, 900, 600, 0] as const;
 const HOLD_MS = 3200;
 
-const ease =
-  "transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]";
+const ease = "transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]";
 
 /* ── Trust-blue glow wrapper (indigo theme) ── */
 
@@ -105,7 +104,11 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       clear();
       return;
     }
-    if (reduced) { setPhase(5); clear(); return; }
+    if (reduced) {
+      setPhase(5);
+      clear();
+      return;
+    }
     let cancelled = false;
 
     const advance = (p: number) => {
@@ -113,10 +116,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       if (p <= 5) {
         setPhase(p);
         const delay = p < 5 ? (PHASE_DELAY[p] ?? 600) : HOLD_MS;
-        timerRef.current = window.setTimeout(
-          () => (p < 5 ? advance(p + 1) : advance(6)),
-          delay,
-        );
+        timerRef.current = window.setTimeout(() => (p < 5 ? advance(p + 1) : advance(6)), delay);
       } else {
         setPhase(0);
         timerRef.current = window.setTimeout(() => {
@@ -140,13 +140,10 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
 
   const student = DEMO_STUDENTS[itemIdx]!;
   const verified = phase >= 5;
-  const isEnglishTitle =
-    t.studentVerifyTitle === "Verified students. Trusted trades.";
+  const isEnglishTitle = t.studentVerifyTitle === "Verified students. Trusted trades.";
 
   const vis = (atPhase: number) =>
-    phase >= atPhase
-      ? "translate-y-0 opacity-100"
-      : "translate-y-3 opacity-0";
+    phase >= atPhase ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0";
 
   /* ── Email verification card ── */
 
@@ -155,12 +152,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       {/* Email */}
       <div className={`${ease} ${vis(1)}`}>
         <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <svg
-            className="h-3.5 w-3.5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden
-          >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
             <path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z" />
             <path d="m19 8.839-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z" />
           </svg>
@@ -174,26 +166,17 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       {/* University detected */}
       <div className={`${ease} ${vis(2)}`}>
         <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-          <svg
-            className="h-3.5 w-3.5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden
-          >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
             <path d="M9.664 1.319a.75.75 0 0 1 .672 0 41.059 41.059 0 0 1 8.198 5.424.75.75 0 0 1-.254 1.285 31.372 31.372 0 0 0-7.86 3.83.75.75 0 0 1-.84 0 31.508 31.508 0 0 0-7.86-3.83.75.75 0 0 1-.254-1.285 41.059 41.059 0 0 1 8.198-5.424Z" />
             <path d="M6 11.459a29.848 29.848 0 0 0-2.455-1.158 41.029 41.029 0 0 0-.39 3.114.75.75 0 0 0 .419.74c.528.256 1.046.53 1.554.82-.21.324-.455.63-.739.914a.75.75 0 1 0 1.06 1.06c.37-.369.69-.77.96-1.193a26.613 26.613 0 0 1 3.095 2.348.75.75 0 0 0 .992 0 26.613 26.613 0 0 1 3.095-2.348c.27.424.59.824.96 1.193a.75.75 0 0 0 1.06-1.06 5.857 5.857 0 0 1-.739-.914c.508-.29 1.026-.564 1.554-.82a.75.75 0 0 0 .419-.74 41.058 41.058 0 0 0-.39-3.114A29.849 29.849 0 0 0 14 11.46V15a.75.75 0 0 1-.08.336A24.298 24.298 0 0 0 10 14a24.298 24.298 0 0 0-3.92 1.336.75.75 0 0 1-.08-.336v-3.54Z" />
           </svg>
           {t.studentVerifyUniversity}
         </p>
-        <p className="mt-0.5 text-base font-semibold text-gray-900">
-          {student.university}
-        </p>
+        <p className="mt-0.5 text-base font-semibold text-gray-900">{student.university}</p>
       </div>
 
       {/* Verifying → Verified */}
-      <div
-        className={`border-t border-dashed border-gray-200 ${ease} ${vis(3)}`}
-      />
+      <div className={`border-t border-dashed border-gray-200 ${ease} ${vis(3)}`} />
       <div className={`flex items-center gap-2 ${ease} ${vis(3)}`}>
         {phase >= 4 ? (
           <>
@@ -216,9 +199,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
         ) : (
           <>
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-brand-200 border-t-brand-500" />
-            <span className="text-sm font-medium text-brand-700">
-              {t.studentVerifyVerifying}
-            </span>
+            <span className="text-sm font-medium text-brand-700">{t.studentVerifyVerifying}</span>
           </>
         )}
       </div>
@@ -240,12 +221,7 @@ export function StudentVerifyDemo({ t }: { t: SiteCopy }) {
       </div>
       <div className={`${ease} ${vis(5)}`}>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
-          <svg
-            className="h-3.5 w-3.5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden
-          >
+          <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
             <path
               fillRule="evenodd"
               d="M9.661 2.237a.531.531 0 0 1 .678 0 11.947 11.947 0 0 0 7.078 2.749.5.5 0 0 1 .479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 0 1-.332 0C5.26 16.564 2 12.163 2 7c0-.54.035-1.07.104-1.59a.5.5 0 0 1 .48-.425 11.947 11.947 0 0 0 7.077-2.749ZM14.196 8.61a.75.75 0 0 0-1.142-.975l-3.64 4.26-1.96-1.96a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.101-.042l4.201-4.843Z"

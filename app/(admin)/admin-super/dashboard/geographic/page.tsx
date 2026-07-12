@@ -6,15 +6,7 @@ import {
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
 import { useEffect, useState } from "react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type SuburbStat = {
   name: string;
@@ -92,7 +84,8 @@ export default function GeographicPage() {
       <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="mb-3 text-sm font-semibold text-slate-700">Posts by Suburb</h2>
         <p className="mb-4 text-xs text-slate-500">
-          Map visualization will use react-leaflet + GeoJSON — currently showing bar chart with real data.
+          Map visualization will use react-leaflet + GeoJSON — currently showing bar chart with real
+          data.
         </p>
         {loading ? (
           <div className="h-56 animate-pulse rounded bg-slate-100" />
