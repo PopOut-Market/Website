@@ -226,7 +226,9 @@ export function InvitationLeaderboard({
                     </td>
                     <td className="py-2 pr-4 text-right tabular-nums text-slate-400">{rank}</td>
                     <td className="py-2 pr-4 font-medium text-slate-800">{r.label}</td>
-                    <td className="py-2 pr-4 text-right tabular-nums text-slate-700">{r.invites}</td>
+                    <td className="py-2 pr-4 text-right tabular-nums text-slate-700">
+                      {r.invites}
+                    </td>
                     <td className="py-2 pr-4 text-right tabular-nums text-slate-700">{r.joined}</td>
                     <td className="py-2 pr-4 text-right font-semibold tabular-nums text-emerald-600">
                       {r.paid}
