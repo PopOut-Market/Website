@@ -608,10 +608,7 @@ export default function RewardReviewPage() {
   const blockedCount = pendingIn("blocked");
   const shelfCount = pendingIn("set_aside");
 
-  const isNew = useCallback(
-    (c: Claim) => lastSeen != null && createdMs(c) > lastSeen,
-    [lastSeen],
-  );
+  const isNew = useCallback((c: Claim) => lastSeen != null && createdMs(c) > lastSeen, [lastSeen]);
 
   const newCount = useMemo(
     () => lanes.review.filter((c) => !decided.has(c.claim_id) && isNew(c)).length,
@@ -667,11 +664,12 @@ export default function RewardReviewPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Review queue</h1>
         <p className="mt-1 max-w-3xl text-sm text-slate-600">
-          One question per listing: <strong className="font-semibold">is it OK to stay on the
-          marketplace?</strong> The coins are worked out for you — a seller under the{" "}
-          {REWARD_APPROVED_CAP}-listing cap earns <span className="font-medium">+10</span>, a seller
-          at the cap earns nothing and the listing is simply cleared. Deny only if the seller is at
-          fault; take the listing down if it breaks the rules.
+          One question per listing:{" "}
+          <strong className="font-semibold">is it OK to stay on the marketplace?</strong> The coins
+          are worked out for you — a seller under the {REWARD_APPROVED_CAP}-listing cap earns{" "}
+          <span className="font-medium">+10</span>, a seller at the cap earns nothing and the
+          listing is simply cleared. Deny only if the seller is at fault; take the listing down if
+          it breaks the rules.
         </p>
       </div>
 
@@ -1073,7 +1071,9 @@ function CollapsibleLane({
             {subtitle}
           </span>
         </span>
-        <span className="shrink-0 text-xs font-medium text-slate-500">{open ? "Hide" : "Show"}</span>
+        <span className="shrink-0 text-xs font-medium text-slate-500">
+          {open ? "Hide" : "Show"}
+        </span>
       </button>
       {open && children}
     </section>
@@ -1145,9 +1145,8 @@ function ClaimCard({
     }
     const raw = (rpcError?.message ?? "").trim();
     // A `guard` is a deliberate backend refusal, not a failure — amber, not red.
-    const guard = /REWARDS_POST_RESTRICTED|SELLER_UNDER_CAP|POST_STILL_LIVE|REWARD_CAP_EXCEEDED/i.test(
-      raw,
-    );
+    const guard =
+      /REWARDS_POST_RESTRICTED|SELLER_UNDER_CAP|POST_STILL_LIVE|REWARD_CAP_EXCEEDED/i.test(raw);
     setErr({ text: mapRpcError(rpcError, fallback), guard });
     setBusy(null);
   }
@@ -1358,7 +1357,9 @@ function ClaimCard({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-base font-semibold text-slate-900">{claim.title ?? "(untitled)"}</h2>
+            <h2 className="text-base font-semibold text-slate-900">
+              {claim.title ?? "(untitled)"}
+            </h2>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
               {formatAudCents(claim.price_cents)}
             </span>
@@ -1815,8 +1816,8 @@ function PrimaryHint({
       <p className="text-xs text-amber-700">
         This claim has no seller profile, so we can&apos;t count how many listings this seller has
         already been rewarded for — and nothing else would stop an over-payment.{" "}
-        <strong className="font-semibold">Approve is disabled.</strong> You can still deny the reward
-        or take the listing down.
+        <strong className="font-semibold">Approve is disabled.</strong> You can still deny the
+        reward or take the listing down.
       </p>
     );
   }
@@ -1824,8 +1825,18 @@ function PrimaryHint({
   return (
     <p className="text-xs text-slate-500">
       {nickname}&apos;s {rewarded + 1}
-      {rewarded + 1 === 1 ? "st" : rewarded + 1 === 2 ? "nd" : rewarded + 1 === 3 ? "rd" : "th"}{" "}
-      rewarded listing — {left === 0 ? "their last reward slot" : `${left} slot${left === 1 ? "" : "s"} left after this`}.
+      {rewarded + 1 === 1
+        ? "st"
+        : rewarded + 1 === 2
+          ? "nd"
+          : rewarded + 1 === 3
+            ? "rd"
+            : "th"}{" "}
+      rewarded listing —{" "}
+      {left === 0
+        ? "their last reward slot"
+        : `${left} slot${left === 1 ? "" : "s"} left after this`}
+      .
     </p>
   );
 }
