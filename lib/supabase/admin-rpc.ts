@@ -13,26 +13,6 @@
 type RpcError = { message?: string | null; code?: string | null } | null;
 
 /**
- * True when the RPC itself does not exist in the database — PostgREST answers
- * PGRST202 ("Could not find the function … in the schema cache") for a function
- * it cannot resolve.
- *
- * The reward-review page uses this to detect, at runtime, whether the Step-2
- * migration (`admin_pass_claim` / `admin_void_claim`) has been applied to THIS
- * Supabase project. That keeps the two deploys independent in both directions:
- * the site works before the SQL lands (falling back to a write-nothing local
- * shelf) and lights the real action up the moment it does — no redeploy, and no
- * build-time flag (a `NEXT_PUBLIC_*` flag is inlined at build, so it could not
- * do this anyway).
- */
-export function isMissingFunction(error: RpcError): boolean {
-  if (!error) return false;
-  if ((error.code ?? "").toUpperCase() === "PGRST202") return true;
-  const raw = (error.message ?? "").toLowerCase();
-  return raw.includes("could not find the function") || raw.includes("does not exist");
-}
-
-/**
  * Single-object RPCs (restrict / reinstate / resolve) return a jsonb object,
  * but a SETOF-style function can surface it as a 1-element array — normalise.
  * Do NOT use this for admin_list_appeals (its array IS the payload).
@@ -55,9 +35,20 @@ export function isNotAuthorized(error: RpcError): boolean {
 export const UNAUTHORIZED_MESSAGE =
   "Your session is no longer authorized. Please sign out and sign in again.";
 
-/** p_post_id is a bigint; send a number when the id is purely numeric. */
-export function postIdArg(raw: string): number | string {
-  const t = raw.trim();
+/**
+ * p_post_id is a bigint; send a number when the id is purely numeric.
+ *
+ * Accepts a number as well as a string on purpose. The moderation page feeds this
+ * a string from a text input, but the reward-review page feeds it `post_id` off
+ * `admin_list_pending_claims`, where it is a bigint column — and PostgREST
+ * serialises bigint as a JSON *number*, whatever the TS type claims. Calling
+ * `.trim()` on that would throw.
+ */
+export function postIdArg(raw: string | number): number | string {
+  if (typeof raw === "number") {
+    return Number.isSafeInteger(raw) ? raw : String(raw);
+  }
+  const t = String(raw ?? "").trim();
   if (/^\d+$/.test(t)) {
     const n = Number(t);
     if (Number.isSafeInteger(n)) return n;
@@ -96,15 +87,18 @@ export function reasonLabel(code: string | null | undefined): string {
 }
 
 /**
- * How many listings a seller can be REWARDED for, lifetime. Past this, a listing
- * still gets a hygiene decision — it just earns no coins (`admin_pass_claim`).
+ * The reward, and how many listings a seller can earn it for (lifetime).
  *
- * This constant is a MIRROR of the cap in Postgres, not the source of truth. The
- * authority is `admin_pass_claim`'s SELLER_UNDER_CAP guard (and, once installed,
- * the `enforce_reward_cap` trigger). Change one, change the other — see
- * supabase/migrations/20260713090000_reward_pass_void_claim.sql.
+ * These MIRROR Postgres — they are not the source of truth. `admin_review_claim`
+ * counts the seller's `listing_approved` ledger rows under an advisory lock and
+ * credits nothing past the cap, writing `status='closed_at_cap'` instead. The
+ * client cannot make it overpay, so these two constants only drive LABELS (the
+ * "+10 coins" / "no coins" preview on the approve button). If they drift from the
+ * database, the preview is wrong but no money moves incorrectly — the receipt is
+ * always rendered from what the RPC actually returned.
  */
 export const REWARD_APPROVED_CAP = 6;
+export const REWARD_COINS = 10;
 
 /** Friendly copy for the documented RPC error message texts (Postgres RAISE). */
 const RPC_ERROR_COPY: Record<string, string> = {
@@ -114,13 +108,12 @@ const RPC_ERROR_COPY: Record<string, string> = {
   POST_NOT_RESTRICTABLE: "That listing can't be restricted in its current state.",
   UPHOLD_REQUIRED: "Choose to uphold or decline the appeal.",
   NOT_AUTHORIZED: UNAUTHORIZED_MESSAGE,
-  // Reward-review (admin_pass_claim / admin_void_claim / enforce_reward_cap).
+  // Reward review.
   CLAIM_NOT_FOUND: "That reward claim no longer exists.",
   SELLER_UNDER_CAP:
-    "This seller still has reward slots left, so this listing is owed +10 coins — approve it instead.",
+    "This seller still has reward slots left, so this listing is owed coins — approve it instead.",
   POST_STILL_LIVE:
     "Voiding only applies to a listing that has been taken down. This one hasn't been, so its claim needs a real decision — approve, deny, or take it down.",
-  REWARD_CAP_EXCEEDED: `This seller is already at the ${REWARD_APPROVED_CAP}-listing reward cap, so no more coins can be paid. Reload and use the no-coins approve.`,
   REWARDS_POST_RESTRICTED:
     "This listing is currently taken down. Reinstate it first, then decide the claim.",
 };

@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
+import { paidCountsByOwner } from "@/lib/supabase/reward-paid-counts";
 
 /**
  * Reward DECISION history (read-only, service-role behind requireAdmin).
@@ -21,8 +22,10 @@ import { requireAdmin } from "@/lib/supabase/admin-server-auth";
  * 2. It does not let that widening leak into the CAP. `summary` — the per-seller
  *    counts the review page uses to decide who is at the 6-listing cap — stays
  *    strictly `status = 'approved'`, because that status is what "coins were
- *    actually paid" means. A no-coins clear (`approved_unpaid`) must never
- *    consume a reward slot, and it doesn't: it isn't 'approved'.
+ *    actually paid" means. A no-coins clear (`closed_at_cap` — a fine listing from
+ *    a seller already at the cap) must never consume a reward slot, and it
+ *    doesn't: it isn't 'approved'. That distinction is the whole reason the two
+ *    statuses exist, and it is what makes "approved ⟺ coins were paid" hold.
  *
  * Notes:
  * - `owner_id` and `post_id` embed cleanly (FKs exist). `decided_by` has NO FK to
@@ -75,26 +78,17 @@ export async function GET(req: Request) {
   });
 
   try {
-    // PAID claims only — this is the reward cap, and it must not count no-coins
-    // clears. Kept as a full lightweight scan so the totals stay exact even when
-    // the detail list below is capped at LIMIT.
-    const { data: allApproved, error: countErr } = await sb
-      .from("reward_listing_claims")
-      .select("owner_id")
-      .eq("status", "approved");
-    if (countErr) {
-      return NextResponse.json(
-        { error: `Supabase query failed: ${countErr.message || "(empty)"}` },
-        { status: 500 },
-      );
+    // PAID claims only — a no-coins clear (closed_at_cap) must not count. Paged
+    // against an exact count, because a plain select() is silently clipped at the
+    // project's PostgREST max-rows and these totals are shown to the operator as
+    // hard money figures ("N paid across M sellers").
+    const paid = await paidCountsByOwner(sb);
+    if (!paid.ok) {
+      return NextResponse.json({ error: `Supabase query failed: ${paid.error}` }, { status: 500 });
     }
-    const perOwner = new Map<string, number>();
-    for (const r of (allApproved ?? []) as { owner_id: string | null }[]) {
-      const id = r.owner_id ?? "(unknown)";
-      perOwner.set(id, (perOwner.get(id) ?? 0) + 1);
-    }
-    const totalApproved = (allApproved ?? []).length;
-    const sellersApproved = perOwner.size;
+    const perOwner = new Map<string, number>(Object.entries(paid.data.counts));
+    const totalApproved = paid.data.total;
+    const sellersApproved = paid.data.sellers;
 
     // Every SETTLED claim, newest-first — approvals, no-coins clears, denials,
     // and cancellations alike.

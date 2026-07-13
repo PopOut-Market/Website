@@ -1,17 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
+import { paidCountsByOwner } from "@/lib/supabase/reward-paid-counts";
 
 function env(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
 /**
- * Read-only: returns the number of already-APPROVED reward claims per seller
- * (owner_id -> count). The reward-review page uses this to soft-cap approvals at
- * 6 per user. This is advisory only — the real write still goes through the
- * SECURITY DEFINER `admin_review_claim` RPC, which does not (yet) enforce the
- * cap. Enforce hard in that RPC for a guarantee.
+ * Read-only: how many listings each seller has actually been PAID for
+ * (owner_id -> count of status='approved' claims).
+ *
+ * This is a LABEL, not a control. `admin_review_claim` enforces the 6-listing cap
+ * itself — it counts the seller's `listing_approved` ledger rows under an advisory
+ * lock and, past the cap, credits nothing and writes `status='closed_at_cap'`
+ * instead. A client cannot make it overpay. So this route only decides whether the
+ * reward-review page's approve button reads "+10 coins" or "no coins"; if it is
+ * stale or unavailable, the button still works and the receipt still tells the
+ * truth (the page renders that from the RPC's own `credited` flag).
+ *
+ * `status='approved'` means COINS WERE PAID — `closed_at_cap` (fine listing, seller
+ * already at the cap) is deliberately a different value, so it is not counted here
+ * and never consumes a reward slot.
  */
 export async function GET(req: Request) {
   const gate = await requireAdmin(req);
@@ -27,19 +37,14 @@ export async function GET(req: Request) {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const { data, error } = await sb
-    .from("reward_listing_claims")
-    .select("owner_id")
-    .eq("status", "approved");
-
-  if (error) {
-    return NextResponse.json({ error: `Query failed: ${error.message}` }, { status: 500 });
+  const result = await paidCountsByOwner(sb);
+  if (!result.ok) {
+    return NextResponse.json({ error: `Query failed: ${result.error}` }, { status: 500 });
   }
 
-  const counts: Record<string, number> = {};
-  (data ?? []).forEach((r: { owner_id: string | null }) => {
-    if (r.owner_id) counts[r.owner_id] = (counts[r.owner_id] ?? 0) + 1;
-  });
+  // Drop the synthetic "(unknown)" bucket — the page keys strictly on a real
+  // owner_id, and a claim with none simply has no cap to preview.
+  const { "(unknown)": _unknown, ...counts } = result.data.counts;
 
   return NextResponse.json({ counts });
 }

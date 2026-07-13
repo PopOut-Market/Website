@@ -10,13 +10,13 @@ import { adminApiFetch } from "@/lib/supabase/admin-fetch";
 import {
   formatAudCents,
   formatDateTime,
-  isMissingFunction,
   isNotAuthorized,
   mapRpcError,
   postIdArg,
   RESTRICT_REASON_CODES,
   RESTRICTION_REASON_LABELS,
   REWARD_APPROVED_CAP,
+  REWARD_COINS,
   UNAUTHORIZED_MESSAGE,
   unwrapRpc,
   type RestrictReasonCode,
@@ -35,53 +35,41 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
  *
  *     "Is this listing OK to stay on the marketplace?"
  *
- * The coin payout is NOT a second question. It is a consequence the SERVER
- * derives from the seller's cap state, and the button only PREVIEWS it:
+ * The coins are NOT a second question. `admin_review_claim(id, approve=true)`
+ * decides them ITSELF: it counts the seller's `listing_approved` ledger rows
+ * under an advisory lock and credits +10 only if they are under the cap. Past the
+ * cap it clears the claim at ZERO coins and returns `credited: false` with
+ * `status: 'closed_at_cap'`. It has always worked this way, and the cap has always
+ * been enforced there — a client cannot make it overpay.
  *
- *   - seller under the cap → "Approve · +10 coins"    → admin_review_claim(id, true)
- *   - seller at the cap    → "Approve · no coins"     → admin_pass_claim(id)
+ * So Approve is ONE button that is never disabled. The seller's approved count is
+ * used ONLY to PREVIEW the outcome on the label ("+10 coins" / "no coins"). If
+ * that preview is stale, wrong, or unavailable, nothing breaks and no money moves
+ * incorrectly — the RECEIPT is rendered from what the server actually returned,
+ * never from what the client guessed.
  *
- * Same verb, same place, never disabled. The reviewer never picks a payout.
+ * ## What the old page got wrong
  *
- * `Deny reward` stays, but only for its honest meaning: the seller is at FAULT
- * (stolen photos, joke listing, ...). It leaves the listing live. `Take listing
- * down` is the hygiene action — it hides the listing, opens an appeal, and
- * cancels the claim server-side.
+ * It DISABLED Approve once a seller hit the cap. That was the whole bug. The
+ * server would have cleared those claims at zero coins quite happily, but the UI
+ * refused to ask, leaving the reviewer with only Deny (every reason code asserts
+ * seller FAULT — a fabricated accusation against a clean listing) or Restrict
+ * (removes a good listing). Both are lies, so an honest reviewer wrote nothing and
+ * at-cap sellers' listings stacked up forever.
  *
- * ## Why the old page stacked at-cap sellers forever
+ * It also grouped BY SELLER, so a group's sort key was its OLDEST claim and a
+ * listing posted a minute ago could sit at the bottom of the page. The unit of the
+ * list now matches the unit of the decision — a listing. The seller is a chip on
+ * the card, not a container.
  *
- * `Approve` used to mean two things at once — "this listing is fine" AND "+10
- * coins are owed". So when the reward axis ran out, the hygiene axis was taken
- * hostage: Approve locked, and the only remaining exits were Deny (every reason
- * code asserts seller fault — a fabricated accusation against a clean listing)
- * or Restrict (removes a good listing). Both are lies, so an honest reviewer
- * wrote nothing, and the claim sat in `pending` forever. The missing verb was
- * "this listing is fine, and nothing is owed". `admin_pass_claim` IS that verb.
+ * ## The one lane that is genuinely different
  *
- * The old page also grouped by seller, which is why recency was unfindable: a
- * group's sort key was its OLDEST claim, so a listing posted a minute ago could
- * sit at the bottom of the page. The unit of the list now matches the unit of
- * the decision — a listing — and the seller is a chip on the card, not a
- * container. The one workflow grouping genuinely served (spotting a farm)
- * survives as the "only this seller" filter.
+ * A claim whose listing is already RESTRICTED cannot be approved or denied at all
+ * — `admin_review_claim` raises REWARDS_POST_RESTRICTED on both. `admin_void_claim`
+ * is the only exit. Those claims get their own section.
  *
- * ## Two runtime capabilities, both fail CLOSED
- *
- * 1. `passSupported` — whether THIS Supabase project has the Step-2 migration
- *    (`admin_pass_claim` / `admin_void_claim`). Probed at load, so the site and
- *    the SQL deploy independently in either order. Until the SQL lands, the
- *    at-cap action is `Set aside`, which writes NOTHING to the server: there is
- *    no honest zero-backend way to settle an at-cap claim, so we don't pretend
- *    there is. See supabase/migrations/20260713090000_reward_pass_void_claim.sql.
- *
- * 2. `countsError` — if the approved-counts route fails we do not know who is at
- *    cap, so Approve is disabled BOARD-WIDE behind a red banner. (The old page
- *    swallowed that failure, defaulted every seller to 0/6, and silently unlocked
- *    Approve for everyone — a cap whose failure mode is "no cap" is not a cap.)
- *
- * Reads and writes call the RPCs directly from the signed-in reviewer's Supabase
- * session (granted to `authenticated`, self-gated on `reward_admins`). The cap
- * counts come from a read-only service-role route.
+ * All RPCs are called directly from the signed-in reviewer's Supabase session
+ * (granted to `authenticated`, self-gated on `reward_admins`).
  */
 
 const PENDING_PAGE_SIZE = 50; // page size the RPC honours
@@ -89,17 +77,9 @@ const MAX_PENDING_PAGES = 40; // safety ceiling — 2000 pending claims
 const STALE_AFTER_DAYS = 7; // nag when the oldest claim has waited this long
 
 /**
- * A claim id that cannot exist (the identity sequence starts at 1), used to probe
- * whether `admin_pass_claim` is installed. The function raises CLAIM_NOT_FOUND
- * long before it can touch a row, so the probe is side-effect-free; the only
- * thing we read from the answer is whether the function itself resolved.
- */
-const PASS_PROBE_CLAIM_ID = 0;
-
-/**
- * Reasons the +10 is refused. EVERY one of these asserts seller FAULT and is
- * recorded permanently — which is exactly why none of them may be used to clear a
- * clean listing from an at-cap seller. That is what `admin_pass_claim` is for.
+ * Reasons the +10 is refused. EVERY one asserts seller FAULT and is recorded
+ * permanently — which is why none of them may be used to clear a clean listing.
+ * A clean listing from an at-cap seller is just an Approve that pays nothing.
  */
 const DENY_CODES = [
   { value: "not_own_photos", label: "Not their own photos" },
@@ -144,24 +124,22 @@ type Claim = {
 };
 
 /**
- * Which section a card sits in.
- *   review     — needs a decision, and coins are on the table
- *   no_reward  — needs a decision, but the seller is at cap so it pays nothing
- *   blocked    — the listing is already taken down, so NO reward decision is
- *                possible: admin_review_claim refuses both approve and deny with
- *                REWARDS_POST_RESTRICTED, and re-restricting is a no-op. Only
- *                admin_void_claim (or reinstating first) can settle it.
- *   set_aside  — parked locally, writes nothing. Only exists pre-migration.
+ * `review` — needs a decision. Whether it pays is the SERVER's business.
+ * `blocked` — listing already taken down; only admin_void_claim can settle it.
  */
-type Lane = "review" | "no_reward" | "blocked" | "set_aside";
+type Lane = "review" | "blocked";
 
-type DecisionKind = "approved" | "passed" | "denied" | "restricted" | "voided" | "noop";
+type DecisionKind = "approved" | "closed" | "denied" | "restricted" | "voided" | "noop";
 
-/** A receipt rendered IN PLACE of the card it replaces, so nothing below reflows. */
-type Decided = {
-  kind: DecisionKind;
-  label: string;
-  lane: Lane;
+/** A receipt rendered IN PLACE of the card, so nothing below reflows mid-click. */
+type Decided = { kind: DecisionKind; label: string; lane: Lane };
+
+/** What `admin_review_claim` answers. `credited` is the money fact; trust it. */
+type ReviewResult = {
+  changed?: boolean;
+  credited?: boolean;
+  coins?: number;
+  status?: string;
 };
 
 type HistoryItem = {
@@ -207,14 +185,22 @@ function initial(nickname: string): string {
 }
 
 /**
- * Per-admin browser state. Keyed on the signed-in identity so two admins sharing
- * a machine never inherit each other's watermark or shelf.
+ * Did the server actually pay? Read the ANSWER, never the client's guess.
+ *
+ * `credited` is authoritative. `status` is the fallback for it: 'closed_at_cap'
+ * is the terminal status the RPC writes when it clears a claim without paying.
+ * If neither field is present we return null — "it succeeded, but don't claim
+ * anything about coins", which is the only honest thing left to say.
  */
+function creditedFrom(result: ReviewResult | null): boolean | null {
+  if (typeof result?.credited === "boolean") return result.credited;
+  if (result?.status === "closed_at_cap") return false;
+  if (result?.status === "approved") return true;
+  return null;
+}
+
 function lastSeenKey(identity: string): string {
   return `popout.rewardReview.lastSeen.${identity}`;
-}
-function setAsideKey(identity: string): string {
-  return `popout.rewardReview.setAside.${identity}`;
 }
 
 function readLastSeen(identity: string): number | null {
@@ -225,26 +211,6 @@ function readLastSeen(identity: string): number | null {
     return Number.isFinite(t) ? t : null;
   } catch {
     return null;
-  }
-}
-
-function readSetAside(identity: string): Set<number> {
-  try {
-    const raw = window.localStorage.getItem(setAsideKey(identity));
-    if (!raw) return new Set();
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return new Set();
-    return new Set(parsed.filter((n): n is number => typeof n === "number"));
-  } catch {
-    return new Set();
-  }
-}
-
-function writeSetAside(identity: string, ids: Set<number>): void {
-  try {
-    window.localStorage.setItem(setAsideKey(identity), JSON.stringify([...ids]));
-  } catch {
-    /* private mode / quota — the shelf is best-effort by design */
   }
 }
 
@@ -259,60 +225,39 @@ export default function RewardReviewPage() {
   const [loading, setLoading] = useState(true);
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  /** A page of the queue failed to load, but earlier pages are shown. */
   const [partial, setPartial] = useState<string | null>(null);
-  /** More pending claims exist than the safety ceiling allows us to load. */
   const [truncated, setTruncated] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
+  /**
+   * Advisory ONLY — it decides the button's LABEL, never whether the button
+   * works. The cap itself lives in Postgres.
+   */
   const [approvedCounts, setApprovedCounts] = useState<Record<string, number>>({});
   const [countsError, setCountsError] = useState(false);
 
-  /** null while probing. See the PASS_PROBE_CLAIM_ID docs. */
-  const [passSupported, setPassSupported] = useState<boolean | null>(null);
-
   const [decided, setDecided] = useState<Map<number, Decided>>(new Map());
-  const [setAside, setSetAside] = useState<Set<number>>(new Set());
 
-  /**
-   * Frozen at mount on purpose. If it tracked "now", the NEW badges would vanish
-   * the instant you arrived and the feature would be decorative. It advances ONLY
-   * when the reviewer explicitly clicks "Mark all seen".
-   */
+  /** Frozen at mount — otherwise the NEW badges vanish the instant you arrive. */
   const [lastSeen, setLastSeen] = useState<number | null>(null);
 
   const [newestFirst, setNewestFirst] = useState(true);
   const [query, setQuery] = useState("");
   const [sellerFilter, setSellerFilter] = useState<{ id: string; nickname: string } | null>(null);
-
-  // null = "reviewer hasn't touched it", so the probe supplies the default. An
-  // explicit toggle always wins after that (OR-ing the probe into the render
-  // condition made the Hide button dead once the migration was installed).
-  const [showNoReward, setShowNoReward] = useState<boolean | null>(null);
   const [showBlocked, setShowBlocked] = useState(false);
-  const [showShelf, setShowShelf] = useState(false);
-  /** Board-level notice — survives a card being re-laned out from under it. */
-  const [notice, setNotice] = useState<string | null>(null);
 
   const [lightbox, setLightbox] = useState<{ photos: string[]; index: number } | null>(null);
 
   const [history, setHistory] = useState<HistoryItem[] | null>(null);
   const [historySummary, setHistorySummary] = useState<HistorySummary | null>(null);
+  const [historyTruncated, setHistoryTruncated] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
-  /** "We have attempted a load" — NOT "we have data". See the fetch effect. */
+  /** "We have attempted a load" — NOT "we have data", or a failure loops. */
   const [historyTried, setHistoryTried] = useState(false);
-  const [historyTruncated, setHistoryTruncated] = useState(false);
 
   const countsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  /** Monotonic id of the newest counts request — older responses are dropped. */
   const countsSeq = useRef(0);
-  /**
-   * Slots this browser has paid for in THIS session, per seller. The server's
-   * count can lag behind them (a scan started before the approve committed), and
-   * a lagging snapshot must never be allowed to LOWER a seller below what we know
-   * we have already paid — that is what would re-arm "+10" on an at-cap seller.
-   */
-  const creditedHere = useRef<Record<string, number>>({});
 
   /* ------------------------------------------------------------- data loads */
 
@@ -320,10 +265,8 @@ export default function RewardReviewPage() {
     const seq = ++countsSeq.current;
     try {
       const res = await adminApiFetch("/api/admin/reward-approved-counts", { cache: "no-store" });
-      // A newer request has been issued since this one left — its answer is the
-      // truth, so drop this (possibly older) snapshot on the floor. Without this,
-      // an in-flight response landing after a later approval would erase the
-      // approval's optimistic increment and re-enable a +10 that isn't owed.
+      // Drop a stale answer: a response that left before a later decision would
+      // otherwise roll the preview back and flip a label to the wrong outcome.
       if (seq !== countsSeq.current) return;
       if (!res.ok) {
         setCountsError(true);
@@ -331,17 +274,9 @@ export default function RewardReviewPage() {
       }
       const json = await res.json();
       if (seq !== countsSeq.current) return;
-      const server: Record<string, number> = json.counts ?? {};
-      // Never regress below what this session has already credited.
-      const merged = { ...server };
-      for (const [ownerId, paidHere] of Object.entries(creditedHere.current)) {
-        merged[ownerId] = Math.max(server[ownerId] ?? 0, paidHere);
-      }
-      setApprovedCounts(merged);
+      setApprovedCounts(json.counts ?? {});
       setCountsError(false);
     } catch {
-      // Fail CLOSED. Without the counts we cannot tell who is at cap, so Approve
-      // is disabled board-wide rather than silently paying an over-cap seller.
       if (seq === countsSeq.current) setCountsError(true);
     }
   }, []);
@@ -349,25 +284,8 @@ export default function RewardReviewPage() {
   /** Debounced so a burst of decisions costs ONE scan, not one per click. */
   const scheduleCountsRefresh = useCallback(() => {
     if (countsTimer.current) clearTimeout(countsTimer.current);
-    countsTimer.current = setTimeout(() => {
-      void fetchApprovedCounts();
-    }, 1500);
+    countsTimer.current = setTimeout(() => void fetchApprovedCounts(), 1500);
   }, [fetchApprovedCounts]);
-
-  const probePassSupport = useCallback(async () => {
-    if (!isAdminAuthConfigured()) return;
-    try {
-      const sb = getAdminAuthBrowserClient();
-      const { error: rpcError } = await sb.rpc("admin_pass_claim", {
-        p_claim_id: PASS_PROBE_CLAIM_ID,
-      });
-      setPassSupported(!isMissingFunction(rpcError));
-    } catch {
-      // Network blip → assume the safe answer (no server-side settle available),
-      // which only ever costs us the write-nothing local shelf.
-      setPassSupported(false);
-    }
-  }, []);
 
   const load = useCallback(async () => {
     if (!isAdminAuthConfigured()) {
@@ -411,9 +329,8 @@ export default function RewardReviewPage() {
       failure = e instanceof Error ? e.message : "Failed to load the queue.";
     }
 
-    // A blipped page must not wipe the pages that DID load — the old page called
-    // setClaims([]) here, so a mid-loop error rendered an authoritative "0 to
-    // review" next to the red banner and the queue looked healthy and empty.
+    // A blipped page must not wipe the pages that DID load, or the KPI renders an
+    // authoritative "0 to review" next to a red banner and the queue looks empty.
     if (failure && all.length === 0) {
       setError(failure);
       setClaims([]);
@@ -450,21 +367,15 @@ export default function RewardReviewPage() {
 
   useEffect(() => {
     setLastSeen(readLastSeen(identity));
-    setSetAside(readSetAside(identity));
   }, [identity]);
 
   useEffect(() => {
     void load();
-    void probePassSupport();
-  }, [load, probePassSupport]);
+  }, [load]);
 
-  // History is fetched only when the tab is actually opened (the old page called
-  // it after EVERY approval, and it runs an unbounded table scan) — and only ONCE
-  // per invalidation. Gating on `history === null` alone would loop forever on a
-  // failure: the error paths never set `history`, so the guard would keep passing
-  // and hammer the service-role route at one request per round-trip. The gate is
-  // "have we tried", not "did we get an answer". Explicit retry is the Refresh
-  // button; `historyTried` is reset to false whenever a decision invalidates it.
+  // Fetched only when the tab is opened, and only ONCE per invalidation. Gating on
+  // `history === null` would loop forever on failure (the error paths never set
+  // it), hammering an unbounded service-role scan. The gate is "have we tried".
   useEffect(() => {
     if (tab === "decisions" && !historyTried && !historyLoading) {
       setHistoryTried(true);
@@ -485,59 +396,38 @@ export default function RewardReviewPage() {
     (claimId: number, entry: Decided, creditedOwnerId?: string | null) => {
       setDecided((prev) => new Map(prev).set(claimId, entry));
       if (creditedOwnerId) {
-        // Reflect the consumed slot immediately so the seller's OTHER pending
-        // cards flip to the no-coins action without waiting for the refetch, and
-        // remember it in a ref so a lagging server snapshot can't undo it.
-        setApprovedCounts((prev) => {
-          const next = (prev[creditedOwnerId] ?? 0) + 1;
-          creditedHere.current[creditedOwnerId] = Math.max(
-            creditedHere.current[creditedOwnerId] ?? 0,
-            next,
-          );
-          return { ...prev, [creditedOwnerId]: next };
-        });
+        // Any counts fetch already in flight was issued BEFORE this payment, so its
+        // answer is now stale by construction. Retire it — otherwise it lands a
+        // moment later, overwrites this increment, and re-advertises "+10 coins" on
+        // the seller's remaining cards when they have just hit the cap. (The money
+        // is safe regardless: the RPC won't overpay and the receipt is rendered from
+        // its answer. This keeps the PREVIEW from lying.)
+        countsSeq.current++;
+        setApprovedCounts((prev) => ({
+          ...prev,
+          [creditedOwnerId]: (prev[creditedOwnerId] ?? 0) + 1,
+        }));
       }
       scheduleCountsRefresh();
-      // A decision changes what the Decisions tab should show — drop the cache and
-      // re-arm the one-shot fetch so the tab reloads next time it is opened.
       setHistory(null);
       setHistoryTried(false);
     },
     [scheduleCountsRefresh],
   );
 
-  /**
-   * `admin_restrict_post` answered `changed:false` — the listing was ALREADY down.
-   * Nothing was written, so do NOT show a receipt and do NOT drop the card (the
-   * old page did both, "clearing" a claim the server never touched). Re-tag it so
-   * it moves to the Blocked lane, which is where it actually belongs.
-   */
+  /** Restrict answered `changed:false` — the listing was ALREADY down. */
   const markAlreadyRestricted = useCallback((claimId: number) => {
     setClaims((prev) =>
       prev.map((c) => (c.claim_id === claimId ? { ...c, post_status: "restricted" } : c)),
     );
-    // Re-tagging moves the card into the Blocked lane, which unmounts the card
-    // that would otherwise have shown the explanation — so say it at board level
-    // and open the lane, or the card would just silently vanish and read exactly
-    // like a successful take-down.
+    // Re-laning unmounts the card that would have shown the explanation, so say it
+    // at board level and open the lane — otherwise it just silently vanishes and
+    // reads exactly like a successful take-down.
     setShowBlocked(true);
     setNotice(
       "That listing was already taken down, so nothing changed. Its reward claim is still open — it has moved to the Blocked section below.",
     );
   }, []);
-
-  const toggleSetAside = useCallback(
-    (claimId: number, on: boolean) => {
-      setSetAside((prev) => {
-        const next = new Set(prev);
-        if (on) next.add(claimId);
-        else next.delete(claimId);
-        writeSetAside(identity, next);
-        return next;
-      });
-    },
-    [identity],
-  );
 
   const markAllSeen = useCallback(() => {
     try {
@@ -561,17 +451,9 @@ export default function RewardReviewPage() {
     (c: Claim): Lane => {
       const pinned = decided.get(c.claim_id)?.lane;
       if (pinned) return pinned; // a receipt never jumps sections under the cursor
-      if (setAside.has(c.claim_id)) return "set_aside";
-      if (c.post_status === "restricted") return "blocked";
-      // Cap unknown (counts route down, or no seller profile to key the count on)
-      // → keep the card in the working lane, where Approve is DISABLED. It must
-      // not be filed as "no reward at stake": we don't know that it isn't.
-      if (countsError) return "review";
-      const sellerId = c.seller?.id;
-      if (!sellerId) return "review";
-      return (approvedCounts[sellerId] ?? 0) >= REWARD_APPROVED_CAP ? "no_reward" : "review";
+      return c.post_status === "restricted" ? "blocked" : "review";
     },
-    [approvedCounts, countsError, decided, setAside],
+    [decided],
   );
 
   const filtering = query.trim().length > 0 || sellerFilter !== null;
@@ -581,15 +463,13 @@ export default function RewardReviewPage() {
     return claims.filter((c) => {
       if (sellerFilter && c.seller?.id !== sellerFilter.id) return false;
       if (!needle) return true;
-      const hay = `${c.title ?? ""} ${c.seller?.nickname ?? ""}`.toLowerCase();
-      return hay.includes(needle);
+      return `${c.title ?? ""} ${c.seller?.nickname ?? ""}`.toLowerCase().includes(needle);
     });
   }, [claims, query, sellerFilter]);
 
   const lanes = useMemo(() => {
-    const out: Record<Lane, Claim[]> = { review: [], no_reward: [], blocked: [], set_aside: [] };
+    const out: Record<Lane, Claim[]> = { review: [], blocked: [] };
     for (const c of visible) out[laneOf(c)].push(c);
-    // newestFirst → the biggest timestamp comes first (descending).
     for (const key of Object.keys(out) as Lane[]) {
       out[key].sort((a, b) =>
         newestFirst ? createdMs(b) - createdMs(a) : createdMs(a) - createdMs(b),
@@ -604,9 +484,7 @@ export default function RewardReviewPage() {
   );
 
   const needsReviewCount = pendingIn("review");
-  const noRewardCount = pendingIn("no_reward");
   const blockedCount = pendingIn("blocked");
-  const shelfCount = pendingIn("set_aside");
 
   const isNew = useCallback((c: Claim) => lastSeen != null && createdMs(c) > lastSeen, [lastSeen]);
 
@@ -615,15 +493,14 @@ export default function RewardReviewPage() {
     [lanes.review, decided, isNew],
   );
 
-  /** Oldest UNDECIDED claim across the two working lanes — the starvation guard. */
   const oldestWaitingDays = useMemo(() => {
-    const times = [...lanes.review, ...lanes.no_reward]
+    const times = lanes.review
       .filter((c) => !decided.has(c.claim_id))
       .map(createdMs)
       .filter((t) => t > 0);
     if (times.length === 0) return 0;
     return Math.floor((Date.now() - Math.min(...times)) / 86_400_000);
-  }, [lanes.review, lanes.no_reward, decided]);
+  }, [lanes.review, decided]);
 
   const pendingCountFor = useCallback(
     (sellerId: string | undefined) => {
@@ -633,22 +510,20 @@ export default function RewardReviewPage() {
     [claims, decided],
   );
 
-  /* ------------------------------------------------------------------ render */
-
   const cardProps = {
     approvedCounts,
     countsError,
-    passSupported,
     decided,
     onDecided,
     onUnauthorized,
     markAlreadyRestricted,
-    toggleSetAside,
     onOpenPhotos: (photos: string[], index: number) => setLightbox({ photos, index }),
     onFilterSeller: (id: string, nickname: string) => setSellerFilter({ id, nickname }),
     pendingCountFor,
     isNew,
   };
+
+  /* ------------------------------------------------------------------ render */
 
   return (
     <div className="space-y-6">
@@ -665,11 +540,11 @@ export default function RewardReviewPage() {
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Review queue</h1>
         <p className="mt-1 max-w-3xl text-sm text-slate-600">
           One question per listing:{" "}
-          <strong className="font-semibold">is it OK to stay on the marketplace?</strong> The coins
-          are worked out for you — a seller under the {REWARD_APPROVED_CAP}-listing cap earns{" "}
-          <span className="font-medium">+10</span>, a seller at the cap earns nothing and the
-          listing is simply cleared. Deny only if the seller is at fault; take the listing down if
-          it breaks the rules.
+          <strong className="font-semibold">is it OK to stay on the marketplace?</strong> Approve,
+          and the coins sort themselves out — a seller under the {REWARD_APPROVED_CAP}-listing cap
+          earns <span className="font-medium">+{REWARD_COINS}</span>, a seller at the cap earns
+          nothing and the listing is simply cleared. Deny only if the seller is at fault; take the
+          listing down if it breaks the rules.
         </p>
       </div>
 
@@ -723,22 +598,23 @@ export default function RewardReviewPage() {
               total={lastSeen == null ? "—" : newCount}
               loading={loading}
             />
-            <KpiCard label={`No reward at stake`} total={noRewardCount} loading={loading} />
+            <KpiCard label="Blocked" total={blockedCount} loading={loading} />
             <KpiCard label="Decided this session" total={decided.size} loading={false} />
           </div>
 
           {countsError && (
-            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
               <span className="flex-1">
-                <strong className="font-semibold">Reward counts unavailable.</strong> We can&apos;t
-                tell who has hit the {REWARD_APPROVED_CAP}-listing cap, so{" "}
-                <strong className="font-semibold">Approve is disabled</strong> to stop anyone being
-                over-credited. Denying and taking listings down still work.
+                Couldn&apos;t load the reward counts, so the buttons can&apos;t preview whether a
+                listing will earn coins.{" "}
+                <strong className="font-semibold">Approving is still safe</strong> — the database
+                decides the payout, not this page, and the receipt will tell you what actually
+                happened.
               </span>
               <button
                 type="button"
                 onClick={() => void fetchApprovedCounts()}
-                className="rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+                className="rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
               >
                 Retry
               </button>
@@ -768,24 +644,6 @@ export default function RewardReviewPage() {
               >
                 Dismiss
               </button>
-            </div>
-          )}
-
-          {passSupported === false && (
-            <div className="rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-sm text-slate-700">
-              <strong className="font-semibold">
-                The no-coins approve isn&apos;t installed on this database yet.
-              </strong>{" "}
-              Until <code className="rounded bg-white px-1 py-0.5 text-xs">admin_pass_claim</code>{" "}
-              ships, an at-cap seller&apos;s good listing has no honest way to be closed — approving
-              would over-pay, denying would record a fault that didn&apos;t happen, and taking it
-              down would remove a good listing. So those cards offer{" "}
-              <strong className="font-semibold">Set aside</strong> instead, which writes nothing to
-              the server. Run{" "}
-              <code className="rounded bg-white px-1 py-0.5 text-xs">
-                supabase/migrations/20260713090000_reward_pass_void_claim.sql
-              </code>{" "}
-              and reload — this page lights the real action up on its own.
             </div>
           )}
 
@@ -889,9 +747,7 @@ export default function RewardReviewPage() {
             <div className="space-y-8">
               <section className="space-y-3">
                 {lanes.review.length === 0 ? (
-                  // A filter that hides everything is NOT an empty queue — saying
-                  // "nothing to review" while a search box is narrowing the list is
-                  // just a lie with confetti on it.
+                  // A filter that hides everything is not an empty queue.
                   filtering ? (
                     <div className="rounded-xl border border-slate-200 bg-white py-10 text-center text-sm text-slate-500 shadow-sm">
                       No listings match the current filter.
@@ -900,13 +756,11 @@ export default function RewardReviewPage() {
                     <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center shadow-sm">
                       <div className="mb-3 text-4xl">🎉</div>
                       <p className="text-sm text-slate-600">
-                        Nothing left that needs a decision with coins on the table.
+                        Nothing left to review — every listing has a decision.
                       </p>
-                      {(noRewardCount > 0 || blockedCount > 0) && (
+                      {blockedCount > 0 && (
                         <p className="mt-1 text-xs text-slate-400">
-                          {noRewardCount > 0 && `${noRewardCount} at-cap`}
-                          {noRewardCount > 0 && blockedCount > 0 && " · "}
-                          {blockedCount > 0 && `${blockedCount} blocked`} still below.
+                          {blockedCount} blocked claim{blockedCount === 1 ? "" : "s"} still below.
                         </p>
                       )}
                     </div>
@@ -921,46 +775,29 @@ export default function RewardReviewPage() {
                 )}
               </section>
 
-              {lanes.no_reward.length > 0 && (
-                <CollapsibleLane
-                  title="No reward at stake"
-                  subtitle={`Seller is already at the ${REWARD_APPROVED_CAP}-listing cap, so these pay nothing — but they still need a hygiene decision.`}
-                  count={noRewardCount}
-                  // Worth working when they can actually be settled; pure clutter
-                  // when they can't. The migration flips this open by itself —
-                  // until the reviewer says otherwise.
-                  open={showNoReward ?? passSupported === true}
-                  onToggle={() => setShowNoReward((v) => !(v ?? passSupported === true))}
-                  tone="slate"
-                >
-                  <LaneBody claims={lanes.no_reward} lane="no_reward" {...cardProps} />
-                </CollapsibleLane>
-              )}
-
               {lanes.blocked.length > 0 && (
-                <CollapsibleLane
-                  title="Blocked — listing already taken down"
-                  subtitle="No reward decision is possible on these: approve and deny both refuse while the listing is restricted. Reinstate it first, or void the claim."
-                  count={blockedCount}
-                  open={showBlocked}
-                  onToggle={() => setShowBlocked((v) => !v)}
-                  tone="rose"
-                >
-                  <LaneBody claims={lanes.blocked} lane="blocked" {...cardProps} />
-                </CollapsibleLane>
-              )}
-
-              {lanes.set_aside.length > 0 && (
-                <CollapsibleLane
-                  title="Set aside"
-                  subtitle="Local to this browser — nothing was written. These claims are still pending on the server and other admins still see them."
-                  count={shelfCount}
-                  open={showShelf}
-                  onToggle={() => setShowShelf((v) => !v)}
-                  tone="slate"
-                >
-                  <LaneBody claims={lanes.set_aside} lane="set_aside" {...cardProps} />
-                </CollapsibleLane>
+                <section className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowBlocked((v) => !v)}
+                    className="flex w-full items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-left transition hover:bg-rose-100/70"
+                  >
+                    <span className="text-slate-400">{showBlocked ? "▾" : "▸"}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold text-rose-900">
+                        Blocked — listing already taken down · {blockedCount}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-rose-700">
+                        No reward decision is possible while a listing is restricted — approve and
+                        deny both refuse. Reinstate it, or void the claim.
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-xs font-medium text-slate-500">
+                      {showBlocked ? "Hide" : "Show"}
+                    </span>
+                  </button>
+                  {showBlocked && <LaneBody claims={lanes.blocked} lane="blocked" {...cardProps} />}
+                </section>
               )}
             </div>
           )}
@@ -975,12 +812,10 @@ export default function RewardReviewPage() {
 type CardCommon = {
   approvedCounts: Record<string, number>;
   countsError: boolean;
-  passSupported: boolean | null;
   decided: Map<number, Decided>;
   onDecided: (claimId: number, entry: Decided, creditedOwnerId?: string | null) => void;
   onUnauthorized: () => void;
   markAlreadyRestricted: (claimId: number) => void;
-  toggleSetAside: (claimId: number, on: boolean) => void;
   onOpenPhotos: (photos: string[], index: number) => void;
   onFilterSeller: (id: string, nickname: string) => void;
   pendingCountFor: (sellerId: string | undefined) => number;
@@ -993,8 +828,6 @@ function LaneBody({
   showNewDivider = false,
   ...common
 }: CardCommon & { claims: Claim[]; lane: Lane; showNewDivider?: boolean }) {
-  // The divider is only meaningful in a newest-first list: everything above it is
-  // new since the reviewer's last visit, everything below was already there.
   let dividerAfter = -1;
   if (showNewDivider) {
     const lastNew = claims.map((c) => common.isNew(c)).lastIndexOf(true);
@@ -1026,64 +859,10 @@ function LaneBody({
   );
 }
 
-function CollapsibleLane({
-  title,
-  subtitle,
-  count,
-  open,
-  onToggle,
-  tone,
-  children,
-}: {
-  title: string;
-  subtitle: string;
-  count: number;
-  open: boolean;
-  onToggle: () => void;
-  tone: "slate" | "rose";
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="space-y-3">
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
-          tone === "rose"
-            ? "border-rose-200 bg-rose-50 hover:bg-rose-100/70"
-            : "border-slate-200 bg-slate-100 hover:bg-slate-200/60"
-        }`}
-      >
-        <span className="text-slate-400">{open ? "▾" : "▸"}</span>
-        <span className="min-w-0 flex-1">
-          <span
-            className={`block text-sm font-semibold ${
-              tone === "rose" ? "text-rose-900" : "text-slate-900"
-            }`}
-          >
-            {title} · {count}
-          </span>
-          <span
-            className={`mt-0.5 block text-xs ${
-              tone === "rose" ? "text-rose-700" : "text-slate-500"
-            }`}
-          >
-            {subtitle}
-          </span>
-        </span>
-        <span className="shrink-0 text-xs font-medium text-slate-500">
-          {open ? "Hide" : "Show"}
-        </span>
-      </button>
-      {open && children}
-    </section>
-  );
-}
-
 function Receipt({ claim, entry }: { claim: Claim; entry: Decided }) {
   const tone: Record<DecisionKind, string> = {
     approved: "border-emerald-300 bg-emerald-50 text-emerald-900",
-    passed: "border-slate-300 bg-slate-100 text-slate-800",
+    closed: "border-slate-300 bg-slate-100 text-slate-800",
     denied: "border-rose-300 bg-rose-50 text-rose-900",
     restricted: "border-rose-300 bg-rose-50 text-rose-900",
     voided: "border-slate-300 bg-slate-100 text-slate-800",
@@ -1109,11 +888,9 @@ function ClaimCard({
   lane,
   approvedCounts,
   countsError,
-  passSupported,
   onDecided,
   onUnauthorized,
   markAlreadyRestricted,
-  toggleSetAside,
   onOpenPhotos,
   onFilterSeller,
   pendingCountFor,
@@ -1132,26 +909,34 @@ function ClaimCard({
   const nickname = claim.seller?.nickname ?? "Unknown seller";
   const rewarded = sellerId ? (approvedCounts[sellerId] ?? 0) : 0;
   const alsoPending = Math.max(0, pendingCountFor(sellerId ?? undefined) - 1);
+  const blocked = lane === "blocked";
+
+  // Can we PREVIEW the coin outcome? Only affects the label — never the button.
+  const previewKnown = !countsError && sellerId !== null;
+  const willPay = previewKnown ? rewarded < REWARD_APPROVED_CAP : null;
 
   const photos = (claim.photos ?? [])
     .map((p) => getPostImageUrl(p))
     .filter((u): u is string => Boolean(u));
 
   function fail(rpcError: { message?: string | null } | null, fallback: string) {
-    setBusy(null); // never leave a button stuck reading "Approving…"
+    setBusy(null);
     if (isNotAuthorized(rpcError)) {
       onUnauthorized();
       return;
     }
     const raw = (rpcError?.message ?? "").trim();
-    // A `guard` is a deliberate backend refusal, not a failure — amber, not red.
-    const guard =
-      /REWARDS_POST_RESTRICTED|SELLER_UNDER_CAP|POST_STILL_LIVE|REWARD_CAP_EXCEEDED/i.test(raw);
+    const guard = /REWARDS_POST_RESTRICTED|SELLER_UNDER_CAP|POST_STILL_LIVE/i.test(raw);
     setErr({ text: mapRpcError(rpcError, fallback), guard });
-    setBusy(null);
   }
 
-  /** Approve WITH coins — the seller is under the cap and is owed +10. */
+  /**
+   * The ONE hygiene verdict. `admin_review_claim` decides the coins itself — it
+   * pays +10 under the cap and clears at zero past it — so this button is never
+   * disabled and the client never sends a coin amount. The receipt is written
+   * from `credited` in the ANSWER, so even a stale preview can't make the UI
+   * claim a payment that didn't happen.
+   */
   async function approve() {
     setBusy("approve");
     setErr(null);
@@ -1162,41 +947,29 @@ function ClaimCard({
         p_approve: true,
       });
       if (rpcError) return fail(rpcError, "Failed to approve the claim.");
-      const already = (unwrapRpc<{ changed?: boolean }>(data)?.changed ?? true) === false;
+
+      const result = unwrapRpc<ReviewResult>(data);
+      if (result?.changed === false) {
+        onDecided(claim.claim_id, {
+          kind: "noop",
+          label: "Already decided by someone else",
+          lane,
+        });
+        return;
+      }
+      const paid = creditedFrom(result);
+      const coins = typeof result?.coins === "number" ? result.coins : REWARD_COINS;
       onDecided(
         claim.claim_id,
-        already
-          ? { kind: "noop", label: "Already decided by someone else", lane }
-          : { kind: "approved", label: "Approved · +10 coins", lane },
-        already ? null : sellerId,
+        paid === true
+          ? { kind: "approved", label: `Approved · +${coins} coins`, lane }
+          : paid === false
+            ? { kind: "closed", label: "Approved · no coins (seller at cap)", lane }
+            : { kind: "approved", label: "Approved", lane },
+        paid === true ? sellerId : null,
       );
     } catch (e) {
       fail({ message: e instanceof Error ? e.message : null }, "Failed to approve the claim.");
-    }
-  }
-
-  /**
-   * Approve WITHOUT coins — the seller is at cap, so nothing is owed. The listing
-   * is fine and stays live. This RPC is structurally incapable of paying coins,
-   * which is what makes it safe to put in the primary slot.
-   */
-  async function pass() {
-    setBusy("pass");
-    setErr(null);
-    try {
-      const sb = getAdminAuthBrowserClient();
-      const { data, error: rpcError } = await sb.rpc("admin_pass_claim", {
-        p_claim_id: claim.claim_id,
-      });
-      if (rpcError) return fail(rpcError, "Failed to clear the claim.");
-      const already = (unwrapRpc<{ changed?: boolean }>(data)?.changed ?? true) === false;
-      onDecided(claim.claim_id, {
-        kind: already ? "noop" : "passed",
-        label: already ? "Already decided by someone else" : "Approved · no coins (at cap)",
-        lane,
-      });
-    } catch (e) {
-      fail({ message: e instanceof Error ? e.message : null }, "Failed to clear the claim.");
     }
   }
 
@@ -1210,7 +983,7 @@ function ClaimCard({
         p_claim_id: claim.claim_id,
       });
       if (rpcError) return fail(rpcError, "Failed to void the claim.");
-      const already = (unwrapRpc<{ changed?: boolean }>(data)?.changed ?? true) === false;
+      const already = unwrapRpc<ReviewResult>(data)?.changed === false;
       onDecided(claim.claim_id, {
         kind: already ? "noop" : "voided",
         label: already ? "Already decided by someone else" : "Claim voided — listing is down",
@@ -1234,7 +1007,7 @@ function ClaimCard({
         p_note: denyNote.trim() || null,
       });
       if (rpcError) return fail(rpcError, "Failed to deny the reward.");
-      const already = (unwrapRpc<{ changed?: boolean }>(data)?.changed ?? true) === false;
+      const already = unwrapRpc<ReviewResult>(data)?.changed === false;
       const label = DENY_CODES.find((r) => r.value === code)?.label ?? code;
       onDecided(claim.claim_id, {
         kind: already ? "noop" : "denied",
@@ -1259,10 +1032,8 @@ function ClaimCard({
       });
       if (rpcError) return fail(rpcError, "Failed to take the listing down.");
       if (unwrapRpc<{ changed?: boolean }>(data)?.changed === false) {
-        // Nothing was written — the listing was ALREADY down. Do not claim success
-        // and do not drop the card; re-file it under Blocked, where it belongs.
-        // markAlreadyRestricted raises the explanation at BOARD level, because
-        // re-laning unmounts this card and any message set here would be lost.
+        // Nothing was written — it was ALREADY down. Don't claim success and don't
+        // drop the card; re-file it under Blocked, where it belongs.
         setBusy(null);
         setPanel(null);
         markAlreadyRestricted(claim.claim_id);
@@ -1277,11 +1048,6 @@ function ClaimCard({
       fail({ message: e instanceof Error ? e.message : null }, "Failed to take the listing down.");
     }
   }
-
-  const atCap = lane === "no_reward";
-  const blocked = lane === "blocked";
-  const parked = lane === "set_aside";
-  const unknownSeller = !sellerId;
 
   return (
     <article
@@ -1298,16 +1064,6 @@ function ClaimCard({
         {blocked && (
           <span className="rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700">
             Listing taken down
-          </span>
-        )}
-        {atCap && (
-          <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700">
-            At cap ({rewarded}/{REWARD_APPROVED_CAP})
-          </span>
-        )}
-        {parked && (
-          <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700">
-            Set aside
           </span>
         )}
         {claim.post_status && !["available", "restricted"].includes(claim.post_status) && (
@@ -1378,24 +1134,17 @@ function ClaimCard({
               {initial(nickname)}
             </span>
             <span className="text-sm font-semibold text-slate-900">{nickname}</span>
-            {unknownSeller ? (
-              <span
-                className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
-                title="This claim has no seller profile, so we cannot tell how many listings this seller has already been rewarded for. Approve is disabled — nothing here can stop it over-paying."
-              >
-                ⚠ profile unavailable — cap not checkable
-              </span>
-            ) : (
+            {previewKnown ? (
               <span
                 className={`rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums ${
-                  countsError
-                    ? "bg-slate-200 text-slate-500"
-                    : rewarded >= REWARD_APPROVED_CAP
-                      ? "bg-slate-200 text-slate-700"
-                      : "bg-emerald-100 text-emerald-700"
+                  willPay ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"
                 }`}
               >
-                {countsError ? "?" : rewarded}/{REWARD_APPROVED_CAP} rewarded
+                {rewarded}/{REWARD_APPROVED_CAP} rewarded
+              </span>
+            ) : (
+              <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-500">
+                rewards so far unknown
               </span>
             )}
             {alsoPending > 0 && (
@@ -1476,21 +1225,14 @@ function ClaimCard({
               denied — the backend refuses both while a listing is restricted.
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              {passSupported ? (
-                <button
-                  type="button"
-                  onClick={voidClaim}
-                  disabled={busy !== null}
-                  className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900 disabled:opacity-50"
-                >
-                  {busy === "void" ? "Voiding…" : "Void claim — nothing owed"}
-                </button>
-              ) : (
-                <span className="text-xs text-slate-500">
-                  Nothing on this page can settle it yet. Reinstate the listing first, then decide
-                  its claim.
-                </span>
-              )}
+              <button
+                type="button"
+                onClick={voidClaim}
+                disabled={busy !== null}
+                className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-900 disabled:opacity-50"
+              >
+                {busy === "void" ? "Voiding…" : "Void claim — nothing owed"}
+              </button>
               <Link
                 href="/admin-super/dashboard/moderation"
                 className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
@@ -1504,6 +1246,11 @@ function ClaimCard({
             <p className="text-xs font-medium text-slate-700">
               Why is no reward owed? The listing stays live — this only refuses the coins, and it is
               recorded permanently. Nothing is pre-selected: picking a reason commits it.
+            </p>
+            <p className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs text-amber-800">
+              If the listing is fine and the seller has simply hit the cap, don&apos;t deny —
+              <strong className="font-semibold"> just Approve</strong>. It pays nothing and records
+              no fault.
             </p>
             <div className="space-y-1.5">
               {DENY_CODES.map((r) => (
@@ -1610,18 +1357,24 @@ function ClaimCard({
               Is this listing OK to stay on the marketplace?
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              <PrimaryAction
-                atCap={atCap}
-                parked={parked}
-                countsError={countsError}
-                unknownSeller={unknownSeller}
-                passSupported={passSupported}
-                busy={busy}
-                onApprove={approve}
-                onPass={pass}
-                onSetAside={() => toggleSetAside(claim.claim_id, true)}
-                onRestore={() => toggleSetAside(claim.claim_id, false)}
-              />
+              <button
+                type="button"
+                onClick={approve}
+                disabled={busy !== null}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold transition disabled:opacity-50 ${
+                  willPay === false
+                    ? "border border-slate-400 bg-white text-slate-800 hover:bg-slate-100"
+                    : "bg-emerald-600 text-white hover:bg-emerald-700"
+                }`}
+              >
+                {busy === "approve"
+                  ? "Approving…"
+                  : willPay === true
+                    ? `✓ Approve · +${REWARD_COINS} coins`
+                    : willPay === false
+                      ? "✓ Approve · no coins (at cap)"
+                      : "✓ Approve"}
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -1645,14 +1398,11 @@ function ClaimCard({
                 Take listing down ▾
               </button>
             </div>
-            <PrimaryHint
-              atCap={atCap}
-              parked={parked}
-              countsError={countsError}
-              passSupported={passSupported}
+            <ApproveHint
+              willPay={willPay}
               rewarded={rewarded}
               nickname={nickname}
-              unknownSeller={unknownSeller}
+              countsError={countsError}
             />
           </div>
         )}
@@ -1661,163 +1411,32 @@ function ClaimCard({
   );
 }
 
-/**
- * The whole fix, in one button. Same verb, same position, in every state — only
- * the label and the write target change, and the label always tells the truth
- * about the coins BEFORE the click.
- */
-function PrimaryAction({
-  atCap,
-  parked,
-  countsError,
-  unknownSeller,
-  passSupported,
-  busy,
-  onApprove,
-  onPass,
-  onSetAside,
-  onRestore,
-}: {
-  atCap: boolean;
-  parked: boolean;
-  countsError: boolean;
-  unknownSeller: boolean;
-  passSupported: boolean | null;
-  busy: string | null;
-  onApprove: () => void;
-  onPass: () => void;
-  onSetAside: () => void;
-  onRestore: () => void;
-}) {
-  if (parked) {
-    return (
-      <button
-        type="button"
-        onClick={onRestore}
-        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-      >
-        Put back in the queue
-      </button>
-    );
-  }
-
-  // Two different unknowns, one rule: if we cannot count this seller's paid
-  // listings, we cannot know a +10 is owed — and `admin_review_claim` will pay it
-  // anyway, because it does not enforce the cap. So Approve fails CLOSED. (A null
-  // seller means the profile join came back empty, which also means there is no
-  // id to key the count on. Deny and take-down still work.)
-  if (countsError || unknownSeller) {
-    return (
-      <button
-        type="button"
-        disabled
-        title={
-          unknownSeller
-            ? "This claim has no seller profile, so we can't count how many listings they've already been rewarded for. Approving could over-pay."
-            : "Reward counts are unavailable, so we can't tell whether this seller is owed coins."
-        }
-        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white opacity-40"
-      >
-        Approve — unavailable
-      </button>
-    );
-  }
-
-  if (atCap) {
-    // Before the migration there is NO honest server-side settle, so we offer the
-    // one action that tells no lie: park it locally and write nothing.
-    if (passSupported !== true) {
-      return (
-        <button
-          type="button"
-          onClick={onSetAside}
-          disabled={busy !== null}
-          className="rounded-lg border border-slate-400 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
-        >
-          ⏸ Set aside · no reward owed
-        </button>
-      );
-    }
-    return (
-      <button
-        type="button"
-        onClick={onPass}
-        disabled={busy !== null}
-        className="rounded-lg border border-slate-400 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 disabled:opacity-50"
-      >
-        {busy === "pass" ? "Clearing…" : `✓ Approve · no coins (at cap)`}
-      </button>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={onApprove}
-      disabled={busy !== null}
-      className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
-    >
-      {busy === "approve" ? "Approving…" : "✓ Approve · +10 coins"}
-    </button>
-  );
-}
-
-function PrimaryHint({
-  atCap,
-  parked,
-  countsError,
-  passSupported,
+/** The coin PREVIEW. Advisory — the server has the last word, and the receipt reports it. */
+function ApproveHint({
+  willPay,
   rewarded,
   nickname,
-  unknownSeller,
+  countsError,
 }: {
-  atCap: boolean;
-  parked: boolean;
-  countsError: boolean;
-  passSupported: boolean | null;
+  willPay: boolean | null;
   rewarded: number;
   nickname: string;
-  unknownSeller: boolean;
+  countsError: boolean;
 }) {
-  if (parked) {
+  if (willPay === null) {
     return (
       <p className="text-xs text-slate-500">
-        Local to this browser — nothing was written. The claim is still pending on the server and
-        other admins still see it.
+        {countsError
+          ? "Can't preview the payout right now — approve anyway; the database works out the coins and the receipt will tell you what happened."
+          : "This claim has no seller profile, so the payout can't be previewed. Approving is still safe — the database works out the coins."}
       </p>
     );
   }
-  if (countsError) {
-    return (
-      <p className="text-xs text-rose-600">
-        Reward counts are unavailable, so approving could over-pay. Fix the counts and reload.
-      </p>
-    );
-  }
-  if (atCap && passSupported !== true) {
+  if (!willPay) {
     return (
       <p className="text-xs text-slate-500">
-        {nickname} has already been rewarded for {REWARD_APPROVED_CAP} listings, so no coins can be
-        paid for this one — and there&apos;s no honest way to close it yet. Denying would record a
-        fault that didn&apos;t happen; taking it down would remove a good listing.
-      </p>
-    );
-  }
-  if (atCap) {
-    return (
-      <p className="text-xs text-slate-500">
-        {nickname} is at the {REWARD_APPROVED_CAP}-listing reward cap. Keeping this listing pays
-        nothing.
-      </p>
-    );
-  }
-  if (unknownSeller) {
-    return (
-      <p className="text-xs text-amber-700">
-        This claim has no seller profile, so we can&apos;t count how many listings this seller has
-        already been rewarded for — and nothing else would stop an over-payment.{" "}
-        <strong className="font-semibold">Approve is disabled.</strong> You can still deny the
-        reward or take the listing down.
+        {nickname} has already been rewarded for {REWARD_APPROVED_CAP} listings, so this one earns
+        nothing. Approving just clears it — no coins, no fault recorded.
       </p>
     );
   }
@@ -1916,13 +1535,18 @@ function Lightbox({
 
 /* ------------------------------------------------------------ decisions tab */
 
+/**
+ * The real `reward_listing_claims.status` vocabulary:
+ *   pending | approved | rejected | cancelled | closed_at_cap
+ * `approved` means coins WERE paid; `closed_at_cap` means the listing was fine but
+ * the seller was already at the cap. Keeping them distinct is what makes the
+ * invariant "approved ⟺ coins were actually paid" true.
+ */
 const DECISION_BADGE: Record<string, { label: string; className: string }> = {
-  approved: { label: "Approved · +10", className: "bg-emerald-100 text-emerald-700" },
-  approved_unpaid: { label: "Approved · no coins", className: "bg-slate-200 text-slate-700" },
+  approved: { label: `Approved · +${REWARD_COINS}`, className: "bg-emerald-100 text-emerald-700" },
+  closed_at_cap: { label: "Approved · no coins", className: "bg-slate-200 text-slate-700" },
   rejected: { label: "Reward denied", className: "bg-rose-100 text-rose-700" },
-  denied: { label: "Reward denied", className: "bg-rose-100 text-rose-700" },
   cancelled: { label: "Cancelled", className: "bg-slate-200 text-slate-600" },
-  voided: { label: "Voided", className: "bg-slate-200 text-slate-600" },
 };
 
 function DecisionsTab({
@@ -1946,8 +1570,8 @@ function DecisionsTab({
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-semibold text-slate-900">Decisions</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Settled claims, newest first — approvals, no-coins clears, and denials with the reason
-            that was recorded.
+            Settled claims, newest first — paid approvals, no-coins clears, and denials with the
+            reason that was recorded.
             {summary
               ? ` ${summary.totalApproved} paid across ${summary.sellersApproved} seller${
                   summary.sellersApproved === 1 ? "" : "s"
