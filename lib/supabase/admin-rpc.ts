@@ -10,7 +10,27 @@
  */
 
 /** Minimal structural shape of a supabase-js / PostgREST error. */
-type RpcError = { message?: string | null } | null;
+type RpcError = { message?: string | null; code?: string | null } | null;
+
+/**
+ * True when the RPC itself does not exist in the database — PostgREST answers
+ * PGRST202 ("Could not find the function … in the schema cache") for a function
+ * it cannot resolve.
+ *
+ * The reward-review page uses this to detect, at runtime, whether the Step-2
+ * migration (`admin_pass_claim` / `admin_void_claim`) has been applied to THIS
+ * Supabase project. That keeps the two deploys independent in both directions:
+ * the site works before the SQL lands (falling back to a write-nothing local
+ * shelf) and lights the real action up the moment it does — no redeploy, and no
+ * build-time flag (a `NEXT_PUBLIC_*` flag is inlined at build, so it could not
+ * do this anyway).
+ */
+export function isMissingFunction(error: RpcError): boolean {
+  if (!error) return false;
+  if ((error.code ?? "").toUpperCase() === "PGRST202") return true;
+  const raw = (error.message ?? "").toLowerCase();
+  return raw.includes("could not find the function") || raw.includes("does not exist");
+}
 
 /**
  * Single-object RPCs (restrict / reinstate / resolve) return a jsonb object,
@@ -75,6 +95,17 @@ export function reasonLabel(code: string | null | undefined): string {
   return RESTRICTION_REASON_LABELS[code] ?? code;
 }
 
+/**
+ * How many listings a seller can be REWARDED for, lifetime. Past this, a listing
+ * still gets a hygiene decision — it just earns no coins (`admin_pass_claim`).
+ *
+ * This constant is a MIRROR of the cap in Postgres, not the source of truth. The
+ * authority is `admin_pass_claim`'s SELLER_UNDER_CAP guard (and, once installed,
+ * the `enforce_reward_cap` trigger). Change one, change the other — see
+ * supabase/migrations/20260713090000_reward_pass_void_claim.sql.
+ */
+export const REWARD_APPROVED_CAP = 6;
+
 /** Friendly copy for the documented RPC error message texts (Postgres RAISE). */
 const RPC_ERROR_COPY: Record<string, string> = {
   RESTRICT_REASON_REQUIRED: "Pick a reason before restricting.",
@@ -83,6 +114,15 @@ const RPC_ERROR_COPY: Record<string, string> = {
   POST_NOT_RESTRICTABLE: "That listing can't be restricted in its current state.",
   UPHOLD_REQUIRED: "Choose to uphold or decline the appeal.",
   NOT_AUTHORIZED: UNAUTHORIZED_MESSAGE,
+  // Reward-review (admin_pass_claim / admin_void_claim / enforce_reward_cap).
+  CLAIM_NOT_FOUND: "That reward claim no longer exists.",
+  SELLER_UNDER_CAP:
+    "This seller still has reward slots left, so this listing is owed +10 coins — approve it instead.",
+  POST_STILL_LIVE:
+    "Voiding only applies to a listing that has been taken down. This one hasn't been, so its claim needs a real decision — approve, deny, or take it down.",
+  REWARD_CAP_EXCEEDED: `This seller is already at the ${REWARD_APPROVED_CAP}-listing reward cap, so no more coins can be paid. Reload and use the no-coins approve.`,
+  REWARDS_POST_RESTRICTED:
+    "This listing is currently taken down. Reinstate it first, then decide the claim.",
 };
 
 /** Map a known RPC error message to friendly copy, else show it raw. */
