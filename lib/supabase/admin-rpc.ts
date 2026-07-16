@@ -57,29 +57,55 @@ export function postIdArg(raw: string | number): number | string {
 }
 
 /**
- * Reasons an operator may pick when restricting a listing. `community_reports`
- * is deliberately excluded — it is auto-only and the RPC rejects it.
+ * Reasons an operator may pick when restricting a listing, in dropdown order —
+ * these mirror the allowlist inside `admin_restrict_post`, which rejects anything
+ * else with RESTRICT_REASON_REQUIRED. `community_reports` is deliberately excluded:
+ * it is auto-only (emitted when community reports trip the takedown threshold) and
+ * the RPC refuses it for a manual take-down, so offering it would always error.
  */
 export const RESTRICT_REASON_CODES = [
   "scam_fraud",
   "prohibited_item",
   "fake_or_misleading",
   "spam",
-  "other",
   "item_not_available",
+  "business_or_postage",
+  "other",
 ] as const;
 export type RestrictReasonCode = (typeof RESTRICT_REASON_CODES)[number];
 
 /** Display labels for every restriction reason, incl. the auto-only one. */
 export const RESTRICTION_REASON_LABELS: Record<string, string> = {
-  scam_fraud: "Scam / fraud",
+  scam_fraud: "Scam or fraud",
   prohibited_item: "Prohibited item",
   fake_or_misleading: "Fake or misleading",
   spam: "Spam",
-  other: "Other",
-  item_not_available: "Item not available to sell",
+  item_not_available: "Item not actually available",
+  business_or_postage: "Business or postage-only listing",
+  other: "Breaks a marketplace rule",
   community_reports: "Community reports",
 };
+
+/**
+ * Guidance for reasons whose test is easy to misread, shown next to the dropdown
+ * once that reason is picked. Codes with no entry show nothing.
+ */
+export const RESTRICT_REASON_HINTS: Record<string, string> = {
+  business_or_postage:
+    "the listing replaces meeting with posting, rather than offering it alongside a meetup — “ships Australia-wide”, “DM to order”, stock lists, sizes made to order. Judge only what the listing does, never who the seller is: one real item, offered by post to a buyer who can’t make the meetup, is an ordinary local sale. If it reads both ways, leave it up.",
+};
+
+/**
+ * Reasons app 1.7 has no label for. Its takedown screen falls back to the generic
+ * “Breaks a marketplace rule”; the push notification is composed server-side and
+ * does carry the real wording. The label is resolved from the stored code at render
+ * time, so the screen corrects itself once the seller updates. Operator FYI only —
+ * nothing here changes what is sent.
+ */
+export const RESTRICT_REASONS_GENERIC_ON_APP_17: readonly string[] = [
+  "item_not_available",
+  "business_or_postage",
+];
 
 export function reasonLabel(code: string | null | undefined): string {
   if (!code) return "—";

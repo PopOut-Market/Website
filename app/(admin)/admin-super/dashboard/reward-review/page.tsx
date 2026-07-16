@@ -2,6 +2,7 @@
 
 import { useAdminAuth } from "@/components/admin/admin-auth-guard";
 import { KpiCard } from "@/components/admin/kpi-card";
+import { RestrictReasonHelp } from "@/components/admin/restrict-reason-help";
 import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
@@ -1320,6 +1321,7 @@ function ClaimCard({
                 </option>
               ))}
             </select>
+            {restrictReason && <RestrictReasonHelp reason={restrictReason} />}
             <textarea
               value={restrictNote}
               onChange={(e) => setRestrictNote(e.target.value)}

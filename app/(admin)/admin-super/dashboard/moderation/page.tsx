@@ -1,5 +1,6 @@
 "use client";
 
+import { RestrictReasonHelp } from "@/components/admin/restrict-reason-help";
 import {
   getAdminAuthBrowserClient,
   isAdminAuthConfigured,
@@ -587,6 +588,11 @@ export default function ListingModerationPage() {
               </option>
             ))}
           </select>
+          {reason && (
+            <div className="mt-2 max-w-sm">
+              <RestrictReasonHelp reason={reason} />
+            </div>
+          )}
         </div>
         <div>
           <label htmlFor="restrict-note" className="mb-1 block text-xs font-medium text-slate-700">
