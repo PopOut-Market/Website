@@ -462,9 +462,7 @@ export default function ListingModerationPage() {
                   if (e.key === "Enter") void runSearch(false);
                 }}
                 disabled={searchDisabled}
-                placeholder={
-                  lookupMode === "title" ? "e.g. bike, sofa, iphone" : "e.g. sooyoung"
-                }
+                placeholder={lookupMode === "title" ? "e.g. bike, sofa, iphone" : "e.g. sooyoung"}
                 className="w-72 max-w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
               />
               <button
@@ -564,7 +562,9 @@ export default function ListingModerationPage() {
             to the seller.
           </p>
           {validId && (
-            <p className="mt-1 text-xs font-medium text-slate-500">Acting on listing #{trimmedId}</p>
+            <p className="mt-1 text-xs font-medium text-slate-500">
+              Acting on listing #{trimmedId}
+            </p>
           )}
         </div>
         <div>
@@ -612,9 +612,7 @@ export default function ListingModerationPage() {
           type="button"
           onClick={restrict}
           disabled={!validId || !reason || busyAny || unauthorized}
-          title={
-            !validId ? "Find a listing first" : !reason ? "Pick a reason first" : undefined
-          }
+          title={!validId ? "Find a listing first" : !reason ? "Pick a reason first" : undefined}
           className="inline-flex items-center justify-center rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50"
         >
           {busy === "restrict" ? "Restricting…" : "Restrict listing"}
@@ -630,7 +628,9 @@ export default function ListingModerationPage() {
             automatically.
           </p>
           {validId && (
-            <p className="mt-1 text-xs font-medium text-slate-500">Acting on listing #{trimmedId}</p>
+            <p className="mt-1 text-xs font-medium text-slate-500">
+              Acting on listing #{trimmedId}
+            </p>
           )}
         </div>
         <button
@@ -665,9 +665,7 @@ function SearchResultRow({
       type="button"
       onClick={onSelect}
       className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition ${
-        selected
-          ? "border-slate-400 bg-slate-100"
-          : "border-slate-200 bg-white hover:bg-slate-50"
+        selected ? "border-slate-400 bg-slate-100" : "border-slate-200 bg-white hover:bg-slate-50"
       }`}
     >
       {thumb ? (
