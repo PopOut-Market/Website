@@ -53,6 +53,18 @@ export async function GET(req: Request) {
   }
   const windowStartISO = `${dayKeys[0]}T00:00:00.000Z`;
 
+  // Rolling weekly buckets: 8 seven-day windows ending today (UTC), oldest first.
+  // The oldest window's first day sets the fetch window for the per-week series.
+  const DAY_MS = 86_400_000;
+  const WEEK_COUNT = 8;
+  const todayUTCms = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const weekStarts: number[] = [];
+  for (let k = WEEK_COUNT - 1; k >= 0; k--) {
+    weekStarts.push(todayUTCms - (k * 7 + 6) * DAY_MS);
+  }
+  const weekWindowStartISO = new Date(weekStarts[0]).toISOString();
+  const weekLabels = weekStarts.map((ms) => new Date(ms).toISOString().slice(5, 10));
+
   try {
     const [
       { count: totalPosts, error: e1 },
@@ -66,6 +78,7 @@ export async function GET(req: Request) {
       { data: windowPosts, error: e8 },
       { data: categoryRows, error: e9 },
       { data: availablePosts, count: availableCount, error: e10 },
+      { data: windowProfiles, error: e11 },
     ] = await Promise.all([
       sb.from("posts").select("*", { count: "exact", head: true }),
       sb
@@ -94,15 +107,26 @@ export async function GET(req: Request) {
         .eq("is_banned", false)
         .is("deleted_at", null),
       sb.from("suburbs").select("id, name"),
-      sb.from("posts").select("created_at").gte("created_at", windowStartISO),
+      // Posts created over the last 8 weeks (feeds the daily/weekly series and,
+      // via category_id, the per-bucket category breakdown shown on hover).
+      sb.from("posts").select("created_at, category_id").gte("created_at", weekWindowStartISO),
       sb.from("categories").select("id, name, slug"),
       sb
         .from("posts")
         .select("category_id, suburb_id", { count: "exact" })
         .eq("status", "available"),
+      // New signups over the last 8 weeks (excludes deleted/banned, like active
+      // users). `language` feeds the per-bucket language breakdown shown on hover.
+      sb
+        .from("profiles")
+        .select("created_at, language")
+        .eq("is_deleted", false)
+        .eq("is_banned", false)
+        .is("deleted_at", null)
+        .gte("created_at", weekWindowStartISO),
     ]);
 
-    const firstErr = e1 ?? e2 ?? e3 ?? e3b ?? e4 ?? e5 ?? e6 ?? e7 ?? e8 ?? e9 ?? e10;
+    const firstErr = e1 ?? e2 ?? e3 ?? e3b ?? e4 ?? e5 ?? e6 ?? e7 ?? e8 ?? e9 ?? e10 ?? e11;
     if (firstErr) {
       return NextResponse.json(
         {
@@ -145,23 +169,76 @@ export async function GET(req: Request) {
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count);
 
-    // Posts created per day (last 7 days).
-    const perDayCount = new Map<string, number>(dayKeys.map((d) => [d, 0]));
-    for (const p of windowPosts ?? []) {
-      const day = (p as { created_at: string }).created_at.slice(0, 10);
-      if (perDayCount.has(day)) perDayCount.set(day, (perDayCount.get(day) ?? 0) + 1);
-    }
-    const dailyData = dayKeys.map((day) => ({
-      date: day.slice(5),
-      count: perDayCount.get(day) ?? 0,
-    }));
-
-    // Currently-available posts by category (English names).
+    // Category id -> English label (needed before the series below can attribute
+    // each windowed post to a category for the hover breakdown).
     const catName = new Map<string, string>();
     for (const c of categoryRows ?? []) {
       const row = c as { id: string | number; name: unknown; slug: string | null };
       catName.set(String(row.id), categoryLabel(row));
     }
+
+    // Per-day (last 7 days) and per-week (last 8 weeks) counts of created_at rows,
+    // each bucket carrying a `breakdown` (label -> count via `labelOf`) so the UI
+    // can repaint the adjacent bar chart for the hovered bucket. Reused for both
+    // posts (by category) and new signups (by language).
+    type Slot = { count: number; breakdown: Map<string, number> };
+    const newSlot = (): Slot => ({ count: 0, breakdown: new Map() });
+    const finish = (date: string, s: Slot) => ({
+      date,
+      count: s.count,
+      breakdown: Object.fromEntries(s.breakdown),
+    });
+    const add = (s: Slot, label: string) => {
+      s.count += 1;
+      s.breakdown.set(label, (s.breakdown.get(label) ?? 0) + 1);
+    };
+
+    const seriesDaily = (rows: unknown[] | null, labelOf: (r: Record<string, unknown>) => string) => {
+      const perDay = new Map<string, Slot>(dayKeys.map((d) => [d, newSlot()]));
+      for (const r of rows ?? []) {
+        const rec = r as Record<string, unknown>;
+        const day = String(rec.created_at ?? "").slice(0, 10);
+        const slot = perDay.get(day);
+        if (slot) add(slot, labelOf(rec));
+      }
+      return dayKeys.map((day) => finish(day.slice(5), perDay.get(day) as Slot));
+    };
+    const seriesWeekly = (
+      rows: unknown[] | null,
+      labelOf: (r: Record<string, unknown>) => string,
+    ) => {
+      const slots = Array.from({ length: WEEK_COUNT }, newSlot);
+      for (const r of rows ?? []) {
+        const rec = r as Record<string, unknown>;
+        const iso = String(rec.created_at ?? "");
+        if (iso.length < 10) continue;
+        const dayMs = Date.UTC(
+          Number(iso.slice(0, 4)),
+          Number(iso.slice(5, 7)) - 1,
+          Number(iso.slice(8, 10)),
+        );
+        const daysAgo = Math.floor((todayUTCms - dayMs) / DAY_MS);
+        if (daysAgo < 0 || daysAgo >= WEEK_COUNT * 7) continue;
+        add(slots[WEEK_COUNT - 1 - Math.floor(daysAgo / 7)], labelOf(rec));
+      }
+      return weekLabels.map((date, i) => finish(date, slots[i]));
+    };
+
+    const postCategoryLabel = (r: Record<string, unknown>): string => {
+      const id = r.category_id as string | number | null;
+      return id == null ? "Uncategorised" : (catName.get(String(id)) ?? "Uncategorised");
+    };
+    const userLanguageLabel = (r: Record<string, unknown>): string => {
+      const lang = r.language;
+      return lang == null || lang === "" ? "(not set)" : String(lang);
+    };
+
+    const postsDaily = seriesDaily(windowPosts, postCategoryLabel);
+    const postsWeekly = seriesWeekly(windowPosts, postCategoryLabel);
+    const usersDaily = seriesDaily(windowProfiles, userLanguageLabel);
+    const usersWeekly = seriesWeekly(windowProfiles, userLanguageLabel);
+
+    // Currently-available posts by category (English names).
     const availByCat = new Map<string, number>();
     for (const p of availablePosts ?? []) {
       const id = (p as { category_id: string | number | null }).category_id;
@@ -189,7 +266,8 @@ export async function GET(req: Request) {
         available: availableCount ?? 0,
         last7d: postsLast7d ?? 0,
         byStatus,
-        daily: dailyData,
+        daily: postsDaily,
+        weekly: postsWeekly,
         byCategory,
         bySuburb: postsBySuburb,
       },
@@ -198,6 +276,8 @@ export async function GET(req: Request) {
         excluded: (totalUsersAll ?? 0) - (activeUsers ?? 0),
         bySuburb,
         byLanguage,
+        daily: usersDaily,
+        weekly: usersWeekly,
       },
       generatedAt: new Date().toISOString(),
     });

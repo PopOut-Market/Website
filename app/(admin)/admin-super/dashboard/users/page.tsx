@@ -27,6 +27,7 @@ type ManagedUser = {
   isBanned: boolean;
   language: string | null;
   suburb: string | null;
+  invitedBy: { id: string; nickname: string } | null;
   counts: {
     posts: number;
     available: number;
@@ -257,7 +258,20 @@ function UserRow({
               </span>
             )}
           </div>
-          <p className="text-xs text-slate-400">Joined {fmtDate(user.createdAt)}</p>
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-slate-400">
+            <span>Joined {fmtDate(user.createdAt)}</span>
+            <span aria-hidden>·</span>
+            {user.invitedBy ? (
+              <span>
+                Invited by{" "}
+                <span className="font-medium text-slate-600">{user.invitedBy.nickname}</span>
+              </span>
+            ) : (
+              <span className="rounded-full bg-slate-100 px-1.5 py-0.5 font-medium text-slate-500">
+                No inviter
+              </span>
+            )}
+          </div>
         </div>
         <div className="hidden flex-wrap items-center justify-end gap-1.5 sm:flex">
           <CountPill label="posts" value={user.counts.posts} highlight={sortKey === "posts"} />
@@ -298,6 +312,12 @@ function UserRow({
             </span>
             <span>
               Language: <span className="font-medium">{user.language ?? "—"}</span>
+            </span>
+            <span>
+              Invited by:{" "}
+              <span className="font-medium">
+                {user.invitedBy ? user.invitedBy.nickname : "— (no inviter)"}
+              </span>
             </span>
             <span>
               Reports filed: <span className="font-medium">{user.counts.reportedBy}</span>

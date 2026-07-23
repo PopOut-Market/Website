@@ -64,9 +64,20 @@ type ReportAgainst = {
   status: string;
   createdAt: string;
 };
+type Embedded = { nickname: string | null } | { nickname: string | null }[] | null;
+type InvitationRow = {
+  inviter_id: string | null;
+  invitee_id: string | null;
+  inviter: Embedded;
+};
 
 const byNewest = (a: { created_at: string }, b: { created_at: string }) =>
   b.created_at.localeCompare(a.created_at);
+
+function embeddedNick(e: Embedded): string | null {
+  const o = Array.isArray(e) ? e[0] : e;
+  return o?.nickname ?? null;
+}
 
 export async function GET(req: Request) {
   const gate = await requireAdmin(req);
@@ -86,7 +97,7 @@ export async function GET(req: Request) {
   });
 
   try {
-    const [profRes, postRes, postRepRes, userRepRes, subRes] = await Promise.all([
+    const [profRes, postRes, postRepRes, userRepRes, subRes, invRes] = await Promise.all([
       sb
         .from("profiles")
         .select(
@@ -98,10 +109,20 @@ export async function GET(req: Request) {
       sb.from("post_reports").select("id, reporter_id, post_id, reason, status, created_at"),
       sb.from("user_reports").select("id, reporter_id, reported_id, reason, status, created_at"),
       sb.from("suburbs").select("id, name"),
+      // Who invited whom — inviter nickname embedded, from the referral table.
+      sb
+        .from("reward_invitations")
+        .select("inviter_id, invitee_id, created_at, inviter:profiles!inviter_id(nickname)")
+        .order("created_at", { ascending: true }),
     ]);
 
     const firstErr =
-      profRes.error ?? postRes.error ?? postRepRes.error ?? userRepRes.error ?? subRes.error;
+      profRes.error ??
+      postRes.error ??
+      postRepRes.error ??
+      userRepRes.error ??
+      subRes.error ??
+      invRes.error;
     if (firstErr) {
       return NextResponse.json(
         { error: `Supabase query failed: ${firstErr.message || "(empty)"}` },
@@ -167,6 +188,17 @@ export async function GET(req: Request) {
       }
     }
 
+    // invitee_id -> their inviter (first invitation wins if somehow duplicated).
+    const invitedBy = new Map<string, { id: string; nickname: string }>();
+    for (const r of (invRes.data ?? []) as InvitationRow[]) {
+      if (r.invitee_id && r.inviter_id && !invitedBy.has(r.invitee_id)) {
+        invitedBy.set(r.invitee_id, {
+          id: r.inviter_id,
+          nickname: embeddedNick(r.inviter) || "(no name)",
+        });
+      }
+    }
+
     const mapPost = (p: PostRow) => ({
       id: p.id,
       title: p.raw_title,
@@ -194,6 +226,7 @@ export async function GET(req: Request) {
           isBanned: !!p.is_banned,
           language: p.language ?? null,
           suburb: p.verified_suburb_id ? (suburbName.get(p.verified_suburb_id) ?? null) : null,
+          invitedBy: invitedBy.get(p.id) ?? null,
           counts: {
             posts: available.length + sold.length,
             available: available.length,
