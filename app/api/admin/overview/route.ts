@@ -23,6 +23,33 @@ function categoryLabel(row: { id: string | number; name: unknown; slug: string |
   return (row.name as string | null) ?? row.slug ?? `#${row.id}`;
 }
 
+// Post statuses the UI knows how to colour. Anything outside this set is folded
+// into an "(other)" bucket below so the breakdown still sums to the true total.
+const POST_STATUSES = ["available", "sold", "deleted", "restricted"] as const;
+
+// PostgREST caps a single response at db-max-rows (1000 on this project). Any
+// query that tallies a whole table in memory silently undercounts once the
+// table grows past that cap, so page through every row via a stable `id` order
+// until a short page marks the end.
+const PAGE_SIZE = 1000;
+type QueryError = { message?: string; code?: string } | null;
+type RangeableQuery = {
+  range: (from: number, to: number) => PromiseLike<{ data: unknown[] | null; error: QueryError }>;
+};
+async function fetchAllRows(
+  makeQuery: () => RangeableQuery,
+): Promise<{ data: unknown[]; error: QueryError }> {
+  const all: unknown[] = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await makeQuery().range(from, from + PAGE_SIZE - 1);
+    if (error) return { data: all, error };
+    const rows = data ?? [];
+    for (const r of rows) all.push(r);
+    if (rows.length < PAGE_SIZE) break;
+  }
+  return { data: all, error: null };
+}
+
 export async function GET(req: Request) {
   const gate = await requireAdmin(req);
   if (gate instanceof NextResponse) return gate;
@@ -71,13 +98,13 @@ export async function GET(req: Request) {
       { count: postsLast7d, error: e2 },
       { count: totalUsersAll, error: e3 },
       { count: activeUsers, error: e3b },
-      { data: statusRows, error: e4 },
+      statusCounts,
       { data: languageRows, error: e5 },
       { data: suburbRows, error: e6 },
       { data: suburbNames, error: e7 },
       { data: windowPosts, error: e8 },
       { data: categoryRows, error: e9 },
-      { data: availablePosts, count: availableCount, error: e10 },
+      { data: availablePosts, error: e10 },
       { data: windowProfiles, error: e11 },
     ] = await Promise.all([
       sb.from("posts").select("*", { count: "exact", head: true }),
@@ -93,39 +120,62 @@ export async function GET(req: Request) {
         .eq("is_deleted", false)
         .eq("is_banned", false)
         .is("deleted_at", null),
-      sb.from("posts").select("status"),
-      sb
-        .from("profiles")
-        .select("language")
-        .eq("is_deleted", false)
-        .eq("is_banned", false)
-        .is("deleted_at", null),
-      sb
-        .from("profiles")
-        .select("verified_suburb_id")
-        .eq("is_deleted", false)
-        .eq("is_banned", false)
-        .is("deleted_at", null),
+      // Posts by status: one exact head count per status (zero rows transferred),
+      // so the tally can never be truncated by the 1000-row response cap.
+      Promise.all(
+        POST_STATUSES.map((status) =>
+          sb.from("posts").select("*", { count: "exact", head: true }).eq("status", status),
+        ),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("profiles")
+          .select("language")
+          .eq("is_deleted", false)
+          .eq("is_banned", false)
+          .is("deleted_at", null)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("profiles")
+          .select("verified_suburb_id")
+          .eq("is_deleted", false)
+          .eq("is_banned", false)
+          .is("deleted_at", null)
+          .order("id"),
+      ),
       sb.from("suburbs").select("id, name"),
       // Posts created over the last 8 weeks (feeds the daily/weekly series and,
       // via category_id, the per-bucket category breakdown shown on hover).
-      sb.from("posts").select("created_at, category_id").gte("created_at", weekWindowStartISO),
+      fetchAllRows(() =>
+        sb
+          .from("posts")
+          .select("created_at, category_id")
+          .gte("created_at", weekWindowStartISO)
+          .order("id"),
+      ),
       sb.from("categories").select("id, name, slug"),
-      sb
-        .from("posts")
-        .select("category_id, suburb_id", { count: "exact" })
-        .eq("status", "available"),
+      // Currently-available posts: rows drive the category + suburb splits, and
+      // their row total is the exact available count once every page is fetched.
+      fetchAllRows(() =>
+        sb.from("posts").select("category_id, suburb_id").eq("status", "available").order("id"),
+      ),
       // New signups over the last 8 weeks (excludes deleted/banned, like active
       // users). `language` feeds the per-bucket language breakdown shown on hover.
-      sb
-        .from("profiles")
-        .select("created_at, language")
-        .eq("is_deleted", false)
-        .eq("is_banned", false)
-        .is("deleted_at", null)
-        .gte("created_at", weekWindowStartISO),
+      fetchAllRows(() =>
+        sb
+          .from("profiles")
+          .select("created_at, language")
+          .eq("is_deleted", false)
+          .eq("is_banned", false)
+          .is("deleted_at", null)
+          .gte("created_at", weekWindowStartISO)
+          .order("id"),
+      ),
     ]);
 
+    const e4 = statusCounts.find((r) => r.error)?.error ?? null;
     const firstErr = e1 ?? e2 ?? e3 ?? e3b ?? e4 ?? e5 ?? e6 ?? e7 ?? e8 ?? e9 ?? e10 ?? e11;
     if (firstErr) {
       return NextResponse.json(
@@ -146,9 +196,17 @@ export async function GET(req: Request) {
       return m;
     };
 
-    const byStatus = [...tally(statusRows, "status", "(unknown)").entries()]
-      .map(([status, count]) => ({ status, count }))
-      .sort((a, b) => b.count - a.count);
+    const byStatus: { status: string; count: number }[] = POST_STATUSES.map((status, i) => ({
+      status,
+      count: statusCounts[i].count ?? 0,
+    }));
+    // Fold any post whose status is null or outside POST_STATUSES into "(other)"
+    // so the breakdown reconciles with the total. (The counts are separate
+    // queries, so a mid-fetch write can make this drift by a row; the > 0 guard
+    // keeps that from ever showing a negative bucket.)
+    const otherStatus = (totalPosts ?? 0) - byStatus.reduce((a, r) => a + r.count, 0);
+    if (otherStatus > 0) byStatus.push({ status: "(other)", count: otherStatus });
+    byStatus.sort((a, b) => b.count - a.count);
 
     const byLanguage = [...tally(languageRows, "language", "(not set)").entries()]
       .map(([code, count]) => ({ code, count }))
@@ -263,7 +321,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       posts: {
         total: totalPosts ?? 0,
-        available: availableCount ?? 0,
+        available: availablePosts.length,
         last7d: postsLast7d ?? 0,
         byStatus,
         daily: postsDaily,
