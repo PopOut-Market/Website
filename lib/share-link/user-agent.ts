@@ -4,8 +4,8 @@
  * A share link has to serve three different audiences from one URL:
  *  - link-preview crawlers, which want Open Graph tags and must NOT be redirected
  *    (a redirect means the chat app renders no card at all);
- *  - humans, who should be sent straight to the right app store;
- *  - messenger in-app browsers, which are BOTH — see `in-app-browser` below.
+ *  - humans in a real browser, who should be sent straight to the right app store;
+ *  - humans inside an app's embedded webview, who must NOT be redirected — see below.
  *
  * Kept UA-only and dependency-free so it stays trivially testable and cheap to run
  * on every request.
@@ -14,26 +14,28 @@
 export type ShareAudience = "in-app-browser" | "crawler" | "ios" | "android" | "desktop";
 
 /**
- * Messenger / social apps whose in-app browser sends the SAME identifying token
- * as their link-preview fetcher, making the two indistinguishable by User-Agent:
- * a `KakaoTalk` hit may be the scraper building a card, or a Korean user who just
- * tapped the link inside a chat.
+ * Named in-app browsers.
  *
- * Resolving that ambiguity by serving ONE html response carrying the Open Graph
- * tags *and* the visible install buttons satisfies both readers: the scraper
- * gets the meta tags it came for, and the human gets a usable page instead of
- * either a blank document or a store redirect their browser refuses to follow.
- * (WeChat actively blocks store navigation out of its in-app browser.)
+ * Two different reasons a UA has to be listed here explicitly rather than left to
+ * the structural check below:
  *
- * The alternative — treating these as pure crawlers — sends real people a card
- * with no way forward; redirecting them instead kills every preview. The hybrid
- * page is a strict superset of both, so it is the safe answer for all four.
+ *  1. Its scraper and its embedded browser send the SAME token, so a hit cannot be
+ *     attributed to one or the other (WeChat, KakaoTalk, LINE, Pinterest). Serving
+ *     one hybrid document — Open Graph tags AND visible install buttons — is the
+ *     only response that satisfies both readers.
+ *  2. It appends its token to a COMPLETE Safari user-agent string, so it still
+ *     carries `Safari/` and the structural check cannot see it as a webview.
+ *     LINE and KakaoTalk both do this, which is why the structural rule alone is
+ *     not enough.
  */
-const IN_APP_BROWSER_PATTERNS: readonly RegExp[] = [
+const KNOWN_IN_APP_BROWSER_PATTERNS: readonly RegExp[] = [
   /MicroMessenger/i, // WeChat
   /KakaoTalk/i, // also matches the `kakaotalk-scrap/1.0` fetcher
   /\bLine\//i, // LINE — see the word-boundary note below
   /Pinterest/i, // matches both `Pinterest/0.2` and `[Pinterest/iOS]`
+  /FBAN|FBAV|FB_IAB/i, // Facebook / Messenger / Instagram in-app browsers
+  /Messenger/i,
+  /Instagram/i,
 ];
 
 /**
@@ -56,6 +58,33 @@ const CRAWLER_PATTERNS: readonly RegExp[] = [
 const IOS_PATTERN = /iPhone|iPad|iPod/i;
 const ANDROID_PATTERN = /Android/i;
 
+/** Android's WebView announces itself with a `wv` product token: `...; wv) AppleWebKit...`. */
+const ANDROID_WEBVIEW_PATTERN = /;\s*wv[);]/i;
+
+/** Every real iOS browser — Safari, Chrome (CriOS), Firefox (FxiOS), Edge (EdgiOS),
+ *  DuckDuckGo — carries a `Safari/` token. WKWebView-hosted browsers usually omit it. */
+const SAFARI_TOKEN_PATTERN = /Safari\//i;
+
+/**
+ * Structural in-app-webview detection, so the rule does not depend on an
+ * ever-growing list of app names.
+ *
+ * An embedded webview cannot follow a redirect to apps.apple.com or
+ * play.google.com — the navigation simply hangs and the user watches a spinner
+ * forever. That is a whole CLASS of client (Snapchat, TikTok, Threads, Reddit,
+ * every "open link in app" surface), not a handful of apps, so it is detected by
+ * shape rather than by name.
+ *
+ * The failure modes are deliberately asymmetric. A false positive costs a real
+ * browser user one extra tap on a page that already shows both store buttons; a
+ * false negative is the infinite spinner. So this errs toward the hybrid page.
+ */
+function isInAppWebView(ua: string): boolean {
+  if (ANDROID_PATTERN.test(ua) && ANDROID_WEBVIEW_PATTERN.test(ua)) return true;
+  if (IOS_PATTERN.test(ua) && !SAFARI_TOKEN_PATTERN.test(ua)) return true;
+  return false;
+}
+
 /**
  * LINE needs the `\bLine\/` word boundary rather than a bare substring: a
  * case-insensitive `line/` also occurs inside ordinary words ("Airline/",
@@ -63,14 +92,16 @@ const ANDROID_PATTERN = /Android/i;
  * html branch instead of the store redirect. The boundary makes it match LINE's
  * own `Line/13.5.0` product token only.
  */
-export function isShareLinkCrawler(userAgent: string): boolean {
-  return (
-    IN_APP_BROWSER_PATTERNS.some((pattern) => pattern.test(userAgent)) ||
-    CRAWLER_PATTERNS.some((pattern) => pattern.test(userAgent))
-  );
+function isKnownInAppBrowser(ua: string): boolean {
+  return KNOWN_IN_APP_BROWSER_PATTERNS.some((pattern) => pattern.test(ua));
 }
 
 /**
+ * Order matters. Named in-app browsers win first because several of them double
+ * as their own scraper. Pure crawlers are checked before the structural webview
+ * rule so a fetcher can never be mistaken for a human. Only then do real
+ * browsers fall through to a store redirect.
+ *
  * Note on iPadOS 13+: Safari on iPad reports a desktop `Macintosh` UA, so it is
  * classified `desktop` and lands on /download. That page shows both store
  * badges, so the visitor still gets to the App Store in one extra tap — a
@@ -78,8 +109,9 @@ export function isShareLinkCrawler(userAgent: string): boolean {
  */
 export function classifyShareAudience(userAgent: string | null | undefined): ShareAudience {
   const ua = userAgent ?? "";
-  if (IN_APP_BROWSER_PATTERNS.some((pattern) => pattern.test(ua))) return "in-app-browser";
+  if (isKnownInAppBrowser(ua)) return "in-app-browser";
   if (CRAWLER_PATTERNS.some((pattern) => pattern.test(ua))) return "crawler";
+  if (isInAppWebView(ua)) return "in-app-browser";
   if (IOS_PATTERN.test(ua)) return "ios";
   if (ANDROID_PATTERN.test(ua)) return "android";
   return "desktop";
