@@ -82,18 +82,46 @@ Pure fetchers are `facebookexternalhit`, `Twitterbot`, `WhatsApp`,
 `redditbot` — each of those apps opens real links in a normal browser with a
 normal UA, so no human ever sees what they render.
 
-The in-app-browser set is `MicroMessenger` (WeChat), `KakaoTalk`, `Line/` and
-`Pinterest`. Each sends the **same** UA token from its in-app browser as from
-its preview fetcher, so a hit may be a scraper building a card or a person who
-just tapped the link in a chat — undistinguishable by UA. One document carrying
-the meta tags _and_ a usable UI satisfies both; treating them as pure crawlers
-would strand real people on a dead-end card, and redirecting them would kill
-every preview. WeChat additionally blocks store navigation out of its in-app
-browser, so the redirect would dead-end there regardless.
+The in-app-browser bucket is matched **two ways**, because either alone leaves a
+hole.
+
+**1. Structural (the general rule).** An embedded webview cannot follow a
+redirect to `apps.apple.com` or `play.google.com` — the navigation hangs and the
+user watches a spinner forever. That is a whole class of client, not a list of
+apps, so it is detected by shape:
+
+- Android: the `wv` product token (`...; wv) AppleWebKit...`) that Android
+  WebView adds.
+- iOS: an iPhone/iPad UA with **no** `Safari/` token. Every real iOS browser —
+  Safari, Chrome (`CriOS`), Firefox (`FxiOS`), Edge (`EdgiOS`), DuckDuckGo —
+  carries one; WKWebView-hosted browsers usually do not.
+
+This covers Snapchat, TikTok, Threads and anything else that ships an embedded
+browser, without anyone having to maintain a list.
+
+The failure modes are deliberately asymmetric: a false positive costs a real
+browser user one extra tap on a page that already shows both store buttons, a
+false negative is an infinite spinner. The rule errs toward the hybrid page.
+
+**2. Named apps.** Still required for two reasons:
+
+- Its scraper and its embedded browser send the same token, so a hit cannot be
+  attributed to either — `MicroMessenger` (WeChat), `KakaoTalk`, `Line/`,
+  `Pinterest`. One hybrid document satisfies both readers; treating them as pure
+  crawlers would strand real people on a dead-end card, and redirecting them
+  would kill every preview.
+- It appends its token to a **complete** Safari UA, so it still carries
+  `Safari/` and the structural check cannot see it. **LINE and KakaoTalk both do
+  this** — which is exactly why the structural rule alone is not sufficient.
+- Meta's surfaces: `FBAN`, `FBAV`, `FB_IAB`, `Messenger`, `Instagram`.
 
 `Line` is matched as `\bLine\/` rather than a bare substring — a
 case-insensitive `line/` also appears inside ordinary words ("Airline/"), and a
 false positive there would strand a real visitor on the HTML page.
+
+Order is: named in-app browsers → pure crawlers → structural webview → real
+browsers. Crawlers are checked before the structural rule so a fetcher can never
+be mistaken for a human.
 
 Unknown token, removed listing, taken-down listing, banned seller, malformed
 token and database error all produce the **same** generic card — no title, no
