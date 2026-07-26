@@ -1,4 +1,40 @@
 # Netlify secret scanning treats inlined Supabase anon URL/key (NEXT_PUBLIC / EXPO_PUBLIC) as
 # findings in the Next.js client bundle. Those vars are intended for the browser; omit by name.
+# The SHARE_*/bare SUPABASE_* pair feeds the server-only /l/<token> share route and is never
+# inlined into the client bundle, but the anon key is public-by-design either way.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "EXPO_PUBLIC_SUPABASE_URL,EXPO_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY"
+  SECRETS_SCAN_OMIT_KEYS = "EXPO_PUBLIC_SUPABASE_URL,EXPO_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SHARE_SUPABASE_URL,SHARE_SUPABASE_ANON_KEY,SUPABASE_URL,SUPABASE_ANON_KEY"
+
+# ---------------------------------------------------------------------------
+# App-association files (/.well-known/*)
+#
+# Apple and Google do NOT follow redirects when fetching these files: whichever
+# host the app claims must return a direct 200.
+#
+# The app claims and shares www.popoutmarket.com.au, which is already this
+# site's primary domain, so www serves them with no redirect and no special
+# rule. The apex still 301s to www, which is correct and harmless — the app does
+# not claim it, and apex links simply redirect into the /l route like any other
+# browser hit.
+#
+# If the apex is ever added back to the app's associated domains, it will need a
+# path-scoped `status = 200` REWRITE here (a rewrite, never a redirect — a
+# competing redirect is what caused this site's apex<->www loop before). Verify
+# any such rule against live Netlify: it is unconfirmed whether a custom rule can
+# override Netlify's automatic primary-domain redirect.
+#
+# Apple also requires `application/json`. `apple-app-site-association` has no
+# extension, so without the header below it is served as
+# application/octet-stream and Apple's CDN rejects it.
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/.well-known/apple-app-site-association"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"

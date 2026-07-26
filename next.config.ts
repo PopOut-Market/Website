@@ -35,6 +35,19 @@ const nextConfig: NextConfig = {
   // Supabase, and Leaflet tile hosts).
   async headers() {
     return [
+      // App-association files. Netlify sets these too (see netlify.toml, which
+      // additionally exempts them from the apex -> www redirect); these entries
+      // give `next dev` / `next start` the same Content-Type so the files can be
+      // verified locally. `apple-app-site-association` has no extension, so
+      // without this it is served as application/octet-stream and Apple rejects it.
+      {
+        source: "/.well-known/apple-app-site-association",
+        headers: [{ key: "Content-Type", value: "application/json" }],
+      },
+      {
+        source: "/.well-known/assetlinks.json",
+        headers: [{ key: "Content-Type", value: "application/json" }],
+      },
       {
         source: "/:path*",
         headers: [

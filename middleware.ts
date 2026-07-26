@@ -91,6 +91,18 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
   // Keep API, Next internals, admin routes, static assets, and the standalone
   // /download page untouched (the latter must stay un-prefixed so the clean
   // /download URL serves directly instead of 308-ing to /en/download).
+  //
+  // `/l/<token>` (listing share links from the mobile app) and `/.well-known/*`
+  // (the Apple/Google app-association files) must be excluded for the same
+  // reason, and for them it is not cosmetic:
+  //   - a share link is a fixed URL already sitting in people's chat threads,
+  //     and locale-prefixing it 308s to /en/l/<token>, which does not exist;
+  //   - Apple and Google do NOT follow redirects when fetching the association
+  //     files, so a 308 to /en/.well-known/... is a silent, total failure of
+  //     Universal Links / App Links. Note `assetlinks.json` used to survive only
+  //     by accident (it ends in `.json`, so `isStaticAsset` caught it) while the
+  //     extensionless `apple-app-site-association` did not — hence an explicit
+  //     rule rather than relying on the extension heuristic.
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
@@ -99,6 +111,8 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
     pathname.startsWith("/favicon") ||
     pathname.startsWith("/opengraph-image") ||
     pathname.startsWith("/twitter-image") ||
+    pathname.startsWith("/.well-known") ||
+    pathname.startsWith("/l/") ||
     pathname === "/download" ||
     pathname === "/download/" ||
     isStaticAsset(pathname)
