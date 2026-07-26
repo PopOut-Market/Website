@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "au.com.popoutmarket",
+      "sha256_cert_fingerprints": [
+        "90:3C:DB:27:52:AD:B9:9F:03:19:52:C1:8F:7C:0F:13:F0:75:78:9B:57:17:BE:86:28:F0:28:C0:23:C1:25:34"
+      ]
+    }
+  }
+]
