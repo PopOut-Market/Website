@@ -141,19 +141,18 @@ SECURITY DEFINER`, returns at most one row of `title`, `price_cents`,
 RLS-locked to anon. `suburb_name` is a `LEFT JOIN` and can be null, in which
 case the card shows the price alone.
 
-Share tokens currently exist only in the **v2 staging** project while the rest
-of the site reads **production**, so the route has its own pointer:
+Share tokens landed in **production** on 2026-07-28, so this route reads the
+same project as the rest of the site: `EXPO_PUBLIC_SUPABASE_*`, falling back to
+`NEXT_PUBLIC_SUPABASE_*`. No per-route pointer, and no new variable to set.
 
-```
-SHARE_SUPABASE_URL=https://yywerlbmbhckfvfoyfif.supabase.co
-SHARE_SUPABASE_ANON_KEY=<staging anon key>
-```
-
-Resolution order is `SHARE_SUPABASE_*` → `SUPABASE_*` → `EXPO_PUBLIC_*` →
-`NEXT_PUBLIC_*`. Once tokens exist in production, delete the `SHARE_*` pair and
-the route follows the site's main project with no code change. **These must also
-be set in Netlify → Site configuration → Environment variables**, or production
-share links will render the generic card for every token.
+While tokens lived only in v2 staging the route had its own `SHARE_SUPABASE_*`
+override (and a bare `SUPABASE_*` tier). Both are gone. A staging
+`SHARE_SUPABASE_URL` left behind in Netlify is exactly what made every
+production share link render the generic card — a wrong project and a
+nonexistent token look identical downstream, so the failure was silent. If those
+two variables are still set in Netlify or in a local `.env`, they are now dead
+config and can be deleted. Do not reintroduce an override tier; point the whole
+site at another project if you need to test against one.
 
 ## og:image and WebP
 
