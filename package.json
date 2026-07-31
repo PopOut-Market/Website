@@ -16,27 +16,31 @@
     "html2canvas-pro": "^2.0.2",
     "jspdf": "^4.2.1",
     "leaflet": "^1.9.4",
-    "next": "^16.2.6",
+    "next": "^16.2.12",
     "nodemailer": "^9.0.1",
-    "react": "latest",
-    "react-dom": "latest",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "recharts": "^3.8.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
     "@types/leaflet": "^1.9.21",
-    "@types/node": "latest",
+    "@types/node": "^25.5.0",
     "@types/nodemailer": "^8.0.0",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "autoprefixer": "latest",
-    "eslint": "latest",
-    "eslint-config-next": "latest",
-    "postcss": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
+    "postcss": "^8.5.25",
     "prettier": "^3.8.3",
     "stylelint": "^17.12.0",
     "stylelint-config-standard": "^40.0.0",
-    "tailwindcss": "latest",
-    "typescript": "latest"
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "postcss": "^8.5.25",
+    "sharp": "^0.35.3"
   }
 }
