@@ -1,4 +1,5 @@
-import { classifyShareAudience } from "@/lib/share-link/user-agent";
+import { classifyShareAudience, classifyShareLaunchPlatform } from "@/lib/share-link/user-agent";
+import { shareAppLaunch } from "@/lib/share-link/app-link";
 import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
@@ -12,8 +13,9 @@ import { NextResponse, type NextRequest } from "next/server";
  * URL, three audiences (see `lib/share-link/user-agent.ts`):
  *
  *   crawler          -> 200 html, Open Graph card, NO redirect (a redirect kills the preview)
- *   in-app browser   -> 200 html, card + visible install buttons (WeChat/KakaoTalk/LINE/
- *                       Pinterest, whose scraper and browser share one UA)
+ *   in-app browser   -> 200 html, card + "Open in the app" hand-off + install buttons
+ *                       (WeChat/KakaoTalk/LINE/Pinterest, whose scraper and browser
+ *                       share one UA)
  *   human            -> 302 to the App Store / Google Play / /download
  *
  * Implemented as a Route Handler rather than a page because it needs exact
@@ -71,9 +73,17 @@ export async function GET(
   const preview = await fetchSharePreview(token);
   const canonicalUrl = shareCanonicalUrl(token);
 
+  // The in-app-browser page is the only response that can hand off to the app:
+  // an in-app browser is exactly where the OS refuses to do it for us. Which URL
+  // form to use comes off the same UA string (`none` for WeChat, which blocks
+  // custom schemes as well as the stores).
   const html =
     audience === "in-app-browser"
-      ? renderShareInAppBrowserHtml(preview, canonicalUrl)
+      ? renderShareInAppBrowserHtml(
+          preview,
+          canonicalUrl,
+          shareAppLaunch(token, classifyShareLaunchPlatform(request.headers.get("user-agent"))),
+        )
       : renderShareCrawlerHtml(preview, canonicalUrl);
 
   return new NextResponse(html, {

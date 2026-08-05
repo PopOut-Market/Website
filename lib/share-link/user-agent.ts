@@ -116,3 +116,37 @@ export function classifyShareAudience(userAgent: string | null | undefined): Sha
   if (ANDROID_PATTERN.test(ua)) return "android";
   return "desktop";
 }
+
+/**
+ * WeChat blocks custom-scheme navigation outright and answers it with an error
+ * dialog, so its page must offer no app hand-off at all — not a button, not an
+ * automatic attempt. It already blocks the App Store and Google Play, which is
+ * why the in-app-browser page exists in the first place; there is nothing left
+ * to try, so leave that page exactly as it was.
+ */
+const SCHEME_BLOCKING_PATTERN = /MicroMessenger/i;
+
+/**
+ * Which custom-scheme URL form to offer an in-app-browser visitor, `"none"`
+ * when none should be offered.
+ *
+ * Only meaningful for the `in-app-browser` audience — every other audience is
+ * either a crawler (no UI) or gets a store redirect before this is consulted.
+ * `"none"` also covers a platform we cannot identify: the two URL forms are
+ * platform-specific and there is no third one worth guessing at, and the store
+ * badges already cover that visitor.
+ */
+export type ShareLaunchPlatform = "ios" | "android" | "none";
+
+export function classifyShareLaunchPlatform(
+  userAgent: string | null | undefined,
+): ShareLaunchPlatform {
+  const ua = userAgent ?? "";
+  if (SCHEME_BLOCKING_PATTERN.test(ua)) return "none";
+  // iOS first: an iPad-on-Android UA does not exist, but LINE and KakaoTalk
+  // append their token to a full Safari UA, so check the device before anything
+  // structural.
+  if (IOS_PATTERN.test(ua)) return "ios";
+  if (ANDROID_PATTERN.test(ua)) return "android";
+  return "none";
+}
