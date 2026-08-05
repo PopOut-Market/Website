@@ -1,7 +1,7 @@
 import {
   fallbackShareImageUrl,
   formatShareDescription,
-  shareImageUrl,
+  sharePreviewImageUrl,
   type SharePreview,
 } from "@/lib/share-link/preview";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
@@ -17,9 +17,11 @@ import type { ShareAppLaunch } from "@/lib/share-link/app-link";
  */
 
 /**
- * Shown for an unknown token AND for a listing that was removed, taken down, or
- * whose seller was banned. The two MUST be indistinguishable: never render a
- * title, a price, or any hint that something used to be here.
+ * Shown for an unknown token AND for anything the database declined to return —
+ * a listing removed, taken down or with a banned seller, a community post
+ * unpublished or taken down. All of them MUST be indistinguishable from a token
+ * that never existed: never render a title, a price, or any hint that something
+ * used to be here.
  */
 const GENERIC_TITLE = "PopOut Market";
 const GENERIC_DESCRIPTION = "Melbourne's second-hand marketplace — buy and sell locally.";
@@ -29,9 +31,10 @@ const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
 /**
- * Listing titles are seller-authored free text going straight into attribute
- * values and markup, so escaping is a hard requirement, not a nicety — an
- * unescaped `"><script>` in a title would be stored XSS on our own domain.
+ * Listing and community-post titles alike are user-authored free text going
+ * straight into attribute values and markup, so escaping is a hard requirement,
+ * not a nicety — an unescaped `"><script>` in a title would be stored XSS on our
+ * own domain.
  */
 function escapeHtml(value: string): string {
   return value
@@ -61,7 +64,7 @@ function cardFields(preview: SharePreview | null): ShareCardFields {
     // Both halves of the description can be absent (no suburb, unreadable
     // price); an empty og:description renders as a blank line in most cards.
     description: formatShareDescription(preview) || GENERIC_DESCRIPTION,
-    imageUrl: shareImageUrl(preview.photoPath),
+    imageUrl: sharePreviewImageUrl(preview),
   };
 }
 
@@ -182,18 +185,21 @@ export function renderShareInAppBrowserHtml(
 ): string {
   const fields = cardFields(preview);
 
-  // Only render listing details when there IS a listing; a removed listing must
-  // look exactly like a token that never existed.
+  // Only render details when the token resolved to something; a removed listing
+  // or an unpublished post must look exactly like a token that never existed.
   //
   // This block is the ONLY part of the page that depends on `preview`, and that
   // is a requirement rather than an accident: the app hand-off below must render
   // identically whether or not the token resolved, or its presence tells the
-  // visitor that something used to be here. When `/l/` starts resolving to
-  // community posts as well, the second card kind drops in HERE and nowhere
-  // else.
-  const listingBlock = preview
+  // visitor that something used to be here.
+  //
+  // One card serves both kinds, and that is what keeps the community privacy
+  // contract cheap to hold: it renders a title, a photo and
+  // `formatShareDescription`, so there is no slot for a body, a reply, a poll
+  // option or an author even if the data layer one day handed one over.
+  const previewBlock = preview
     ? `      <div style="margin:0 auto 28px;max-width:340px;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;background:#f9fafb;text-align:left;">
-        <img src="${escapeHtml(shareImageUrl(preview.photoPath))}" alt="${escapeHtml(preview.title)}" style="display:block;width:100%;height:180px;object-fit:cover;" />
+        <img src="${escapeHtml(sharePreviewImageUrl(preview))}" alt="${escapeHtml(preview.title)}" style="display:block;width:100%;height:180px;object-fit:cover;" />
         <div style="padding:12px 14px;">
           <p style="margin:0 0 4px;font-size:15px;font-weight:600;line-height:1.35;">${escapeHtml(preview.title)}</p>
           <p style="margin:0;font-size:14px;color:#4b5563;">${escapeHtml(formatShareDescription(preview))}</p>
@@ -224,7 +230,7 @@ export function renderShareInAppBrowserHtml(
       <img src="${LOGO_SRC}" alt="PopOut Market" width="72" height="72" style="width:64px;height:64px;border-radius:18px;border:1px solid rgba(0,0,0,0.1);object-fit:cover;" />
       <h1 style="margin:20px 0 8px;font-size:22px;font-weight:800;letter-spacing:-0.01em;">PopOut Market</h1>
       <p style="margin:0 0 28px;font-size:14px;color:#374151;">Melbourne&#39;s second-hand marketplace</p>
-${listingBlock}${launchBlock}      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
+${previewBlock}${launchBlock}      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
         <a href="${escapeHtml(APP_STORE_URL)}" aria-label="Download on the App Store" style="display:block;">
           <img src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" style="height:52px;width:auto;" />
         </a>
