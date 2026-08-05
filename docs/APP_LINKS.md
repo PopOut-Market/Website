@@ -8,6 +8,7 @@
 | Share data + formatting    | `lib/share-link/preview.ts`                     |                                   |
 | User-Agent classification  | `lib/share-link/user-agent.ts`                  |                                   |
 | Card + in-app-browser HTML | `lib/share-link/html.ts`                        |                                   |
+| App hand-off URL builders  | `lib/share-link/app-link.ts`                    |                                   |
 | Server Supabase client     | `lib/supabase/share-preview-client.ts`          |                                   |
 | iOS association            | `public/.well-known/apple-app-site-association` | filled in                         |
 | Android association        | `public/.well-known/assetlinks.json`            | filled in                         |
@@ -71,11 +72,11 @@ app directly.
 
 One URL, three audiences, branched on `User-Agent`:
 
-| Audience                   | Response                                                     |
-| -------------------------- | ------------------------------------------------------------ |
-| Pure link-preview fetchers | `200` HTML, Open Graph tags, **no redirect**                 |
-| Messenger in-app browsers  | `200` HTML, Open Graph tags **plus** visible install buttons |
-| Everyone else (humans)     | `302` → App Store / Google Play / `/download`                |
+| Audience                   | Response                                                                 |
+| -------------------------- | ------------------------------------------------------------------------ |
+| Pure link-preview fetchers | `200` HTML, Open Graph tags, **no redirect**                             |
+| Messenger in-app browsers  | `200` HTML, Open Graph tags **plus** an app hand-off and install buttons |
+| Everyone else (humans)     | `302` → App Store / Google Play / `/download`                            |
 
 Pure fetchers are `facebookexternalhit`, `Twitterbot`, `WhatsApp`,
 `TelegramBot`, `Slackbot`, `Discordbot`, `LinkedInBot`, `Applebot`,
@@ -133,6 +134,87 @@ Every response carries `Vary: User-Agent` and `Cache-Control: no-store`. The
 crawler's HTML to a human, or a store redirect to a crawler (killing every
 preview).
 
+## Opening the app from an in-app browser
+
+**Universal Links and App Links are not handed to a native app when the link is
+tapped inside another app's embedded webview.** That is OS behaviour, not a
+misconfiguration — it applies to Messenger, Instagram, LINE, KakaoTalk,
+WhatsApp-on-iOS and every other in-app browser, and no change to
+`apple-app-site-association` or `assetlinks.json` affects it. Both files were
+verified live (200, `application/json`, no redirect, correct team ID and Play
+signing fingerprint) while this was still happening.
+
+So a visitor who **already has the app** fell through to `/l/<token>`, and that
+page could only offer the two stores. They tapped "Open" on the store listing,
+the app launched on the home feed, and the listing they were sent was lost.
+
+The fix is the app's **custom scheme**, which an in-app browser will still hand
+off. It is registered by the shipped binary (`popout-market`, live since 2.0.2 on
+both stores) and the app already parses this path form, so nothing changed
+app-side. Builders live in `lib/share-link/app-link.ts`:
+
+- iOS: `popout-market://l/<token>`
+- Android:
+  `intent://l/<token>#Intent;scheme=popout-market;package=au.com.popoutmarket;S.browser_fallback_url=<url-encoded Play URL>;end`
+
+Every in-app-browser visitor on a known platform gets a primary **"Open in the
+app"** button above the store badges — a user gesture, which Meta's browser
+honours far more consistently than an automatic navigation. **iOS additionally
+gets one automatic attempt** ~400 ms after paint, for the apps where that works
+at all (KakaoTalk, LINE, Instagram, WhatsApp-iOS). The badges stay on the page
+underneath the whole time, so a blocked attempt is a no-op that leaves exactly
+the page that shipped before.
+
+Five constraints, all load-bearing:
+
+- **WeChat (`MicroMessenger`) gets no hand-off at all** — not a button, not an
+  attempt. It blocks custom schemes and answers with an error dialog. Its page is
+  byte-identical to the pre-hand-off version.
+- **Android never gets the automatic attempt.** A top-level navigation to
+  `intent://` in a webview that does not implement intent handling fails with
+  `ERR_UNKNOWN_URL_SCHEME`, and the webview paints its own error page over ours —
+  costing the visitor the store badges and the listing card both. That is worse
+  than doing nothing, and "worse than doing nothing is impossible" is the entire
+  safety argument for shipping this without a device test. A tapped button
+  carries the same risk in principle, but there the visitor asked, can see what
+  happened, and can go back. Note that a `visibilitychange` guard does **not**
+  address this: there is only ever one navigation, so there is no subsequent
+  action for such a guard to suppress.
+- **The automatic attempt must stay JavaScript.** KakaoTalk, LINE, WeChat and
+  Pinterest send the same UA from their scraper as from their browser, so this
+  one document is read by both. Scrapers do not execute JS, so a script cannot
+  cost a preview card — a `<meta http-equiv="refresh">` or a server-side redirect
+  would kill it outright.
+- **The hand-off must not depend on whether the token resolved.** An unknown
+  token and a removed listing already render the same generic card; if the button
+  appeared only when the listing resolved, its presence would leak that something
+  used to be there. In `renderShareInAppBrowserHtml` the listing card is the only
+  block that reads `preview` — keep it that way.
+- **Only a valid 24-hex token produces any of these URLs.** The path segment is
+  attacker-controlled and ends up in markup _and_ in an inline script;
+  validating in `app-link.ts` means nothing else can reach either, so no
+  downstream escaping is load-bearing.
+
+The crawler response and both `302` branches are untouched.
+
+## Coming: community posts on the same page
+
+`/l/<token>` will resolve to **either a listing or a community post**. This is
+blocked on database work that has not reached production — until it has, a
+community token renders the generic card, so do not ship a branch that assumes
+otherwise.
+
+The hand-off needs no change: both kinds share the `/l/<token>` address, so the
+scheme and intent URLs are already kind-agnostic. The second card kind drops into
+the `listingBlock` in `renderShareInAppBrowserHtml`, which is deliberately the
+only part of that page reading `preview`.
+
+**The community card carries the post's title, neighbourhood and photo and
+nothing else.** Never the body, never replies, never poll options, never anything
+identifying the author. That is a privacy contract, not a layout preference — it
+does not get relaxed to fill space in the card, and the `og:description` is bound
+by it too.
+
 ## Data source
 
 One RPC, `get_share_preview(p_share_token text)` — anon-callable, `STABLE
@@ -153,6 +235,32 @@ nonexistent token look identical downstream, so the failure was silent. If those
 two variables are still set in Netlify or in a local `.env`, they are now dead
 config and can be deleted. Do not reintroduce an override tier; point the whole
 site at another project if you need to test against one.
+
+## Verifying a change to this route
+
+**On the live www deploy only — never on a Netlify deploy preview.** The Deploy
+Preview context bakes a third Supabase project, which has none of these tokens,
+so a perfectly good token legitimately renders the generic card there and a
+correct fix looks broken. (To find out which project a build points at, grep its
+shipped `/_next/static/chunks/*.js` for `*.supabase.co`.)
+
+The standing check is a crawler-UA fetch of a **known-good token compared against
+a made-up one**. Both must be requested, every time: the route swallows unknown
+token, timeout, 401 and bad config into the same generic card, so nothing logs
+and a broken data path is invisible from one request. The real card for the good
+token and the generic card for the invented one is the pass; the real card for
+both means the visibility gate broke.
+
+```bash
+UA='facebookexternalhit/1.1'
+curl -sA "$UA" https://www.popoutmarket.com.au/l/<real-token>   | grep 'og:title'
+curl -sA "$UA" https://www.popoutmarket.com.au/l/a1b2c3d4e5f60718293a4b5c | grep 'og:title'
+```
+
+For the app hand-off, swap the UA for an in-app browser one (`...iPhone...
+[FBAN/MessengerForiOS...]`) and check for `popout-market://l/<token>`. The only
+real proof, though, is a device: send a link to a phone that has the app and tap
+it from Messenger.
 
 ## og:image and WebP
 

@@ -5,6 +5,7 @@ import {
   type SharePreview,
 } from "@/lib/share-link/preview";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
+import type { ShareAppLaunch } from "@/lib/share-link/app-link";
 
 /**
  * HTML for the `/l/<token>` share landing route.
@@ -125,23 +126,71 @@ export function renderShareCrawlerHtml(preview: SharePreview | null, canonicalUr
 }
 
 /**
- * Messenger in-app browser response: the same Open Graph card PLUS the visible
- * install buttons.
+ * The automatic hand-off attempt. iOS only — `ShareAppLaunch.autoUrl` explains
+ * why Android must never get one.
+ *
+ * Deliberately JavaScript, and deliberately NOT a `<meta http-equiv="refresh">`
+ * or a server-side redirect: KakaoTalk, LINE, WeChat and Pinterest send the same
+ * UA from their scraper as from their browser, so this one document is read by
+ * both. Scrapers do not execute JS, so a script cannot cost us a link preview,
+ * whereas either redirect form would kill the card outright.
+ *
+ * `url` is built from a validated 24-hex token and compile-time constants (see
+ * `lib/share-link/app-link.ts`), so nothing user- or seller-authored reaches
+ * this script; `JSON.stringify` is belt-and-braces on top of that.
+ *
+ * The delay lets the page paint first, so the store badges are already on screen
+ * when — as in Messenger — nothing happens at all.
+ */
+function autoLaunchScript(url: string): string {
+  return `    <script>
+      (function () {
+        var target = ${JSON.stringify(url)};
+        var done = false;
+        function stop() { done = true; }
+        document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
+        window.addEventListener("pagehide", stop);
+        window.setTimeout(function () {
+          if (done || document.hidden) return;
+          try { window.location.href = target; } catch (error) { /* webview refused it — the badges are right there */ }
+        }, 400);
+      })();
+    </script>
+`;
+}
+
+/**
+ * Messenger in-app browser response: the same Open Graph card PLUS a visible
+ * app hand-off and the install buttons.
  *
  * WeChat, KakaoTalk, LINE and Pinterest all send the same UA token from their
  * in-app browser as from their link-preview fetcher, so this one document has to
  * satisfy both — hence meta tags and a real UI together. WeChat additionally
  * blocks navigation to the App Store / Google Play, so the store redirect every
  * other human gets would simply dead-end there.
+ *
+ * `launch` is the app hand-off, or null when none can be offered (WeChat, an
+ * unidentifiable platform, an unusable token). Without it this page can only
+ * send a visitor who ALREADY HAS the app to the store, where "Open" launches the
+ * home feed and the listing they were sent is lost — which is the bug this
+ * argument exists to fix.
  */
 export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
+  launch: ShareAppLaunch | null = null,
 ): string {
   const fields = cardFields(preview);
 
   // Only render listing details when there IS a listing; a removed listing must
   // look exactly like a token that never existed.
+  //
+  // This block is the ONLY part of the page that depends on `preview`, and that
+  // is a requirement rather than an accident: the app hand-off below must render
+  // identically whether or not the token resolved, or its presence tells the
+  // visitor that something used to be here. When `/l/` starts resolving to
+  // community posts as well, the second card kind drops in HERE and nowhere
+  // else.
   const listingBlock = preview
     ? `      <div style="margin:0 auto 28px;max-width:340px;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;background:#f9fafb;text-align:left;">
         <img src="${escapeHtml(shareImageUrl(preview.photoPath))}" alt="${escapeHtml(preview.title)}" style="display:block;width:100%;height:180px;object-fit:cover;" />
@@ -153,6 +202,18 @@ export function renderShareInAppBrowserHtml(
 `
     : "";
 
+  /**
+   * With a hand-off available the store badges become the secondary path, so
+   * they get a "don't have it yet" heading. Without one the page is left exactly
+   * as it was — that is WeChat's page, and nothing here improves it.
+   */
+  const launchBlock = launch
+    ? `      <a href="${escapeHtml(launch.buttonUrl)}" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 32px;border-radius:14px;background:#cc3200;color:#fff;font-size:16px;font-weight:700;text-decoration:none;">Open in the app</a>
+      <p style="margin:20px 0 12px;font-size:13px;color:#6b7280;">Don&#39;t have the app yet?</p>
+`
+    : `      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Open this listing in the PopOut Market app</p>
+`;
+
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -163,8 +224,7 @@ export function renderShareInAppBrowserHtml(
       <img src="${LOGO_SRC}" alt="PopOut Market" width="72" height="72" style="width:64px;height:64px;border-radius:18px;border:1px solid rgba(0,0,0,0.1);object-fit:cover;" />
       <h1 style="margin:20px 0 8px;font-size:22px;font-weight:800;letter-spacing:-0.01em;">PopOut Market</h1>
       <p style="margin:0 0 28px;font-size:14px;color:#374151;">Melbourne&#39;s second-hand marketplace</p>
-${listingBlock}      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Open this listing in the PopOut Market app</p>
-      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
+${listingBlock}${launchBlock}      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
         <a href="${escapeHtml(APP_STORE_URL)}" aria-label="Download on the App Store" style="display:block;">
           <img src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" style="height:52px;width:auto;" />
         </a>
@@ -173,9 +233,13 @@ ${listingBlock}      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Op
         </a>
       </div>
       <p style="margin:32px 0 0;max-width:320px;font-size:12px;line-height:1.6;color:#9ca3af;">
-        If a button doesn&#39;t open the store, use the menu at the top right to open this page in your browser (such as Safari or Chrome), then tap it again.
+        ${
+          launch
+            ? "If the app button doesn&#39;t open the app, or a store button doesn&#39;t open the store, use the menu at the top right to open this page in your browser (such as Safari or Chrome), then tap it again."
+            : "If a button doesn&#39;t open the store, use the menu at the top right to open this page in your browser (such as Safari or Chrome), then tap it again."
+        }
       </p>
     </main>
-  </body>
+${launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
 </html>`;
 }
