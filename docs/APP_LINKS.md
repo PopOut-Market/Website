@@ -5,7 +5,7 @@
 | Piece                      | File                                            | Status                            |
 | -------------------------- | ----------------------------------------------- | --------------------------------- |
 | Share landing route        | `app/l/[token]/route.ts`                        | works now, independent of the app |
-| Share data + formatting    | `lib/share-link/preview.ts`                     |                                   |
+| Share data + formatting    | `lib/share-link/preview.ts`                     | listings + community posts        |
 | User-Agent classification  | `lib/share-link/user-agent.ts`                  |                                   |
 | Card + in-app-browser HTML | `lib/share-link/html.ts`                        |                                   |
 | App hand-off URL builders  | `lib/share-link/app-link.ts`                    |                                   |
@@ -124,10 +124,10 @@ Order is: named in-app browsers → pure crawlers → structural webview → rea
 browsers. Crawlers are checked before the structural rule so a fetcher can never
 be mistaken for a human.
 
-Unknown token, removed listing, taken-down listing, banned seller, malformed
-token and database error all produce the **same** generic card — no title, no
-price, no reason. `get_share_preview` applies that visibility gate server-side
-and simply returns zero rows.
+Unknown token, removed listing, taken-down listing, banned seller, unpublished
+or taken-down community post, malformed token and database error all produce the
+**same** generic card — no title, no price, no reason. The RPCs apply those
+visibility gates server-side and simply return zero rows.
 
 Every response carries `Vary: User-Agent` and `Cache-Control: no-store`. The
 `Vary` is load-bearing: without it the CDN may cache one variant and serve a
@@ -197,31 +197,65 @@ Five constraints, all load-bearing:
 
 The crawler response and both `302` branches are untouched.
 
-## Coming: community posts on the same page
+## Two kinds behind one address
 
-`/l/<token>` will resolve to **either a listing or a community post**. This is
-blocked on database work that has not reached production — until it has, a
-community token renders the generic card, so do not ship a branch that assumes
-otherwise.
+`/l/<token>` resolves to **either a marketplace listing or a community post**
+(community share backend live on production 2026-08-05, verified under anon).
 
-The hand-off needs no change: both kinds share the `/l/<token>` address, so the
-scheme and intent URLs are already kind-agnostic. The second card kind drops into
-the `listingBlock` in `renderShareInAppBrowserHtml`, which is deliberately the
-only part of that page reading `preview`.
+The app hand-off needed no change: both kinds share the `/l/<token>` address, so
+the scheme and intent URLs are kind-agnostic. One card renders both, in the
+single `previewBlock` of `renderShareInAppBrowserHtml` — deliberately still the
+only part of that page that reads `preview`.
 
 **The community card carries the post's title, neighbourhood and photo and
 nothing else.** Never the body, never replies, never poll options, never anything
-identifying the author. That is a privacy contract, not a layout preference — it
-does not get relaxed to fill space in the card, and the `og:description` is bound
-by it too.
+identifying the author (community-share.md 3.33). That is a privacy contract, not
+a layout preference — it does not get relaxed to fill space in the card, and it
+binds `og:description` too, which is therefore **the neighbourhood, not an
+excerpt**. The database enforces its half: `get_community_share_preview` returns
+only those three columns, and `CommunitySharePreview` has no field for anything
+else, so there is nothing to leak even by accident.
+
+### The wrong-bucket trap
+
+Listing photos live in `post_images`; community photos live in
+`community_post_images`. **The path shape inside them is identical**, so a
+wrong-bucket URL is perfectly well-formed and simply 404s — a blank thumbnail in
+someone's chat thread, with nothing logged anywhere. Verified against the real
+production photo: the right bucket returns `200 image/png`, the wrong one `400`.
+
+The bucket is therefore derived from the resolved kind via `PHOTO_BUCKETS` in
+`preview.ts` and never assumed. `sharePreviewImageUrl` takes the whole preview
+rather than a bare path precisely so the kind cannot be dropped on the floor at a
+call site.
 
 ## Data source
 
-One RPC, `get_share_preview(p_share_token text)` — anon-callable, `STABLE
-SECURITY DEFINER`, returns at most one row of `title`, `price_cents`,
-`suburb_name`, `photo_path`. Nothing else is read; the underlying tables are
-RLS-locked to anon. `suburb_name` is a `LEFT JOIN` and can be null, in which
-case the card shows the price alone.
+Three RPCs, all anon-callable `STABLE SECURITY DEFINER`, read in a fixed order:
+
+1. `resolve_share_link(p_share_token text)` → `(kind, target_id)`, where `kind`
+   is `'listing'` or `'community_post'`. No row for an unknown, empty or
+   ambiguous address.
+2. then **exactly one** of `get_share_preview` (listing → `title`,
+   `price_cents`, `suburb_name`, `photo_path`) or
+   `get_community_share_preview` (post → `title`, `suburb_name`, `photo_path`).
+
+**Resolve first, then fetch the matching preview. Never try one preview and fall
+back to the other on an empty result.** An ordered guess-chain is forbidden by
+community-share.md 3.30: the two previews have independent visibility gates, so a
+listing that is merely hidden could fall through and be rendered as whatever the
+second lookup happened to find — an address showing the wrong kind of thing
+entirely. The resolver is the only authority on which kind a token is. An
+unrecognised `kind` string renders the generic card rather than being guessed at,
+so adding a third kind server-side degrades safely until this repo knows about it.
+
+`RPC_TIMEOUT_MS` is one budget for the **whole** sequence — a single deadline is
+created up front and handed to both calls, so adding the resolver did not double
+the time a crawler can be made to wait.
+
+Nothing else is read; the underlying tables are RLS-locked to anon.
+`suburb_name` is a `LEFT JOIN` and can be null, in which case a listing card
+shows the price alone.
 
 Share tokens landed in **production** on 2026-07-28, so this route reads the
 same project as the rest of the site: `EXPO_PUBLIC_SUPABASE_*`, falling back to
