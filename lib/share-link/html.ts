@@ -24,7 +24,13 @@ import type { ShareAppLaunch } from "@/lib/share-link/app-link";
  * used to be here.
  */
 const GENERIC_TITLE = "PopOut Market";
-const GENERIC_DESCRIPTION = "Melbourne's second-hand marketplace — buy and sell locally.";
+// Keep this in step with the positioning used everywhere else the brand
+// describes itself — the site layout's openGraph description, `OG_IMAGE.alt`,
+// the text baked into app/opengraph-image.tsx, and /download. This one is the
+// easiest to forget and the most widely seen: it is what every shared link
+// falls back to in a chat thread when the preview cannot be read.
+const GENERIC_DESCRIPTION =
+  "The neighbourhood app for Melbourne — second-hand from neighbours nearby, local shop finds, and neighbourhood questions answered.";
 
 const LOGO_SRC = "/images/app-icon.png";
 const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
