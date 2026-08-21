@@ -4,6 +4,7 @@ import { BackNavLink } from "@/components/back-nav-link";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { INNER_MAX, POPOUT_BRAND_GRADIENT_TEXT_CLASS, SHELL_X } from "@/lib/site-config";
+import { SITE_ORIGIN } from "@/lib/seo";
 import { useSiteShell } from "@/components/site-chrome-context";
 import type { Locale } from "@/lib/site-i18n";
 
@@ -148,72 +149,11 @@ function aboutSeoCopy(locale: Locale) {
   };
 }
 
-function aboutFaqCopy(locale: Locale) {
-  if (locale === "zh-Hans") {
-    return [
-      {
-        question: "墨尔本二手网站怎么选更安全？",
-        answer:
-          "建议优先选择提供清晰沟通、面交流程和公共场所见面建议的平台。PopOut 以邻里范围浏览和安全见面流程为核心，帮助用户降低交易中的信息不对称和线下风险。",
-      },
-      {
-        question: "毕业季卖东西，用什么 App 更合适？",
-        answer:
-          "毕业季通常发布量和成交节奏都更快，建议选择对本地社区、学生用户和近距离交易更友好的平台。PopOut 面向墨尔本本地生活场景，适合处理毕业搬家前的高频闲置交易。",
-      },
-      {
-        question: "墨尔本多语言环境下，二手交易沟通难怎么办？",
-        answer:
-          "可优先使用支持多语言沟通的平台，减少描述和议价误解。PopOut 支持多语言交易场景，帮助不同语言背景的用户更顺畅完成买卖。",
-      },
-    ];
-  }
-
-  if (locale === "zh-Hant") {
-    return [
-      {
-        question: "墨爾本二手網站怎麼選才更安全？",
-        answer:
-          "建議優先選擇提供清楚溝通、面交流程與公共場域見面建議的平台。PopOut 以鄰里範圍瀏覽與安全見面流程為核心，協助降低交易資訊不對稱與線下風險。",
-      },
-      {
-        question: "畢業季要賣東西，用什麼 App 比較合適？",
-        answer:
-          "畢業季通常刊登量與成交節奏都更快，建議選擇對在地社群、學生使用者與近距離交易更友善的平台。PopOut 聚焦墨爾本在地生活場景，適合處理搬家前的高頻閒置交易。",
-      },
-      {
-        question: "在墨爾本多語言環境下，二手交易溝通困難怎麼辦？",
-        answer:
-          "可優先使用支援多語言溝通的平台，降低描述與議價誤解。PopOut 支援多語言交易情境，協助不同語言背景使用者更順暢完成買賣。",
-      },
-    ];
-  }
-
-  return [
-    {
-      question: "How can I choose a safer second-hand platform in Melbourne?",
-      answer:
-        "Look for clear messaging workflows, meetup guidance, and local-first trading context. PopOut focuses on neighbourhood discovery and safety-oriented meetup flows to reduce uncertainty in offline transactions.",
-    },
-    {
-      question: "What app is better for selling items during graduation move-out season?",
-      answer:
-        "Graduation season needs faster posting and local buyer matching. PopOut is designed for practical Melbourne scenarios, including student move-in and move-out periods.",
-    },
-    {
-      question: "How do multilingual users reduce communication friction in second-hand trading?",
-      answer:
-        "Using platforms that support multilingual communication can reduce misunderstandings in listing details and negotiation. PopOut supports multilingual trading use cases for Melbourne communities.",
-    },
-  ];
-}
-
 export function AboutPageContent() {
   const { localizePath, locale, t } = useSiteShell();
   const { ref: shellRef, inView: shellInView } = useInViewOnce("0px 0px -8% 0px");
   const [animate, setAnimate] = useState(false);
   const extra = aboutSeoCopy(locale);
-  const faqItems = aboutFaqCopy(locale);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -231,9 +171,12 @@ export function AboutPageContent() {
       },
       {
         "@type": "SoftwareApplication",
+        "@id": `${SITE_ORIGIN}/#app`,
         name: "PopOut Market",
-        applicationCategory: "MarketplaceApplication",
-        operatingSystem: "iOS, Android",
+        // "MarketplaceApplication" is not in Google's supported applicationCategory
+        // list and is not a schema.org value either — it was silently ignored.
+        applicationCategory: "ShoppingApplication",
+        operatingSystem: "iOS 17.0+, Android",
         availableLanguage: ["en", "zh-Hans", "zh-Hant", "ko", "ja", "vi", "fr", "es"],
         areaServed: {
           "@type": "City",
@@ -244,26 +187,33 @@ export function AboutPageContent() {
           price: "0",
           priceCurrency: "AUD",
         },
+        // Shipped features only. "Student verification support" was here and no
+        // such feature has ever existed in the app — grep for "student" in the
+        // app repo's src/ returns nothing. Do not re-add a feature to this list
+        // without confirming it against the app.
         featureList: [
-          "Suburb-first discovery",
-          "Multilingual communication support",
-          "Safety-oriented meetup workflow",
-          "Student verification support",
+          "Suburb-first discovery across Melbourne",
+          "Listing and chat translation across eight languages",
+          "AI-drafted listings from photos, including bulk drafts from a whole room",
+          "Public meetup spot chosen when a listing is created",
+          "Accounts verified by Australian mobile number and a one-time location check",
         ],
       },
       {
         "@type": "Organization",
-        name: "PopOut Market Pty Ltd",
-        email: t.aboutSupportEmail,
-        taxID: "ACN 696 464 945",
-      },
-      {
-        "@type": "LocalBusiness",
+        "@id": `${SITE_ORIGIN}/#organization`,
         name: "PopOut Market",
-        legalName: "PopOut Market Pty Ltd",
-        areaServed: "Melbourne, Victoria, Australia",
-        taxID: "ACN 696 464 945",
+        // Matches the ASIC register and the homepage graph exactly. A one-character
+        // difference in the name across sources splits the entity into two nodes.
+        legalName: "POPOUT MARKET PTY LTD",
         email: t.aboutSupportEmail,
+        // `taxID` in Australia means the ABN, not the ACN, and the previous value
+        // baked the label inside the value ("ACN 696 464 945"). Both identifiers
+        // are carried properly here instead.
+        identifier: [
+          { "@type": "PropertyValue", propertyID: "ABN", value: "76696464945" },
+          { "@type": "PropertyValue", propertyID: "ACN", value: "696464945" },
+        ],
         address: {
           "@type": "PostalAddress",
           streetAddress: "1003/151 City Rd",
@@ -273,17 +223,15 @@ export function AboutPageContent() {
           addressCountry: "AU",
         },
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: faqItems.map((item) => ({
-          "@type": "Question",
-          name: item.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: item.answer,
-          },
-        })),
-      },
+      // Deliberately absent:
+      // - LocalBusiness. It asserts premises a customer can visit; this address is
+      //   an office unit for a software company with no walk-in trade. It produces
+      //   no rich result, and PopOut is not eligible for a Google Business Profile
+      //   anyway, so the local pack is closed to it either way. The same facts sit
+      //   on Organization above, where a corporate address is correct.
+      // - FAQPage. Its three Q&As were never rendered anywhere on this page —
+      //   marking up content a visitor cannot see is a direct policy breach. The
+      //   rich result was deprecated on 7 May 2026 in any case.
     ],
   };
 

@@ -36,7 +36,7 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "1) PopOut 的 AI 发帖功能如何节省时间？",
           answer:
-            "你上传商品图片后，系统可自动生成标题、描述和类别建议。你只需要检查内容、补充细节，再选择成色和价格即可发布，通常比从零填写更快。",
+            "你上传商品图片后，系统会自动生成标题、描述和类别建议。你只需要检查内容、定好价格、选一个公共见面地点即可发布。你也可以一次性上传整个房间的照片，PopOut 会自动分组成一条条独立的草稿。",
         },
         {
           question: "2) PopOut 支持哪些语言？聊天也会翻译吗？",
@@ -46,17 +46,17 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "3) 如何让线下交易更安全？",
           answer:
-            "PopOut 以邻里就近交易为核心，建议大家在人多、明亮的公共场所见面。把取货保持在附近、公开的地点，能让买卖双方都更安心地完成交易。",
+            "PopOut 以邻里就近交易为核心，商品都是当面交付。发帖时卖家会从列表里选一个好辨认的公共地点作为见面点，买家在帖子上就能看到。每个账号都通过澳洲手机号和一次性位置校验完成验证，《PopOut Market 规则》以八种语言公开，不登录也能查看。",
         },
         {
-          question: "4) PopOut 有 AI 自动回复吗？",
+          question: "4) PopOut 怎么确认用户是真人？",
           answer:
-            "有。PopOut 已加入 AI 自动回复功能。目前还是比较简单的回复，我们正在持续更新，很快会有更强的功能上线。现在它能帮你回复大量重复、无意义的咨询，以及你在帖子里已经写明的内容，帮你节省时间；遇到不确定或帖子里没写到的问题，AI 不会贸然回复，而是留给你亲自回复买家。这样你就能把精力集中在买家真正有价值的问题上。",
+            "每个账号都需要用澳洲手机号验证，并做一次性的位置校验来确认你所在的 suburb，校验完位置信息即被丢弃——PopOut 不会保存你的定位轨迹。持续聊天和发帖的用户每 30 天会重新校验一次。任何帖子和消息都可以举报，违规帖子会被限制，被限制方也可以申诉。",
         },
         {
-          question: "5) 学生用户在 PopOut 有什么优势？",
+          question: "5) PopOut 只能买卖二手吗？",
           answer:
-            "PopOut 提供学生身份验证通道，帮助同校、同学区或同学生公寓用户更高效地发现彼此，提升交易匹配效率和基础信任感。",
+            "不只。社区（Community）版块专门用来看附近发生的事：本地折扣、关于你所在区域的提问、生活推荐，以及想收二手的人。还有一张本地商店地图，邻居会把逛到的折扣发上来，商品名和价格直接写在照片上，并翻译成 App 支持的每一种语言。",
         },
         {
           question: "6) 墨尔本二手网站怎么选更安全？",
@@ -92,7 +92,7 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "1) PopOut 的 AI 發文功能如何節省時間？",
           answer:
-            "上傳商品圖片後，系統可自動產生標題、描述與分類建議。你只需檢查與補充內容，再設定成色與價格即可發佈，通常比從零填寫更有效率。",
+            "上傳商品圖片後，系統會自動產生標題、描述與分類建議。你只需檢查內容、設定價格、選一個公共見面地點即可發佈。你也可以一次上傳整個房間的照片，PopOut 會自動分組成一則則獨立的草稿。",
         },
         {
           question: "2) PopOut 支援哪些語言？聊天也可翻譯嗎？",
@@ -102,17 +102,17 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "3) 如何讓線下交易更安全？",
           answer:
-            "PopOut 以鄰里就近交易為核心，建議在人多、明亮的公共場所見面。把取貨保持在附近、公開的地點，能讓買賣雙方都更安心地完成交易。",
+            "PopOut 以鄰里就近交易為核心，商品都是當面交付。發文時賣家會從清單中挑一個好辨識的公共地點作為見面點，買家在貼文上就能看到。每個帳號都透過澳洲手機號碼與一次性位置驗證完成認證，《PopOut Market 規則》以八種語言公開，未登入也能閱讀。",
         },
         {
-          question: "4) PopOut 有 AI 自動回覆嗎？",
+          question: "4) PopOut 怎麼確認使用者是真人？",
           answer:
-            "有。PopOut 已加入 AI 自動回覆功能。目前還是比較簡單的回覆，我們正在持續更新，很快會有更強的功能上線。現在它能幫你回覆大量重複、無意義的詢問，以及你在貼文裡已經寫明的內容，替你節省時間；遇到不確定或貼文裡沒寫到的問題，AI 不會貿然回覆，而是留給你親自回覆買家。這樣你就能把精力集中在買家真正有價值的問題上。",
+            "每個帳號都需要用澳洲手機號碼驗證，並做一次性的位置驗證來確認你所在的 suburb，驗證完位置資訊即被丟棄——PopOut 不會保存你的定位軌跡。持續聊天與發文的使用者每 30 天會重新驗證一次。任何貼文與訊息都可以檢舉，違規貼文會被限制，被限制方也可以申訴。",
         },
         {
-          question: "5) 學生使用者在 PopOut 有什麼優勢？",
+          question: "5) PopOut 只能買賣二手嗎？",
           answer:
-            "PopOut 提供學生身份驗證通道，讓同校、同學區或同學生宿舍使用者更容易互相發現，提升配對效率與基礎信任。",
+            "不只。社群（Community）版塊專門用來看附近發生的事：在地折扣、關於你所在區域的提問、生活推薦，以及想收二手的人。還有一張在地商店地圖，鄰居會把逛到的折扣發上來，商品名與價格直接寫在照片上，並翻譯成 App 支援的每一種語言。",
         },
         {
           question: "6) 墨爾本二手網站怎麼選才更安全？",
@@ -147,7 +147,7 @@ function getCopy(locale: string): FaqCopy {
       {
         question: "1) How does PopOut's AI listing assist save time?",
         answer:
-          "After you upload item photos, PopOut can draft a title, description, and category suggestions. You review and adjust details, set condition and price, then publish with fewer manual steps.",
+          "After you upload photos of the item, PopOut drafts a title, description and category for you. You review it, set the price and pick a public meetup spot, then publish. You can add a whole room's photos at once and PopOut sorts them into separate drafts.",
       },
       {
         question: "2) Which languages are supported, and is chat included?",
@@ -157,17 +157,17 @@ function getCopy(locale: string): FaqCopy {
       {
         question: "3) How does PopOut support safer in-person trades?",
         answer:
-          "PopOut is neighbourhood-first, so trades happen close to home, and we encourage meeting in busy, public, well-lit places. Keeping pickups local and public helps both sides feel more comfortable completing a trade.",
+          "PopOut is neighbourhood-first, so trades happen close to home and you hand the item over in person. When you post, you pick a recognisable public place as the meetup spot and the buyer sees it on the listing. Every account is verified with an Australian mobile number and a one-time location check, and the PopOut Market Rules are published in eight languages and readable without an account.",
       },
       {
-        question: "4) Does PopOut have AI auto-reply for messages?",
+        question: "4) How does PopOut check that people are real?",
         answer:
-          "Yes. PopOut now includes an AI auto-reply feature. For now it handles simpler replies, and we are actively improving it — better capabilities are coming soon. Today it can take care of the high volume of repetitive or low-value messages and questions already answered in your listing, saving you time. For anything uncertain or not covered in your post, the AI will not guess — it leaves those for you to answer the buyer personally, so you can focus your energy on the questions that genuinely matter.",
+          "Every account is verified with an Australian mobile number and a one-time location check that confirms your suburb and is then discarded — PopOut does not keep your location history. The check is repeated every 30 days for people who keep chatting and posting. Listings and messages can be reported, a listing can be restricted, and a restriction can be appealed.",
       },
       {
-        question: "5) What is the benefit for student communities?",
+        question: "5) Is PopOut only for buying and selling?",
         answer:
-          "PopOut includes a student verification pathway that helps users in campus and accommodation circles discover each other faster with stronger baseline trust.",
+          "No. The Community tab is for neighbourhood life: local deals at nearby shops, questions about your area, recommendations, and people looking to buy. There is also a map of local shops, where neighbours post what they have found with the product name and price written on the photo and translated into every language the app speaks.",
       },
       {
         question: "6) How can I choose a safer second-hand platform in Melbourne?",
@@ -201,7 +201,10 @@ export function FaqPageContent() {
       "@type": "FAQPage",
       mainEntity: copy.faqs.map((item) => ({
         "@type": "Question",
-        name: item.question,
+        // Strip the visible "1) " ordinal. It is a layout affordance for the
+        // on-page list; inside Question.name it becomes part of the question an
+        // assistant quotes back ("1) How does PopOut…"), which reads as broken.
+        name: item.question.replace(/^\d+\)\s*/, ""),
         acceptedAnswer: {
           "@type": "Answer",
           text: item.answer,

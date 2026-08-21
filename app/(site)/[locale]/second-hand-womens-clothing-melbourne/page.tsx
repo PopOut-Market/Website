@@ -1,44 +1,66 @@
-import { MarketPageContent } from "@/components/market-page-content";
-import { MarketServerListings } from "@/components/market-server-listings";
+import { CategoryPageContent } from "@/components/category-page-content";
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-jsonld";
+import { categoryByPath, categoryCopy } from "@/lib/market-categories";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
-import { localizedMetadata, localizedTitle, localizedDescription } from "@/lib/site-seo-copy";
-import { COPY } from "@/lib/site-i18n";
-import { SITE_ORIGIN } from "@/lib/seo";
+import { localizedAlternates, SITE_ORIGIN, OG_IMAGE } from "@/lib/seo";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import { fetchFeedListings, formatPriceLabel } from "@/lib/supabase/server-feed";
+import { COPY } from "@/lib/site-i18n";
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { notFound } from "next/navigation";
 
-const PATH = "/market";
-const SSR_LISTING_COUNT = 24;
+const PATH = "/second-hand-womens-clothing-melbourne";
+const LISTING_COUNT = 24;
 
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const locale = await localeFromParams(params);
-  return localizedMetadata(PATH, locale);
+  const category = categoryByPath(PATH);
+  if (!category) return {};
+  const copy = categoryCopy(category, locale);
+  const selfPath = toLocalePath(PATH, locale);
+
+  return {
+    title: { absolute: copy.title },
+    description: copy.description,
+    alternates: { canonical: selfPath, languages: localizedAlternates(PATH) },
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      url: `${SITE_ORIGIN}${selfPath}`,
+      type: "website",
+      siteName: "PopOut Market",
+      images: [OG_IMAGE],
+    },
+  };
 }
 
-export default async function MarketPage({ params }: LocaleParams) {
+export default async function Page({ params }: LocaleParams) {
   const locale = await localeFromParams(params);
-  const t = COPY[locale];
+  const category = categoryByPath(PATH);
+  if (!category) notFound();
 
-  const listings = await fetchFeedListings({ locale, limit: SSR_LISTING_COUNT });
+  const t = COPY[locale];
+  const copy = categoryCopy(category, locale);
+  const listings = await fetchFeedListings({
+    locale,
+    limit: LISTING_COUNT,
+    categoryTopId: category.topId,
+  });
   const priceLabels = listings.map((l) =>
     formatPriceLabel(locale, l.priceCents, t.homeMarketFilterGiveaway),
   );
 
   const canonical = `${SITE_ORIGIN}${toLocalePath(PATH, locale)}`;
-  const heading = localizedTitle(PATH, locale)?.split("|")[0]?.trim() || t.marketPageTitle;
-  const intro = localizedDescription(PATH, locale) ?? t.homeMarketSubtitle;
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "@id": canonical,
     url: canonical,
-    name: heading,
-    description: intro,
+    name: copy.h1,
+    description: copy.description,
     inLanguage: locale,
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+    // Emitted only when there is real inventory behind it.
     ...(listings.length > 0
       ? {
           mainEntity: {
@@ -71,24 +93,24 @@ export default async function MarketPage({ params }: LocaleParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <MarketServerListings
+      <BreadcrumbJsonLd
+        items={[
+          { name: "PopOut Market", path: "/" },
+          { name: t.marketPageTitle, path: "/market" },
+          { name: copy.h1, path: PATH },
+        ]}
         locale={locale}
-        heading={heading}
-        intro={intro}
-        listings={listings}
-        priceLabels={priceLabels}
-        noImageLabel={t.marketSupabaseEmpty}
       />
-      <Suspense fallback={null}>
-        <MarketPageContent />
-      </Suspense>
+      <CategoryPageContent category={category} listings={listings} priceLabels={priceLabels} />
     </>
   );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";
 
-// Prerendered and refreshed hourly. The interactive suburb picker below reads
-// `useSearchParams` inside a Suspense boundary, which stays client-side.
+// Prerendered per locale, refreshed hourly so the listings stay real without
+// making the page dynamic for visitors or crawlers. `force-static` is required:
+// without it Next 16 serves this route on demand and every crawler hit becomes a
+// live database round-trip.
 export const dynamic = "force-static";
 export const revalidate = 3600;

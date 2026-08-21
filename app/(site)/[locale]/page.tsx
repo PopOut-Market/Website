@@ -1,113 +1,104 @@
 import { HomePageContent } from "@/components/home-page-content";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { localizedMetadata } from "@/lib/site-seo-copy";
+import { COPY } from "@/lib/site-i18n";
+import { SITE_ORIGIN } from "@/lib/seo";
+import { organizationNode, webSiteNode, mobileAppNode } from "@/lib/jsonld";
+import { toLocalePath } from "@/lib/site-locale-routing";
 import {
-  APP_STORE_URL,
-  GOOGLE_PLAY_URL,
-  FOOTER_CONTACT_EMAIL,
-  FOOTER_SOCIAL_LINKEDIN_DEFAULT,
-  FOOTER_SOCIAL_REDNOTE_DEFAULT,
-} from "@/lib/site-config";
+  fetchActiveSuburbCount,
+  fetchFeedListings,
+  formatPriceLabel,
+} from "@/lib/supabase/server-feed";
 import type { Metadata } from "next";
 
-// Real, verifiable external identifiers (App Store + social profiles + ACN +
-// address) are the strongest trust signals AI assistants use to recognise and
-// cite an entity. operatingSystem is iOS-only until the Android app ships.
-const homeJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      name: "PopOut Market",
-      url: "https://www.popoutmarket.com.au/",
-      inLanguage: "en-AU",
-      publisher: {
-        "@type": "Organization",
-        name: "PopOut Market",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://www.popoutmarket.com.au/favicon.png",
-        },
-      },
-    },
-    {
-      "@type": "Organization",
-      name: "PopOut Market",
-      legalName: "POPOUT MARKET PTY LTD",
-      url: "https://www.popoutmarket.com.au/",
-      logo: "https://www.popoutmarket.com.au/favicon.png",
-      email: FOOTER_CONTACT_EMAIL,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "1003/151 City Rd",
-        addressLocality: "Southbank",
-        addressRegion: "VIC",
-        postalCode: "3006",
-        addressCountry: "AU",
-      },
-      areaServed: {
-        "@type": "City",
-        name: "Melbourne",
-        containedInPlace: {
-          "@type": "Country",
-          name: "Australia",
-        },
-      },
-      sameAs: [
-        APP_STORE_URL,
-        GOOGLE_PLAY_URL,
-        FOOTER_SOCIAL_LINKEDIN_DEFAULT,
-        FOOTER_SOCIAL_REDNOTE_DEFAULT,
-      ],
-    },
-    {
-      "@type": "MobileApplication",
-      name: "PopOut Market",
-      applicationCategory: "MarketplaceApplication",
-      operatingSystem: "iOS, Android",
-      url: "https://www.popoutmarket.com.au/",
-      downloadUrl: APP_STORE_URL,
-      installUrl: APP_STORE_URL,
-      areaServed: {
-        "@type": "City",
-        name: "Melbourne",
-        containedInPlace: {
-          "@type": "Country",
-          name: "Australia",
-        },
-      },
-      availableLanguage: ["en", "zh-Hans", "zh-Hant", "ko", "ja", "vi", "fr", "es"],
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "AUD",
-      },
-      featureList: [
-        "Melbourne suburb-based listing discovery",
-        "Multilingual buyer and seller communication",
-        "Second-hand trading workflow for local meetups",
-        "Student-friendly posting and move-out selling support",
-      ],
-    },
-  ],
-};
+const HOME_LISTING_COUNT = 6;
 
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const locale = await localeFromParams(params);
   return localizedMetadata("/", locale);
 }
 
-export default function HomePage() {
+export default async function HomePage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  const t = COPY[locale];
+
+  // Server-rendered so the listings exist in the HTML for crawlers that never
+  // run JavaScript — which is all of them except Googlebot's renderer.
+  const [listings, suburbCount] = await Promise.all([
+    fetchFeedListings({ locale, limit: HOME_LISTING_COUNT }),
+    fetchActiveSuburbCount(),
+  ]);
+
+  const priceLabels = listings.map((l) =>
+    formatPriceLabel(locale, l.priceCents, t.homeMarketFilterGiveaway),
+  );
+
+  const canonical = `${SITE_ORIGIN}${toLocalePath("/", locale)}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      webSiteNode(locale),
+      organizationNode(),
+      mobileAppNode(),
+      {
+        "@type": "WebPage",
+        "@id": canonical,
+        url: canonical,
+        name: t.heroTitle,
+        description: t.heroLead,
+        inLanguage: locale,
+        isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+        about: { "@id": `${SITE_ORIGIN}/#app` },
+        publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+      },
+      // Only emitted when there is real inventory behind it. An empty ItemList,
+      // or one built from invented demo items, is worse than none.
+      ...(listings.length > 0
+        ? [
+            {
+              "@type": "ItemList",
+              name: t.homeMarketTitle.replace(/\*/g, ""),
+              numberOfItems: listings.length,
+              itemListElement: listings.map((l, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                url: `${SITE_ORIGIN}${toLocalePath(`/market/p/${encodeURIComponent(l.id)}`, locale)}`,
+                item: {
+                  "@type": "Product",
+                  name: l.title,
+                  itemCondition: "https://schema.org/UsedCondition",
+                  offers: {
+                    "@type": "Offer",
+                    price: (l.priceCents / 100).toFixed(2),
+                    priceCurrency: "AUD",
+                    availability: "https://schema.org/InStock",
+                  },
+                },
+              })),
+            },
+          ]
+        : []),
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomePageContent />
+      <HomePageContent listings={listings} priceLabels={priceLabels} suburbCount={suburbCount} />
     </>
   );
 }
 
 export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-params";
+
+// Prerendered at build and refreshed hourly: still a static file at the edge for
+// every visitor and every crawler, just not a frozen one. `force-static` is
+// required — without it Next 16 renders this route on demand, which would mean a
+// live database round-trip on every crawler hit.
 export const dynamic = "force-static";
+export const revalidate = 3600;

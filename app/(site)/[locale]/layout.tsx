@@ -16,19 +16,19 @@ export const metadata: Metadata = {
     template: "%s | PopOut Market",
   },
   description:
-    "PopOut Market helps Melbourne communities buy and sell second-hand items with suburb-first discovery, multilingual communication, and safer meetup workflows.",
+    "PopOut Market is the neighbourhood app for Melbourne: buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything, in eight languages.",
   openGraph: {
     type: "website",
     siteName: "PopOut Market",
     title: "PopOut Market",
     description:
-      "Melbourne's second-hand marketplace — buy and sell locally with suburb-first discovery and multilingual chat.",
+      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",
   },
   twitter: {
     card: "summary_large_image",
     title: "PopOut Market",
     description:
-      "Melbourne's second-hand marketplace — buy and sell locally with suburb-first discovery and multilingual chat.",
+      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",
   },
 };
 

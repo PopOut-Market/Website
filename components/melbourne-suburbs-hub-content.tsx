@@ -3,6 +3,7 @@
 import { useSiteShell } from "@/components/site-chrome-context";
 import { MELBOURNE_REGIONS } from "@/lib/melbourne-regions";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { MARKET_SUBURBS, type MarketSuburb } from "@/lib/site-suburbs";
 import { suburbSeoPath } from "@/lib/suburb-seo-pages";
 import Link from "next/link";
@@ -30,7 +31,7 @@ function hubCopy(locale: string): HubCopy {
       return {
         title: "了解更多墨尔本区域",
         intro:
-          "墨尔本市中心及周边拥有多个主要城区，每个区域的居民结构和生活方式略有不同。下方覆盖墨尔本八个核心区域（CBD、Carlton、Parkville、Southbank、Docklands、Fitzory、North Melbourne、South Wharf），并附上各区简介和主要特色。",
+          "墨尔本市中心及周边拥有多个主要城区，每个区域的居民结构和生活方式略有不同。下方覆盖墨尔本八个核心区域（CBD、Carlton、Parkville、Southbank、Docklands、Fitzroy、North Melbourne、South Wharf），并附上各区简介和主要特色。",
         areaIntroTitle: "区域总览",
         guideTitle: "服务覆盖说明",
         guideBody:
@@ -57,7 +58,7 @@ function hubCopy(locale: string): HubCopy {
             body: "新兴滨水商务与住宅区，高层公寓密集，居民以年轻专业人士为主。二手交易常见家电、家具和儿童用品，适合新入住家庭和短租人群。",
           },
           {
-            title: "菲茨罗伊（Fitzory / Fitzroy）",
+            title: "菲茨罗伊（Fitzroy）",
             body: "创意氛围浓厚，复古店与设计工作室聚集。二手服饰、工艺品和个性家居需求明显，适合年轻创意人群和艺术爱好者。",
           },
           {
@@ -83,7 +84,7 @@ function hubCopy(locale: string): HubCopy {
       return {
         title: "了解更多墨爾本區域",
         intro:
-          "墨爾本市中心及周邊擁有多個主要城區，每個區域的居民結構與生活方式略有不同。下方整理墨爾本八個核心區域（CBD、Carlton、Parkville、Southbank、Docklands、Fitzory、North Melbourne、South Wharf），並附上各區簡介與特色。",
+          "墨爾本市中心及周邊擁有多個主要城區，每個區域的居民結構與生活方式略有不同。下方整理墨爾本八個核心區域（CBD、Carlton、Parkville、Southbank、Docklands、Fitzroy、North Melbourne、South Wharf），並附上各區簡介與特色。",
         areaIntroTitle: "區域總覽",
         guideTitle: "如何使用這個頁面",
         guideBody:
@@ -110,7 +111,7 @@ function hubCopy(locale: string): HubCopy {
             body: "新興濱水商住區，高層住宅集中，年輕專業人士比例高。二手交易常見家電、家具與兒童用品。",
           },
           {
-            title: "菲茨羅伊（Fitzory / Fitzroy）",
+            title: "菲茨羅伊（Fitzroy）",
             body: "創意氛圍濃厚，復古店與設計工作室聚集。二手服飾、工藝品與個性家居需求明顯。",
           },
           {
@@ -260,7 +261,9 @@ export function MelbourneSuburbsHubContent() {
       },
       hasPart: MARKET_SUBURBS.map((suburb) => ({
         "@type": "WebPage",
-        name: suburb,
+        // Display name, not the frozen key — "Fitzory" was being published
+        // as a Melbourne place name in structured data on all 8 locales.
+        name: suburbDisplayName(suburb),
         url: localizePath(suburbSeoPath(suburb)),
       })),
     }),
@@ -309,7 +312,7 @@ export function MelbourneSuburbsHubContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="group rounded-2xl border border-black/5 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-200"
               >
-                <p className="text-base font-semibold text-gray-900">{suburb}</p>
+                <p className="text-base font-semibold text-gray-900">{suburbDisplayName(suburb)}</p>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600">
                   {suburbBlurb(locale, suburb)}
                 </p>

@@ -44,7 +44,7 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "如何更高效在 Fitzroy 找到合适二手物品",
         practicalBody:
-          "建议先按“最近发布”“同区距离”“成色描述完整”筛选，再使用 “Fitzory/Fitzroy + 品类词” 搜索（如 vintage chair、record、lamp）。若你有明确风格偏好，可先收藏关键词并持续追踪新上架。",
+          "建议先按“最近发布”“同区距离”“成色描述完整”筛选，再使用 “Fitzroy + 品类词” 搜索（如 vintage chair、record、lamp）。若你有明确风格偏好，可先收藏关键词并持续追踪新上架。",
         nextStepTitle: "下一步建议",
         nextStepBody:
           "先浏览 Fitzroy 在售列表，再对比 Carlton 与 North Melbourne 的同类商品。若你更看重风格和独特性，优先选择描述清晰、图片完整且可快速沟通的卖家。",
@@ -69,7 +69,7 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "如何更有效在 Fitzroy 找到合適二手物品",
         practicalBody:
-          "建議先用「最近發布」「同區距離」「成色描述完整」篩選，再用 “Fitzory/Fitzroy + 品類詞” 搜尋（如 vintage chair、record、lamp）。若有明確風格偏好，可先收藏關鍵字並持續追蹤。",
+          "建議先用「最近發布」「同區距離」「成色描述完整」篩選，再用 “Fitzroy + 品類詞” 搜尋（如 vintage chair、record、lamp）。若有明確風格偏好，可先收藏關鍵字並持續追蹤。",
         nextStepTitle: "下一步建議",
         nextStepBody:
           "先看 Fitzroy 列表，再與 Carlton、North Melbourne 的同類商品比較。若你更重視風格與獨特性，優先選擇圖片完整、描述清楚且可快速回覆的賣家。",
@@ -94,7 +94,7 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "How to find better second-hand options in Fitzroy",
         practicalBody:
-          "Filter by recently posted, nearby distance, and complete condition notes first. Then search with “Fitzory/Fitzroy + item terms” (for example, vintage chair, record, lamp) to surface more relevant local listings.",
+          "Filter by recently posted, nearby distance, and complete condition notes first. Then search with “Fitzroy + item terms” (for example, vintage chair, record, lamp) to surface more relevant local listings.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
           "Start with Fitzroy listings, then compare similar items in Carlton and North Melbourne. If style and uniqueness matter most, prioritize posts with clearer photos and faster seller response.",

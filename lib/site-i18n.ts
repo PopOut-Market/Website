@@ -32,13 +32,8 @@ export type SiteCopy = {
   topLanguage: string;
   languageModalTitle: string;
   languageModalHint: string;
-  heroSecondaryPrefix: string;
-  heroSecondaryLink: string;
-  heroSecondarySuffix: string;
-  heroExploreCta: string;
   downloadLine: string;
   slogan: string;
-  ratingAria: string;
   homeAria: string;
   appStoreAlt: string;
   googlePlayAlt: string;
@@ -74,19 +69,13 @@ export type SiteCopy = {
   marketPostListedIn: string;
   marketPostListedOn: string;
   marketPostCategoryLabel: string;
-  marketPostStatusLabel: string;
-  marketPostDeliveryLabel: string;
-  marketPostNegotiableLabel: string;
   marketPostListingRef: string;
-  /** Cyan badge when the listing supports delivery (replaces generic “Yes”). */
-  marketPostDeliverableBadge: string;
   /** Shown to the right of the price when the price is not negotiable. */
   marketPostFixedPriceLabel: string;
   marketPostDetailLoadingAria: string;
   marketPostDescriptionHeading: string;
   marketPostPreferredMeetupLabel: string;
   marketPostOtherItemsHeading: string;
-  marketPostSellerVerifiedLabel: string;
   marketYes: string;
   marketNo: string;
   marketUnknown: string;
@@ -94,44 +83,8 @@ export type SiteCopy = {
   translationDemoSubtitle: string;
   aiPostDemoTitle: string;
   aiPostDemoSubtitle: string;
-  autoReplyDemoTitle: string;
-  autoReplyDemoSubtitle: string;
-  autoReplyDemoInboxTitle: string;
-  autoReplyDemoTabBuying: string;
-  autoReplyDemoTabSelling: string;
-  autoReplyDemoBadge: string;
-  autoReplyDemoTimeNow: string;
-  autoReplyDemoTime1Min: string;
-  autoReplyDemoMsgMeet: string;
-  autoReplyDemoMsgPrice: string;
-  autoReplyDemoMsgSelling: string;
-  autoReplyDemoMsgGreeting: string;
   aiPostDemoPrice: string;
-  aiPostDemoCondition: string;
   aiPostDemoYouFill: string;
-  scheduleDemoTitle: string;
-  scheduleDemoSubtitle: string;
-  scheduleDemoDate: string;
-  scheduleDemoTime: string;
-  scheduleDemoLocation: string;
-  scheduleDemoScheduled: string;
-  scheduleDemoScanHint: string;
-  scheduleDemoVerified: string;
-  studentVerifyTitle: string;
-  studentVerifySubtitle: string;
-  studentVerifyEmailLabel: string;
-  studentVerifyUniversity: string;
-  studentVerifyVerifying: string;
-  studentVerifyVerified: string;
-  studentVerifyBadge: string;
-  safetyZoneTitle: string;
-  safetyZoneSubtitle: string;
-  safetyZoneNearLabel: string;
-  safetyZoneFinding: string;
-  safetyZoneListTitle: string;
-  safetyZoneBadgeCctv: string;
-  safetyZoneBadgeBusy: string;
-  safetyZoneBadgeLit: string;
   footerLegalNavAria: string;
   footerCopyright: string;
   footerAcn: string;
@@ -141,7 +94,6 @@ export type SiteCopy = {
   footerNavChildSafety: string;
   footerNavContact: string;
   footerSocialRednoteAria: string;
-  footerSocialInstagramAria: string;
   footerSocialLinkedInAria: string;
   footerLegalStub: string;
   footerBackHome: string;
@@ -175,18 +127,6 @@ export type SiteCopy = {
   aboutSupportEmail: string;
   legalEnglishAuthoritative: string;
   languageModalCloseAria: string;
-  carouselGoToItemAria: string;
-  demoListingWoodenDiningChair: string;
-  demoListingMountainBike: string;
-  demoListingAcousticGuitar: string;
-  demoListingWirelessHeadphones: string;
-  demoListingTextbookBundle: string;
-  demoListingSmartWatch: string;
-  demoListingGameController: string;
-  heroNowInConnector: string;
-  heroLocationSuffix: string;
-  heroTitleTemplate: string;
-  heroRotatingItems: string[];
   contactBack: string;
   contactHint: string;
   contactTitlePlaceholder: string;
@@ -201,7 +141,6 @@ export type SiteCopy = {
   faqDisclaimerTitle: string;
   faqDisclaimerBody: string;
   faqComparisonCta: string;
-  marketSeoIntroPrefix: string;
   marketSeoIntroNearLabel: string;
   marketSuburbMapTitle: string;
   marketPostMeetupMapAlt: string;
@@ -286,6 +225,28 @@ export type SiteCopy = {
   comparisonFbCard2Body: string;
   comparisonFbCard3Title: string;
   comparisonFbCard3Body: string;
+  heroTitle: string;
+  heroLead: string;
+  heroTrustLine: string;
+  heroGetAppCta: string;
+  heroBrowseCta: string;
+  homeMarketTitle: string;
+  homeMarketSubtitle: string;
+  homeMarketBrowseAll: string;
+  homeMarketFilterAll: string;
+  homeMarketFilterGiveaway: string;
+  homeMarketFilterUnder20: string;
+  homeBulkListingLine: string;
+  homeShopsTitle: string;
+  homeShopsSubtitle: string;
+  homeShopsCta: string;
+  homeCommunityTitle: string;
+  homeCommunitySubtitle: string;
+  homeCommunityTopics: string;
+  homeTrustTitle: string;
+  homeTrustSubtitle: string;
+  homeCoverageTitle: string;
+  homeCoverageCta: string;
   notFoundTitle: string;
   notFoundDescription: string;
 };
@@ -296,13 +257,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Language",
     languageModalTitle: "Choose your language",
     languageModalHint: "PopOut supports local communities in multiple languages.",
-    heroSecondaryPrefix: "Buy and sell with neighbours nearby",
-    heroSecondaryLink: "",
-    heroSecondarySuffix: "",
-    heroExploreCta: "Explore more items near you",
     downloadLine: "Download the PopOut Market app for iOS or Android",
-    slogan: "buy and sell with people around you",
-    ratingAria: "Rating 5.0 out of 5 on the App Store",
+    slogan: "buy and sell with neighbours nearby",
     homeAria: "PopOut home",
     appStoreAlt: "Download on the App Store",
     googlePlayAlt: "Get it on Google Play",
@@ -340,17 +296,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "Listed in {suburb}",
     marketPostListedOn: "Listed on {date}",
     marketPostCategoryLabel: "Category",
-    marketPostStatusLabel: "Status",
-    marketPostDeliveryLabel: "Delivery",
-    marketPostNegotiableLabel: "Negotiable",
     marketPostListingRef: "Listing ref.",
-    marketPostDeliverableBadge: "Delivery available",
     marketPostFixedPriceLabel: "Fixed price",
     marketPostDetailLoadingAria: "Loading listing",
     marketPostDescriptionHeading: "Description",
     marketPostPreferredMeetupLabel: "Preferred meet-up point",
     marketPostOtherItemsHeading: "More from this seller",
-    marketPostSellerVerifiedLabel: "Verified in",
     marketYes: "Yes",
     marketNo: "No",
     marketUnknown: "Unknown",
@@ -360,47 +311,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoTitle: "Snap a photo. AI does the *rest*",
     aiPostDemoSubtitle:
       "Take a photo and AI generates the title, category, and description — you just set the price.",
-    autoReplyDemoTitle: "No more *time wasters*",
-    autoReplyDemoSubtitle: 'AI answers "Is it still available?"',
-    autoReplyDemoInboxTitle: "Messages",
-    autoReplyDemoTabBuying: "Buying",
-    autoReplyDemoTabSelling: "Selling",
-    autoReplyDemoBadge: "Auto-reply on",
-    autoReplyDemoTimeNow: "just now",
-    autoReplyDemoTime1Min: "1 min",
-    autoReplyDemoMsgMeet: "What time should we meet?",
-    autoReplyDemoMsgPrice: "It's $50. Are you interested?",
-    autoReplyDemoMsgSelling: "Selling for $30. Interested?",
-    autoReplyDemoMsgGreeting: "Hi! The leather office chair is still available.",
     aiPostDemoPrice: "Price",
-    aiPostDemoCondition: "Condition",
     aiPostDemoYouFill: "You fill in",
-    scheduleDemoTitle: "Meet with confidence.",
-    scheduleDemoSubtitle:
-      "Pick a time and place, meet your buyer, and scan their QR code to confirm — reducing no-shows and building a trusted community.",
-    scheduleDemoDate: "Date",
-    scheduleDemoTime: "Time",
-    scheduleDemoLocation: "Meet-up spot",
-    scheduleDemoScheduled: "Scheduled",
-    scheduleDemoScanHint: "Scan to verify",
-    scheduleDemoVerified: "Meetup Verified",
-    studentVerifyTitle: "Verified students. Trusted trades.",
-    studentVerifySubtitle:
-      "Verify your student email to earn a trust badge — making every transaction in the community safer and more reliable.",
-    studentVerifyEmailLabel: "Student email",
-    studentVerifyUniversity: "University",
-    studentVerifyVerifying: "Verifying…",
-    studentVerifyVerified: "Email Verified",
-    studentVerifyBadge: "Verified Student",
-    safetyZoneTitle: "Safer meetups. By design.",
-    safetyZoneSubtitle:
-      "When you choose where to meet, we suggest nearby Safety Zones — busy, well-lit spots with cameras — so trades feel calmer and our community stays stronger.",
-    safetyZoneNearLabel: "Meet-up area",
-    safetyZoneFinding: "Scanning for Safety Zones…",
-    safetyZoneListTitle: "Suggested spots",
-    safetyZoneBadgeCctv: "CCTV",
-    safetyZoneBadgeBusy: "Busy",
-    safetyZoneBadgeLit: "Well-lit",
     footerLegalNavAria: "Policies and contact",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
     footerAcn: "ACN 696 464 945",
@@ -410,7 +322,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "Child Safety",
     footerNavContact: "Contact Us",
     footerSocialRednoteAria: "PopOut Market on Xiaohongshu (RED)",
-    footerSocialInstagramAria: "PopOut Market on Instagram",
     footerSocialLinkedInAria: "PopOut Market on LinkedIn",
     footerLegalStub: "This page will be updated soon.",
     footerBackHome: "Back to home",
@@ -427,7 +338,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Precise location-based recommendations in Melbourne help you discover hidden gems right on your doorstep. Knowing the seller might live on the next street over gives every transaction a foundation of trust you can see.",
     aboutWhySafetyTitle: "Safety Is Our Core Principle",
     aboutWhySafetyBody:
-      "Your safety comes first. We suggest busy, well-lit public spots across Melbourne as safer places for in-person trades, and we encourage users to verify their student identity. Every transaction on PopOut comes with an extra layer of assurance.",
+      "Your safety comes first. Every PopOut account is verified with an Australian mobile number and a one-time location check that confirms your suburb and is then discarded. Meetups happen in public places the seller picks when they post, and the PopOut Market Rules are published in eight languages and readable without an account. Anything can be reported, and a restricted listing can be appealed.",
     aboutWhyCommunicationTitle: "Communication Without Borders",
     aboutWhyCommunicationBody:
       "Language should never be a barrier to connection. PopOut features a powerful real-time bilingual translation system. Chat in your native language — the other person receives an automatic translation. Even if your English isn't perfect, you can trade freely and make like-minded friends here.",
@@ -435,7 +346,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyLead: "At PopOut, we treat privacy as a fundamental right.",
     aboutPrivacyMinimalTitle: "Minimal Data Collection",
     aboutPrivacyMinimalBody:
-      "We only collect essential information like your phone number and email for login verification.",
+      "A PopOut account needs a verified Australian mobile number, a verified suburb, and a nickname you choose. There is no email address, no password and no legal name on a PopOut account.",
     aboutPrivacyStorageTitle: "High-Standard Storage",
     aboutPrivacyStorageBody:
       "Your sensitive data is stored in encrypted databases, in transit and at rest.",
@@ -456,18 +367,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "The English version of this document is authoritative.",
     languageModalCloseAria: "Close language picker",
-    carouselGoToItemAria: "Go to item {index}",
-    demoListingWoodenDiningChair: "Wooden Dining Chair",
-    demoListingMountainBike: "Mountain Bike",
-    demoListingAcousticGuitar: "Acoustic Guitar",
-    demoListingWirelessHeadphones: "Wireless Headphones",
-    demoListingTextbookBundle: "Textbook Bundle",
-    demoListingSmartWatch: "Smart Watch",
-    demoListingGameController: "Game Controller",
-    heroNowInConnector: ", now in ",
-    heroTitleTemplate: "Find used {item} in {brand}",
-    heroRotatingItems: ["furniture", "electronics", "bikes", "textbooks", "kitchenware", "clothes"],
-    heroLocationSuffix: "",
     contactBack: "Back Home",
     contactHint: "Tell us your question or partnership request and we will reply by email.",
     contactTitlePlaceholder: "Enter a short title",
@@ -484,7 +383,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "This page is for product information only and does not constitute legal, financial, or safety guarantees. Features may vary by app version, region, and account context.",
     faqComparisonCta: "Compare with other markets",
-    marketSeoIntroPrefix: "Buy and sell used items in",
     marketSeoIntroNearLabel: "Showing items in",
     marketSuburbMapTitle: "Map of {suburb}",
     marketPostMeetupMapAlt: "Meet-up location map",
@@ -501,28 +399,29 @@ export const COPY: Record<Locale, SiteCopy> = {
       "This page is for product education only. It is not legal advice and does not intend to discredit any third-party platform. Third-party trademarks and product names belong to their respective owners. Features can change over time; please verify current details on each platform's official channels.",
     comparisonHubCardsTitle: "Open detailed comparisons",
     comparisonHubCardsHint: "Choose a platform below for full article-style comparison",
-    comparisonHubCardFbBody: "Compare listing speed, multilingual messaging, and AI auto-reply.",
+    comparisonHubCardFbBody:
+      "Compare listing speed, multilingual messaging, and how each app verifies who you are trading with.",
     comparisonHubCardFbCta: "Read PopOut vs Facebook Marketplace",
     comparisonHubCardGumtreeBody:
-      "Compare AI listing setup, student verification, and AI auto-reply.",
+      "Compare AI listing setup, multilingual chat translation, and account verification.",
     comparisonHubCardGumtreeCta: "Read PopOut vs Gumtree",
     comparisonGumtreeH1: "PopOut vs Gumtree: Experience Comparison",
     comparisonGumtreeLead:
-      "This page compares real-world workflow differences around listing setup, multilingual communication, and AI auto-reply in Melbourne second-hand use cases.",
+      "This page compares real-world workflow differences around listing setup, multilingual communication, and account verification in Melbourne second-hand use cases.",
     comparisonGumtreeDisclaimer:
       "Disclaimer: this page is for user education and product communication only. It is not legal advice. Gumtree and related marks belong to their respective owners. Third-party features may change over time.",
     comparisonGumtreeSection1Title: "1) AI-assisted listing setup",
     comparisonGumtreeSection1Body:
-      "PopOut can draft title, description, and category suggestions from item photos. Users then review, set condition and target price, and choose options like delivery and negotiation to publish more quickly.",
+      "PopOut can draft a title, description and category from photos of the item. The seller reviews the draft, sets the price and picks a public meetup spot, then publishes. Photos of a whole room can be added at once, and PopOut sorts them into separate draft listings.",
     comparisonGumtreeSection2Title: "2) Built-in multilingual flow",
     comparisonGumtreeSection2Body:
       "PopOut supports English, Simplified Chinese, Traditional Chinese, Korean, Japanese, French, Spanish, and Vietnamese across posting and messaging, reducing language friction in a diverse city environment.",
-    comparisonGumtreeSection3Title: "3) AI auto-reply that saves sellers time",
+    comparisonGumtreeSection3Title: "3) Verified neighbours, not anonymous accounts",
     comparisonGumtreeSection3Body:
-      "PopOut includes an AI auto-reply feature. It is simple for now and we are actively improving it, with stronger capabilities coming soon. Today it handles the high volume of repetitive, low-value messages and answers questions already covered in your listing. For anything uncertain or not written in your post, the AI does not guess — it leaves those for you to answer the buyer yourself, so you can focus on the questions that genuinely matter.",
-    comparisonGumtreeSection4Title: "4) Student verification for campus communities",
+      "Every PopOut account is verified with an Australian mobile number and a one-time location check, repeated every 30 days for people who keep chatting and posting. The check confirms the suburb only; GPS is not stored. The PopOut Market Rules are published in eight languages and readable without an account.",
+    comparisonGumtreeSection4Title: "4) Meeting up in a public place",
     comparisonGumtreeSection4Body:
-      "A student verification pathway helps improve trust and matching quality for university and accommodation-based transactions in Melbourne.",
+      "Selling on PopOut means handing the item to a neighbour in person. The seller picks a recognisable public place from a list when they post, and the buyer sees that spot on the listing. There is no postage and no courier step.",
     comparisonGumtreeTableTitle: "Feature snapshot (user-oriented)",
     comparisonGumtreeTableNote:
       "Note: the right column describes broad public usage patterns and may vary by account, region, or product updates.",
@@ -533,41 +432,41 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Popout: "Multilingual understanding across posts and chat",
     comparisonGumtreeFeature2Other:
       "Cross-language communication often depends on user-side translation",
-    comparisonGumtreeFeature3Title: "AI auto-reply",
+    comparisonGumtreeFeature3Title: "Account verification",
     comparisonGumtreeFeature3Popout:
-      "AI handles repetitive questions and details already in your listing; leaves uncertain ones for you",
-    comparisonGumtreeFeature3Other:
-      "Replies are fully manual, with no AI help to filter repetitive messages",
-    comparisonGumtreeFeature4Title: "Student-specific trust mechanism",
-    comparisonGumtreeFeature4Popout: "Student verification helps campus-related matching",
-    comparisonGumtreeFeature4Other: "Dedicated student identity pathway may be limited",
+      "Australian mobile number plus a one-time location check, re-checked every 30 days",
+    comparisonGumtreeFeature3Other: "Typically an email or social sign-in, with no location check",
+    comparisonGumtreeFeature4Title: "Where the handover happens",
+    comparisonGumtreeFeature4Popout:
+      "A public meetup spot is chosen when the listing is created and shown to the buyer",
+    comparisonGumtreeFeature4Other: "Arranged privately in chat, if at all",
     comparisonGumtreeFinalTitle: "Recommendation",
     comparisonGumtreeFinalBody:
-      "If your priorities are posting speed, multilingual clarity, and AI auto-reply that saves time, PopOut may be the better fit. Validate current features based on your own region and usage.",
+      "If your priorities are posting speed, multilingual clarity, and knowing that the person on the other end is a verified neighbour, PopOut may be the better fit. Validate current features based on your own region and usage.",
     comparisonBackLabel: "Back to comparisons",
     comparisonGumtreeCard1Title: "Fast AI Posting",
     comparisonGumtreeCard1Body: "Less category hunting and form repetition",
     comparisonGumtreeCard2Title: "Multilingual Trade",
     comparisonGumtreeCard2Body: "Supports key cross-language transaction flows",
-    comparisonGumtreeCard3Title: "AI auto-reply",
-    comparisonGumtreeCard3Body: "AI answers repetitive questions to save your time",
+    comparisonGumtreeCard3Title: "Verified neighbours",
+    comparisonGumtreeCard3Body: "Australian mobile number plus a one-time location check",
     comparisonFbH1: "PopOut vs Facebook Marketplace: Experience Comparison",
     comparisonFbLead:
-      "This article compares practical workflow differences in listing setup, multilingual communication, and AI auto-reply. The intent is to help users choose a marketplace flow that fits everyday needs.",
+      "This article compares practical workflow differences in listing setup, multilingual communication, and account verification. The intent is to help users choose a marketplace flow that fits everyday needs.",
     comparisonFbDisclaimer:
       "Disclaimer: this page is for product education only, not legal advice or a negative statement about any third-party platform. Facebook Marketplace and related marks belong to their respective owners. Feature availability may vary by region, account type, and product updates.",
     comparisonFbSection1Title: "1) AI-assisted listing from photos",
     comparisonFbSection1Body:
-      "On PopOut, uploading item photos can generate draft title, description, and category suggestions. Users review, add context, set condition and price, then publish faster with fewer manual steps.",
+      "On PopOut, uploading item photos can generate a draft title, description and category. The seller reviews, adds context, sets the price and picks a public meetup spot, then publishes with fewer manual steps.",
     comparisonFbSection2Title: "2) Real-time multilingual communication",
     comparisonFbSection2Body:
       "PopOut supports English, Simplified Chinese, Traditional Chinese, Korean, Japanese, French, Spanish, and Vietnamese. Posts and chats can be read in each user's preferred language flow.",
-    comparisonFbSection3Title: "3) AI auto-reply that saves sellers time",
+    comparisonFbSection3Title: "3) Verified neighbours, not anonymous accounts",
     comparisonFbSection3Body:
-      "PopOut includes an AI auto-reply feature. It is simple for now and we are actively improving it, with stronger capabilities coming soon. Today it handles repetitive, low-value messages and answers questions already covered in your listing. For anything uncertain or not written in your post, the AI does not guess — it leaves those for you to reply to the buyer personally, so your time goes to the questions that genuinely matter.",
-    comparisonFbSection4Title: "4) Student verification pathway in Melbourne",
+      "Every PopOut account is verified with an Australian mobile number and a one-time location check, repeated every 30 days for people who keep chatting and posting. The check confirms the suburb only; GPS is not stored. Listings and messages can be reported, and a restricted listing can be appealed once.",
+    comparisonFbSection4Title: "4) Meeting up in a public place",
     comparisonFbSection4Body:
-      "For student communities and accommodation clusters, PopOut includes a student verification channel to improve trust and discoverability in campus-related transactions.",
+      "Selling on PopOut means handing the item to a neighbour in person. The seller picks a recognisable public place from a list when they post, and the buyer sees that spot on the listing. There is no postage and no courier step.",
     comparisonFbTableTitle: "Feature snapshot (user-oriented)",
     comparisonFbTableNote:
       "Note: the right column reflects common public usage patterns and may change over time.",
@@ -578,23 +477,52 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Popout:
       "Post and chat content can be understood across supported languages",
     comparisonFbFeature2Other: "Cross-language communication often depends on self-translation",
-    comparisonFbFeature3Title: "AI auto-reply",
+    comparisonFbFeature3Title: "Account verification",
     comparisonFbFeature3Popout:
-      "AI replies to repetitive questions and listing details; uncertain ones wait for you",
-    comparisonFbFeature3Other:
-      "Messaging is fully manual, with no AI help to handle repetitive questions",
-    comparisonFbFeature4Title: "Student-focused trust layer",
-    comparisonFbFeature4Popout: "Student verification pathway for campus/accommodation matching",
-    comparisonFbFeature4Other: "Student-specific identity flow is commonly limited or unavailable",
+      "Australian mobile number plus a one-time location check, re-checked every 30 days",
+    comparisonFbFeature3Other: "Typically an existing social account, with no location check",
+    comparisonFbFeature4Title: "Where the handover happens",
+    comparisonFbFeature4Popout:
+      "A public meetup spot is chosen when the listing is created and shown to the buyer",
+    comparisonFbFeature4Other: "Arranged privately in chat, if at all",
     comparisonFbFinalTitle: "How to use this comparison",
     comparisonFbFinalBody:
-      "If your priorities are faster posting, smoother multilingual communication, and AI auto-reply that handles repetitive questions, PopOut's workflow may fit better. Always verify current feature details in your own usage context.",
+      "If your priorities are faster posting, smoother multilingual communication, and knowing that the person on the other end is a verified neighbour, PopOut's workflow may fit better. Always verify current feature details in your own usage context.",
     comparisonFbCard1Title: "AI Listing Assist",
     comparisonFbCard1Body: "Photo-based draft title and description",
     comparisonFbCard2Title: "Live Translation",
     comparisonFbCard2Body: "Smoother cross-language posts and chat",
-    comparisonFbCard3Title: "AI auto-reply",
-    comparisonFbCard3Body: "AI handles repetitive questions so you focus on real ones",
+    comparisonFbCard3Title: "Verified neighbours",
+    comparisonFbCard3Body: "Australian mobile number plus a one-time location check",
+    heroTitle: "Everything in your Melbourne suburb, in one feed",
+    heroLead:
+      "PopOut Market is the neighbourhood app for Melbourne. Buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything — each of you writing in your own language.",
+    heroTrustLine:
+      "Verified by an Australian mobile number and a one-time location check. Free on iOS and Android. Live in {count} Melbourne suburbs.",
+    heroGetAppCta: "Get the app",
+    heroBrowseCta: "Browse second-hand near you",
+    homeMarketTitle: "Buy and sell second-hand with *neighbours nearby*",
+    homeMarketSubtitle:
+      "Every listing comes from someone who lives near you, and you hand it over in person. Filter by Giveaway or Under $20, or browse by category.",
+    homeMarketBrowseAll: "Browse all listings",
+    homeMarketFilterAll: "All",
+    homeMarketFilterGiveaway: "Giveaway",
+    homeMarketFilterUnder20: "Under $20",
+    homeBulkListingLine:
+      "Add a whole room's photos at once — PopOut sorts them into separate drafts.",
+    homeShopsTitle: "Local shops on the *map*",
+    homeShopsSubtitle:
+      "Neighbours walk the shops nearby and post what they find, with the product name and price written on the photo and translated into every language the app speaks. The map covers 16 shops in Melbourne CBD and Docklands, 14 of them independent Asian grocers.",
+    homeShopsCta: "See the Melbourne CBD Asian grocery guide",
+    homeCommunityTitle: "Ask your neighbours *anything*",
+    homeCommunitySubtitle:
+      "The Community tab is where neighbourhood life happens: local deals, questions about your area, recommendations, and people looking to buy. Write in your language, they read it in theirs.",
+    homeCommunityTopics: "Local deals · Ask & News · Local life · Looking to buy · Other",
+    homeTrustTitle: "Real neighbours, *not anonymous accounts*",
+    homeTrustSubtitle:
+      "Every account is verified with an Australian mobile number and a one-time location check that confirms your suburb and is then discarded, re-checked every 30 days. The PopOut Market Rules are published in eight languages and readable without an account, and anything can be reported, restricted and appealed.",
+    homeCoverageTitle: "Live in *{count} Melbourne suburbs*",
+    homeCoverageCta: "See every Melbourne suburb",
     notFoundTitle: "Page not found",
     notFoundDescription: "The page you requested does not exist or is not publicly accessible.",
   },
@@ -603,13 +531,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "语言",
     languageModalTitle: "选择你的语言",
     languageModalHint: "PopOut 以多语言连接本地社区。",
-    heroSecondaryPrefix: "用",
-    heroSecondaryLink: "中文",
-    heroSecondarySuffix: "，和身边的邻居轻松买卖二手好物",
-    heroExploreCta: "探索更多商品",
     downloadLine: "下载 PopOut Market 应用，支持 iOS 和 Android",
-    slogan: "与身边的人轻松买卖",
-    ratingAria: "App Store 评分 5.0（满分 5 分）",
+    slogan: "与身边的邻居轻松买卖",
     homeAria: "PopOut 首页",
     appStoreAlt: "在 App Store 下载",
     googlePlayAlt: "在 Google Play 获取",
@@ -645,17 +568,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "发布于 {suburb}",
     marketPostListedOn: "{date} 发布",
     marketPostCategoryLabel: "分类",
-    marketPostStatusLabel: "状态",
-    marketPostDeliveryLabel: "可配送",
-    marketPostNegotiableLabel: "可议价",
     marketPostListingRef: "编号",
-    marketPostDeliverableBadge: "可配送",
     marketPostFixedPriceLabel: "价格固定",
     marketPostDetailLoadingAria: "正在加载详情",
     marketPostDescriptionHeading: "描述",
     marketPostPreferredMeetupLabel: "首选见面地点",
     marketPostOtherItemsHeading: "该卖家的其他商品",
-    marketPostSellerVerifiedLabel: "已在以下区域认证",
     marketYes: "是",
     marketNo: "否",
     marketUnknown: "未知",
@@ -663,45 +581,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     translationDemoSubtitle: "你用你的语言发消息，对方用他的语言收到——翻译全自动。",
     aiPostDemoTitle: "拍张照，AI 帮你*搞定*",
     aiPostDemoSubtitle: "拍照后 AI 自动生成标题、分类和描述，你只需填价格和状态。",
-    autoReplyDemoTitle: "常见问题交给 AI *真正买家*由你来聊",
-    autoReplyDemoSubtitle: "买家一问，AI 立刻回复",
-    autoReplyDemoInboxTitle: "消息",
-    autoReplyDemoTabBuying: "我买的",
-    autoReplyDemoTabSelling: "我卖的",
-    autoReplyDemoBadge: "自动回复已开",
-    autoReplyDemoTimeNow: "刚刚",
-    autoReplyDemoTime1Min: "1分钟前",
-    autoReplyDemoMsgMeet: "我们几点见面呀？",
-    autoReplyDemoMsgPrice: "$50，有兴趣吗？",
-    autoReplyDemoMsgSelling: "$30出，有兴趣吗？",
-    autoReplyDemoMsgGreeting: "你好！这把真皮办公椅还在的哦。",
     aiPostDemoPrice: "价格",
-    aiPostDemoCondition: "成色",
     aiPostDemoYouFill: "你来填",
-    scheduleDemoTitle: "每一次见面，都安心。",
-    scheduleDemoSubtitle: "选好时间和地点，见面后扫码确认——减少爽约，共建信任社区。",
-    scheduleDemoDate: "日期",
-    scheduleDemoTime: "时间",
-    scheduleDemoLocation: "见面地点",
-    scheduleDemoScheduled: "已预约",
-    scheduleDemoScanHint: "扫码验证",
-    scheduleDemoVerified: "见面已确认",
-    studentVerifyTitle: "认证学生，可信交易。",
-    studentVerifySubtitle: "通过学生邮箱验证获取信任徽章——让社区里的每一笔交易更安全、更放心。",
-    studentVerifyEmailLabel: "学生邮箱",
-    studentVerifyUniversity: "所属大学",
-    studentVerifyVerifying: "验证中…",
-    studentVerifyVerified: "邮箱已验证",
-    studentVerifyBadge: "已认证学生",
-    safetyZoneTitle: "更安心的见面，从选址开始。",
-    safetyZoneSubtitle:
-      "选定见面区域后，我们会推荐附近的安全区域——人流多、光线好、有监控的公共场所，让交易更踏实，社区更可信。",
-    safetyZoneNearLabel: "见面区域",
-    safetyZoneFinding: "正在扫描安全区域…",
-    safetyZoneListTitle: "推荐地点",
-    safetyZoneBadgeCctv: "监控",
-    safetyZoneBadgeBusy: "人流多",
-    safetyZoneBadgeLit: "光线好",
     footerLegalNavAria: "条款与联系",
     footerCopyright: "版权所有 © 2026 PopOut Market Pty Ltd。保留所有权利。",
     footerAcn: "ACN：696 464 945",
@@ -711,7 +592,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "儿童安全",
     footerNavContact: "联系我们",
     footerSocialRednoteAria: "PopOut Market 小红书",
-    footerSocialInstagramAria: "PopOut Market Instagram",
     footerSocialLinkedInAria: "PopOut Market LinkedIn",
     footerLegalStub: "本页面内容即将更新。",
     footerBackHome: "返回首页",
@@ -728,14 +608,15 @@ export const COPY: Record<Locale, SiteCopy> = {
       "基于墨尔本精准的地理位置推荐，帮你发现家门口的好物。知道卖家可能就住在隔壁街，让每一次交易都多一份看得见的信任。",
     aboutWhySafetyTitle: "安全，是我们的核心理念",
     aboutWhySafetyBody:
-      "你的安全高于一切。我们会推荐墨尔本人多、明亮的公共场所作为更安全的面交地点，并鼓励用户完成学生身份验证。在 PopOut 上的每一笔交易，都多一层安心保障。",
+      "你的安全高于一切。每个 PopOut 账号都要通过澳洲手机号验证和一次性定位核验，定位只用来确认你所在的城区，确认后立即丢弃。见面地点由卖家在发布商品时从公共场所中选定；《PopOut Market 社区规则》以八种语言发布，不注册也能查看。任何内容都可以举报，被限制的商品也可以申诉。",
     aboutWhyCommunicationTitle: "沟通，再无国界",
     aboutWhyCommunicationBody:
       "语言不该成为连接的障碍。PopOut 配备强大的实时双语翻译系统。用你的母语聊天——对方会收到自动翻译。即使英语还不够流利，你也可以在这里自由交易、结识志同道合的朋友。",
     aboutPrivacyTitle: "我们守护您的隐私",
     aboutPrivacyLead: "在 PopOut，我们视隐私为基本权利。",
     aboutPrivacyMinimalTitle: "极简数据采集",
-    aboutPrivacyMinimalBody: "我们只收集登录验证所必需的信息，例如手机号与邮箱。",
+    aboutPrivacyMinimalBody:
+      "一个 PopOut 账号只需要三样东西：通过验证的澳洲手机号、通过核验的所在城区，以及你自己取的昵称。账号里没有邮箱、没有密码，也没有真实姓名。",
     aboutPrivacyStorageTitle: "高标准存储",
     aboutPrivacyStorageBody: "你的敏感数据存放在加密数据库中（传输与存储均加密）。",
     aboutPrivacyNoTracesTitle: "不留痕迹",
@@ -753,18 +634,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "本文件以英文版本为准。",
     languageModalCloseAria: "关闭语言选择",
-    carouselGoToItemAria: "跳转到第 {index} 项",
-    demoListingWoodenDiningChair: "实木餐椅",
-    demoListingMountainBike: "山地自行车",
-    demoListingAcousticGuitar: "原声吉他",
-    demoListingWirelessHeadphones: "无线耳机",
-    demoListingTextbookBundle: "教材套装",
-    demoListingSmartWatch: "智能手表",
-    demoListingGameController: "游戏手柄",
-    heroNowInConnector: "，现已上线 ",
-    heroTitleTemplate: "在 {brand} 淘二手{item}",
-    heroRotatingItems: ["家具", "电子产品", "自行车", "教材", "厨具", "衣物"],
-    heroLocationSuffix: "",
     contactBack: "返回首页",
     contactHint: "留下你的问题或合作需求，我们会尽快通过邮箱回复。",
     contactTitlePlaceholder: "请输入标题",
@@ -781,7 +650,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "本页用于产品信息说明，不构成法律、财务或安全承诺。不同地区与版本的功能可能存在差异，请以 App 内实际页面和官方公告为准。",
     faqComparisonCta: "查看与其他平台对比",
-    marketSeoIntroPrefix: "买卖二手物品 ·",
     marketSeoIntroNearLabel: "正在显示",
     marketSuburbMapTitle: "{suburb}地图",
     marketPostMeetupMapAlt: "交易地点地图",
@@ -798,27 +666,27 @@ export const COPY: Record<Locale, SiteCopy> = {
       "本页面仅用于用户教育与产品说明，不构成对任何第三方平台的贬损或法律判断。文中提及的第三方名称属于其各自权利人；功能状态可能随第三方版本更新而变化，请以对方官方说明为准。",
     comparisonHubCardsTitle: "查看具体对比",
     comparisonHubCardsHint: "选择一个平台查看完整对比文章",
-    comparisonHubCardFbBody: "对比发布速度、多语言沟通和 AI 自动回复。",
+    comparisonHubCardFbBody: "对比发布速度、多语言沟通，以及各自如何核验交易对象的账号。",
     comparisonHubCardFbCta: "查看与 Facebook Marketplace 对比",
-    comparisonHubCardGumtreeBody: "对比 AI 发布设置、学生认证和 AI 自动回复。",
+    comparisonHubCardGumtreeBody: "对比 AI 发布设置、多语言聊天翻译和账号验证。",
     comparisonHubCardGumtreeCta: "查看与 Gumtree 对比",
     comparisonGumtreeH1: "PopOut vs Gumtree：功能体验对比",
     comparisonGumtreeLead:
-      "本页围绕墨尔本二手交易场景，对比发布设置、多语言沟通和 AI 自动回复在实际使用流程中的差异。",
+      "本页围绕墨尔本二手交易场景，对比发布设置、多语言沟通和账号验证在实际使用流程中的差异。",
     comparisonGumtreeDisclaimer:
       "免责声明：本页仅用于用户教育和产品说明，不构成法律意见。Gumtree 及相关名称属于其权利人。第三方平台功能可能变化，请以其官方信息为准。",
     comparisonGumtreeSection1Title: "1) AI 帮你完成初稿，缩短发布路径",
     comparisonGumtreeSection1Body:
-      "PopOut 支持图片生成标题、描述与分类建议，用户只需要核对并补充即可。完成成色、价格、配送与议价选项后，就能更快发布，避免在大量分类中反复查找。",
+      "PopOut 可以根据商品照片生成标题、描述与分类初稿。卖家核对初稿、设置价格，再选好一个公共见面地点，就能发布。你也可以一次性上传整间房的照片，PopOut 会把它们拆成一条条独立的商品草稿。",
     comparisonGumtreeSection2Title: "2) 多语言买卖沟通，覆盖墨尔本多民族用户",
     comparisonGumtreeSection2Body:
       "用户使用英语、简体中文、繁体中文、韩语、日语、法语、西班牙语、越南语输入后，可在帖子和聊天场景中按不同语言实时理解，降低沟通误解与等待成本。",
-    comparisonGumtreeSection3Title: "3）AI 自动回复，帮卖家省时间",
+    comparisonGumtreeSection3Title: "3) 认证过的邻居，不是匿名账号",
     comparisonGumtreeSection3Body:
-      "PopOut 内置了 AI 自动回复功能。目前功能还比较简单，我们正在持续优化，更强大的能力很快就会上线。现在它可以应对大量重复、价值不高的消息，并回答你在商品描述中已经写明的问题。对于不确定或描述里没有提到的内容，AI 不会贸然作答，而是留给你亲自回复买家，让你把精力集中在真正重要的问题上。",
-    comparisonGumtreeSection4Title: "4) 学生身份验证，服务校园与宿舍交易",
+      "每个 PopOut 账号都要通过澳洲手机号验证和一次性定位核验；只要你还在继续聊天和发帖，每 30 天会重新核验一次。核验只确认你所在的城区，不会保存 GPS 记录。《PopOut Market 社区规则》以八种语言发布，不注册也能查看。",
+    comparisonGumtreeSection4Title: "4) 在公共场所当面交易",
     comparisonGumtreeSection4Body:
-      "针对墨尔本学生群体，PopOut 提供身份验证通道，帮助同校、同宿舍或相近学习生活圈用户更快建立信任并完成交易。",
+      "在 PopOut 卖东西，就是把物品当面交到邻居手上。卖家发布时会从列表里选一个好找的公共场所，买家在商品页上就能看到这个地点。没有邮寄，也没有快递环节。",
     comparisonGumtreeTableTitle: "核心能力对照（用户视角）",
     comparisonGumtreeTableNote:
       "注：右侧内容为常见公开体验概述，具体功能会因版本和地区更新而变化。",
@@ -828,39 +696,39 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Title: "语言覆盖与翻译体验",
     comparisonGumtreeFeature2Popout: "多语言输入与阅读链路一体化，覆盖发帖和聊天场景",
     comparisonGumtreeFeature2Other: "常见方式是用户自行切换语言或外部翻译",
-    comparisonGumtreeFeature3Title: "AI 自动回复",
-    comparisonGumtreeFeature3Popout: "AI 处理重复问题和描述中已有的细节，不确定的留给你来答",
-    comparisonGumtreeFeature3Other: "全程手动回复，没有 AI 帮你过滤重复消息",
-    comparisonGumtreeFeature4Title: "学生圈层交易效率",
-    comparisonGumtreeFeature4Popout: "学生验证帮助提升校园场景匹配效率",
-    comparisonGumtreeFeature4Other: "通常没有专门的学生身份识别流程",
+    comparisonGumtreeFeature3Title: "账号验证方式",
+    comparisonGumtreeFeature3Popout: "澳洲手机号 + 一次性定位核验，每 30 天重新核验一次",
+    comparisonGumtreeFeature3Other: "通常是邮箱或社交账号登录，没有定位核验",
+    comparisonGumtreeFeature4Title: "交易在哪里完成",
+    comparisonGumtreeFeature4Popout: "发布商品时就选好公共见面地点，并展示给买家",
+    comparisonGumtreeFeature4Other: "通常在私聊里自行约定，也可能根本没有约定",
     comparisonGumtreeFinalTitle: "选择建议",
     comparisonGumtreeFinalBody:
-      "如果你更看重发布速度、多语言沟通的清晰度，以及能节省时间的 AI 自动回复，那么 PopOut Market 可能更适合你。请结合你所在地区和使用习惯，自行确认当前的功能。",
+      "如果你更看重发布速度、多语言沟通的清晰度，以及确认对面是一位通过认证的邻居，那么 PopOut Market 可能更适合你。请结合你所在地区和使用习惯，自行确认当前的功能。",
     comparisonBackLabel: "返回对比总览",
     comparisonGumtreeCard1Title: "AI 快速发布",
     comparisonGumtreeCard1Body: "减少分类查找和重复填写时间",
     comparisonGumtreeCard2Title: "多语言交易",
     comparisonGumtreeCard2Body: "覆盖主要跨语言买卖场景",
-    comparisonGumtreeCard3Title: "AI 自动回复",
-    comparisonGumtreeCard3Body: "AI 回答重复问题，帮你节省时间",
+    comparisonGumtreeCard3Title: "认证过的邻居",
+    comparisonGumtreeCard3Body: "澳洲手机号 + 一次性定位核验",
     comparisonFbH1: "PopOut vs Facebook Marketplace：功能体验对比",
     comparisonFbLead:
-      "本文对比发布设置、多语言沟通和 AI 自动回复在实际使用流程中的差异，旨在帮助用户选择更契合日常需求的交易流程。",
+      "本文对比发布设置、多语言沟通和账号验证在实际使用流程中的差异，旨在帮助用户选择更契合日常需求的交易流程。",
     comparisonFbDisclaimer:
       "免责声明：本页仅用于产品信息说明，不构成法律意见，也不对第三方平台作价值判断。Facebook Marketplace 及相关名称为其权利人所有；功能会随版本调整，请以官方信息为准。",
     comparisonFbSection1Title: "1) AI 图片发帖，减少第一步的重复劳动",
     comparisonFbSection1Body:
-      "在 PopOut，你上传图片后可自动生成标题、描述和类别建议。你只需快速检查并补充细节，再选择成色和价格即可发布。对于新用户或分类不熟悉的用户，这能显著减少初次发帖耗时。",
+      "在 PopOut，你上传商品照片后就能自动生成标题、描述和分类初稿。卖家核对并补充细节、设置价格，再选好一个公共见面地点，就能用更少的手动步骤完成发布。",
     comparisonFbSection2Title: "2) 多语言实时翻译，降低沟通门槛",
     comparisonFbSection2Body:
       "PopOut 支持英语、简体中文、繁体中文、韩语、日语、法语、西班牙语、越南语的输入与理解。帖子与聊天可以按用户语言实时展示，适合墨尔本多语言社区场景。",
-    comparisonFbSection3Title: "3）AI 自动回复，帮卖家省时间",
+    comparisonFbSection3Title: "3) 认证过的邻居，不是匿名账号",
     comparisonFbSection3Body:
-      "PopOut 内置了 AI 自动回复功能。目前功能还比较简单，我们正在持续优化，更强大的能力很快就会上线。现在它可以应对大量重复、价值不高的消息，并回答你在商品描述中已经写明的问题。对于不确定或描述里没有提到的内容，AI 不会贸然作答，而是留给你亲自回复买家，把时间花在真正重要的问题上。",
-    comparisonFbSection4Title: "4) 面向学生群体的身份验证通道",
+      "每个 PopOut 账号都要通过澳洲手机号验证和一次性定位核验；只要你还在继续聊天和发帖，每 30 天会重新核验一次。核验只确认你所在的城区，不会保存 GPS 记录。商品和消息都可以举报，被限制的商品还有一次申诉机会。",
+    comparisonFbSection4Title: "4) 在公共场所当面交易",
     comparisonFbSection4Body:
-      "针对墨尔本学生与学生公寓用户，PopOut 提供学生身份验证能力，帮助用户更容易识别同校或同住宿圈层的交易对象，提升交易匹配效率与信任感。",
+      "在 PopOut 卖东西，就是把物品当面交到邻居手上。卖家发布时会从列表里选一个好找的公共场所，买家在商品页上就能看到这个地点。没有邮寄，也没有快递环节。",
     comparisonFbTableTitle: "核心功能对照（用户视角）",
     comparisonFbTableNote:
       "注：右侧为公开可观察到的通用体验描述，具体能力可能因地区、账号类型和产品版本而变化。",
@@ -870,21 +738,49 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Title: "跨语言沟通",
     comparisonFbFeature2Popout: "帖子和聊天支持多语言实时理解与呈现",
     comparisonFbFeature2Other: "多语言沟通一般依赖用户自行翻译",
-    comparisonFbFeature3Title: "AI 自动回复",
-    comparisonFbFeature3Popout: "AI 回复重复问题和描述中的细节，不确定的等你来答",
-    comparisonFbFeature3Other: "消息全程手动回复，没有 AI 帮你处理重复问题",
-    comparisonFbFeature4Title: "学生场景支持",
-    comparisonFbFeature4Popout: "提供学生验证通道，便于校园与宿舍圈层匹配",
-    comparisonFbFeature4Other: "通常没有面向学生交易链路的专门身份流程",
+    comparisonFbFeature3Title: "账号验证方式",
+    comparisonFbFeature3Popout: "澳洲手机号 + 一次性定位核验，每 30 天重新核验一次",
+    comparisonFbFeature3Other: "通常沿用已有的社交账号，没有定位核验",
+    comparisonFbFeature4Title: "交易在哪里完成",
+    comparisonFbFeature4Popout: "发布商品时就选好公共见面地点，并展示给买家",
+    comparisonFbFeature4Other: "通常在私聊里自行约定，也可能根本没有约定",
     comparisonFbFinalTitle: "如何使用这页信息",
     comparisonFbFinalBody:
-      "如果你更看重更快的发布、更顺畅的多语言沟通，以及能帮你处理重复提问的 AI 自动回复，那么 PopOut Market 的使用流程可能更适合你。请务必结合你自身的使用场景，确认当前的具体功能细节。",
+      "如果你更看重更快的发布、更顺畅的多语言沟通，以及确认对面是一位通过认证的邻居，那么 PopOut Market 的使用流程可能更适合你。请务必结合你自身的使用场景，确认当前的具体功能细节。",
     comparisonFbCard1Title: "AI 发帖引导",
     comparisonFbCard1Body: "上传图片后自动给出标题与描述建议",
     comparisonFbCard2Title: "实时翻译沟通",
     comparisonFbCard2Body: "多语言帖子与聊天更顺畅",
-    comparisonFbCard3Title: "AI 自动回复",
-    comparisonFbCard3Body: "AI 处理重复问题，让你专注于真正重要的问题",
+    comparisonFbCard3Title: "认证过的邻居",
+    comparisonFbCard3Body: "澳洲手机号 + 一次性定位核验",
+    heroTitle: "你所在的墨尔本城区，一切尽在同一个信息流",
+    heroLead:
+      "PopOut Market 是墨尔本的邻里生活 App：和身边通过认证的邻居买卖二手好物，在地图上看到本地商铺正在打折的商品，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
+    heroTrustLine:
+      "澳洲手机号 + 一次性定位核验完成认证。iOS 与 Android 免费下载。已覆盖墨尔本 {count} 个城区。",
+    heroGetAppCta: "下载 App",
+    heroBrowseCta: "看看附近的二手好物",
+    homeMarketTitle: "和*身边的邻居*买卖二手好物",
+    homeMarketSubtitle:
+      "每一件商品都来自住在你附近的人，交易全部当面完成。可以按「免费送」或「$20 以内」筛选，也可以按分类慢慢逛。",
+    homeMarketBrowseAll: "浏览全部商品",
+    homeMarketFilterAll: "全部",
+    homeMarketFilterGiveaway: "免费送",
+    homeMarketFilterUnder20: "$20 以内",
+    homeBulkListingLine: "一次性上传整间房的照片——PopOut 会自动帮你拆成一条条商品草稿。",
+    homeShopsTitle: "本地商铺，都在*地图*上",
+    homeShopsSubtitle:
+      "邻居逛完附近的店，就把发现的好价发上来：商品名和价格直接标在照片上，并翻译成 App 支持的每一种语言。地图目前覆盖墨尔本 CBD 与 Docklands 的 16 家店铺，其中 14 家是独立经营的亚洲超市。",
+    homeShopsCta: "查看墨尔本 CBD 亚洲超市指南",
+    homeCommunityTitle: "邻里之间，*什么都能问*",
+    homeCommunitySubtitle:
+      "「社区」页汇集了邻里生活的一切：本地优惠、关于你所在城区的提问、生活推荐，还有正在求购的邻居。你用你的语言写，他们用自己的语言读。",
+    homeCommunityTopics: "本地优惠 · 提问与资讯 · 本地生活 · 求购 · 其他",
+    homeTrustTitle: "真实的邻居，*不是匿名账号*",
+    homeTrustSubtitle:
+      "每个账号都要通过澳洲手机号验证和一次性定位核验：定位只用来确认你所在的城区，确认后立即丢弃，每 30 天重新核验一次。《PopOut Market 社区规则》以八种语言发布，不注册也能查看；任何内容都可以举报、限制，也都可以申诉。",
+    homeCoverageTitle: "已覆盖*墨尔本 {count} 个城区*",
+    homeCoverageCta: "查看全部墨尔本城区",
     notFoundTitle: "页面未找到",
     notFoundDescription: "您请求的页面不存在或无法公开访问。",
   },
@@ -893,13 +789,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "語言",
     languageModalTitle: "選擇你的語言",
     languageModalHint: "PopOut 以多語言連結在地社群。",
-    heroSecondaryPrefix: "用",
-    heroSecondaryLink: "中文",
-    heroSecondarySuffix: "輕鬆和附近的鄰居買賣二手好物",
-    heroExploreCta: "探索更多商品",
     downloadLine: "下載 PopOut Market 應用，支援 iOS 與 Android",
-    slogan: "與身邊的人輕鬆買賣",
-    ratingAria: "App Store 評分 5.0（滿分 5 分）",
+    slogan: "與附近的鄰居輕鬆買賣二手",
     homeAria: "PopOut 首頁",
     appStoreAlt: "在 App Store 下載",
     googlePlayAlt: "在 Google Play 取得",
@@ -934,17 +825,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "於 {suburb} 刊登",
     marketPostListedOn: "{date} 刊登",
     marketPostCategoryLabel: "分類",
-    marketPostStatusLabel: "狀態",
-    marketPostDeliveryLabel: "可配送",
-    marketPostNegotiableLabel: "可議價",
     marketPostListingRef: "編號",
-    marketPostDeliverableBadge: "可配送",
     marketPostFixedPriceLabel: "價格固定",
     marketPostDetailLoadingAria: "載入詳情中",
     marketPostDescriptionHeading: "說明",
     marketPostPreferredMeetupLabel: "首選面交地點",
     marketPostOtherItemsHeading: "該賣家的其他商品",
-    marketPostSellerVerifiedLabel: "已在以下區域驗證",
     marketYes: "是",
     marketNo: "否",
     marketUnknown: "未知",
@@ -952,45 +838,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     translationDemoSubtitle: "你用你的語言發訊息，對方用他的語言收到——翻譯全自動。",
     aiPostDemoTitle: "拍張照，AI 幫你*搞定*",
     aiPostDemoSubtitle: "拍照後 AI 自動產生標題、分類和描述，你只需填價格和狀態。",
-    autoReplyDemoTitle: "常見問題交給 AI *真正買家*由你來聊",
-    autoReplyDemoSubtitle: "買家一問，AI 立刻回覆",
-    autoReplyDemoInboxTitle: "訊息",
-    autoReplyDemoTabBuying: "購買",
-    autoReplyDemoTabSelling: "販售",
-    autoReplyDemoBadge: "自動回覆開啟",
-    autoReplyDemoTimeNow: "剛剛",
-    autoReplyDemoTime1Min: "1 分鐘前",
-    autoReplyDemoMsgMeet: "我們約幾點碰面呢？",
-    autoReplyDemoMsgPrice: "這個 $50 喔，有興趣嗎？",
-    autoReplyDemoMsgSelling: "$30 出售，有興趣嗎？",
-    autoReplyDemoMsgGreeting: "嗨！這張皮革辦公椅還在喔。",
     aiPostDemoPrice: "價格",
-    aiPostDemoCondition: "成色",
     aiPostDemoYouFill: "你來填",
-    scheduleDemoTitle: "每一次見面，都安心。",
-    scheduleDemoSubtitle: "選好時間和地點，見面後掃碼確認——減少爽約，共建信任社區。",
-    scheduleDemoDate: "日期",
-    scheduleDemoTime: "時間",
-    scheduleDemoLocation: "見面地點",
-    scheduleDemoScheduled: "已預約",
-    scheduleDemoScanHint: "掃碼驗證",
-    scheduleDemoVerified: "見面已確認",
-    studentVerifyTitle: "認證學生，可信交易。",
-    studentVerifySubtitle: "透過學生信箱驗證取得信任徽章——讓社區中的每一筆交易更安全、更放心。",
-    studentVerifyEmailLabel: "學生信箱",
-    studentVerifyUniversity: "所屬大學",
-    studentVerifyVerifying: "驗證中…",
-    studentVerifyVerified: "信箱已驗證",
-    studentVerifyBadge: "已認證學生",
-    safetyZoneTitle: "更安心的見面，從選址開始。",
-    safetyZoneSubtitle:
-      "選定見面區域後，我們會推薦附近的安全區域——人流多、光線佳、有監視器的公共場所，讓交易更踏實，社區更可信。",
-    safetyZoneNearLabel: "見面區域",
-    safetyZoneFinding: "正在掃描安全區域…",
-    safetyZoneListTitle: "推薦地點",
-    safetyZoneBadgeCctv: "監視器",
-    safetyZoneBadgeBusy: "人潮多",
-    safetyZoneBadgeLit: "光線佳",
     footerLegalNavAria: "條款與聯絡",
     footerCopyright: "版權所有 © 2026 PopOut Market Pty Ltd。保留所有權利。",
     footerAcn: "ACN：696 464 945",
@@ -1000,7 +849,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "兒童安全",
     footerNavContact: "聯絡我們",
     footerSocialRednoteAria: "PopOut Market 小紅書",
-    footerSocialInstagramAria: "PopOut Market Instagram",
     footerSocialLinkedInAria: "PopOut Market LinkedIn",
     footerLegalStub: "本頁面內容即將更新。",
     footerBackHome: "返回首頁",
@@ -1017,14 +865,15 @@ export const COPY: Record<Locale, SiteCopy> = {
       "基於墨爾本精準的地理位置推薦，幫你發現家門口的好物。知道賣家可能就住在隔壁街，讓每一次交易都多一份看得見的信任。",
     aboutWhySafetyTitle: "安全，是我們的核心理念",
     aboutWhySafetyBody:
-      "你的安全高於一切。我們會推薦墨爾本人多、明亮的公共場所作為更安全的面交地點，並鼓勵使用者完成學生身份驗證。在 PopOut 上的每一筆交易，都多一層安心保障。",
+      "你的安全高於一切。每個 PopOut 帳號都需要通過澳洲手機號碼驗證，並完成一次性的位置確認——位置僅用來確認你所在的城區，確認後隨即刪除，之後每 30 天再確認一次。面交地點由賣家在刊登時挑選，都是公共場所；PopOut Market 使用守則以八種語言公開，不需帳號也能閱讀。任何內容都可以檢舉，刊登被限制時也可以提出申訴。",
     aboutWhyCommunicationTitle: "溝通，再無國界",
     aboutWhyCommunicationBody:
       "語言不該成為連結的障礙。PopOut 配備強大的即時雙語翻譯系統。用你的母語聊天——對方會收到自動翻譯。即使英文還不夠流利，你也可以在這裡自由交易、結識志同道合的朋友。",
     aboutPrivacyTitle: "我們守護您的隱私",
     aboutPrivacyLead: "在 PopOut，我們視隱私為基本權利。",
     aboutPrivacyMinimalTitle: "極簡資料採集",
-    aboutPrivacyMinimalBody: "我們只收集登入驗證所必需的資訊，例如手機號碼與電子郵件。",
+    aboutPrivacyMinimalBody:
+      "一個 PopOut 帳號只需要一組已驗證的澳洲手機號碼、一個已驗證的所在城區，以及一個你自己取的暱稱。帳號上沒有電子郵件、沒有密碼，也沒有你的法定姓名。",
     aboutPrivacyStorageTitle: "高標準儲存",
     aboutPrivacyStorageBody: "你的敏感資料存放在加密資料庫中（傳輸與儲存均加密）。",
     aboutPrivacyNoTracesTitle: "不留痕跡",
@@ -1042,18 +891,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "本文件以英文版本為準。",
     languageModalCloseAria: "關閉語言選擇",
-    carouselGoToItemAria: "跳至第 {index} 項",
-    demoListingWoodenDiningChair: "實木餐椅",
-    demoListingMountainBike: "登山自行車",
-    demoListingAcousticGuitar: "木吉他",
-    demoListingWirelessHeadphones: "無線耳機",
-    demoListingTextbookBundle: "教材套組",
-    demoListingSmartWatch: "智慧手錶",
-    demoListingGameController: "遊戲手把",
-    heroNowInConnector: "，現已上線 ",
-    heroTitleTemplate: "在 {brand} 尋找二手{item}",
-    heroRotatingItems: ["家具", "電子產品", "單車", "教科書", "廚房用品", "衣物"],
-    heroLocationSuffix: "",
     contactBack: "返回首頁",
     contactHint: "留下你的問題或合作需求，我們會盡快透過信箱回覆。",
     contactTitlePlaceholder: "請輸入標題",
@@ -1070,7 +907,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "本頁僅供產品資訊參考，不構成法律、財務或安全承諾。不同地區與版本的功能可能有所差異，請以 App 內實際功能與官方公告為準。",
     faqComparisonCta: "查看與其他平台比較",
-    marketSeoIntroPrefix: "買賣二手物品 ·",
     marketSeoIntroNearLabel: "正在顯示",
     marketSuburbMapTitle: "{suburb}地圖",
     marketPostMeetupMapAlt: "交易地點地圖",
@@ -1087,27 +923,27 @@ export const COPY: Record<Locale, SiteCopy> = {
       "本頁面僅用於使用者教育與產品資訊，不構成對任何第三方平台的貶抑或法律判斷。文中提及第三方名稱屬於其各自權利人；功能可能隨版本更新變動，請以各平台官方資訊為準。",
     comparisonHubCardsTitle: "查看詳細對比",
     comparisonHubCardsHint: "選擇一個平台查看完整對比文章",
-    comparisonHubCardFbBody: "比較刊登速度、多語訊息溝通，以及 AI 自動回覆。",
+    comparisonHubCardFbBody: "比較刊登速度、多語訊息溝通，以及各平台如何驗證你的交易對象。",
     comparisonHubCardFbCta: "查看與 Facebook Marketplace 對比",
-    comparisonHubCardGumtreeBody: "比較 AI 刊登設定、學生身分驗證，以及 AI 自動回覆。",
+    comparisonHubCardGumtreeBody: "比較 AI 刊登設定、多語聊天翻譯，以及帳號驗證方式。",
     comparisonHubCardGumtreeCta: "查看與 Gumtree 對比",
     comparisonGumtreeH1: "PopOut vs Gumtree：功能體驗比較",
     comparisonGumtreeLead:
-      "本頁以墨爾本二手交易的實際情境，比較刊登設定、多語溝通，以及 AI 自動回覆在實務操作流程上的差異。",
+      "本頁以墨爾本二手交易的實際情境，比較刊登設定、多語溝通，以及帳號驗證在實務操作流程上的差異。",
     comparisonGumtreeDisclaimer:
       "免責聲明：本頁僅供使用者教育與產品資訊參考，不構成法律意見。Gumtree 及相關名稱屬其權利人；功能可能隨版本更新調整，請以官方資訊為準。",
     comparisonGumtreeSection1Title: "1) AI 協助完成初稿，縮短發佈路徑",
     comparisonGumtreeSection1Body:
-      "PopOut 可由圖片生成標題、描述與分類建議，使用者只需檢查補充，再設定成色、價格、配送與議價選項，即可更快完成發佈。",
+      "PopOut 可由物品照片生成標題、描述與分類初稿。賣家只需檢查內容、設定價格並挑選一處公共面交地點，即可發佈。你也可以一次上傳整個房間的照片，PopOut 會自動整理成一則則獨立的刊登初稿。",
     comparisonGumtreeSection2Title: "2) 多語言買賣溝通，適配多元社群",
     comparisonGumtreeSection2Body:
       "支援英語、簡中、繁中、韓語、日語、法語、西班牙語、越南語。貼文與聊天可依不同語言即時理解，降低溝通落差。",
-    comparisonGumtreeSection3Title: "3) 為賣家省時的 AI 自動回覆",
+    comparisonGumtreeSection3Title: "3) 經過驗證的鄰居，而非匿名帳號",
     comparisonGumtreeSection3Body:
-      "PopOut Market 內建 AI 自動回覆功能。目前功能還算簡單，我們也正持續優化，更強大的能力即將推出。現階段它能處理大量重複、價值不高的訊息，並回答你已寫在商品說明裡的問題。至於不確定或商品說明中沒有提到的內容，AI 不會貿然猜測作答，而是留給你親自回覆買家，讓你能把心力放在真正重要的問題上。",
-    comparisonGumtreeSection4Title: "4) 學生驗證支援校園與宿舍交易",
+      "每個 PopOut 帳號都需要通過澳洲手機號碼驗證與一次性的位置確認；持續聊天與發文的使用者每 30 天會再確認一次。位置只用來確認城區，不會保存 GPS 紀錄。PopOut Market 使用守則以八種語言公開，不需帳號也能閱讀。",
+    comparisonGumtreeSection4Title: "4) 在公共場所當面完成交付",
     comparisonGumtreeSection4Body:
-      "針對墨爾本學生族群，PopOut 提供身份驗證通道，讓同校或同宿舍圈層更容易互相發現與建立交易信任。",
+      "在 PopOut 賣東西，就是親手把物品交給鄰居。賣家刊登時會從清單中挑選一處好認的公共場所，買家在刊登頁上就能看到這個地點。沒有郵寄，也沒有快遞環節。",
     comparisonGumtreeTableTitle: "核心能力對照（使用者視角）",
     comparisonGumtreeTableNote: "註：右側為常見公開體驗概述，實際功能可能因地區與版本變動。",
     comparisonGumtreeFeature1Title: "發文準備時間",
@@ -1116,40 +952,39 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Title: "語言覆蓋與翻譯體驗",
     comparisonGumtreeFeature2Popout: "發文與聊天具備多語言理解流程",
     comparisonGumtreeFeature2Other: "常需使用者自行翻譯或切換語言",
-    comparisonGumtreeFeature3Title: "AI 自動回覆",
-    comparisonGumtreeFeature3Popout:
-      "AI 負責回答重複問題與商品說明中已有的資訊，不確定的則留給你處理",
-    comparisonGumtreeFeature3Other: "訊息需全程手動回覆，沒有 AI 協助篩選重複訊息",
-    comparisonGumtreeFeature4Title: "學生圈層交易效率",
-    comparisonGumtreeFeature4Popout: "學生驗證提升校園場景匹配效率",
-    comparisonGumtreeFeature4Other: "通常缺少學生身份識別流程",
+    comparisonGumtreeFeature3Title: "帳號驗證",
+    comparisonGumtreeFeature3Popout: "澳洲手機號碼加上一次性位置確認，每 30 天重新確認",
+    comparisonGumtreeFeature3Other: "通常以電子郵件或社群帳號登入，沒有位置確認",
+    comparisonGumtreeFeature4Title: "面交地點如何決定",
+    comparisonGumtreeFeature4Popout: "刊登時就選定公共面交地點，並顯示給買家",
+    comparisonGumtreeFeature4Other: "多半在聊天中私下約定，甚至沒有約定",
     comparisonGumtreeFinalTitle: "選擇建議",
     comparisonGumtreeFinalBody:
-      "如果你重視刊登速度、多語溝通的清晰度，以及能節省時間的 AI 自動回覆，PopOut 可能更適合你。請依你所在地區與實際使用情況，確認目前的功能內容。",
+      "如果你重視刊登速度、多語溝通的清晰度，也在意對方是不是經過驗證的鄰居，PopOut 可能更適合你。請依你所在地區與實際使用情況，確認目前的功能內容。",
     comparisonBackLabel: "返回比較總覽",
     comparisonGumtreeCard1Title: "AI 快速發佈",
     comparisonGumtreeCard1Body: "減少分類查找與重複填寫時間",
     comparisonGumtreeCard2Title: "多語言交易",
     comparisonGumtreeCard2Body: "覆蓋主要跨語買賣場景",
-    comparisonGumtreeCard3Title: "AI 自動回覆",
-    comparisonGumtreeCard3Body: "AI 替你回答重複問題，為你省下時間",
+    comparisonGumtreeCard3Title: "經驗證的鄰居",
+    comparisonGumtreeCard3Body: "澳洲手機號碼加上一次性位置確認",
     comparisonFbH1: "PopOut vs Facebook Marketplace：功能體驗比較",
     comparisonFbLead:
-      "本文比較刊登設定、多語溝通，以及 AI 自動回覆在實務操作流程上的差異，目的是協助使用者選擇真正貼合日常需求的交易流程。",
+      "本文比較刊登設定、多語溝通，以及帳號驗證在實務操作流程上的差異，目的是協助使用者選擇真正貼合日常需求的交易流程。",
     comparisonFbDisclaimer:
       "免責聲明：本頁僅供產品資訊參考，不構成法律意見，也不對第三方平台作價值判斷。Facebook Marketplace 及相關名稱屬其權利人所有；功能可能隨版本調整，請以官方資訊為準。",
     comparisonFbSection1Title: "1) AI 圖片發文，減少重複填寫",
     comparisonFbSection1Body:
-      "在 PopOut，上傳圖片後可自動生成標題、描述與分類建議。你只需快速檢查與補充，再填入成色與價格即可發佈，可有效縮短初次上架時間。",
+      "在 PopOut，上傳物品照片後可自動生成標題、描述與分類初稿。賣家只需檢查與補充內容、設定價格並挑選一處公共面交地點，就能用更少的手動步驟完成發佈。",
     comparisonFbSection2Title: "2) 多語言即時翻譯，降低溝通門檻",
     comparisonFbSection2Body:
       "PopOut 支援英語、簡中、繁中、韓語、日語、法語、西班牙語、越南語。貼文與聊天可依使用者語言即時呈現，適合墨爾本多語社群。",
-    comparisonFbSection3Title: "3) 為賣家省時的 AI 自動回覆",
+    comparisonFbSection3Title: "3) 經過驗證的鄰居，而非匿名帳號",
     comparisonFbSection3Body:
-      "PopOut Market 內建 AI 自動回覆功能。目前功能還算簡單，我們也正持續優化，更強大的能力即將推出。現階段它能處理重複、價值不高的訊息，並回答你已寫在商品說明裡的問題。至於不確定或商品說明中沒有提到的內容，AI 不會貿然猜測作答，而是留給你親自回覆買家，讓你把時間花在真正重要的問題上。",
-    comparisonFbSection4Title: "4) 面向學生族群的身份驗證",
+      "每個 PopOut 帳號都需要通過澳洲手機號碼驗證與一次性的位置確認；持續聊天與發文的使用者每 30 天會再確認一次。位置只用來確認城區，不會保存 GPS 紀錄。刊登與訊息都可以檢舉，刊登被限制時也可以提出一次申訴。",
+    comparisonFbSection4Title: "4) 在公共場所當面完成交付",
     comparisonFbSection4Body:
-      "對於墨爾本學生與學生公寓族群，PopOut 提供學生驗證能力，讓同校或同住宿圈層更容易互相發現與交易。",
+      "在 PopOut 賣東西，就是親手把物品交給鄰居。賣家刊登時會從清單中挑選一處好認的公共場所，買家在刊登頁上就能看到這個地點。沒有郵寄，也沒有快遞環節。",
     comparisonFbTableTitle: "核心功能對照（使用者視角）",
     comparisonFbTableNote: "註：右側為常見公開體驗描述，實際能力可能因地區、帳號與版本而異。",
     comparisonFbFeature1Title: "發文啟動效率",
@@ -1158,21 +993,49 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Title: "跨語言溝通",
     comparisonFbFeature2Popout: "貼文與聊天支援多語言即時理解與呈現",
     comparisonFbFeature2Other: "多語溝通常仰賴使用者自行翻譯",
-    comparisonFbFeature3Title: "AI 自動回覆",
-    comparisonFbFeature3Popout: "AI 回覆重複問題與商品說明細節，不確定的則等你來處理",
-    comparisonFbFeature3Other: "訊息需全程手動回覆，沒有 AI 協助處理重複問題",
-    comparisonFbFeature4Title: "學生場景支援",
-    comparisonFbFeature4Popout: "提供學生驗證通道，提升校園圈層匹配效率",
-    comparisonFbFeature4Other: "通常缺少學生交易鏈路的專門身份流程",
+    comparisonFbFeature3Title: "帳號驗證",
+    comparisonFbFeature3Popout: "澳洲手機號碼加上一次性位置確認，每 30 天重新確認",
+    comparisonFbFeature3Other: "通常沿用既有的社群帳號，沒有位置確認",
+    comparisonFbFeature4Title: "面交地點如何決定",
+    comparisonFbFeature4Popout: "刊登時就選定公共面交地點，並顯示給買家",
+    comparisonFbFeature4Other: "多半在聊天中私下約定，甚至沒有約定",
     comparisonFbFinalTitle: "如何使用這頁資訊",
     comparisonFbFinalBody:
-      "如果你重視更快的刊登速度、更順暢的多語溝通，以及能處理重複問題的 AI 自動回覆，PopOut 的操作流程可能更適合你。請務必依你自身的使用情境，確認目前的功能細節。",
+      "如果你重視更快的刊登速度、更順暢的多語溝通，也在意對方是不是經過驗證的鄰居，PopOut 的操作流程可能更適合你。請務必依你自身的使用情境，確認目前的功能細節。",
     comparisonFbCard1Title: "AI 發文引導",
     comparisonFbCard1Body: "上傳圖片後自動產生標題與描述建議",
     comparisonFbCard2Title: "即時翻譯溝通",
     comparisonFbCard2Body: "多語貼文與聊天更順暢",
-    comparisonFbCard3Title: "AI 自動回覆",
-    comparisonFbCard3Body: "AI 處理重複問題，讓你專注於真正重要的提問",
+    comparisonFbCard3Title: "經驗證的鄰居",
+    comparisonFbCard3Body: "澳洲手機號碼加上一次性位置確認",
+    heroTitle: "你所在的墨爾本社區，大小事全在同一個動態",
+    heroLead:
+      "PopOut Market 是專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，在地圖上看見在地店家的最新優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
+    heroTrustLine:
+      "以澳洲手機號碼與一次性位置確認完成驗證。iOS 與 Android 免費下載。已上線墨爾本 {count} 個區域。",
+    heroGetAppCta: "下載 App",
+    heroBrowseCta: "瀏覽附近的二手好物",
+    homeMarketTitle: "和*附近的鄰居*買賣二手好物",
+    homeMarketSubtitle:
+      "每一則刊登都來自住在你附近的人，物品由雙方親手面交。可以用「免費贈送」或「$20 以下」快速篩選，也可以依分類瀏覽。",
+    homeMarketBrowseAll: "瀏覽全部刊登",
+    homeMarketFilterAll: "全部",
+    homeMarketFilterGiveaway: "免費贈送",
+    homeMarketFilterUnder20: "$20 以下",
+    homeBulkListingLine: "一次上傳整個房間的照片——PopOut 會自動整理成一則則刊登初稿。",
+    homeShopsTitle: "在地店家，就在*地圖上*",
+    homeShopsSubtitle:
+      "鄰居逛過附近的店家後把發現貼上來，商品名稱與價格直接標在照片上，並翻譯成 App 支援的每一種語言。地圖目前收錄墨爾本 CBD 與 Docklands 共 16 家店，其中 14 家是獨立經營的亞洲超市。",
+    homeShopsCta: "查看墨爾本 CBD 亞洲超市指南",
+    homeCommunityTitle: "有問題，*儘管問鄰居*",
+    homeCommunitySubtitle:
+      "社群分頁就是鄰里生活的所在：在地優惠、社區大小事、私房推薦，還有正在徵求物品的鄰居。你用你的語言寫，他們用自己的語言讀。",
+    homeCommunityTopics: "在地優惠 · 提問與消息 · 在地生活 · 徵求物品 · 其他",
+    homeTrustTitle: "真實的鄰居，*不是匿名帳號*",
+    homeTrustSubtitle:
+      "每個帳號都需要通過澳洲手機號碼驗證，以及一次性的位置確認——僅用來確認你所在的城區，確認後隨即刪除，之後每 30 天再確認一次。PopOut Market 使用守則以八種語言公開，不需帳號也能閱讀；任何內容都可以檢舉、限制與申訴。",
+    homeCoverageTitle: "已在*墨爾本 {count} 個區域*上線",
+    homeCoverageCta: "查看所有墨爾本區域",
     notFoundTitle: "找不到頁面",
     notFoundDescription: "您請求的頁面不存在或無法公開存取。",
   },
@@ -1181,13 +1044,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "언어",
     languageModalTitle: "언어 선택",
     languageModalHint: "PopOut은 다양한 언어로 지역 커뮤니티를 연결합니다.",
-    heroSecondaryPrefix: "동네 이웃과, ",
-    heroSecondaryLink: "한국어로",
-    heroSecondarySuffix: " 편하게 사고파세요",
-    heroExploreCta: "더 많은 상품 둘러보기",
     downloadLine: "iOS 및 Android용 PopOut Market 앱을 다운로드하세요",
-    slogan: "주변 사람들과 쉽고 빠르게 거래하세요",
-    ratingAria: "App Store 별점 5점 만점에 5.0점",
+    slogan: "가까운 동네 이웃과 사고파세요",
     homeAria: "PopOut 홈",
     appStoreAlt: "App Store에서 다운로드",
     googlePlayAlt: "Google Play에서 다운로드",
@@ -1225,17 +1083,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "{suburb}에서 올라왔어요",
     marketPostListedOn: "{date}에 올라왔어요",
     marketPostCategoryLabel: "카테고리",
-    marketPostStatusLabel: "상태",
-    marketPostDeliveryLabel: "배송 가능",
-    marketPostNegotiableLabel: "가격 제안 가능",
     marketPostListingRef: "참조 번호",
-    marketPostDeliverableBadge: "배송 가능",
     marketPostFixedPriceLabel: "고정 가격",
     marketPostDetailLoadingAria: "상세 정보 불러오는 중",
     marketPostDescriptionHeading: "설명",
     marketPostPreferredMeetupLabel: "선호 만남 장소",
     marketPostOtherItemsHeading: "이 판매자의 다른 상품",
-    marketPostSellerVerifiedLabel: "다음 지역 인증",
     marketYes: "예",
     marketNo: "아니오",
     marketUnknown: "알 수 없음",
@@ -1243,47 +1096,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     translationDemoSubtitle: "내 언어로 보내면, 상대방은 자기 언어로 받아요. 번역은 자동입니다.",
     aiPostDemoTitle: "사진 한 장이면 AI가 *알아서*",
     aiPostDemoSubtitle: "사진을 찍으면 AI가 제목, 카테고리, 설명을 자동 생성 — 가격만 입력하세요.",
-    autoReplyDemoTitle: "뻔한 질문은 AI가 *중요한 답변*만 내가",
-    autoReplyDemoSubtitle: "포스트에 있는 내용은 AI가 자동 답변",
-    autoReplyDemoInboxTitle: "채팅",
-    autoReplyDemoTabBuying: "구매",
-    autoReplyDemoTabSelling: "판매",
-    autoReplyDemoBadge: "자동응답 켜짐",
-    autoReplyDemoTimeNow: "방금 전",
-    autoReplyDemoTime1Min: "1분 전",
-    autoReplyDemoMsgMeet: "몇 시에 만날까요?",
-    autoReplyDemoMsgPrice: "$50이에요. 구매 원하세요?",
-    autoReplyDemoMsgSelling: "$30에 판매해요. 관심 있으세요?",
-    autoReplyDemoMsgGreeting: "안녕하세요! 가죽 사무용 의자 아직 판매 중이에요.",
     aiPostDemoPrice: "가격",
-    aiPostDemoCondition: "상태",
     aiPostDemoYouFill: "직접 입력",
-    scheduleDemoTitle: "약속은 확실하게.",
-    scheduleDemoSubtitle:
-      "시간과 장소를 정하고, 만나서 QR을 스캔하면 확인 완료 — 노쇼를 줄이고 신뢰를 쌓아요.",
-    scheduleDemoDate: "날짜",
-    scheduleDemoTime: "시간",
-    scheduleDemoLocation: "만남 장소",
-    scheduleDemoScheduled: "예약 완료",
-    scheduleDemoScanHint: "스캔하여 확인",
-    scheduleDemoVerified: "만남 확인됨",
-    studentVerifyTitle: "인증된 학생, 신뢰할 수 있는 거래.",
-    studentVerifySubtitle:
-      "학생 이메일을 인증하고 신뢰 배지를 받으세요 — 커뮤니티의 모든 거래를 더 안전하게.",
-    studentVerifyEmailLabel: "학생 이메일",
-    studentVerifyUniversity: "대학교",
-    studentVerifyVerifying: "인증 중…",
-    studentVerifyVerified: "이메일 인증됨",
-    studentVerifyBadge: "인증된 학생",
-    safetyZoneTitle: "더 안심되는 만남, 장소부터.",
-    safetyZoneSubtitle:
-      "만남 지역을 고르면 근처 세이프티 존을 추천해요 — 유동 인구가 많고 밝으며 CCTV가 있는 공공장소로, 거래는 더 편안하게, 커뮤니티는 더 믿을 만하게.",
-    safetyZoneNearLabel: "만남 지역",
-    safetyZoneFinding: "세이프티 존 검색 중…",
-    safetyZoneListTitle: "추천 장소",
-    safetyZoneBadgeCctv: "CCTV",
-    safetyZoneBadgeBusy: "유동 인구",
-    safetyZoneBadgeLit: "조명 양호",
     footerLegalNavAria: "약관 및 문의",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
     footerAcn: "ACN 696 464 945",
@@ -1293,7 +1107,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "아동 안전",
     footerNavContact: "문의하기",
     footerSocialRednoteAria: "PopOut Market 샤오홍슈(RED)",
-    footerSocialInstagramAria: "PopOut Market 인스타그램",
     footerSocialLinkedInAria: "PopOut Market 링크드인",
     footerLegalStub: "이 페이지는 곧 업데이트됩니다.",
     footerBackHome: "홈으로 돌아가기",
@@ -1310,14 +1123,15 @@ export const COPY: Record<Locale, SiteCopy> = {
       "멜버른 기반의 정확한 위치 추천으로 집 앞에서 보물 같은 물건을 발견하세요. 판매자가 바로 옆 거리에 살 수 있다는 걸 알면, 모든 거래에 눈에 보이는 신뢰가 생깁니다.",
     aboutWhySafetyTitle: "안전이 우리의 핵심 원칙",
     aboutWhySafetyBody:
-      "당신의 안전이 최우선입니다. 멜버른에서 사람이 많고 밝은 공공장소를 더 안전한 대면 거래 장소로 추천하고, 학생 신원 인증을 권장합니다. PopOut의 모든 거래에 한 겹 더 안심이 더해집니다.",
+      "당신의 안전이 최우선입니다. 모든 PopOut 계정은 호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. 위치 정보는 거주 지역만 확인한 뒤 바로 삭제됩니다. 만남은 판매자가 게시할 때 직접 고른 공공장소에서 이루어지고, PopOut Market 이용 규칙은 8개 언어로 공개되어 계정 없이도 읽을 수 있습니다. 무엇이든 신고할 수 있고, 제한된 게시글은 이의를 제기할 수 있습니다.",
     aboutWhyCommunicationTitle: "국경 없는 소통",
     aboutWhyCommunicationBody:
       "언어는 연결의 장벽이 되어서는 안 됩니다. PopOut에는 강력한 실시간 이중 언어 번역이 있습니다. 모국어로 채팅하면 상대에게는 자동으로 번역됩니다. 영어가 완벽하지 않아도 자유롭게 거래하고 마음이 맞는 친구를 만나세요.",
     aboutPrivacyTitle: "개인정보를 지킵니다",
     aboutPrivacyLead: "PopOut에서는 개인정보를 기본권으로 대합니다.",
     aboutPrivacyMinimalTitle: "최소 수집",
-    aboutPrivacyMinimalBody: "로그인 확인을 위해 전화번호와 이메일 등 필수 정보만 수집합니다.",
+    aboutPrivacyMinimalBody:
+      "PopOut 계정에는 인증된 호주 휴대폰 번호, 인증된 거주 지역, 그리고 직접 정한 닉네임만 있으면 됩니다. 이메일 주소도, 비밀번호도, 실명도 필요하지 않습니다.",
     aboutPrivacyStorageTitle: "높은 수준의 저장",
     aboutPrivacyStorageBody:
       "민감한 데이터는 전송 구간과 저장 모두 암호화된 데이터베이스에 보관됩니다.",
@@ -1338,18 +1152,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "이 문서는 영어 버전이 기준입니다.",
     languageModalCloseAria: "언어 선택 닫기",
-    carouselGoToItemAria: "{index}번 항목으로 이동",
-    demoListingWoodenDiningChair: "원목 식탁 의자",
-    demoListingMountainBike: "산악자전거",
-    demoListingAcousticGuitar: "어쿠스틱 기타",
-    demoListingWirelessHeadphones: "무선 헤드폰",
-    demoListingTextbookBundle: "교재 묶음",
-    demoListingSmartWatch: "스마트워치",
-    demoListingGameController: "게임 컨트롤러",
-    heroNowInConnector: ", 이제 ",
-    heroTitleTemplate: "{brand}에서 중고 {item} 찾기",
-    heroRotatingItems: ["가구", "전자제품", "자전거", "교재", "주방용품", "옷"],
-    heroLocationSuffix: "에도",
     contactBack: "홈으로 돌아가기",
     contactHint: "문의 사항이나 제휴 요청을 남겨 주시면 이메일로 회신해 드립니다.",
     contactTitlePlaceholder: "제목을 입력하세요",
@@ -1366,7 +1168,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "이 페이지는 제품 정보 제공 목적이며 법률·재무·안전을 보장하지 않습니다. 기능은 앱 버전, 지역, 계정 상황에 따라 다를 수 있습니다.",
     faqComparisonCta: "다른 마켓과 비교하기",
-    marketSeoIntroPrefix: "중고 거래 ·",
     marketSeoIntroNearLabel: "표시 중인 지역",
     marketSuburbMapTitle: "{suburb} 지도",
     marketPostMeetupMapAlt: "거래 장소 지도",
@@ -1383,27 +1184,28 @@ export const COPY: Record<Locale, SiteCopy> = {
       "이 페이지는 제품 안내 목적으로만 제공되며 법률 자문이 아니고 어떤 제3자 플랫폼도 폄하하려는 의도가 없습니다. 제3자 상표와 제품명은 각 권리자에게 귀속됩니다. 기능은 시간이 지나며 바뀔 수 있으니 각 플랫폼의 공식 채널에서 최신 정보를 확인하세요.",
     comparisonHubCardsTitle: "상세 비교 보기",
     comparisonHubCardsHint: "아래에서 플랫폼을 선택해 전체 비교 글을 확인하세요",
-    comparisonHubCardFbBody: "등록 속도, 다국어 메시지, AI 자동 응답을 비교해 보세요.",
+    comparisonHubCardFbBody:
+      "등록 속도, 다국어 메시지, 그리고 거래 상대를 어떻게 인증하는지 비교해 보세요.",
     comparisonHubCardFbCta: "PopOut vs Facebook Marketplace 보기",
-    comparisonHubCardGumtreeBody: "등록 설정, 학생 인증, AI 자동 응답을 비교해 보세요.",
+    comparisonHubCardGumtreeBody: "AI 등록 설정, 다국어 채팅 번역, 계정 인증을 비교해 보세요.",
     comparisonHubCardGumtreeCta: "PopOut vs Gumtree 보기",
     comparisonGumtreeH1: "PopOut vs Gumtree: 사용 경험 비교",
     comparisonGumtreeLead:
-      "이 페이지는 멜버른 중고 거래 사용 사례를 중심으로 등록 설정, 다국어 소통, AI 자동 응답에서 나타나는 실제 사용 흐름의 차이를 비교합니다.",
+      "이 페이지는 멜버른 중고 거래 사용 사례를 중심으로 등록 설정, 다국어 소통, 계정 인증에서 나타나는 실제 사용 흐름의 차이를 비교합니다.",
     comparisonGumtreeDisclaimer:
       "면책 고지: 이 페이지는 사용자 안내와 제품 설명 목적으로만 제공되며 법률 자문이 아닙니다. Gumtree 및 관련 상표는 각 권리자에게 귀속됩니다. 제3자 기능은 시간이 지나며 바뀔 수 있습니다.",
     comparisonGumtreeSection1Title: "1) AI가 돕는 등록 설정",
     comparisonGumtreeSection1Body:
-      "PopOut은 물품 사진을 바탕으로 제목, 설명, 카테고리 제안을 작성해 줍니다. 사용자는 이를 검토하고 상태와 희망 가격을 정한 뒤 배송이나 흥정 같은 옵션을 선택해 더 빠르게 등록할 수 있습니다.",
+      "PopOut은 물품 사진을 바탕으로 제목, 설명, 카테고리 초안을 만들어 줍니다. 판매자는 초안을 검토하고 가격을 정한 뒤 공공장소 만남 지점을 골라 등록하면 됩니다. 방 안 물건을 한꺼번에 찍어 올리면 PopOut이 사진을 물건별로 나눠 각각의 등록 초안으로 정리해 줍니다.",
     comparisonGumtreeSection2Title: "2) 내장된 다국어 흐름",
     comparisonGumtreeSection2Body:
       "PopOut은 영어, 중국어 간체, 중국어 번체, 한국어, 일본어, 프랑스어, 스페인어, 베트남어를 등록과 메시지에서 지원해, 다양한 도시 환경에서 언어 장벽을 줄여 줍니다.",
-    comparisonGumtreeSection3Title: "3) 판매자의 시간을 아껴주는 AI 자동 응답",
+    comparisonGumtreeSection3Title: "3) 익명 계정이 아닌, 인증된 이웃",
     comparisonGumtreeSection3Body:
-      "PopOut Market에는 AI 자동 응답 기능이 있습니다. 아직은 단순한 수준이지만 지금도 꾸준히 개선하고 있으며, 더 강력한 기능도 곧 추가될 예정입니다. 현재는 반복적이고 사소한 문의를 대신 처리하고, 게시글에 이미 적어 둔 내용에 관한 질문에 답해 줍니다. 확실하지 않거나 게시글에 없는 내용은 AI가 함부로 추측해 답하지 않고, 판매자가 직접 구매자에게 답할 수 있도록 남겨 둡니다. 덕분에 판매자는 정말 중요한 질문에만 집중할 수 있습니다.",
-    comparisonGumtreeSection4Title: "4) 캠퍼스 커뮤니티를 위한 학생 인증",
+      "모든 PopOut 계정은 호주 휴대폰 번호와 한 번의 위치 확인으로 인증하며, 계속 대화하고 게시하는 사용자는 30일마다 다시 확인합니다. 이 확인은 거주 지역만 파악할 뿐 GPS 기록은 저장하지 않습니다. PopOut Market 이용 규칙은 8개 언어로 공개되어 계정 없이도 읽을 수 있습니다.",
+    comparisonGumtreeSection4Title: "4) 만남은 공공장소에서",
     comparisonGumtreeSection4Body:
-      "학생 인증 절차는 멜버른의 대학 및 숙소 기반 거래에서 신뢰와 매칭 품질을 높이는 데 도움이 됩니다.",
+      "PopOut에서 판매한다는 건 이웃에게 물건을 직접 건네준다는 뜻입니다. 판매자는 게시할 때 목록에서 찾기 쉬운 공공장소를 고르고, 구매자는 게시글에서 그 장소를 확인합니다. 우편 발송도, 택배 단계도 없습니다.",
     comparisonGumtreeTableTitle: "기능 요약 (사용자 관점)",
     comparisonGumtreeTableNote:
       "참고: 오른쪽 열은 일반적인 공개 이용 양상을 설명하며 계정, 지역, 제품 업데이트에 따라 달라질 수 있습니다.",
@@ -1413,41 +1215,39 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Title: "거래 흐름에서의 언어 지원",
     comparisonGumtreeFeature2Popout: "게시물과 채팅 전반에서 다국어 이해 지원",
     comparisonGumtreeFeature2Other: "언어 간 소통은 보통 사용자가 직접 번역해야 함",
-    comparisonGumtreeFeature3Title: "AI 자동 응답",
-    comparisonGumtreeFeature3Popout:
-      "반복되는 질문과 게시글에 이미 있는 정보는 AI가 답하고, 확실하지 않은 질문은 판매자에게 남깁니다",
-    comparisonGumtreeFeature3Other:
-      "모든 답변을 직접 입력해야 하며, 반복 문의를 걸러 줄 AI 기능이 없습니다",
-    comparisonGumtreeFeature4Title: "학생 전용 신뢰 장치",
-    comparisonGumtreeFeature4Popout: "학생 인증으로 캠퍼스 관련 매칭 개선",
-    comparisonGumtreeFeature4Other: "전용 학생 신원 확인 절차가 제한적일 수 있음",
+    comparisonGumtreeFeature3Title: "계정 인증",
+    comparisonGumtreeFeature3Popout: "호주 휴대폰 번호와 한 번의 위치 확인, 30일마다 재확인",
+    comparisonGumtreeFeature3Other: "대체로 이메일이나 소셜 로그인만 하며 위치 확인은 없음",
+    comparisonGumtreeFeature4Title: "물건을 건네는 장소",
+    comparisonGumtreeFeature4Popout: "등록할 때 공공장소 만남 지점을 골라 구매자에게 표시",
+    comparisonGumtreeFeature4Other: "정한다 해도 대개 채팅에서 개인적으로 조율",
     comparisonGumtreeFinalTitle: "추천",
     comparisonGumtreeFinalBody:
-      "등록 속도, 다국어 소통의 명확함, 그리고 시간을 절약해 주는 AI 자동 응답이 중요하다면 PopOut이 더 잘 맞을 수 있습니다. 현재 제공되는 기능은 본인의 지역과 사용 환경을 기준으로 직접 확인해 보세요.",
+      "등록 속도, 다국어 소통의 명확함, 그리고 상대가 인증된 이웃이라는 확신이 중요하다면 PopOut이 더 잘 맞을 수 있습니다. 현재 제공되는 기능은 본인의 지역과 사용 환경을 기준으로 직접 확인해 보세요.",
     comparisonBackLabel: "비교 목록으로 돌아가기",
     comparisonGumtreeCard1Title: "빠른 AI 등록",
     comparisonGumtreeCard1Body: "카테고리 찾기와 반복 입력을 줄여 줍니다",
     comparisonGumtreeCard2Title: "다국어 거래",
     comparisonGumtreeCard2Body: "주요 언어 간 거래 흐름을 지원합니다",
-    comparisonGumtreeCard3Title: "AI 자동 응답",
-    comparisonGumtreeCard3Body: "반복되는 질문에 AI가 답해 판매자의 시간을 아껴 줍니다",
+    comparisonGumtreeCard3Title: "인증된 이웃",
+    comparisonGumtreeCard3Body: "호주 휴대폰 번호와 한 번의 위치 확인",
     comparisonFbH1: "PopOut vs Facebook Marketplace: 사용 경험 비교",
     comparisonFbLead:
-      "이 글은 등록 설정, 다국어 소통, AI 자동 응답에서 나타나는 실질적인 사용 흐름의 차이를 비교합니다. 일상적인 필요에 맞는 마켓플레이스 사용 흐름을 선택하시는 데 도움을 드리는 것이 목적입니다.",
+      "이 글은 등록 설정, 다국어 소통, 계정 인증에서 나타나는 실질적인 사용 흐름의 차이를 비교합니다. 일상적인 필요에 맞는 마켓플레이스 사용 흐름을 선택하시는 데 도움을 드리는 것이 목적입니다.",
     comparisonFbDisclaimer:
       "면책 고지: 이 페이지는 제품 안내 목적으로만 제공되며 법률 자문이 아니고 어떤 제3자 플랫폼에 대한 부정적 평가도 아닙니다. Facebook Marketplace 및 관련 상표는 각 권리자에게 귀속됩니다. 기능 제공 여부는 지역, 계정 유형, 제품 업데이트에 따라 달라질 수 있습니다.",
     comparisonFbSection1Title: "1) 사진으로 시작하는 AI 등록",
     comparisonFbSection1Body:
-      "PopOut에서는 물품 사진을 올리면 제목, 설명, 카테고리 초안을 만들어 줍니다. 사용자는 이를 검토하고 내용을 보완한 뒤 상태와 가격을 정하면, 수동 단계를 줄이며 더 빠르게 등록할 수 있습니다.",
+      "PopOut에서는 물품 사진을 올리면 제목, 설명, 카테고리 초안을 만들어 줍니다. 판매자는 이를 검토하고 내용을 보완한 뒤 가격을 정하고 공공장소 만남 지점을 고르면, 수동 단계를 줄이며 더 빠르게 등록할 수 있습니다.",
     comparisonFbSection2Title: "2) 실시간 다국어 소통",
     comparisonFbSection2Body:
       "PopOut은 영어, 중국어 간체, 중국어 번체, 한국어, 일본어, 프랑스어, 스페인어, 베트남어를 지원합니다. 게시물과 채팅을 각 사용자가 선호하는 언어로 읽을 수 있습니다.",
-    comparisonFbSection3Title: "3) 판매자의 시간을 아껴주는 AI 자동 응답",
+    comparisonFbSection3Title: "3) 익명 계정이 아닌, 인증된 이웃",
     comparisonFbSection3Body:
-      "PopOut Market에는 AI 자동 응답 기능이 있습니다. 아직은 단순한 수준이지만 지금도 꾸준히 개선하고 있으며, 더 강력한 기능도 곧 추가될 예정입니다. 현재는 반복적이고 사소한 문의를 대신 처리하고, 게시글에 이미 적어 둔 내용에 관한 질문에 답해 줍니다. 확실하지 않거나 게시글에 없는 내용은 AI가 함부로 추측해 답하지 않고, 판매자가 직접 구매자에게 답할 수 있도록 남겨 둡니다. 그래서 판매자는 정말 중요한 질문에만 시간을 쓸 수 있습니다.",
-    comparisonFbSection4Title: "4) 멜버른 학생 인증 절차",
+      "모든 PopOut 계정은 호주 휴대폰 번호와 한 번의 위치 확인으로 인증하며, 계속 대화하고 게시하는 사용자는 30일마다 다시 확인합니다. 이 확인은 거주 지역만 파악할 뿐 GPS 기록은 저장하지 않습니다. 게시글과 메시지는 언제든 신고할 수 있고, 제한된 게시글은 한 번 이의를 제기할 수 있습니다.",
+    comparisonFbSection4Title: "4) 만남은 공공장소에서",
     comparisonFbSection4Body:
-      "학생 커뮤니티와 숙소 밀집 지역을 위해 PopOut은 학생 인증 채널을 제공해, 캠퍼스 관련 거래에서 신뢰와 노출을 높입니다.",
+      "PopOut에서 판매한다는 건 이웃에게 물건을 직접 건네준다는 뜻입니다. 판매자는 게시할 때 목록에서 찾기 쉬운 공공장소를 고르고, 구매자는 게시글에서 그 장소를 확인합니다. 우편 발송도, 택배 단계도 없습니다.",
     comparisonFbTableTitle: "기능 요약 (사용자 관점)",
     comparisonFbTableNote:
       "참고: 오른쪽 열은 일반적인 공개 이용 양상을 반영하며 시간이 지나며 바뀔 수 있습니다.",
@@ -1457,23 +1257,50 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Title: "다국어 메시지",
     comparisonFbFeature2Popout: "지원 언어 전반에서 게시물과 채팅 내용을 이해 가능",
     comparisonFbFeature2Other: "언어 간 소통은 보통 직접 번역에 의존",
-    comparisonFbFeature3Title: "AI 자동 응답",
-    comparisonFbFeature3Popout:
-      "반복되는 질문과 게시글에 있는 정보는 AI가 답하고, 확실하지 않은 질문은 판매자에게 남깁니다",
-    comparisonFbFeature3Other:
-      "메시지를 전부 직접 보내야 하며, 반복 문의를 처리해 줄 AI 기능이 없습니다",
-    comparisonFbFeature4Title: "학생 중심 신뢰 계층",
-    comparisonFbFeature4Popout: "캠퍼스/숙소 매칭을 위한 학생 인증 절차",
-    comparisonFbFeature4Other: "학생 전용 신원 확인 절차가 대체로 제한적이거나 없음",
+    comparisonFbFeature3Title: "계정 인증",
+    comparisonFbFeature3Popout: "호주 휴대폰 번호와 한 번의 위치 확인, 30일마다 재확인",
+    comparisonFbFeature3Other: "대체로 기존 소셜 계정으로 가입하며 위치 확인은 없음",
+    comparisonFbFeature4Title: "물건을 건네는 장소",
+    comparisonFbFeature4Popout: "등록할 때 공공장소 만남 지점을 골라 구매자에게 표시",
+    comparisonFbFeature4Other: "정한다 해도 대개 채팅에서 개인적으로 조율",
     comparisonFbFinalTitle: "이 비교를 활용하는 방법",
     comparisonFbFinalBody:
-      "더 빠른 등록, 더 매끄러운 다국어 소통, 그리고 반복되는 질문을 처리해 주는 AI 자동 응답이 중요하다면 PopOut의 사용 흐름이 더 잘 맞을 수 있습니다. 현재 기능의 세부 사항은 항상 본인의 사용 환경에서 직접 확인하시기 바랍니다.",
+      "더 빠른 등록, 더 매끄러운 다국어 소통, 그리고 상대가 인증된 이웃이라는 확신이 중요하다면 PopOut의 사용 흐름이 더 잘 맞을 수 있습니다. 현재 기능의 세부 사항은 항상 본인의 사용 환경에서 직접 확인하시기 바랍니다.",
     comparisonFbCard1Title: "AI 등록 도우미",
     comparisonFbCard1Body: "사진을 바탕으로 제목과 설명 초안 작성",
     comparisonFbCard2Title: "실시간 번역",
     comparisonFbCard2Body: "언어 간 게시물과 채팅이 더 매끄럽게",
-    comparisonFbCard3Title: "AI 자동 응답",
-    comparisonFbCard3Body: "반복되는 질문은 AI가 처리해 정말 중요한 질문에 집중할 수 있습니다",
+    comparisonFbCard3Title: "인증된 이웃",
+    comparisonFbCard3Body: "호주 휴대폰 번호와 한 번의 위치 확인",
+    heroTitle: "멜버른 우리 동네의 모든 것, 피드 하나에",
+    heroLead:
+      "PopOut Market은 멜버른을 위한 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 지도에서 동네 가게의 지금 할인 정보를 확인하고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
+    heroTrustLine:
+      "호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. iOS와 Android에서 무료. 멜버른 {count}개 지역에서 이용할 수 있습니다.",
+    heroGetAppCta: "앱 다운로드",
+    heroBrowseCta: "내 주변 중고 상품 둘러보기",
+    homeMarketTitle: "*가까운 이웃*과 중고를 사고파세요",
+    homeMarketSubtitle:
+      "모든 상품은 가까이 사는 이웃이 올린 것이고, 물건은 직접 만나서 건넵니다. 무료 나눔이나 $20 이하로 걸러 보거나 카테고리별로 둘러보세요.",
+    homeMarketBrowseAll: "전체 상품 둘러보기",
+    homeMarketFilterAll: "전체",
+    homeMarketFilterGiveaway: "무료 나눔",
+    homeMarketFilterUnder20: "$20 이하",
+    homeBulkListingLine:
+      "방 안 물건을 한꺼번에 찍어 올려 보세요 — PopOut이 물건별 등록 초안으로 나눠 줍니다.",
+    homeShopsTitle: "*지도*로 보는 동네 가게",
+    homeShopsSubtitle:
+      "이웃들이 근처 가게를 직접 둘러보고 찾은 정보를 올립니다. 사진 위에 상품명과 가격이 적혀 있고, 앱이 지원하는 모든 언어로 번역됩니다. 지도에는 멜버른 CBD와 Docklands의 가게 16곳이 있고, 그중 14곳은 개인이 운영하는 아시안 식료품점입니다.",
+    homeShopsCta: "멜버른 CBD 아시안 식료품점 가이드 보기",
+    homeCommunityTitle: "이웃에게 *무엇이든* 물어보세요",
+    homeCommunitySubtitle:
+      "커뮤니티 탭에는 동네 생활이 모입니다. 동네 할인 정보, 우리 동네에 대한 궁금증, 추천, 그리고 물건을 구하는 사람들까지. 내 언어로 쓰면 상대는 자기 언어로 읽습니다.",
+    homeCommunityTopics: "동네 할인 · 질문과 소식 · 동네 생활 · 삽니다 · 기타",
+    homeTrustTitle: "익명 계정이 아니라 *진짜 이웃*입니다",
+    homeTrustSubtitle:
+      "모든 계정은 호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. 위치 정보는 거주 지역만 확인한 뒤 바로 삭제되고, 30일마다 다시 확인합니다. PopOut Market 이용 규칙은 8개 언어로 공개되어 계정 없이도 읽을 수 있으며, 무엇이든 신고하고 제한할 수 있고 이의도 제기할 수 있습니다.",
+    homeCoverageTitle: "지금 *멜버른 {count}개 지역*에서 이용할 수 있어요",
+    homeCoverageCta: "멜버른 전체 지역 보기",
     notFoundTitle: "페이지를 찾을 수 없습니다",
     notFoundDescription: "요청하신 페이지가 존재하지 않거나 공개적으로 접근할 수 없습니다.",
   },
@@ -1482,13 +1309,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "言語",
     languageModalTitle: "言語を選択",
     languageModalHint: "PopOut は多言語で地域コミュニティをつなぎます。",
-    heroSecondaryPrefix: "ご近所さんと安心して売り買い、ぜんぶ",
-    heroSecondaryLink: "日本語で",
-    heroSecondarySuffix: "どうぞ",
-    heroExploreCta: "もっと商品を見る",
     downloadLine: "iOS / Android 向け PopOut Market アプリをダウンロード",
-    slogan: "近くの人と手軽に売り買いしよう",
-    ratingAria: "App Store の評価は 5 点中 5.0",
+    slogan: "ご近所さんと手軽に売り買いしよう",
     homeAria: "PopOut ホーム",
     appStoreAlt: "App Storeでダウンロード",
     googlePlayAlt: "Google Playで手に入れよう",
@@ -1526,17 +1348,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "{suburb}で出品",
     marketPostListedOn: "{date}に出品",
     marketPostCategoryLabel: "カテゴリ",
-    marketPostStatusLabel: "状態",
-    marketPostDeliveryLabel: "配送対応",
-    marketPostNegotiableLabel: "価格交渉",
     marketPostListingRef: "出品番号",
-    marketPostDeliverableBadge: "配送可",
     marketPostFixedPriceLabel: "価格固定",
     marketPostDetailLoadingAria: "詳細を読み込み中",
     marketPostDescriptionHeading: "説明",
     marketPostPreferredMeetupLabel: "希望受け渡し場所",
     marketPostOtherItemsHeading: "この出品者の他の商品",
-    marketPostSellerVerifiedLabel: "認証済みエリア",
     marketYes: "はい",
     marketNo: "いいえ",
     marketUnknown: "不明",
@@ -1546,47 +1363,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoTitle: "写真を撮るだけ。あとはAIに*おまかせ*",
     aiPostDemoSubtitle:
       "写真を撮ると、AIがタイトル・カテゴリ・説明を自動生成。価格と状態だけ入力すればOK。",
-    autoReplyDemoTitle: "*冷やかし*はもう来ない",
-    autoReplyDemoSubtitle: "「まだありますか？」もAIが返事",
-    autoReplyDemoInboxTitle: "メッセージ",
-    autoReplyDemoTabBuying: "買う",
-    autoReplyDemoTabSelling: "売る",
-    autoReplyDemoBadge: "自動返信オン",
-    autoReplyDemoTimeNow: "たった今",
-    autoReplyDemoTime1Min: "1分前",
-    autoReplyDemoMsgMeet: "何時に待ち合わせますか？",
-    autoReplyDemoMsgPrice: "$50です。ご興味ありますか？",
-    autoReplyDemoMsgSelling: "$30で出品中です。いかがですか？",
-    autoReplyDemoMsgGreeting: "こんにちは！レザーのオフィスチェア、まだありますよ。",
     aiPostDemoPrice: "価格",
-    aiPostDemoCondition: "状態",
     aiPostDemoYouFill: "あなたが入力",
-    scheduleDemoTitle: "確かな約束を、毎回。",
-    scheduleDemoSubtitle:
-      "日時と場所を決めて、会ったらQRをスキャン——ノーショーを減らし、信頼あるコミュニティへ。",
-    scheduleDemoDate: "日時",
-    scheduleDemoTime: "時間",
-    scheduleDemoLocation: "受け渡し場所",
-    scheduleDemoScheduled: "予約済み",
-    scheduleDemoScanHint: "スキャンして確認",
-    scheduleDemoVerified: "確認済み",
-    studentVerifyTitle: "認証済み学生。信頼ある取引。",
-    studentVerifySubtitle:
-      "学生メールを認証して信頼バッジを獲得——コミュニティの取引をより安全・安心に。",
-    studentVerifyEmailLabel: "学生メール",
-    studentVerifyUniversity: "大学",
-    studentVerifyVerifying: "認証中…",
-    studentVerifyVerified: "メール認証済み",
-    studentVerifyBadge: "認証済み学生",
-    safetyZoneTitle: "安心の取引は、場所選びから。",
-    safetyZoneSubtitle:
-      "待ち合わせエリアを選ぶと、近くのセーフティゾーンを提案します。人通りが多く明るく、防犯カメラのある公共の場所で、より落ち着いた取引と、より良いコミュニティを。",
-    safetyZoneNearLabel: "待ち合わせエリア",
-    safetyZoneFinding: "セーフティゾーンを検索中…",
-    safetyZoneListTitle: "おすすめスポット",
-    safetyZoneBadgeCctv: "防犯カメラ",
-    safetyZoneBadgeBusy: "人通り多め",
-    safetyZoneBadgeLit: "明るい",
     footerLegalNavAria: "ポリシーとお問い合わせ",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
     footerAcn: "ACN 696 464 945",
@@ -1596,7 +1374,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "子どもの安全",
     footerNavContact: "お問い合わせ",
     footerSocialRednoteAria: "PopOut Market 小紅書（RED）",
-    footerSocialInstagramAria: "PopOut Market Instagram",
     footerSocialLinkedInAria: "PopOut Market LinkedIn",
     footerLegalStub: "このページは近日更新予定です。",
     footerBackHome: "ホームに戻る",
@@ -1613,14 +1390,15 @@ export const COPY: Record<Locale, SiteCopy> = {
       "メルボルンに基づく位置情報のおすすめで、家のすぐそばの掘り出し物を見つけられます。売り手が隣の通りに住んでいるかもしれないと分かれば、取引に目に見える信頼が生まれます。",
     aboutWhySafetyTitle: "安全が私たちの核",
     aboutWhySafetyBody:
-      "あなたの安全が最優先です。対面取引には、メルボルンの人通りが多く明るい公共スポットをより安全な場所としておすすめし、学生身分の確認も推奨しています。PopOut上の取引には、さらに一層の安心があります。",
+      "あなたの安全が最優先です。PopOut のアカウントはすべて、オーストラリアの携帯電話番号と、お住まいのサバーブを確認したらすぐに破棄される一度きりの位置情報チェックで認証されます。受け渡しは、出品時に出品者が選んだ公共の場所で行います。PopOut Market のルールは8言語で公開されており、アカウントがなくても読めます。気になることはいつでも通報でき、制限された出品には異議を申し立てられます。",
     aboutWhyCommunicationTitle: "国境のないコミュニケーション",
     aboutWhyCommunicationBody:
       "言語がつながりの障壁になるべきではありません。PopOutには強力なリアルタイム二言語翻訳があります。母語でチャットすれば、相手には自動翻訳が届きます。英語が完璧でなくても、自由に取引し、気の合う友だちを作れます。",
     aboutPrivacyTitle: "プライバシーを守ります",
     aboutPrivacyLead: "PopOutではプライバシーを基本権として扱います。",
     aboutPrivacyMinimalTitle: "最小限のデータ収集",
-    aboutPrivacyMinimalBody: "ログイン確認のため、電話番号やメールなど必要な情報だけを収集します。",
+    aboutPrivacyMinimalBody:
+      "PopOut のアカウントに必要なのは、認証済みのオーストラリアの携帯電話番号、確認済みのサバーブ、そしてご自身で決めたニックネームだけです。メールアドレスもパスワードも、本名も登録しません。",
     aboutPrivacyStorageTitle: "高水準の保管",
     aboutPrivacyStorageBody:
       "機微なデータは、通信時も保存時も暗号化されたデータベースに保管されます。",
@@ -1641,18 +1419,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "本書類は英語版を正文とします。",
     languageModalCloseAria: "言語選択を閉じる",
-    carouselGoToItemAria: "{index} 番目の項目へ移動",
-    demoListingWoodenDiningChair: "木製ダイニングチェア",
-    demoListingMountainBike: "マウンテンバイク",
-    demoListingAcousticGuitar: "アコースティックギター",
-    demoListingWirelessHeadphones: "ワイヤレスヘッドホン",
-    demoListingTextbookBundle: "教科書セット",
-    demoListingSmartWatch: "スマートウォッチ",
-    demoListingGameController: "ゲームコントローラー",
-    heroNowInConnector: "、ただいま ",
-    heroTitleTemplate: "{brand}で中古{item}探し",
-    heroRotatingItems: ["家具", "電化製品", "自転車", "教科書", "キッチン用品", "古着"],
-    heroLocationSuffix: "にも",
     contactBack: "ホームに戻る",
     contactHint: "ご質問や提携のご相談をお寄せください。メールにて返信いたします。",
     contactTitlePlaceholder: "タイトルを入力",
@@ -1669,7 +1435,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "このページは製品情報のみを目的としており、法的・財務的・安全上の保証を行うものではありません。機能はアプリのバージョン、地域、アカウントの状況により異なる場合があります。",
     faqComparisonCta: "他のマーケットと比較する",
-    marketSeoIntroPrefix: "中古品を売買 ·",
     marketSeoIntroNearLabel: "表示中のエリア",
     marketSuburbMapTitle: "{suburb}の地図",
     marketPostMeetupMapAlt: "取引場所の地図",
@@ -1686,27 +1451,29 @@ export const COPY: Record<Locale, SiteCopy> = {
       "このページは製品の説明のみを目的としており、法的助言ではなく、いかなる第三者プラットフォームをも貶める意図はありません。第三者の商標および製品名はそれぞれの権利者に帰属します。機能は変更される場合がありますので、各プラットフォームの公式情報で最新の内容をご確認ください。",
     comparisonHubCardsTitle: "詳細な比較を開く",
     comparisonHubCardsHint: "下からプラットフォームを選ぶと、記事形式の詳しい比較が見られます",
-    comparisonHubCardFbBody: "出品のスピード、多言語メッセージ、AI自動返信を比較します。",
+    comparisonHubCardFbBody:
+      "出品のスピード、多言語メッセージ、そして取引相手をどう確認しているかを比較します。",
     comparisonHubCardFbCta: "PopOut vs Facebook Marketplace を読む",
-    comparisonHubCardGumtreeBody: "AIによる出品設定、学生認証、AI自動返信を比較します。",
+    comparisonHubCardGumtreeBody:
+      "AIによる出品設定、多言語チャット翻訳、アカウント認証を比較します。",
     comparisonHubCardGumtreeCta: "PopOut vs Gumtree を読む",
     comparisonGumtreeH1: "PopOut vs Gumtree：使用体験の比較",
     comparisonGumtreeLead:
-      "このページでは、メルボルンでの中古品取引を想定し、出品設定、多言語コミュニケーション、AI自動返信における実際のワークフローの違いを比較します。",
+      "このページでは、メルボルンでの中古品取引を想定し、出品設定、多言語コミュニケーション、アカウント認証における実際のワークフローの違いを比較します。",
     comparisonGumtreeDisclaimer:
       "免責事項：このページはユーザー向けの説明と製品紹介のみを目的としており、法的助言ではありません。Gumtree および関連する商標はそれぞれの権利者に帰属します。第三者の機能は変更される場合があります。",
     comparisonGumtreeSection1Title: "1) AI による出品作成のサポート",
     comparisonGumtreeSection1Body:
-      "PopOut は商品写真からタイトル・説明・カテゴリの提案を作成できます。ユーザーはそれを確認し、状態や希望価格を設定し、配送や値引きなどのオプションを選ぶことで、より早く出品できます。",
+      "PopOut は商品写真からタイトル・説明・カテゴリの下書きを作成できます。出品者はその下書きを確認し、価格を決め、公共の受け渡し場所を選んで公開するだけです。部屋全体の写真をまとめて追加すれば、PopOut がそれぞれ別の出品の下書きに振り分けます。",
     comparisonGumtreeSection2Title: "2) 多言語に対応した一連の流れ",
     comparisonGumtreeSection2Body:
       "PopOut は英語、簡体字中国語、繁体字中国語、韓国語、日本語、フランス語、スペイン語、ベトナム語に出品とメッセージで対応し、多様な都市環境での言語の壁を減らします。",
-    comparisonGumtreeSection3Title: "3）出品者の時間を節約するAI自動返信",
+    comparisonGumtreeSection3Title: "3) 匿名アカウントではなく、認証済みのご近所さん",
     comparisonGumtreeSection3Body:
-      "PopOut MarketにはAI自動返信機能が搭載されています。現時点ではシンプルな機能ですが、現在も改良を重ねており、さらに便利な機能を近日中に追加する予定です。今のところ、繰り返し寄せられる簡単なメッセージや、出品情報にすでに記載されている内容についての質問にAIが対応します。判断が難しいことや投稿に書かれていないことについては、AIが推測で答えることはなく、出品者ご自身が購入希望者に直接お答えいただけるよう残しておきます。これにより、本当に大切な質問に集中していただけます。",
-    comparisonGumtreeSection4Title: "4) キャンパスコミュニティ向けの学生認証",
+      "PopOut のアカウントはすべて、オーストラリアの携帯電話番号と一度きりの位置情報チェックで認証されます。チャットや出品を続けている方には、30日ごとに再確認が行われます。確認するのはサバーブだけで、GPS の情報が保存されることはありません。PopOut Market のルールは8言語で公開されており、アカウントがなくても読めます。",
+    comparisonGumtreeSection4Title: "4) 受け渡しは公共の場所で",
     comparisonGumtreeSection4Body:
-      "学生認証の仕組みは、メルボルンの大学や住居を中心とした取引における信頼性とマッチングの質を高めるのに役立ちます。",
+      "PopOut で売るということは、ご近所さんに直接手渡しするということです。出品者は投稿時に、わかりやすい公共の場所をリストから選び、その場所は出品ページで購入希望者にも表示されます。郵送も宅配便も一切ありません。",
     comparisonGumtreeTableTitle: "機能の概要（ユーザー視点）",
     comparisonGumtreeTableNote:
       "注：右の列は一般的な利用傾向を示したもので、アカウント、地域、製品の更新によって異なる場合があります。",
@@ -1716,41 +1483,41 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Title: "取引の流れにおける言語サポート",
     comparisonGumtreeFeature2Popout: "投稿とチャットの両方で多言語に対応",
     comparisonGumtreeFeature2Other: "言語をまたぐやり取りはユーザー側の翻訳に頼りがち",
-    comparisonGumtreeFeature3Title: "AI自動返信",
+    comparisonGumtreeFeature3Title: "アカウント認証",
     comparisonGumtreeFeature3Popout:
-      "繰り返しの質問や出品情報に記載済みの内容にはAIが対応し、判断が難しいものは出品者にお任せします",
+      "オーストラリアの携帯電話番号と一度きりの位置情報チェック、30日ごとに再確認",
     comparisonGumtreeFeature3Other:
-      "返信はすべて手動で、繰り返しのメッセージを振り分けるAIのサポートはありません",
-    comparisonGumtreeFeature4Title: "学生向けの信頼の仕組み",
-    comparisonGumtreeFeature4Popout: "学生認証でキャンパス関連のマッチングを支援",
-    comparisonGumtreeFeature4Other: "学生専用の本人確認の仕組みは限られる場合がある",
+      "通常はメールまたはSNSアカウントでのログインのみで、位置情報の確認はなし",
+    comparisonGumtreeFeature4Title: "受け渡しが行われる場所",
+    comparisonGumtreeFeature4Popout: "出品時に公共の受け渡し場所を選び、購入希望者にも表示される",
+    comparisonGumtreeFeature4Other: "チャットで個別に決めるだけで、決まらないことも多い",
     comparisonGumtreeFinalTitle: "おすすめ",
     comparisonGumtreeFinalBody:
-      "出品のスピード、多言語でのわかりやすさ、そして時間を節約できるAI自動返信を重視するなら、PopOutのほうが適しているかもしれません。最新の機能については、ご自身の地域や利用状況に合わせてご確認ください。",
+      "出品のスピード、多言語でのわかりやすさ、そして相手が認証済みのご近所さんだという安心感を重視するなら、PopOutのほうが適しているかもしれません。最新の機能については、ご自身の地域や利用状況に合わせてご確認ください。",
     comparisonBackLabel: "比較一覧に戻る",
     comparisonGumtreeCard1Title: "AI で素早く出品",
     comparisonGumtreeCard1Body: "カテゴリ探しや繰り返しの入力を削減",
     comparisonGumtreeCard2Title: "多言語での取引",
     comparisonGumtreeCard2Body: "主要な多言語取引の流れに対応",
-    comparisonGumtreeCard3Title: "AI自動返信",
-    comparisonGumtreeCard3Body: "繰り返しの質問にはAIが回答し、あなたの時間を節約します",
+    comparisonGumtreeCard3Title: "認証済みのご近所さん",
+    comparisonGumtreeCard3Body: "オーストラリアの携帯電話番号と一度きりの位置情報チェック",
     comparisonFbH1: "PopOut vs Facebook Marketplace：使用体験の比較",
     comparisonFbLead:
-      "この記事では、出品設定、多言語コミュニケーション、AI自動返信における実際のワークフローの違いを比較します。日々のニーズに合ったマーケットプレイスの選び方をサポートすることを目的としています。",
+      "この記事では、出品設定、多言語コミュニケーション、アカウント認証における実際のワークフローの違いを比較します。日々のニーズに合ったマーケットプレイスの選び方をサポートすることを目的としています。",
     comparisonFbDisclaimer:
       "免責事項：このページは製品の説明のみを目的としており、法的助言や第三者プラットフォームに対する否定的な評価ではありません。Facebook Marketplace および関連する商標はそれぞれの権利者に帰属します。機能の提供状況は地域、アカウントの種類、製品の更新によって異なる場合があります。",
     comparisonFbSection1Title: "1) 写真からの AI 出品サポート",
     comparisonFbSection1Body:
-      "PopOut では、商品写真をアップロードするとタイトル・説明・カテゴリの下書きが生成されます。ユーザーはそれを確認して情報を補い、状態と価格を設定するだけで、手作業を減らしてより早く出品できます。",
+      "PopOut では、商品写真をアップロードするとタイトル・説明・カテゴリの下書きが生成されます。出品者はそれを確認して情報を補い、価格を決め、公共の受け渡し場所を選ぶだけ。手作業を減らして出品できます。",
     comparisonFbSection2Title: "2) リアルタイムの多言語コミュニケーション",
     comparisonFbSection2Body:
       "PopOut は英語、簡体字中国語、繁体字中国語、韓国語、日本語、フランス語、スペイン語、ベトナム語に対応しています。投稿やチャットを各ユーザーの好みの言語で読むことができます。",
-    comparisonFbSection3Title: "3）出品者の時間を節約するAI自動返信",
+    comparisonFbSection3Title: "3) 匿名アカウントではなく、認証済みのご近所さん",
     comparisonFbSection3Body:
-      "PopOut MarketにはAI自動返信機能が搭載されています。現時点ではシンプルな機能ですが、現在も改良を重ねており、さらに便利な機能を近日中に追加する予定です。今のところ、繰り返し寄せられる簡単なメッセージや、出品情報にすでに記載されている内容についての質問にAIが対応します。判断が難しいことや投稿に書かれていないことについては、AIが推測で答えることはなく、出品者ご自身が購入希望者に直接お答えいただけるよう残しておきます。これにより、本当に大切な質問に時間を使っていただけます。",
-    comparisonFbSection4Title: "4) メルボルンの学生認証の仕組み",
+      "PopOut のアカウントはすべて、オーストラリアの携帯電話番号と一度きりの位置情報チェックで認証されます。チャットや出品を続けている方には、30日ごとに再確認が行われます。確認するのはサバーブだけで、GPS の情報が保存されることはありません。出品もメッセージも通報でき、制限された出品には一度だけ異議を申し立てられます。",
+    comparisonFbSection4Title: "4) 受け渡しは公共の場所で",
     comparisonFbSection4Body:
-      "学生コミュニティや住居が集まる地域に向けて、PopOut は学生認証の仕組みを備えており、キャンパス関連の取引における信頼性と見つけやすさを高めます。",
+      "PopOut で売るということは、ご近所さんに直接手渡しするということです。出品者は投稿時に、わかりやすい公共の場所をリストから選び、その場所は出品ページで購入希望者にも表示されます。郵送も宅配便も一切ありません。",
     comparisonFbTableTitle: "機能の概要（ユーザー視点）",
     comparisonFbTableNote:
       "注：右の列は一般的な利用傾向を反映したもので、時間とともに変わる場合があります。",
@@ -1760,24 +1527,51 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Title: "多言語メッセージ",
     comparisonFbFeature2Popout: "対応言語をまたいで投稿やチャットの内容を理解できる",
     comparisonFbFeature2Other: "言語をまたぐやり取りは自分での翻訳に頼りがち",
-    comparisonFbFeature3Title: "AI自動返信",
+    comparisonFbFeature3Title: "アカウント認証",
     comparisonFbFeature3Popout:
-      "繰り返しの質問や出品情報に記載済みの内容にはAIが対応し、判断が難しいものは出品者にお任せします",
-    comparisonFbFeature3Other:
-      "メッセージのやり取りはすべて手動で、繰り返しの質問に対応するAIのサポートはありません",
-    comparisonFbFeature4Title: "学生向けの信頼レイヤー",
-    comparisonFbFeature4Popout: "キャンパスや住居のマッチング向けの学生認証の仕組み",
-    comparisonFbFeature4Other:
-      "学生専用の本人確認の流れは限られているか、提供されていないことが多い",
+      "オーストラリアの携帯電話番号と一度きりの位置情報チェック、30日ごとに再確認",
+    comparisonFbFeature3Other: "通常は既存のSNSアカウントを利用するのみで、位置情報の確認はなし",
+    comparisonFbFeature4Title: "受け渡しが行われる場所",
+    comparisonFbFeature4Popout: "出品時に公共の受け渡し場所を選び、購入希望者にも表示される",
+    comparisonFbFeature4Other: "チャットで個別に決めるだけで、決まらないことも多い",
     comparisonFbFinalTitle: "この比較の使い方",
     comparisonFbFinalBody:
-      "より速い出品、よりスムーズな多言語コミュニケーション、そして繰り返し寄せられる質問に対応するAI自動返信を重視するなら、PopOutのワークフローのほうが合っているかもしれません。最新の機能の詳細は、必ずご自身の利用状況に合わせてご確認ください。",
+      "より速い出品、よりスムーズな多言語コミュニケーション、そして相手が認証済みのご近所さんだという安心感を重視するなら、PopOutのワークフローのほうが合っているかもしれません。最新の機能の詳細は、必ずご自身の利用状況に合わせてご確認ください。",
     comparisonFbCard1Title: "AI 出品アシスト",
     comparisonFbCard1Body: "写真をもとにタイトルと説明を下書き",
     comparisonFbCard2Title: "リアルタイム翻訳",
     comparisonFbCard2Body: "言語をまたぐ投稿やチャットがよりスムーズに",
-    comparisonFbCard3Title: "AI自動返信",
-    comparisonFbCard3Body: "繰り返しの質問にはAIが対応するので、本当に大切な質問に集中できます",
+    comparisonFbCard3Title: "認証済みのご近所さん",
+    comparisonFbCard3Body: "オーストラリアの携帯電話番号と一度きりの位置情報チェック",
+    heroTitle: "メルボルンのご近所のすべてが、ひとつのフィードに",
+    heroLead:
+      "PopOut Market は、メルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店のいまのお買い得情報を地図で見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
+    heroTrustLine:
+      "オーストラリアの携帯電話番号と一度きりの位置情報チェックで認証。iOS / Android で無料。メルボルンの{count}の地域で利用できます。",
+    heroGetAppCta: "アプリを入手",
+    heroBrowseCta: "近くの中古品を見る",
+    homeMarketTitle: "*すぐ近くのご近所さん*と中古品を売り買い",
+    homeMarketSubtitle:
+      "出品しているのは、みんな近所に住んでいる人。受け渡しは直接手渡しです。「あげます」や「$20以下」で絞り込んだり、カテゴリから探したりできます。",
+    homeMarketBrowseAll: "すべての出品を見る",
+    homeMarketFilterAll: "すべて",
+    homeMarketFilterGiveaway: "あげます",
+    homeMarketFilterUnder20: "$20以下",
+    homeBulkListingLine:
+      "部屋全体の写真をまとめて追加すれば、PopOut がそれぞれ別の下書きに振り分けます。",
+    homeShopsTitle: "近くのお店が*地図*でわかる",
+    homeShopsSubtitle:
+      "近所の人が実際にお店を歩いて見つけたものを投稿。商品名と価格は写真に書き込まれ、アプリが対応するすべての言語に翻訳されます。地図にはメルボルン CBD とドックランズの16店舗が掲載されていて、そのうち14店舗は個人経営のアジア系食料品店です。",
+    homeShopsCta: "メルボルン CBD のアジア食材店ガイドを見る",
+    homeCommunityTitle: "ご近所さんに*なんでも*聞いてみよう",
+    homeCommunitySubtitle:
+      "コミュニティタブは、ご近所の暮らしが集まる場所。お買い得情報、エリアについての質問やお知らせ、暮らしの話題、そして「探しています」の投稿まで。あなたは自分の言語で書き、相手は自分の言語で読みます。",
+    homeCommunityTopics: "お買い得情報 · 質問・お知らせ · 暮らしの話題 · 探しています · その他",
+    homeTrustTitle: "*匿名アカウントではなく*、本物のご近所さん",
+    homeTrustSubtitle:
+      "アカウントはすべて、オーストラリアの携帯電話番号と、お住まいのサバーブを確認したらすぐに破棄される一度きりの位置情報チェックで認証され、30日ごとに再確認されます。PopOut Market のルールは8言語で公開されていてアカウントがなくても読め、気になることはいつでも通報でき、出品の制限や異議申し立ての仕組みも整っています。",
+    homeCoverageTitle: "*メルボルンの{count}の地域*に広がっています",
+    homeCoverageCta: "メルボルンの地域をすべて見る",
     notFoundTitle: "ページが見つかりません",
     notFoundDescription: "リクエストされたページは存在しないか、公開されていません。",
   },
@@ -1786,13 +1580,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Ngôn ngữ",
     languageModalTitle: "Chọn ngôn ngữ của bạn",
     languageModalHint: "PopOut hỗ trợ cộng đồng địa phương với nhiều ngôn ngữ.",
-    heroSecondaryPrefix: "Mua bán thoải mái với hàng xóm quanh đây, trò chuyện bằng ",
-    heroSecondaryLink: "tiếng Việt",
-    heroSecondarySuffix: " của bạn",
-    heroExploreCta: "Khám phá thêm sản phẩm",
     downloadLine: "Tải ứng dụng PopOut Market cho iOS và Android",
-    slogan: "mua và bán với những người xung quanh bạn",
-    ratingAria: "Đánh giá 5.0 trên 5 sao trên App Store",
+    slogan: "mua bán cùng hàng xóm quanh đây",
     homeAria: "Trang chủ PopOut",
     appStoreAlt: "Tải trên App Store",
     googlePlayAlt: "Tải trên Google Play",
@@ -1830,17 +1619,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "Đăng tại {suburb}",
     marketPostListedOn: "Đăng vào ngày {date}",
     marketPostCategoryLabel: "Danh mục",
-    marketPostStatusLabel: "Trạng thái",
-    marketPostDeliveryLabel: "Có giao hàng",
-    marketPostNegotiableLabel: "Có thể thương lượng",
     marketPostListingRef: "Mã tin",
-    marketPostDeliverableBadge: "Có giao hàng",
     marketPostFixedPriceLabel: "Giá cố định",
     marketPostDetailLoadingAria: "Đang tải chi tiết",
     marketPostDescriptionHeading: "Mô tả",
     marketPostPreferredMeetupLabel: "Điểm gặp ưu tiên",
     marketPostOtherItemsHeading: "Các tin khác của người bán",
-    marketPostSellerVerifiedLabel: "Đã xác minh tại",
     marketYes: "Có",
     marketNo: "Không",
     marketUnknown: "Không rõ",
@@ -1849,47 +1633,8 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Bạn gửi bằng ngôn ngữ của bạn, đối phương nhận bằng ngôn ngữ của họ — dịch tự động.",
     aiPostDemoTitle: "Chụp ảnh. AI lo *phần còn lại*",
     aiPostDemoSubtitle: "Chụp ảnh, AI tự tạo tiêu đề, danh mục và mô tả — bạn chỉ cần nhập giá.",
-    autoReplyDemoTitle: "Chỉ người *thật sự* muốn mua",
-    autoReplyDemoSubtitle: 'AI trả lời "Còn không bạn?"',
-    autoReplyDemoInboxTitle: "Tin nhắn",
-    autoReplyDemoTabBuying: "Đang mua",
-    autoReplyDemoTabSelling: "Đang bán",
-    autoReplyDemoBadge: "Bật trả lời tự động",
-    autoReplyDemoTimeNow: "vừa xong",
-    autoReplyDemoTime1Min: "1 phút",
-    autoReplyDemoMsgMeet: "Mình hẹn gặp lúc mấy giờ vậy?",
-    autoReplyDemoMsgPrice: "Giá $50 nha. Bạn quan tâm không?",
-    autoReplyDemoMsgSelling: "Mình bán $30 thôi. Bạn thấy sao?",
-    autoReplyDemoMsgGreeting: "Chào bạn! Cái ghế văn phòng bọc da vẫn còn nha.",
     aiPostDemoPrice: "Giá",
-    aiPostDemoCondition: "Tình trạng",
     aiPostDemoYouFill: "Bạn nhập",
-    scheduleDemoTitle: "Gặp nhau, luôn đúng hẹn.",
-    scheduleDemoSubtitle:
-      "Chọn thời gian và địa điểm, gặp mặt rồi quét mã QR xác nhận — giảm vắng mặt, xây dựng cộng đồng tin cậy.",
-    scheduleDemoDate: "Ngày",
-    scheduleDemoTime: "Giờ",
-    scheduleDemoLocation: "Điểm hẹn",
-    scheduleDemoScheduled: "Đã hẹn",
-    scheduleDemoScanHint: "Quét mã xác nhận",
-    scheduleDemoVerified: "Đã xác nhận gặp mặt",
-    studentVerifyTitle: "Sinh viên xác minh. Giao dịch tin cậy.",
-    studentVerifySubtitle:
-      "Xác minh email sinh viên để nhận huy hiệu tin cậy — mỗi giao dịch trong cộng đồng đều an toàn hơn.",
-    studentVerifyEmailLabel: "Email sinh viên",
-    studentVerifyUniversity: "Trường đại học",
-    studentVerifyVerifying: "Đang xác minh…",
-    studentVerifyVerified: "Email đã xác minh",
-    studentVerifyBadge: "Sinh viên đã xác minh",
-    safetyZoneTitle: "Gặp gỡ an toàn hơn, từ địa điểm.",
-    safetyZoneSubtitle:
-      "Khi bạn chọn khu vực hẹn gặp, ứng dụng gợi ý các Vùng an toàn gần đó — nơi đông người, sáng sủa, có camera — để giao dịch yên tâm hơn và cộng đồng gắn kết hơn.",
-    safetyZoneNearLabel: "Khu vực hẹn",
-    safetyZoneFinding: "Đang quét vùng an toàn…",
-    safetyZoneListTitle: "Địa điểm gợi ý",
-    safetyZoneBadgeCctv: "CCTV",
-    safetyZoneBadgeBusy: "Đông người",
-    safetyZoneBadgeLit: "Sáng sủa",
     footerLegalNavAria: "Điều khoản và liên hệ",
     footerCopyright: "Bản quyền © 2026 PopOut Market Pty Ltd. Mọi quyền được bảo lưu.",
     footerAcn: "ACN 696 464 945",
@@ -1899,7 +1644,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "An toàn trẻ em",
     footerNavContact: "Liên hệ",
     footerSocialRednoteAria: "PopOut Market trên Xiaohongshu (RED)",
-    footerSocialInstagramAria: "PopOut Market trên Instagram",
     footerSocialLinkedInAria: "PopOut Market trên LinkedIn",
     footerLegalStub: "Trang này sẽ được cập nhật sớm.",
     footerBackHome: "Về trang chủ",
@@ -1916,7 +1660,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Gợi ý theo vị trí chính xác tại Melbourne giúp bạn khám phá món hời ngay trước cửa. Biết người bán có thể ở ngay phố bên cạnh tạo nền tảng tin cậy cho mỗi giao dịch.",
     aboutWhySafetyTitle: "An toàn là nguyên tắc cốt lõi",
     aboutWhySafetyBody:
-      "Sự an toàn của bạn được đặt lên hàng đầu. Chúng tôi gợi ý những điểm gặp công cộng đông người, đủ ánh sáng khắp Melbourne làm nơi giao dịch trực tiếp an toàn hơn, và khuyến khích xác minh danh tính sinh viên. Mỗi giao dịch trên PopOut có thêm một lớp đảm bảo.",
+      "Sự an toàn của bạn được đặt lên hàng đầu. Mọi tài khoản PopOut đều được xác minh bằng số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất — chỉ để xác nhận khu vực (suburb) của bạn rồi xóa ngay. Việc gặp mặt diễn ra tại địa điểm công cộng do người bán chọn khi đăng tin, và Quy tắc PopOut Market được công bố bằng tám ngôn ngữ, ai cũng đọc được mà không cần tài khoản. Mọi nội dung đều có thể được báo cáo, và tin đăng bị hạn chế có thể khiếu nại.",
     aboutWhyCommunicationTitle: "Kết nối không biên giới",
     aboutWhyCommunicationBody:
       "Ngôn ngữ không nên là rào cản. PopOut có dịch song ngữ thời gian thực mạnh. Trò chuyện bằng tiếng mẹ đẻ — đối phương nhận bản dịch tự động. Dù tiếng Anh chưa hoàn hảo, bạn vẫn có thể giao dịch tự do và kết bạn.",
@@ -1924,7 +1668,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyLead: "Tại PopOut, quyền riêng tư là quyền cơ bản.",
     aboutPrivacyMinimalTitle: "Thu thập tối thiểu",
     aboutPrivacyMinimalBody:
-      "Chúng tôi chỉ thu thập thông tin cần thiết như số điện thoại và email để xác minh đăng nhập.",
+      "Một tài khoản PopOut chỉ cần số điện thoại di động Úc đã xác minh, khu vực (suburb) đã xác minh và một biệt danh do bạn tự chọn. Tài khoản PopOut không có địa chỉ email, không có mật khẩu và không có tên thật trên giấy tờ.",
     aboutPrivacyStorageTitle: "Lưu trữ tiêu chuẩn cao",
     aboutPrivacyStorageBody:
       "Dữ liệu nhạy cảm được lưu trong cơ sở dữ liệu mã hóa, cả khi truyền và khi lưu trữ.",
@@ -1945,18 +1689,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "Bản tiếng Anh của tài liệu này là bản có hiệu lực.",
     languageModalCloseAria: "Đóng bộ chọn ngôn ngữ",
-    carouselGoToItemAria: "Đến mục {index}",
-    demoListingWoodenDiningChair: "Ghế ăn gỗ",
-    demoListingMountainBike: "Xe đạp leo núi",
-    demoListingAcousticGuitar: "Đàn guitar acoustic",
-    demoListingWirelessHeadphones: "Tai nghe không dây",
-    demoListingTextbookBundle: "Bộ sách giáo khoa",
-    demoListingSmartWatch: "Đồng hồ thông minh",
-    demoListingGameController: "Tay cầm chơi game",
-    heroNowInConnector: ", nay đã có tại ",
-    heroTitleTemplate: "Tìm {item} cũ trên {brand}",
-    heroRotatingItems: ["nội thất", "đồ điện tử", "xe đạp", "sách giáo khoa", "đồ bếp", "quần áo"],
-    heroLocationSuffix: "",
     contactBack: "Về trang chủ",
     contactHint: "Hãy để lại câu hỏi hoặc đề nghị hợp tác, chúng tôi sẽ phản hồi qua email.",
     contactTitlePlaceholder: "Nhập tiêu đề ngắn",
@@ -1973,7 +1705,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "Trang này chỉ cung cấp thông tin sản phẩm và không cấu thành bảo đảm về pháp lý, tài chính hay an toàn. Tính năng có thể khác nhau theo phiên bản ứng dụng, khu vực và tài khoản.",
     faqComparisonCta: "So sánh với các nền tảng khác",
-    marketSeoIntroPrefix: "Mua bán đồ cũ tại",
     marketSeoIntroNearLabel: "Đang hiển thị tại",
     marketSuburbMapTitle: "Bản đồ {suburb}",
     marketPostMeetupMapAlt: "Bản đồ địa điểm gặp mặt",
@@ -1991,28 +1722,28 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonHubCardsTitle: "Xem so sánh chi tiết",
     comparisonHubCardsHint: "Chọn một nền tảng bên dưới để xem bài so sánh đầy đủ",
     comparisonHubCardFbBody:
-      "So sánh tốc độ đăng tin, nhắn tin đa ngôn ngữ và tính năng trả lời tự động bằng AI.",
+      "So sánh tốc độ đăng tin, nhắn tin đa ngôn ngữ và cách mỗi ứng dụng xác minh người bạn đang giao dịch cùng.",
     comparisonHubCardFbCta: "Đọc PopOut vs Facebook Marketplace",
     comparisonHubCardGumtreeBody:
-      "So sánh quy trình đăng tin bằng AI, tính năng xác minh sinh viên và trả lời tự động bằng AI.",
+      "So sánh quy trình đăng tin bằng AI, dịch trò chuyện đa ngôn ngữ và cách xác minh tài khoản.",
     comparisonHubCardGumtreeCta: "Đọc PopOut vs Gumtree",
     comparisonGumtreeH1: "PopOut vs Gumtree: So sánh trải nghiệm",
     comparisonGumtreeLead:
-      "Trang này so sánh những khác biệt trong quy trình thực tế liên quan đến việc đăng tin, giao tiếp đa ngôn ngữ và tính năng trả lời tự động bằng AI trong các trường hợp mua bán đồ cũ tại Melbourne.",
+      "Trang này so sánh những khác biệt trong quy trình thực tế liên quan đến việc đăng tin, giao tiếp đa ngôn ngữ và cách xác minh tài khoản trong các trường hợp mua bán đồ cũ tại Melbourne.",
     comparisonGumtreeDisclaimer:
       "Miễn trừ trách nhiệm: trang này chỉ nhằm giới thiệu cho người dùng và sản phẩm, không phải tư vấn pháp lý. Gumtree và các nhãn hiệu liên quan thuộc về chủ sở hữu tương ứng. Tính năng của bên thứ ba có thể thay đổi theo thời gian.",
     comparisonGumtreeSection1Title: "1) Thiết lập đăng tin có AI hỗ trợ",
     comparisonGumtreeSection1Body:
-      "PopOut có thể soạn gợi ý tiêu đề, mô tả và danh mục từ ảnh sản phẩm. Người dùng chỉ cần xem lại, đặt tình trạng và giá mong muốn, rồi chọn các tùy chọn như giao hàng và thương lượng để đăng nhanh hơn.",
+      "PopOut có thể soạn sẵn tiêu đề, mô tả và danh mục từ ảnh món đồ. Người bán xem lại bản nháp, đặt giá và chọn một điểm hẹn công cộng, rồi đăng tin. Bạn cũng có thể tải ảnh cả căn phòng lên cùng lúc, PopOut sẽ tự tách thành từng tin đăng nháp riêng.",
     comparisonGumtreeSection2Title: "2) Luồng đa ngôn ngữ tích hợp sẵn",
     comparisonGumtreeSection2Body:
       "PopOut hỗ trợ tiếng Anh, tiếng Trung giản thể, tiếng Trung phồn thể, tiếng Hàn, tiếng Nhật, tiếng Pháp, tiếng Tây Ban Nha và tiếng Việt khi đăng tin và nhắn tin, giúp giảm rào cản ngôn ngữ trong một thành phố đa dạng.",
-    comparisonGumtreeSection3Title: "3) Tự động trả lời bằng AI giúp người bán tiết kiệm thời gian",
+    comparisonGumtreeSection3Title: "3) Hàng xóm đã xác minh, không phải tài khoản ẩn danh",
     comparisonGumtreeSection3Body:
-      "PopOut Market có tính năng tự động trả lời bằng AI. Hiện tại tính năng còn đơn giản và chúng tôi đang tích cực cải thiện, với nhiều khả năng mạnh mẽ hơn sẽ sớm ra mắt. Ngay bây giờ, AI có thể xử lý lượng lớn tin nhắn lặp đi lặp lại, ít quan trọng và trả lời những câu hỏi đã có sẵn trong tin đăng của bạn. Với những thông tin còn chưa chắc chắn hoặc không được nêu trong tin đăng, AI sẽ không đoán bừa mà nhường lại cho bạn tự trả lời người mua, nhờ vậy bạn có thể tập trung vào những câu hỏi thực sự quan trọng.",
-    comparisonGumtreeSection4Title: "4) Xác minh sinh viên cho cộng đồng trường học",
+      "Mọi tài khoản PopOut đều được xác minh bằng số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất, và được kiểm tra lại mỗi 30 ngày với những người tiếp tục nhắn tin và đăng tin. Lần kiểm tra này chỉ xác nhận khu vực (suburb); dữ liệu GPS không được lưu lại. Quy tắc PopOut Market được công bố bằng tám ngôn ngữ và ai cũng đọc được mà không cần tài khoản.",
+    comparisonGumtreeSection4Title: "4) Gặp mặt tại nơi công cộng",
     comparisonGumtreeSection4Body:
-      "Quy trình xác minh sinh viên giúp nâng cao mức độ tin cậy và chất lượng kết nối cho các giao dịch quanh trường học và nơi ở tại Melbourne.",
+      "Bán trên PopOut nghĩa là trao món đồ tận tay hàng xóm. Khi đăng tin, người bán chọn một địa điểm công cộng dễ nhận biết từ danh sách có sẵn, và người mua nhìn thấy điểm hẹn đó ngay trên tin đăng. Không gửi bưu điện, không qua đơn vị vận chuyển.",
     comparisonGumtreeTableTitle: "Tóm tắt tính năng (theo góc nhìn người dùng)",
     comparisonGumtreeTableNote:
       "Lưu ý: cột bên phải mô tả các mẫu sử dụng phổ biến và có thể khác nhau tùy tài khoản, khu vực hoặc bản cập nhật sản phẩm.",
@@ -2024,42 +1755,42 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Popout: "Hiểu đa ngôn ngữ trong cả bài đăng và trò chuyện",
     comparisonGumtreeFeature2Other:
       "Giao tiếp khác ngôn ngữ thường phụ thuộc vào việc người dùng tự dịch",
-    comparisonGumtreeFeature3Title: "Tự động trả lời bằng AI",
+    comparisonGumtreeFeature3Title: "Xác minh tài khoản",
     comparisonGumtreeFeature3Popout:
-      "AI trả lời các câu hỏi lặp lại và thông tin đã có trong tin đăng; những câu chưa chắc chắn thì để lại cho bạn",
+      "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất, kiểm tra lại mỗi 30 ngày",
     comparisonGumtreeFeature3Other:
-      "Mọi phản hồi đều phải làm thủ công, không có AI hỗ trợ lọc tin nhắn lặp lại",
-    comparisonGumtreeFeature4Title: "Cơ chế tin cậy dành riêng cho sinh viên",
-    comparisonGumtreeFeature4Popout: "Xác minh sinh viên giúp kết nối quanh trường học",
-    comparisonGumtreeFeature4Other:
-      "Quy trình xác minh danh tính sinh viên riêng có thể bị hạn chế",
+      "Thường chỉ đăng nhập bằng email hoặc mạng xã hội, không kiểm tra vị trí",
+    comparisonGumtreeFeature4Title: "Nơi trao món đồ",
+    comparisonGumtreeFeature4Popout:
+      "Điểm hẹn công cộng được chọn ngay khi đăng tin và hiển thị cho người mua",
+    comparisonGumtreeFeature4Other: "Tự hẹn riêng trong tin nhắn, nếu có hẹn",
     comparisonGumtreeFinalTitle: "Gợi ý lựa chọn",
     comparisonGumtreeFinalBody:
-      "Nếu ưu tiên của bạn là tốc độ đăng tin, sự rõ ràng khi giao tiếp đa ngôn ngữ và tính năng trả lời tự động bằng AI giúp tiết kiệm thời gian, thì PopOut có thể là lựa chọn phù hợp hơn. Hãy tự kiểm chứng các tính năng hiện có dựa trên khu vực và cách sử dụng của riêng bạn.",
+      "Nếu ưu tiên của bạn là tốc độ đăng tin, sự rõ ràng khi giao tiếp đa ngôn ngữ và việc biết chắc người ở đầu bên kia là một hàng xóm đã xác minh, thì PopOut có thể là lựa chọn phù hợp hơn. Hãy tự kiểm chứng các tính năng hiện có dựa trên khu vực và cách sử dụng của riêng bạn.",
     comparisonBackLabel: "Quay lại trang so sánh",
     comparisonGumtreeCard1Title: "Đăng tin nhanh bằng AI",
     comparisonGumtreeCard1Body: "Giảm việc tìm danh mục và nhập lại biểu mẫu",
     comparisonGumtreeCard2Title: "Giao dịch đa ngôn ngữ",
     comparisonGumtreeCard2Body: "Hỗ trợ các luồng giao dịch khác ngôn ngữ chính",
-    comparisonGumtreeCard3Title: "Tự động trả lời bằng AI",
-    comparisonGumtreeCard3Body: "AI trả lời các câu hỏi lặp lại để tiết kiệm thời gian cho bạn",
+    comparisonGumtreeCard3Title: "Hàng xóm đã xác minh",
+    comparisonGumtreeCard3Body: "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất",
     comparisonFbH1: "PopOut vs Facebook Marketplace: So sánh trải nghiệm",
     comparisonFbLead:
-      "Bài viết này so sánh những khác biệt thực tế trong quy trình đăng tin, giao tiếp đa ngôn ngữ và tính năng trả lời tự động bằng AI. Mục đích là giúp người dùng chọn được một quy trình mua bán phù hợp với nhu cầu hằng ngày.",
+      "Bài viết này so sánh những khác biệt thực tế trong quy trình đăng tin, giao tiếp đa ngôn ngữ và cách xác minh tài khoản. Mục đích là giúp người dùng chọn được một quy trình mua bán phù hợp với nhu cầu hằng ngày.",
     comparisonFbDisclaimer:
       "Miễn trừ trách nhiệm: trang này chỉ nhằm giới thiệu sản phẩm, không phải tư vấn pháp lý hay tuyên bố tiêu cực về bất kỳ nền tảng bên thứ ba nào. Facebook Marketplace và các nhãn hiệu liên quan thuộc về chủ sở hữu tương ứng. Khả năng có tính năng có thể khác nhau tùy khu vực, loại tài khoản và bản cập nhật sản phẩm.",
     comparisonFbSection1Title: "1) Đăng tin bằng AI từ ảnh",
     comparisonFbSection1Body:
-      "Trên PopOut, tải ảnh sản phẩm lên có thể tạo bản nháp tiêu đề, mô tả và gợi ý danh mục. Người dùng xem lại, bổ sung thông tin, đặt tình trạng và giá, rồi đăng nhanh hơn với ít thao tác thủ công.",
+      "Trên PopOut, chỉ cần tải ảnh món đồ lên là có ngay bản nháp tiêu đề, mô tả và danh mục. Người bán xem lại, bổ sung thông tin, đặt giá và chọn một điểm hẹn công cộng, rồi đăng tin với ít thao tác thủ công hơn.",
     comparisonFbSection2Title: "2) Giao tiếp đa ngôn ngữ theo thời gian thực",
     comparisonFbSection2Body:
       "PopOut hỗ trợ tiếng Anh, tiếng Trung giản thể, tiếng Trung phồn thể, tiếng Hàn, tiếng Nhật, tiếng Pháp, tiếng Tây Ban Nha và tiếng Việt. Bài đăng và trò chuyện có thể đọc bằng ngôn ngữ ưa thích của từng người dùng.",
-    comparisonFbSection3Title: "3) Tự động trả lời bằng AI giúp người bán tiết kiệm thời gian",
+    comparisonFbSection3Title: "3) Hàng xóm đã xác minh, không phải tài khoản ẩn danh",
     comparisonFbSection3Body:
-      "PopOut Market có tính năng tự động trả lời bằng AI. Hiện tại tính năng còn đơn giản và chúng tôi đang tích cực cải thiện, với nhiều khả năng mạnh mẽ hơn sẽ sớm ra mắt. Ngay bây giờ, AI có thể xử lý các tin nhắn lặp đi lặp lại, ít quan trọng và trả lời những câu hỏi đã có sẵn trong tin đăng của bạn. Với những thông tin còn chưa chắc chắn hoặc không được nêu trong tin đăng, AI sẽ không đoán bừa mà nhường lại cho bạn tự trả lời người mua, nhờ vậy bạn có thể dành thời gian cho những câu hỏi thực sự quan trọng.",
-    comparisonFbSection4Title: "4) Quy trình xác minh sinh viên tại Melbourne",
+      "Mọi tài khoản PopOut đều được xác minh bằng số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất, và được kiểm tra lại mỗi 30 ngày với những người tiếp tục nhắn tin và đăng tin. Lần kiểm tra này chỉ xác nhận khu vực (suburb); dữ liệu GPS không được lưu lại. Bạn có thể báo cáo tin đăng và tin nhắn, còn tin đăng bị hạn chế có thể khiếu nại một lần.",
+    comparisonFbSection4Title: "4) Gặp mặt tại nơi công cộng",
     comparisonFbSection4Body:
-      "Đối với cộng đồng sinh viên và các khu nhà ở, PopOut có kênh xác minh sinh viên để tăng độ tin cậy và khả năng được tìm thấy trong các giao dịch quanh trường học.",
+      "Bán trên PopOut nghĩa là trao món đồ tận tay hàng xóm. Khi đăng tin, người bán chọn một địa điểm công cộng dễ nhận biết từ danh sách có sẵn, và người mua nhìn thấy điểm hẹn đó ngay trên tin đăng. Không gửi bưu điện, không qua đơn vị vận chuyển.",
     comparisonFbTableTitle: "Tóm tắt tính năng (theo góc nhìn người dùng)",
     comparisonFbTableNote:
       "Lưu ý: cột bên phải phản ánh các mẫu sử dụng phổ biến và có thể thay đổi theo thời gian.",
@@ -2070,25 +1801,53 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Popout:
       "Nội dung bài đăng và trò chuyện có thể hiểu được qua các ngôn ngữ được hỗ trợ",
     comparisonFbFeature2Other: "Giao tiếp khác ngôn ngữ thường phụ thuộc vào việc tự dịch",
-    comparisonFbFeature3Title: "Tự động trả lời bằng AI",
+    comparisonFbFeature3Title: "Xác minh tài khoản",
     comparisonFbFeature3Popout:
-      "AI trả lời các câu hỏi lặp lại và thông tin đã có trong tin đăng; những câu chưa chắc chắn sẽ chờ bạn xử lý",
-    comparisonFbFeature3Other:
-      "Việc nhắn tin hoàn toàn thủ công, không có AI hỗ trợ xử lý các câu hỏi lặp lại",
-    comparisonFbFeature4Title: "Lớp tin cậy hướng đến sinh viên",
-    comparisonFbFeature4Popout: "Quy trình xác minh sinh viên để kết nối quanh trường/nơi ở",
-    comparisonFbFeature4Other:
-      "Quy trình xác minh danh tính sinh viên riêng thường hạn chế hoặc không có",
+      "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất, kiểm tra lại mỗi 30 ngày",
+    comparisonFbFeature3Other: "Thường dùng sẵn một tài khoản mạng xã hội, không kiểm tra vị trí",
+    comparisonFbFeature4Title: "Nơi trao món đồ",
+    comparisonFbFeature4Popout:
+      "Điểm hẹn công cộng được chọn ngay khi đăng tin và hiển thị cho người mua",
+    comparisonFbFeature4Other: "Tự hẹn riêng trong tin nhắn, nếu có hẹn",
     comparisonFbFinalTitle: "Cách sử dụng phần so sánh này",
     comparisonFbFinalBody:
-      "Nếu ưu tiên của bạn là đăng tin nhanh hơn, giao tiếp đa ngôn ngữ mượt mà hơn và tính năng trả lời tự động bằng AI giúp xử lý những câu hỏi lặp đi lặp lại, thì quy trình của PopOut có thể phù hợp hơn với bạn. Hãy luôn tự xác minh chi tiết các tính năng hiện có trong bối cảnh sử dụng của riêng bạn.",
+      "Nếu ưu tiên của bạn là đăng tin nhanh hơn, giao tiếp đa ngôn ngữ mượt mà hơn và việc biết chắc người ở đầu bên kia là một hàng xóm đã xác minh, thì quy trình của PopOut có thể phù hợp hơn với bạn. Hãy luôn tự xác minh chi tiết các tính năng hiện có trong bối cảnh sử dụng của riêng bạn.",
     comparisonFbCard1Title: "Trợ lý đăng tin AI",
     comparisonFbCard1Body: "Soạn nháp tiêu đề và mô tả từ ảnh",
     comparisonFbCard2Title: "Dịch trực tiếp",
     comparisonFbCard2Body: "Bài đăng và trò chuyện khác ngôn ngữ mượt mà hơn",
-    comparisonFbCard3Title: "Tự động trả lời bằng AI",
-    comparisonFbCard3Body:
-      "AI xử lý các câu hỏi lặp lại để bạn tập trung vào những câu hỏi thực sự quan trọng",
+    comparisonFbCard3Title: "Hàng xóm đã xác minh",
+    comparisonFbCard3Body: "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất",
+    heroTitle: "Cả khu phố Melbourne của bạn, gói gọn trong một bảng tin",
+    heroLead:
+      "PopOut Market là ứng dụng khu phố dành cho Melbourne. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, xem ưu đãi đang có tại các cửa hàng địa phương ngay trên bản đồ, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
+    heroTrustLine:
+      "Xác minh bằng số điện thoại di động Úc và một lần kiểm tra vị trí duy nhất. Miễn phí trên iOS và Android. Đã có mặt tại {count} khu vực ở Melbourne.",
+    heroGetAppCta: "Tải ứng dụng",
+    heroBrowseCta: "Xem đồ cũ gần bạn",
+    homeMarketTitle: "Mua bán đồ cũ cùng *hàng xóm quanh đây*",
+    homeMarketSubtitle:
+      "Mỗi tin đăng đều đến từ một người sống gần bạn, và món đồ được trao tận tay. Lọc theo Cho tặng hoặc Dưới $20, hoặc xem theo danh mục.",
+    homeMarketBrowseAll: "Xem tất cả tin đăng",
+    homeMarketFilterAll: "Tất cả",
+    homeMarketFilterGiveaway: "Cho tặng",
+    homeMarketFilterUnder20: "Dưới $20",
+    homeBulkListingLine:
+      "Tải ảnh cả căn phòng lên một lượt — PopOut tự tách thành từng tin đăng nháp riêng.",
+    homeShopsTitle: "Cửa hàng địa phương ngay trên *bản đồ*",
+    homeShopsSubtitle:
+      "Hàng xóm dạo quanh các cửa hàng gần nhà rồi đăng lại những gì họ thấy, kèm tên sản phẩm và giá ghi ngay trên ảnh, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ. Bản đồ hiện có 16 cửa hàng ở Melbourne CBD và Docklands, trong đó 14 là tiệm tạp hóa châu Á tư nhân.",
+    homeShopsCta: "Xem cẩm nang tiệm tạp hóa châu Á ở Melbourne CBD",
+    homeCommunityTitle: "Hỏi hàng xóm *bất cứ điều gì*",
+    homeCommunitySubtitle:
+      "Tab Cộng đồng là nơi đời sống khu phố diễn ra: ưu đãi địa phương, câu hỏi về khu bạn ở, gợi ý hay ho và cả những người đang cần mua. Bạn viết bằng ngôn ngữ của mình, họ đọc bằng ngôn ngữ của họ.",
+    homeCommunityTopics:
+      "Ưu đãi địa phương · Hỏi đáp & Tin tức · Đời sống khu phố · Cần mua · Khác",
+    homeTrustTitle: "Hàng xóm thật, *không phải tài khoản ẩn danh*",
+    homeTrustSubtitle:
+      "Mọi tài khoản đều được xác minh bằng số điện thoại di động Úc và một lần kiểm tra vị trí duy nhất — chỉ để xác nhận khu vực (suburb) của bạn rồi xóa ngay, và được kiểm tra lại mỗi 30 ngày. Quy tắc PopOut Market được công bố bằng tám ngôn ngữ, ai cũng đọc được mà không cần tài khoản; mọi nội dung đều có thể được báo cáo, hạn chế và khiếu nại.",
+    homeCoverageTitle: "Đã có mặt tại *{count} khu vực ở Melbourne*",
+    homeCoverageCta: "Xem tất cả khu vực ở Melbourne",
     notFoundTitle: "Không tìm thấy trang",
     notFoundDescription: "Trang bạn yêu cầu không tồn tại hoặc không được công khai.",
   },
@@ -2097,13 +1856,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Langue",
     languageModalTitle: "Choisissez votre langue",
     languageModalHint: "PopOut soutient les communautés locales en plusieurs langues.",
-    heroSecondaryPrefix: "Achetez et vendez près de chez vous, entre voisins, tout en ",
-    heroSecondaryLink: "français",
-    heroSecondarySuffix: "",
-    heroExploreCta: "Explorer plus d'articles",
     downloadLine: "Téléchargez l'application PopOut Market pour iOS et Android",
-    slogan: "achetez et vendez avec les personnes autour de vous",
-    ratingAria: "Note de 5,0 sur 5 sur l'App Store",
+    slogan: "achetez et vendez entre voisins, près de chez vous",
     homeAria: "Accueil PopOut",
     appStoreAlt: "Télécharger sur l'App Store",
     googlePlayAlt: "Obtenir sur Google Play",
@@ -2143,17 +1897,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "Publié à {suburb}",
     marketPostListedOn: "Publié le {date}",
     marketPostCategoryLabel: "Catégorie",
-    marketPostStatusLabel: "Statut",
-    marketPostDeliveryLabel: "Livraison",
-    marketPostNegotiableLabel: "Négociable",
     marketPostListingRef: "Réf.",
-    marketPostDeliverableBadge: "Livraison possible",
     marketPostFixedPriceLabel: "Prix fixe",
     marketPostDetailLoadingAria: "Chargement de l’annonce",
     marketPostDescriptionHeading: "Description",
     marketPostPreferredMeetupLabel: "Point de remise préféré",
     marketPostOtherItemsHeading: "Autres annonces du vendeur",
-    marketPostSellerVerifiedLabel: "Vérifié à",
     marketYes: "Oui",
     marketNo: "Non",
     marketUnknown: "Inconnu",
@@ -2163,47 +1912,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoTitle: "Prenez une photo. L'IA fait le *reste*",
     aiPostDemoSubtitle:
       "Photographiez l'objet et l'IA génère titre, catégorie et description — vous n'avez qu'à fixer le prix.",
-    autoReplyDemoTitle: "Fini les *pertes de temps*",
-    autoReplyDemoSubtitle: "L'IA répond : « C'est toujours dispo ? »",
-    autoReplyDemoInboxTitle: "Messages",
-    autoReplyDemoTabBuying: "Achats",
-    autoReplyDemoTabSelling: "Ventes",
-    autoReplyDemoBadge: "Réponse auto activée",
-    autoReplyDemoTimeNow: "à l'instant",
-    autoReplyDemoTime1Min: "1 min",
-    autoReplyDemoMsgMeet: "À quelle heure nous rencontrons-nous ?",
-    autoReplyDemoMsgPrice: "Le prix est de 50 $. Êtes-vous intéressé(e) ?",
-    autoReplyDemoMsgSelling: "Je le vends 30 $. Intéressé(e) ?",
-    autoReplyDemoMsgGreeting: "Bonjour ! La chaise de bureau en cuir est toujours disponible.",
     aiPostDemoPrice: "Prix",
-    aiPostDemoCondition: "État",
     aiPostDemoYouFill: "À vous",
-    scheduleDemoTitle: "Des rendez-vous en toute confiance.",
-    scheduleDemoSubtitle:
-      "Choisissez un créneau et un lieu, retrouvez l'acheteur et scannez le QR pour confirmer — moins de faux bonds, plus de confiance.",
-    scheduleDemoDate: "Date",
-    scheduleDemoTime: "Heure",
-    scheduleDemoLocation: "Point de rencontre",
-    scheduleDemoScheduled: "Planifié",
-    scheduleDemoScanHint: "Scanner pour vérifier",
-    scheduleDemoVerified: "Rencontre vérifiée",
-    studentVerifyTitle: "Étudiants vérifiés. Échanges de confiance.",
-    studentVerifySubtitle:
-      "Vérifiez votre e-mail étudiant pour obtenir un badge de confiance — chaque transaction dans la communauté plus sûre.",
-    studentVerifyEmailLabel: "E-mail étudiant",
-    studentVerifyUniversity: "Université",
-    studentVerifyVerifying: "Vérification…",
-    studentVerifyVerified: "E-mail vérifié",
-    studentVerifyBadge: "Étudiant vérifié",
-    safetyZoneTitle: "Des rencontres plus sûres, dès le lieu choisi.",
-    safetyZoneSubtitle:
-      "Lorsque vous choisissez où vous retrouver, nous suggérons des zones sécurisées à proximité — lieux fréquentés, bien éclairés, avec caméras — pour des échanges plus sereins et une communauté plus solide.",
-    safetyZoneNearLabel: "Zone de rendez-vous",
-    safetyZoneFinding: "Recherche de zones sécurisées…",
-    safetyZoneListTitle: "Suggestions",
-    safetyZoneBadgeCctv: "Vidéosurveillance",
-    safetyZoneBadgeBusy: "Fréquenté",
-    safetyZoneBadgeLit: "Bien éclairé",
     footerLegalNavAria: "Politiques et contact",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Tous droits réservés.",
     footerAcn: "ACN 696 464 945",
@@ -2213,7 +1923,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "Sécurité des enfants",
     footerNavContact: "Nous contacter",
     footerSocialRednoteAria: "PopOut Market sur Xiaohongshu (RED)",
-    footerSocialInstagramAria: "PopOut Market sur Instagram",
     footerSocialLinkedInAria: "PopOut Market sur LinkedIn",
     footerLegalStub: "Cette page sera mise à jour prochainement.",
     footerBackHome: "Retour à l’accueil",
@@ -2230,7 +1939,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Des recommandations précises basées sur la localisation à Melbourne vous aident à découvrir des pépites près de chez vous. Savoir que le vendeur habite peut‑être la rue suivante donne à chaque échange une confiance visible.",
     aboutWhySafetyTitle: "La sécurité est notre principe fondamental",
     aboutWhySafetyBody:
-      "Votre sécurité passe avant tout. Nous suggérons des lieux publics fréquentés et bien éclairés à Melbourne comme endroits plus sûrs pour les remises en main propre, et encourageons la vérification du statut étudiant. Chaque transaction sur PopOut comporte une assurance supplémentaire.",
+      "Votre sécurité passe avant tout. Chaque compte PopOut est vérifié par un numéro de mobile australien et un contrôle de localisation ponctuel : il confirme votre quartier, puis la position est supprimée. Les remises se font dans un lieu public choisi par le vendeur au moment de la publication, et les Règles de PopOut Market sont publiées en huit langues et consultables sans compte. Tout peut être signalé, et une annonce restreinte peut faire l’objet d’un recours.",
     aboutWhyCommunicationTitle: "Communiquer sans frontières",
     aboutWhyCommunicationBody:
       "La langue ne doit pas être un obstacle. PopOut propose une traduction bilingue en temps réel. Écrivez dans votre langue — l’autre reçoit une traduction automatique. Même si votre anglais n’est pas parfait, vous pouvez échanger et vous faire des amis.",
@@ -2238,7 +1947,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyLead: "Chez PopOut, la confidentialité est un droit fondamental.",
     aboutPrivacyMinimalTitle: "Collecte minimale",
     aboutPrivacyMinimalBody:
-      "Nous ne collectons que l’essentiel — téléphone et e‑mail pour la vérification de connexion.",
+      "Un compte PopOut demande un numéro de mobile australien vérifié, un quartier vérifié et un pseudo que vous choisissez. Aucune adresse e-mail, aucun mot de passe et aucun nom légal ne figurent sur un compte PopOut.",
     aboutPrivacyStorageTitle: "Stockage exigeant",
     aboutPrivacyStorageBody:
       "Vos données sensibles sont stockées dans des bases chiffrées, en transit comme au repos.",
@@ -2259,25 +1968,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "La version anglaise de ce document fait foi.",
     languageModalCloseAria: "Fermer le sélecteur de langue",
-    carouselGoToItemAria: "Aller à l'élément {index}",
-    demoListingWoodenDiningChair: "Chaise de salle à manger en bois",
-    demoListingMountainBike: "Vélo tout terrain",
-    demoListingAcousticGuitar: "Guitare acoustique",
-    demoListingWirelessHeadphones: "Casque sans fil",
-    demoListingTextbookBundle: "Lot de manuels",
-    demoListingSmartWatch: "Montre connectée",
-    demoListingGameController: "Manette de jeu",
-    heroNowInConnector: ", désormais à ",
-    heroTitleTemplate: "Trouvez {item} d'occasion sur {brand}",
-    heroRotatingItems: [
-      "meubles",
-      "électronique",
-      "vélos",
-      "manuels scolaires",
-      "ustensiles de cuisine",
-      "vêtements",
-    ],
-    heroLocationSuffix: "",
     contactBack: "Retour à l’accueil",
     contactHint:
       "Indiquez votre question ou votre demande de partenariat, nous vous répondrons par e-mail.",
@@ -2295,7 +1985,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "Cette page est fournie à titre informatif sur le produit et ne constitue aucune garantie juridique, financière ou de sécurité. Les fonctionnalités peuvent varier selon la version de l’application, la région et le compte.",
     faqComparisonCta: "Comparer avec d’autres plateformes",
-    marketSeoIntroPrefix: "Achetez et vendez des articles d’occasion à",
     marketSeoIntroNearLabel: "Articles affichés à",
     marketSuburbMapTitle: "Carte de {suburb}",
     marketPostMeetupMapAlt: "Carte du lieu de rencontre",
@@ -2313,29 +2002,28 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonHubCardsTitle: "Ouvrir les comparaisons détaillées",
     comparisonHubCardsHint: "Choisissez une plateforme ci-dessous pour la comparaison complète",
     comparisonHubCardFbBody:
-      "Comparez la rapidité de publication, la messagerie multilingue et la réponse automatique par IA.",
+      "Comparez la rapidité de publication, la messagerie multilingue et la façon dont chaque appli vérifie la personne avec qui vous échangez.",
     comparisonHubCardFbCta: "Lire PopOut vs Facebook Marketplace",
     comparisonHubCardGumtreeBody:
-      "Comparez la création d'annonces par IA, la vérification du statut étudiant et la réponse automatique par IA.",
+      "Comparez la création d'annonces par IA, la traduction des conversations en plusieurs langues et la vérification des comptes.",
     comparisonHubCardGumtreeCta: "Lire PopOut vs Gumtree",
     comparisonGumtreeH1: "PopOut vs Gumtree : comparaison de l'expérience",
     comparisonGumtreeLead:
-      "Cette page compare les différences concrètes de flux de travail concernant la création d'annonces, la communication multilingue et la réponse automatique par IA, dans des cas d'usage de seconde main à Melbourne.",
+      "Cette page compare les différences concrètes de flux de travail concernant la création d'annonces, la communication multilingue et la vérification des comptes, dans des cas d'usage de seconde main à Melbourne.",
     comparisonGumtreeDisclaimer:
       "Avertissement : cette page sert uniquement à informer les utilisateurs et à présenter le produit. Il ne s'agit pas d'un conseil juridique. Gumtree et les marques associées appartiennent à leurs propriétaires respectifs. Les fonctionnalités tierces peuvent évoluer.",
     comparisonGumtreeSection1Title: "1) Mise en ligne assistée par IA",
     comparisonGumtreeSection1Body:
-      "PopOut peut générer un brouillon de titre, de description et de suggestions de catégorie à partir des photos de l'article. L'utilisateur les vérifie, indique l'état et le prix souhaité, puis choisit des options comme la livraison et la négociation pour publier plus vite.",
+      "PopOut peut rédiger un titre, une description et une catégorie à partir des photos de l'article. Le vendeur relit le brouillon, fixe le prix et choisit un lieu de rencontre public, puis publie. Vous pouvez aussi ajouter d'un coup les photos de toute une pièce : PopOut les répartit en brouillons d'annonces distincts.",
     comparisonGumtreeSection2Title: "2) Parcours multilingue intégré",
     comparisonGumtreeSection2Body:
       "PopOut prend en charge l'anglais, le chinois simplifié, le chinois traditionnel, le coréen, le japonais, le français, l'espagnol et le vietnamien pour la publication et la messagerie, réduisant les frictions linguistiques dans une ville diverse.",
-    comparisonGumtreeSection3Title:
-      "3) La réponse automatique par IA qui fait gagner du temps aux vendeurs",
+    comparisonGumtreeSection3Title: "3) Des voisins vérifiés, pas des comptes anonymes",
     comparisonGumtreeSection3Body:
-      "PopOut Market intègre une fonctionnalité de réponse automatique par IA. Elle reste simple pour le moment et nous l'améliorons activement, avec des capacités plus poussées qui arrivent bientôt. Aujourd'hui, elle prend en charge le grand volume de messages répétitifs et peu utiles, et répond aux questions déjà traitées dans votre annonce. Pour tout ce qui est incertain ou qui ne figure pas dans votre annonce, l'IA ne se hasarde pas à deviner : elle vous laisse répondre vous-même à l'acheteur, afin que vous puissiez vous concentrer sur les questions qui comptent vraiment.",
-    comparisonGumtreeSection4Title: "4) Vérification étudiante pour les communautés de campus",
+      "Chaque compte PopOut est vérifié par un numéro de mobile australien et un contrôle de localisation ponctuel, renouvelé tous les 30 jours pour celles et ceux qui continuent à discuter et à publier. Ce contrôle confirme uniquement le quartier ; aucune donnée GPS n'est conservée. Les Règles de PopOut Market sont publiées en huit langues et consultables sans compte.",
+    comparisonGumtreeSection4Title: "4) Une remise en main propre, dans un lieu public",
     comparisonGumtreeSection4Body:
-      "Un parcours de vérification étudiante aide à renforcer la confiance et la qualité des mises en relation pour les transactions liées aux universités et aux logements à Melbourne.",
+      "Vendre sur PopOut, c'est remettre l'article à un voisin en main propre. Au moment de publier, le vendeur choisit dans une liste un lieu public facile à repérer, et l'acheteur le voit sur l'annonce. Ni envoi postal, ni coursier.",
     comparisonGumtreeTableTitle: "Aperçu des fonctionnalités (point de vue utilisateur)",
     comparisonGumtreeTableNote:
       "Remarque : la colonne de droite décrit des usages publics généraux et peut varier selon le compte, la région ou les mises à jour du produit.",
@@ -2347,45 +2035,43 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Popout: "Compréhension multilingue dans les annonces et la messagerie",
     comparisonGumtreeFeature2Other:
       "La communication entre langues dépend souvent de la traduction par l'utilisateur",
-    comparisonGumtreeFeature3Title: "Réponse automatique par IA",
+    comparisonGumtreeFeature3Title: "Vérification du compte",
     comparisonGumtreeFeature3Popout:
-      "L'IA traite les questions répétitives et les détails déjà présents dans votre annonce, et vous laisse les cas incertains",
+      "Numéro de mobile australien et contrôle de localisation ponctuel, renouvelé tous les 30 jours",
     comparisonGumtreeFeature3Other:
-      "Les réponses sont entièrement manuelles, sans aide de l'IA pour filtrer les messages répétitifs",
-    comparisonGumtreeFeature4Title: "Mécanisme de confiance dédié aux étudiants",
+      "En général, une inscription par e-mail ou via un réseau social, sans contrôle de localisation",
+    comparisonGumtreeFeature4Title: "Lieu de la remise",
     comparisonGumtreeFeature4Popout:
-      "La vérification étudiante facilite les mises en relation sur le campus",
-    comparisonGumtreeFeature4Other: "Le parcours d'identité étudiante dédié peut être limité",
+      "Un lieu de rencontre public est choisi à la création de l'annonce et affiché à l'acheteur",
+    comparisonGumtreeFeature4Other: "À convenir en privé dans la conversation, voire pas du tout",
     comparisonGumtreeFinalTitle: "Recommandation",
     comparisonGumtreeFinalBody:
-      "Si vos priorités sont la rapidité de publication, la clarté multilingue et une réponse automatique par IA qui vous fait gagner du temps, PopOut peut être le meilleur choix. Vérifiez les fonctionnalités actuelles en fonction de votre propre région et de votre usage.",
+      "Si vos priorités sont la rapidité de publication, la clarté multilingue et la certitude que la personne en face est un voisin vérifié, PopOut peut être le meilleur choix. Vérifiez les fonctionnalités actuelles en fonction de votre propre région et de votre usage.",
     comparisonBackLabel: "Retour aux comparaisons",
     comparisonGumtreeCard1Title: "Publication rapide par IA",
     comparisonGumtreeCard1Body: "Moins de recherche de catégorie et de saisie répétée",
     comparisonGumtreeCard2Title: "Transactions multilingues",
     comparisonGumtreeCard2Body:
       "Prend en charge les principaux parcours de transaction multilingues",
-    comparisonGumtreeCard3Title: "Réponse automatique par IA",
-    comparisonGumtreeCard3Body:
-      "L'IA répond aux questions répétitives pour vous faire gagner du temps",
+    comparisonGumtreeCard3Title: "Voisins vérifiés",
+    comparisonGumtreeCard3Body: "Numéro de mobile australien et contrôle de localisation ponctuel",
     comparisonFbH1: "PopOut vs Facebook Marketplace : comparaison de l'expérience",
     comparisonFbLead:
-      "Cet article compare les différences pratiques de flux de travail dans la création d'annonces, la communication multilingue et la réponse automatique par IA. L'objectif est d'aider les utilisateurs à choisir un flux de marketplace adapté à leurs besoins quotidiens.",
+      "Cet article compare les différences pratiques de flux de travail dans la création d'annonces, la communication multilingue et la vérification des comptes. L'objectif est d'aider les utilisateurs à choisir un flux de marketplace adapté à leurs besoins quotidiens.",
     comparisonFbDisclaimer:
       "Avertissement : cette page sert uniquement à présenter le produit, et non un conseil juridique ni une déclaration négative sur une plateforme tierce. Facebook Marketplace et les marques associées appartiennent à leurs propriétaires respectifs. La disponibilité des fonctionnalités peut varier selon la région, le type de compte et les mises à jour du produit.",
     comparisonFbSection1Title: "1) Mise en ligne assistée par IA à partir de photos",
     comparisonFbSection1Body:
-      "Sur PopOut, le téléchargement des photos de l'article peut générer un brouillon de titre, de description et des suggestions de catégorie. L'utilisateur vérifie, complète, indique l'état et le prix, puis publie plus vite avec moins d'étapes manuelles.",
+      "Sur PopOut, le téléchargement des photos de l'article peut générer un brouillon de titre, de description et de catégorie. Le vendeur relit, complète, fixe le prix et choisit un lieu de rencontre public, puis publie avec moins d'étapes manuelles.",
     comparisonFbSection2Title: "2) Communication multilingue en temps réel",
     comparisonFbSection2Body:
       "PopOut prend en charge l'anglais, le chinois simplifié, le chinois traditionnel, le coréen, le japonais, le français, l'espagnol et le vietnamien. Les annonces et les conversations peuvent être lues dans la langue préférée de chaque utilisateur.",
-    comparisonFbSection3Title:
-      "3) La réponse automatique par IA qui fait gagner du temps aux vendeurs",
+    comparisonFbSection3Title: "3) Des voisins vérifiés, pas des comptes anonymes",
     comparisonFbSection3Body:
-      "PopOut Market intègre une fonctionnalité de réponse automatique par IA. Elle reste simple pour le moment et nous l'améliorons activement, avec des capacités plus poussées qui arrivent bientôt. Aujourd'hui, elle prend en charge les messages répétitifs et peu utiles, et répond aux questions déjà traitées dans votre annonce. Pour tout ce qui est incertain ou qui ne figure pas dans votre annonce, l'IA ne se hasarde pas à deviner : elle vous laisse répondre personnellement à l'acheteur, afin que vous puissiez consacrer votre temps aux questions qui comptent vraiment.",
-    comparisonFbSection4Title: "4) Parcours de vérification étudiante à Melbourne",
+      "Chaque compte PopOut est vérifié par un numéro de mobile australien et un contrôle de localisation ponctuel, renouvelé tous les 30 jours pour celles et ceux qui continuent à discuter et à publier. Ce contrôle confirme uniquement le quartier ; aucune donnée GPS n'est conservée. Les annonces et les messages peuvent être signalés, et une annonce restreinte peut faire l'objet d'un recours, une seule fois.",
+    comparisonFbSection4Title: "4) Une remise en main propre, dans un lieu public",
     comparisonFbSection4Body:
-      "Pour les communautés étudiantes et les regroupements de logements, PopOut inclut un canal de vérification étudiante afin de renforcer la confiance et la visibilité dans les transactions liées au campus.",
+      "Vendre sur PopOut, c'est remettre l'article à un voisin en main propre. Au moment de publier, le vendeur choisit dans une liste un lieu public facile à repérer, et l'acheteur le voit sur l'annonce. Ni envoi postal, ni coursier.",
     comparisonFbTableTitle: "Aperçu des fonctionnalités (point de vue utilisateur)",
     comparisonFbTableNote:
       "Remarque : la colonne de droite reflète des usages publics courants et peut évoluer avec le temps.",
@@ -2398,26 +2084,53 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbFeature2Popout:
       "Le contenu des annonces et des conversations est compréhensible dans les langues prises en charge",
     comparisonFbFeature2Other: "La communication entre langues dépend souvent de l'auto-traduction",
-    comparisonFbFeature3Title: "Réponse automatique par IA",
+    comparisonFbFeature3Title: "Vérification du compte",
     comparisonFbFeature3Popout:
-      "L'IA répond aux questions répétitives et aux détails de l'annonce ; les cas incertains vous reviennent",
+      "Numéro de mobile australien et contrôle de localisation ponctuel, renouvelé tous les 30 jours",
     comparisonFbFeature3Other:
-      "La messagerie est entièrement manuelle, sans aide de l'IA pour gérer les questions répétitives",
-    comparisonFbFeature4Title: "Couche de confiance axée sur les étudiants",
+      "En général, un compte de réseau social existant, sans contrôle de localisation",
+    comparisonFbFeature4Title: "Lieu de la remise",
     comparisonFbFeature4Popout:
-      "Parcours de vérification étudiante pour les mises en relation campus/logement",
-    comparisonFbFeature4Other:
-      "Le parcours d'identité spécifique aux étudiants est souvent limité ou indisponible",
+      "Un lieu de rencontre public est choisi à la création de l'annonce et affiché à l'acheteur",
+    comparisonFbFeature4Other: "À convenir en privé dans la conversation, voire pas du tout",
     comparisonFbFinalTitle: "Comment utiliser cette comparaison",
     comparisonFbFinalBody:
-      "Si vos priorités sont une publication plus rapide, une communication multilingue plus fluide et une réponse automatique par IA qui gère les questions répétitives, le flux de travail de PopOut peut mieux vous convenir. Vérifiez toujours les détails actuels des fonctionnalités dans votre propre contexte d'utilisation.",
+      "Si vos priorités sont une publication plus rapide, une communication multilingue plus fluide et la certitude que la personne en face est un voisin vérifié, le flux de travail de PopOut peut mieux vous convenir. Vérifiez toujours les détails actuels des fonctionnalités dans votre propre contexte d'utilisation.",
     comparisonFbCard1Title: "Assistant d'annonce IA",
     comparisonFbCard1Body: "Brouillon de titre et de description à partir des photos",
     comparisonFbCard2Title: "Traduction en direct",
     comparisonFbCard2Body: "Annonces et conversations entre langues plus fluides",
-    comparisonFbCard3Title: "Réponse automatique par IA",
-    comparisonFbCard3Body:
-      "L'IA gère les questions répétitives pour que vous puissiez vous concentrer sur les vraies",
+    comparisonFbCard3Title: "Voisins vérifiés",
+    comparisonFbCard3Body: "Numéro de mobile australien et contrôle de localisation ponctuel",
+    heroTitle: "Tout ce qui se passe dans votre quartier de Melbourne, dans un seul fil",
+    heroLead:
+      "PopOut Market, c'est l'appli de quartier de Melbourne. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, repérez sur la carte les promos du moment dans les commerces du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
+    heroTrustLine:
+      "Vérification par numéro de mobile australien et contrôle de localisation ponctuel. Gratuit sur iOS et Android. Disponible dans {count} quartiers de Melbourne.",
+    heroGetAppCta: "Télécharger l'appli",
+    heroBrowseCta: "Voir les articles d'occasion près de chez vous",
+    homeMarketTitle: "Achetez et vendez d'occasion *entre voisins*",
+    homeMarketSubtitle:
+      "Chaque annonce vient de quelqu'un qui habite près de chez vous, et la remise se fait en main propre. Filtrez par « À donner » ou « Moins de 20 $ », ou parcourez par catégorie.",
+    homeMarketBrowseAll: "Voir toutes les annonces",
+    homeMarketFilterAll: "Tout",
+    homeMarketFilterGiveaway: "À donner",
+    homeMarketFilterUnder20: "Moins de 20 $",
+    homeBulkListingLine:
+      "Ajoutez d'un coup les photos de toute une pièce — PopOut les répartit en brouillons distincts.",
+    homeShopsTitle: "Les commerces du quartier, sur la *carte*",
+    homeShopsSubtitle:
+      "Des voisins font le tour des commerces du coin et publient leurs trouvailles : le nom du produit et son prix sont inscrits sur la photo et traduits dans toutes les langues de l'appli. La carte couvre 16 commerces du CBD de Melbourne et de Docklands, dont 14 épiceries asiatiques indépendantes.",
+    homeShopsCta: "Voir le guide des épiceries asiatiques du CBD de Melbourne",
+    homeCommunityTitle: "Demandez *tout ce que vous voulez* à vos voisins",
+    homeCommunitySubtitle:
+      "L'onglet Communauté, c'est là que se passe la vie du quartier : bons plans, questions sur votre secteur, recommandations et objets recherchés. Écrivez dans votre langue, chacun vous lit dans la sienne.",
+    homeCommunityTopics: "Bons plans · Questions & actus · Vie du quartier · Je recherche · Autre",
+    homeTrustTitle: "De vrais voisins, *pas des comptes anonymes*",
+    homeTrustSubtitle:
+      "Chaque compte est vérifié par un numéro de mobile australien et un contrôle de localisation ponctuel : il confirme votre quartier, puis la position est supprimée ; le contrôle est renouvelé tous les 30 jours. Les Règles de PopOut Market sont publiées en huit langues et consultables sans compte, et tout peut être signalé, restreint, puis contesté.",
+    homeCoverageTitle: "Déjà présent dans *{count} quartiers de Melbourne*",
+    homeCoverageCta: "Voir tous les quartiers de Melbourne",
     notFoundTitle: "Page introuvable",
     notFoundDescription: "La page demandée n’existe pas ou n’est pas accessible publiquement.",
   },
@@ -2426,14 +2139,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Idioma",
     languageModalTitle: "Elige tu idioma",
     languageModalHint: "PopOut conecta comunidades locales en varios idiomas.",
-    heroSecondaryPrefix:
-      "Compra y vende con tus vecinos sin complicaciones, entendiéndote con todos en ",
-    heroSecondaryLink: "español",
-    heroSecondarySuffix: "",
-    heroExploreCta: "Explorar más productos",
     downloadLine: "Descarga la app PopOut Market para iOS y Android",
-    slogan: "compra y vende con personas cerca de ti",
-    ratingAria: "Valoración de 5,0 de 5 en la App Store",
+    slogan: "compra y vende con vecinos cerca de ti",
     homeAria: "Inicio de PopOut",
     appStoreAlt: "Descargar en App Store",
     googlePlayAlt: "Consíguelo en Google Play",
@@ -2473,17 +2180,12 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketPostListedIn: "Publicado en {suburb}",
     marketPostListedOn: "Publicado el {date}",
     marketPostCategoryLabel: "Categoría",
-    marketPostStatusLabel: "Estado",
-    marketPostDeliveryLabel: "Entrega",
-    marketPostNegotiableLabel: "Negociable",
     marketPostListingRef: "Ref.",
-    marketPostDeliverableBadge: "Con envío",
     marketPostFixedPriceLabel: "Precio fijo",
     marketPostDetailLoadingAria: "Cargando anuncio",
     marketPostDescriptionHeading: "Descripción",
     marketPostPreferredMeetupLabel: "Punto de encuentro preferido",
     marketPostOtherItemsHeading: "Otros anuncios de este vendedor",
-    marketPostSellerVerifiedLabel: "Verificado en",
     marketYes: "Sí",
     marketNo: "No",
     marketUnknown: "Desconocido",
@@ -2493,47 +2195,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoTitle: "Haz una foto. La IA hace el *resto*",
     aiPostDemoSubtitle:
       "Toma una foto y la IA genera título, categoría y descripción — tú solo pones el precio.",
-    autoReplyDemoTitle: "Solo compradores *de verdad*",
-    autoReplyDemoSubtitle: 'La IA responde "¿Sigue disponible?"',
-    autoReplyDemoInboxTitle: "Mensajes",
-    autoReplyDemoTabBuying: "Compras",
-    autoReplyDemoTabSelling: "Ventas",
-    autoReplyDemoBadge: "Respuesta automática",
-    autoReplyDemoTimeNow: "ahora mismo",
-    autoReplyDemoTime1Min: "1 min",
-    autoReplyDemoMsgMeet: "¿A qué hora quedamos?",
-    autoReplyDemoMsgPrice: "Son $50. ¿Te interesa?",
-    autoReplyDemoMsgSelling: "Lo vendo por $30. ¿Te interesa?",
-    autoReplyDemoMsgGreeting: "¡Hola! La silla de oficina de cuero sigue disponible.",
     aiPostDemoPrice: "Precio",
-    aiPostDemoCondition: "Estado",
     aiPostDemoYouFill: "Tú rellenas",
-    scheduleDemoTitle: "Queda con confianza.",
-    scheduleDemoSubtitle:
-      "Elige hora y lugar, encuentra al comprador y escanea su QR para confirmar — menos plantones y más confianza en tu comunidad.",
-    scheduleDemoDate: "Fecha",
-    scheduleDemoTime: "Hora",
-    scheduleDemoLocation: "Punto de encuentro",
-    scheduleDemoScheduled: "Programado",
-    scheduleDemoScanHint: "Escanear para verificar",
-    scheduleDemoVerified: "Encuentro verificado",
-    studentVerifyTitle: "Estudiantes verificados. Intercambios de confianza.",
-    studentVerifySubtitle:
-      "Verifica tu correo estudiantil para obtener una insignia de confianza — cada operación en la comunidad más segura.",
-    studentVerifyEmailLabel: "Correo estudiantil",
-    studentVerifyUniversity: "Universidad",
-    studentVerifyVerifying: "Verificando…",
-    studentVerifyVerified: "Correo verificado",
-    studentVerifyBadge: "Estudiante verificado",
-    safetyZoneTitle: "Encuentros más seguros, desde el lugar.",
-    safetyZoneSubtitle:
-      "Al elegir dónde quedar, sugerimos zonas seguras cercanas — concurridas, bien iluminadas y con cámaras — para intercambios más tranquilos y una comunidad más fuerte.",
-    safetyZoneNearLabel: "Zona de encuentro",
-    safetyZoneFinding: "Buscando zonas seguras…",
-    safetyZoneListTitle: "Lugares sugeridos",
-    safetyZoneBadgeCctv: "Cámaras",
-    safetyZoneBadgeBusy: "Concurrido",
-    safetyZoneBadgeLit: "Bien iluminado",
     footerLegalNavAria: "Políticas y contacto",
     footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Todos los derechos reservados.",
     footerAcn: "ACN 696 464 945",
@@ -2543,7 +2206,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     footerNavChildSafety: "Seguridad infantil",
     footerNavContact: "Contáctanos",
     footerSocialRednoteAria: "PopOut Market en Xiaohongshu (RED)",
-    footerSocialInstagramAria: "PopOut Market en Instagram",
     footerSocialLinkedInAria: "PopOut Market en LinkedIn",
     footerLegalStub: "Esta página se actualizará pronto.",
     footerBackHome: "Volver al inicio",
@@ -2560,7 +2222,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Recomendaciones precisas por ubicación en Melbourne te ayudan a descubrir joyas a la vuelta de la esquina. Saber que el vendedor puede vivir en la calle de al lado da a cada intercambio una confianza visible.",
     aboutWhySafetyTitle: "La seguridad es nuestro principio central",
     aboutWhySafetyBody:
-      "Tu seguridad es lo primero. Sugerimos lugares públicos concurridos y bien iluminados de Melbourne como puntos más seguros para las entregas en persona, y animamos a verificar la condición de estudiante. Cada transacción en PopOut lleva una capa extra de tranquilidad.",
+      "Tu seguridad es lo primero. Cada cuenta de PopOut se verifica con un número de móvil australiano y una única comprobación de ubicación que confirma tu barrio y después se descarta. Los encuentros se hacen en lugares públicos que elige el vendedor al publicar, y las Normas de PopOut Market están publicadas en ocho idiomas y se pueden leer sin tener cuenta. Todo se puede denunciar, y un anuncio restringido se puede apelar.",
     aboutWhyCommunicationTitle: "Comunicación sin fronteras",
     aboutWhyCommunicationBody:
       "El idioma no debe ser una barrera. PopOut ofrece traducción bilingüe en tiempo real. Escribe en tu lengua — la otra persona recibe traducción automática. Aunque tu inglés no sea perfecto, puedes comerciar con libertad y hacer amigos.",
@@ -2568,7 +2230,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutPrivacyLead: "En PopOut, la privacidad es un derecho fundamental.",
     aboutPrivacyMinimalTitle: "Recopilación mínima",
     aboutPrivacyMinimalBody:
-      "Solo recopilamos lo esencial, como teléfono y correo, para verificar el inicio de sesión.",
+      "Una cuenta de PopOut necesita un número de móvil australiano verificado, un barrio verificado y un apodo que eliges tú. En una cuenta de PopOut no hay dirección de correo, ni contraseña, ni nombre legal.",
     aboutPrivacyStorageTitle: "Almacenamiento de alto nivel",
     aboutPrivacyStorageBody:
       "Tus datos sensibles se guardan en bases de datos cifradas, tanto en tránsito como en reposo.",
@@ -2589,25 +2251,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutSupportEmail: "contact@popoutmarket.com.au",
     legalEnglishAuthoritative: "La versión en inglés de este documento es la auténtica.",
     languageModalCloseAria: "Cerrar el selector de idioma",
-    carouselGoToItemAria: "Ir al elemento {index}",
-    demoListingWoodenDiningChair: "Silla de comedor de madera",
-    demoListingMountainBike: "Bicicleta de montaña",
-    demoListingAcousticGuitar: "Guitarra acústica",
-    demoListingWirelessHeadphones: "Auriculares inalámbricos",
-    demoListingTextbookBundle: "Paquete de libros de texto",
-    demoListingSmartWatch: "Reloj inteligente",
-    demoListingGameController: "Mando de juego",
-    heroNowInConnector: ", ahora en ",
-    heroTitleTemplate: "Encuentra {item} de segunda mano en {brand}",
-    heroRotatingItems: [
-      "muebles",
-      "electrónica",
-      "bicicletas",
-      "libros de texto",
-      "menaje de cocina",
-      "ropa",
-    ],
-    heroLocationSuffix: "",
     contactBack: "Volver al inicio",
     contactHint:
       "Cuéntanos tu pregunta o solicitud de colaboración y te responderemos por correo electrónico.",
@@ -2625,7 +2268,6 @@ export const COPY: Record<Locale, SiteCopy> = {
     faqDisclaimerBody:
       "Esta página es solo informativa sobre el producto y no constituye ninguna garantía legal, financiera ni de seguridad. Las funciones pueden variar según la versión de la app, la región y la cuenta.",
     faqComparisonCta: "Comparar con otros mercados",
-    marketSeoIntroPrefix: "Compra y vende artículos usados en",
     marketSeoIntroNearLabel: "Mostrando artículos en",
     marketSuburbMapTitle: "Mapa de {suburb}",
     marketPostMeetupMapAlt: "Mapa del punto de encuentro",
@@ -2643,30 +2285,28 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonHubCardsTitle: "Abrir comparaciones detalladas",
     comparisonHubCardsHint: "Elige una plataforma abajo para ver la comparación completa",
     comparisonHubCardFbBody:
-      "Compara la rapidez para publicar, la mensajería multilingüe y la respuesta automática con IA.",
+      "Compara la rapidez para publicar, la mensajería multilingüe y cómo verifica cada app a la persona con la que intercambias.",
     comparisonHubCardFbCta: "Leer PopOut vs Facebook Marketplace",
     comparisonHubCardGumtreeBody:
-      "Compara la configuración de anuncios con IA, la verificación de estudiantes y la respuesta automática con IA.",
+      "Compara la creación de anuncios con IA, la traducción del chat multilingüe y la verificación de cuentas.",
     comparisonHubCardGumtreeCta: "Leer PopOut vs Gumtree",
     comparisonGumtreeH1: "PopOut vs Gumtree: comparación de la experiencia",
     comparisonGumtreeLead:
-      "Esta página compara las diferencias reales de flujo de trabajo en la configuración de anuncios, la comunicación multilingüe y la respuesta automática con IA en casos de uso de segunda mano en Melbourne.",
+      "Esta página compara las diferencias reales de flujo de trabajo en la creación de anuncios, la comunicación multilingüe y la verificación de cuentas en casos de uso de segunda mano en Melbourne.",
     comparisonGumtreeDisclaimer:
       "Aviso: esta página tiene fines únicamente informativos para el usuario y el producto. No constituye asesoramiento legal. Gumtree y las marcas relacionadas pertenecen a sus respectivos propietarios. Las funciones de terceros pueden cambiar con el tiempo.",
     comparisonGumtreeSection1Title: "1) Creación de anuncios asistida por IA",
     comparisonGumtreeSection1Body:
-      "PopOut puede redactar sugerencias de título, descripción y categoría a partir de las fotos del artículo. El usuario las revisa, indica el estado y el precio deseado, y elige opciones como la entrega y la negociación para publicar más rápido.",
+      "PopOut puede redactar un título, una descripción y una categoría a partir de las fotos del artículo. El vendedor revisa el borrador, pone el precio y elige un punto de encuentro público, y publica. Se pueden añadir de una vez las fotos de una habitación entera y PopOut las separa en borradores de anuncios distintos.",
     comparisonGumtreeSection2Title: "2) Flujo multilingüe integrado",
     comparisonGumtreeSection2Body:
       "PopOut admite inglés, chino simplificado, chino tradicional, coreano, japonés, francés, español y vietnamita al publicar y mensajear, reduciendo las barreras de idioma en una ciudad diversa.",
-    comparisonGumtreeSection3Title:
-      "3) Respuesta automática con IA que ahorra tiempo a los vendedores",
+    comparisonGumtreeSection3Title: "3) Vecinos verificados, no cuentas anónimas",
     comparisonGumtreeSection3Body:
-      "PopOut Market incluye una función de respuesta automática con IA. Por ahora es sencilla y la estamos mejorando de forma constante, con funciones más potentes en camino. Hoy se encarga del gran volumen de mensajes repetitivos y de poco valor, y responde las preguntas que ya están cubiertas en tu publicación. Ante cualquier duda o algo que no esté escrito en tu anuncio, la IA no improvisa: deja esos casos para que los respondas tú mismo, así puedes concentrarte en las preguntas que de verdad importan.",
-    comparisonGumtreeSection4Title:
-      "4) Verificación de estudiantes para comunidades universitarias",
+      "Cada cuenta de PopOut se verifica con un número de móvil australiano y una única comprobación de ubicación, que se repite cada 30 días para quienes siguen chateando y publicando. La comprobación solo confirma el barrio; el GPS no se guarda. Las Normas de PopOut Market están publicadas en ocho idiomas y se pueden leer sin tener cuenta.",
+    comparisonGumtreeSection4Title: "4) El encuentro, siempre en un lugar público",
     comparisonGumtreeSection4Body:
-      "Una vía de verificación de estudiantes ayuda a mejorar la confianza y la calidad de las coincidencias en las transacciones vinculadas a universidades y alojamientos en Melbourne.",
+      "Vender en PopOut significa entregar el artículo a un vecino en persona. Al publicar, el vendedor elige de una lista un lugar público reconocible, y el comprador ve ese punto en el anuncio. No hay envío postal ni mensajería.",
     comparisonGumtreeTableTitle: "Resumen de funciones (desde el punto de vista del usuario)",
     comparisonGumtreeTableNote:
       "Nota: la columna de la derecha describe patrones de uso públicos generales y puede variar según la cuenta, la región o las actualizaciones del producto.",
@@ -2679,42 +2319,42 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonGumtreeFeature2Popout: "Comprensión multilingüe en publicaciones y chat",
     comparisonGumtreeFeature2Other:
       "La comunicación entre idiomas suele depender de la traducción del propio usuario",
-    comparisonGumtreeFeature3Title: "Respuesta automática con IA",
+    comparisonGumtreeFeature3Title: "Verificación de la cuenta",
     comparisonGumtreeFeature3Popout:
-      "La IA se encarga de las preguntas repetitivas y de los detalles que ya están en tu anuncio; las dudas las deja para ti",
+      "Número de móvil australiano y una única comprobación de ubicación, que se repite cada 30 días",
     comparisonGumtreeFeature3Other:
-      "Las respuestas son totalmente manuales, sin ninguna IA que filtre los mensajes repetitivos",
-    comparisonGumtreeFeature4Title: "Mecanismo de confianza específico para estudiantes",
+      "Normalmente un correo o un inicio de sesión con redes sociales, sin comprobación de ubicación",
+    comparisonGumtreeFeature4Title: "Dónde se hace la entrega",
     comparisonGumtreeFeature4Popout:
-      "La verificación de estudiantes facilita las coincidencias en el campus",
-    comparisonGumtreeFeature4Other: "La vía dedicada de identidad estudiantil puede ser limitada",
+      "Se elige un punto de encuentro público al crear el anuncio y el comprador lo ve",
+    comparisonGumtreeFeature4Other: "Se acuerda por privado en el chat, si es que se acuerda",
     comparisonGumtreeFinalTitle: "Recomendación",
     comparisonGumtreeFinalBody:
-      "Si tus prioridades son la rapidez al publicar, la claridad multilingüe y una respuesta automática con IA que te ahorre tiempo, PopOut puede ser la mejor opción. Comprueba las funciones disponibles actualmente según tu región y tu forma de uso.",
+      "Si tus prioridades son la rapidez al publicar, la claridad multilingüe y saber que al otro lado hay un vecino verificado, PopOut puede ser la mejor opción. Comprueba las funciones disponibles actualmente según tu región y tu forma de uso.",
     comparisonBackLabel: "Volver a las comparaciones",
     comparisonGumtreeCard1Title: "Publicación rápida con IA",
     comparisonGumtreeCard1Body: "Menos búsqueda de categorías y repetición de formularios",
     comparisonGumtreeCard2Title: "Comercio multilingüe",
     comparisonGumtreeCard2Body: "Admite los principales flujos de transacción entre idiomas",
-    comparisonGumtreeCard3Title: "Respuesta automática con IA",
-    comparisonGumtreeCard3Body: "La IA responde las preguntas repetitivas para ahorrarte tiempo",
+    comparisonGumtreeCard3Title: "Vecinos verificados",
+    comparisonGumtreeCard3Body: "Número de móvil australiano y una única comprobación de ubicación",
     comparisonFbH1: "PopOut vs Facebook Marketplace: comparación de la experiencia",
     comparisonFbLead:
-      "Este artículo compara las diferencias prácticas de flujo de trabajo en la configuración de anuncios, la comunicación multilingüe y la respuesta automática con IA. La intención es ayudar a los usuarios a elegir un marketplace cuyo flujo de trabajo se adapte a sus necesidades cotidianas.",
+      "Este artículo compara las diferencias prácticas de flujo de trabajo en la creación de anuncios, la comunicación multilingüe y la verificación de cuentas. La intención es ayudar a los usuarios a elegir un marketplace cuyo flujo de trabajo se adapte a sus necesidades cotidianas.",
     comparisonFbDisclaimer:
       "Aviso: esta página tiene fines únicamente informativos sobre el producto, no constituye asesoramiento legal ni una declaración negativa sobre ninguna plataforma de terceros. Facebook Marketplace y las marcas relacionadas pertenecen a sus respectivos propietarios. La disponibilidad de funciones puede variar según la región, el tipo de cuenta y las actualizaciones del producto.",
     comparisonFbSection1Title: "1) Creación de anuncios con IA a partir de fotos",
     comparisonFbSection1Body:
-      "En PopOut, subir las fotos del artículo puede generar un borrador de título, descripción y sugerencias de categoría. El usuario revisa, añade contexto, indica el estado y el precio, y publica más rápido con menos pasos manuales.",
+      "En PopOut, subir las fotos del artículo puede generar un borrador de título, descripción y categoría. El vendedor revisa, añade contexto, pone el precio y elige un punto de encuentro público, y publica con menos pasos manuales.",
     comparisonFbSection2Title: "2) Comunicación multilingüe en tiempo real",
     comparisonFbSection2Body:
       "PopOut admite inglés, chino simplificado, chino tradicional, coreano, japonés, francés, español y vietnamita. Las publicaciones y los chats pueden leerse en el idioma preferido de cada usuario.",
-    comparisonFbSection3Title: "3) Respuesta automática con IA que ahorra tiempo a los vendedores",
+    comparisonFbSection3Title: "3) Vecinos verificados, no cuentas anónimas",
     comparisonFbSection3Body:
-      "PopOut Market incluye una función de respuesta automática con IA. Por ahora es sencilla y la estamos mejorando de forma constante, con funciones más potentes en camino. Hoy se encarga de los mensajes repetitivos y de poco valor, y responde las preguntas que ya están cubiertas en tu publicación. Ante cualquier duda o algo que no esté escrito en tu anuncio, la IA no improvisa: deja esos casos para que los respondas tú mismo, así dedicas tu tiempo a las preguntas que de verdad importan.",
-    comparisonFbSection4Title: "4) Vía de verificación de estudiantes en Melbourne",
+      "Cada cuenta de PopOut se verifica con un número de móvil australiano y una única comprobación de ubicación, que se repite cada 30 días para quienes siguen chateando y publicando. La comprobación solo confirma el barrio; el GPS no se guarda. Los anuncios y los mensajes se pueden denunciar, y un anuncio restringido se puede apelar una vez.",
+    comparisonFbSection4Title: "4) El encuentro, siempre en un lugar público",
     comparisonFbSection4Body:
-      "Para las comunidades estudiantiles y los conjuntos de alojamiento, PopOut incluye un canal de verificación de estudiantes para mejorar la confianza y la visibilidad en las transacciones vinculadas al campus.",
+      "Vender en PopOut significa entregar el artículo a un vecino en persona. Al publicar, el vendedor elige de una lista un lugar público reconocible, y el comprador ve ese punto en el anuncio. No hay envío postal ni mensajería.",
     comparisonFbTableTitle: "Resumen de funciones (desde el punto de vista del usuario)",
     comparisonFbTableNote:
       "Nota: la columna de la derecha refleja patrones de uso públicos comunes y puede cambiar con el tiempo.",
@@ -2728,26 +2368,54 @@ export const COPY: Record<Locale, SiteCopy> = {
       "El contenido de publicaciones y chats puede entenderse en los idiomas admitidos",
     comparisonFbFeature2Other:
       "La comunicación entre idiomas suele depender de la traducción propia",
-    comparisonFbFeature3Title: "Respuesta automática con IA",
+    comparisonFbFeature3Title: "Verificación de la cuenta",
     comparisonFbFeature3Popout:
-      "La IA responde las preguntas repetitivas y los detalles que ya están en tu anuncio; las dudas quedan a la espera de tu respuesta",
+      "Número de móvil australiano y una única comprobación de ubicación, que se repite cada 30 días",
     comparisonFbFeature3Other:
-      "La mensajería es totalmente manual, sin ninguna IA que gestione las preguntas repetitivas",
-    comparisonFbFeature4Title: "Capa de confianza enfocada en estudiantes",
+      "Normalmente una cuenta de redes sociales ya existente, sin comprobación de ubicación",
+    comparisonFbFeature4Title: "Dónde se hace la entrega",
     comparisonFbFeature4Popout:
-      "Vía de verificación de estudiantes para coincidencias de campus/alojamiento",
-    comparisonFbFeature4Other:
-      "El flujo de identidad específico para estudiantes suele ser limitado o no estar disponible",
+      "Se elige un punto de encuentro público al crear el anuncio y el comprador lo ve",
+    comparisonFbFeature4Other: "Se acuerda por privado en el chat, si es que se acuerda",
     comparisonFbFinalTitle: "Cómo usar esta comparación",
     comparisonFbFinalBody:
-      "Si tus prioridades son publicar más rápido, una comunicación multilingüe más fluida y una respuesta automática con IA que gestione las preguntas repetitivas, el flujo de trabajo de PopOut puede encajar mejor. Comprueba siempre los detalles actuales de las funciones según tu propio contexto de uso.",
+      "Si tus prioridades son publicar más rápido, una comunicación multilingüe más fluida y saber que al otro lado hay un vecino verificado, el flujo de trabajo de PopOut puede encajar mejor. Comprueba siempre los detalles actuales de las funciones según tu propio contexto de uso.",
     comparisonFbCard1Title: "Asistente de anuncios con IA",
     comparisonFbCard1Body: "Borrador de título y descripción a partir de fotos",
     comparisonFbCard2Title: "Traducción en vivo",
     comparisonFbCard2Body: "Publicaciones y chats entre idiomas más fluidos",
-    comparisonFbCard3Title: "Respuesta automática con IA",
-    comparisonFbCard3Body:
-      "La IA se encarga de las preguntas repetitivas para que te centres en las que de verdad importan",
+    comparisonFbCard3Title: "Vecinos verificados",
+    comparisonFbCard3Body: "Número de móvil australiano y una única comprobación de ubicación",
+    heroTitle: "Todo lo que pasa en tu barrio de Melbourne, en un solo feed",
+    heroLead:
+      "PopOut Market es la app de barrio de Melbourne. Compra y vende de segunda mano con vecinos verificados cerca de ti, mira en el mapa las ofertas del momento en las tiendas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
+    heroTrustLine:
+      "Verificación con número de móvil australiano y una única comprobación de ubicación. Gratis en iOS y Android. Ya disponible en {count} barrios de Melbourne.",
+    heroGetAppCta: "Descargar la app",
+    heroBrowseCta: "Ver artículos de segunda mano cerca de ti",
+    homeMarketTitle: "Compra y vende de segunda mano con *vecinos cerca de ti*",
+    homeMarketSubtitle:
+      "Cada anuncio es de alguien que vive cerca y la entrega es siempre en persona. Filtra por Regalo o Menos de $20, o explora por categoría.",
+    homeMarketBrowseAll: "Ver todos los anuncios",
+    homeMarketFilterAll: "Todos",
+    homeMarketFilterGiveaway: "Regalo",
+    homeMarketFilterUnder20: "Menos de $20",
+    homeBulkListingLine:
+      "Añade de una vez las fotos de toda una habitación — PopOut las separa en borradores distintos.",
+    homeShopsTitle: "Las tiendas del barrio, en el *mapa*",
+    homeShopsSubtitle:
+      "Los vecinos recorren las tiendas cercanas y publican lo que encuentran, con el nombre del producto y el precio escritos sobre la foto y traducidos a todos los idiomas de la app. El mapa cubre 16 tiendas del CBD de Melbourne y Docklands, 14 de ellas supermercados asiáticos independientes.",
+    homeShopsCta: "Ver la guía de supermercados asiáticos del CBD de Melbourne",
+    homeCommunityTitle: "Pregunta a tus vecinos *lo que quieras*",
+    homeCommunitySubtitle:
+      "La pestaña Comunidad es donde ocurre la vida del barrio: ofertas locales, preguntas sobre tu zona, recomendaciones y gente que busca comprar. Tú escribes en tu idioma y ellos lo leen en el suyo.",
+    homeCommunityTopics:
+      "Ofertas locales · Preguntas y noticias · Vida local · Busco comprar · Otros",
+    homeTrustTitle: "Vecinos de verdad, *no cuentas anónimas*",
+    homeTrustSubtitle:
+      "Cada cuenta se verifica con un número de móvil australiano y una única comprobación de ubicación que confirma tu barrio y después se descarta, y se repite cada 30 días. Las Normas de PopOut Market están publicadas en ocho idiomas y se pueden leer sin tener cuenta; todo se puede denunciar, restringir y apelar.",
+    homeCoverageTitle: "Ya disponible en *{count} barrios de Melbourne*",
+    homeCoverageCta: "Ver todos los barrios de Melbourne",
     notFoundTitle: "Página no encontrada",
     notFoundDescription: "La página que solicitaste no existe o no es de acceso público.",
   },

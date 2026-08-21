@@ -17,37 +17,43 @@ type SeoEntry = {
 // Australia" (so it ranks for both the city and the country) while making the
 // "starting in Melbourne, more cities coming soon" framing explicit. Keep this
 // framing when editing — do NOT imply nationwide coverage already exists.
+// NOTE: the homepage descriptions state "336 Melbourne suburbs". Every rendered
+// page reads that figure live (see `fetchActiveSuburbCount`), but metadata is
+// authored copy in 8 locales, so it is written out here. Suburbs are activated by
+// hand outside the migration pipeline, so re-check with
+//   GET /rest/v1/suburbs?select=id&is_active=eq.true   (Prefer: count=exact)
+// and update all 8 strings together if it has moved materially.
 const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
   "/": {
     es: {
       title: "PopOut Market | App de segunda mano en Melbourne, Australia y mercado local",
       description:
-        "PopOut Market es la app de segunda mano y el mercado local de Melbourne, Australia, para comprar y vender cerca de ti: descubre artículos por zona, chatea en varios idiomas y queda de forma más segura. Ya disponible en Melbourne y pronto en más ciudades de Australia.",
+        "PopOut Market es la app de segunda mano y el mercado local de Melbourne, Australia, para comprar y vender cerca de ti: descubre artículos por zona, chatea en varios idiomas y queda de forma más segura. Además, ofertas de tiendas locales y consejos del barrio, en 8 idiomas. Disponible en 336 barrios de Melbourne.",
     },
     fr: {
       title: "PopOut Market | Appli d'occasion à Melbourne, Australie & marché de quartier",
       description:
-        "PopOut Market est l'appli d'occasion et le marché de quartier de Melbourne, en Australie, pour acheter et vendre près de chez vous : annonces par quartier, messagerie multilingue et rencontres plus sûres. Disponible à Melbourne, bientôt dans d'autres villes australiennes.",
+        "PopOut Market est l'appli d'occasion et le marché de quartier de Melbourne, en Australie, pour acheter et vendre près de chez vous : annonces par quartier, messagerie multilingue et rencontres plus sûres. En plus : les promos des commerces du quartier et les conseils des voisins, en 8 langues. Disponible dans 336 quartiers de Melbourne.",
     },
     vi: {
       title: "PopOut Market | App đồ cũ tại Melbourne, Úc & chợ đồ cũ khu vực",
       description:
-        "PopOut Market là app đồ cũ và chợ mua bán đồ cũ theo khu vực tại Melbourne, Úc: tìm nội thất, đồ điện cũ gần bạn, chat đa ngôn ngữ và giao dịch trực tiếp an toàn hơn. Hiện đã có mặt tại Melbourne, sắp mở rộng tới nhiều thành phố khác ở Úc.",
+        "PopOut Market là app đồ cũ và chợ mua bán đồ cũ theo khu vực tại Melbourne, Úc: tìm nội thất, đồ điện cũ gần bạn, chat đa ngôn ngữ và giao dịch trực tiếp an toàn hơn. Ngoài ra còn có khuyến mãi từ cửa hàng địa phương và mẹo sống trong khu vực, bằng 8 ngôn ngữ. Đã có mặt tại 336 khu vực ở Melbourne.",
     },
     "zh-Hant": {
       title: "PopOut Market | 澳洲墨爾本二手 App 與同城二手交易平台",
       description:
-        "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手交易平台：依郊區／社區發現身邊的二手好物，支援多語言聊天翻譯與更安全的當面交易，適合留學生搬家與畢業清倉。現已在墨爾本上線，更多澳洲城市陸續開放，敬請期待。",
+        "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手交易平台：依郊區／社區發現身邊的二手好物，支援多語言聊天翻譯與更安全的當面交易，適合留學生搬家與畢業清倉。還能看到附近商店的優惠與鄰里生活情報，支援 8 種語言。已覆蓋墨爾本 336 個城區。",
     },
     ja: {
       title: "PopOut Market | オーストラリア・メルボルンの中古売買アプリ・地元フリマ",
       description:
-        "PopOut Marketはオーストラリア（Australia）メルボルンの中古売買アプリ・地元フリマアプリ。エリアや近所ごとに身近な中古品を探し、翻訳付きの多言語チャットでやり取りし、より安全な手渡しの直接取引で売買できます。現在はメルボルンで提供中、今後オーストラリアの他都市にも順次拡大予定です。",
+        "PopOut Marketはオーストラリア（Australia）メルボルンの中古売買アプリ・地元フリマアプリ。エリアや近所ごとに身近な中古品を探し、翻訳付きの多言語チャットでやり取りし、より安全な手渡しの直接取引で売買できます。近所のお店のセール情報やご近所の生活情報も、8言語で。メルボルンの336サバーブで利用できます。",
     },
     en: {
-      title: "PopOut Market | Melbourne, Australia Second-Hand App & Marketplace",
+      title: "PopOut Market | Melbourne, Australia Second-Hand Marketplace & Neighbourhood App",
       description:
-        "PopOut Market is a second-hand app and neighbourhood marketplace in Melbourne, Australia, for buying and selling locally, with suburb-first discovery, multilingual communication, and safer meetup workflows. Live in Melbourne now, with more Australian cities coming soon.",
+        "PopOut Market is a second-hand app and neighbourhood marketplace in Melbourne, Australia, for buying and selling locally, with suburb-first discovery, multilingual communication, and safer meetup workflows. Plus local shop finds and neighbourhood tips, in 8 languages. Live in 336 Melbourne suburbs.",
       keywords: [
         "Australia second hand app",
         "Australia second hand marketplace",
@@ -59,12 +65,16 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
         "student second hand app Melbourne",
         "safe second hand trading",
         "multilingual marketplace app",
+        "Melbourne neighbourhood app",
+        "neighbourhood app Australia",
+        "local deals Melbourne",
+        "Melbourne community app",
       ],
     },
     "zh-Hans": {
       title: "PopOut Market | 澳洲墨尔本二手App与同城二手交易平台",
       description:
-        "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易App和同城二手市场：按郊区/社区发现身边的二手好物，支持多语言沟通和更安全的当面交易，适合留学生搬家和毕业清仓。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。",
+        "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易App和同城二手市场：按郊区/社区发现身边的二手好物，支持多语言沟通和更安全的当面交易，适合留学生搬家和毕业清仓。还能看到附近商店的优惠和邻里生活情报，支持 8 种语言。已覆盖墨尔本 336 个城区。",
       keywords: [
         "澳洲二手",
         "澳大利亚二手",
@@ -80,7 +90,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     ko: {
       title: "PopOut Market | 호주 멜버른 중고거래 앱 & 동네 중고마켓",
       description:
-        "PopOut Market는 호주(Australia) 멜버른의 중고거래 앱이자 동네 중고마켓입니다. 동네별로 가까운 중고 물품을 찾고, 다국어 채팅과 더 안전한 직거래로 거래하세요. 현재 멜버른에서 운영 중이며, 호주 내 더 많은 도시로 확대될 예정입니다.",
+        "PopOut Market는 호주(Australia) 멜버른의 중고거래 앱이자 동네 중고마켓입니다. 동네별로 가까운 중고 물품을 찾고, 다국어 채팅과 더 안전한 직거래로 거래하세요. 동네 가게 할인 정보와 이웃들의 생활 정보까지, 8개 언어로 제공합니다. 멜버른 336개 서버브에서 이용할 수 있습니다.",
       keywords: [
         "호주 중고거래",
         "호주 중고거래 앱",
@@ -276,6 +286,17 @@ function seoEntry(path: string, locale: Locale): SeoEntry | null {
  */
 export function localizedTitle(path: string, locale: Locale): string | null {
   return seoEntry(path, locale)?.title ?? null;
+}
+
+/**
+ * Localized meta description for a logical path, or null when there is none.
+ *
+ * Used by pages that render their own server-side intro paragraph and want it to
+ * say the same thing the description says — the alternative is a second, drifting
+ * copy of the same sentence in `lib/site-i18n.ts`.
+ */
+export function localizedDescription(path: string, locale: Locale): string | null {
+  return seoEntry(path, locale)?.description ?? null;
 }
 
 /**

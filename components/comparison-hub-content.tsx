@@ -66,9 +66,12 @@ export function ComparisonHubContent() {
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-8 sm:py-10`}>
       <div className={`${INNER_MAX} max-w-5xl`}>
-        <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+        {/* h2, not h1. `/comparison` already renders its own <h1> in
+            app/(site)/[locale]/comparison/page.tsx before mounting this
+            component; two <h1>s were being served on every locale of that page. */}
+        <h2 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.title}
-        </h1>
+        </h2>
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">{copy.intro}</p>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">

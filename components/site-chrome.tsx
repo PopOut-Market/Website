@@ -4,14 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { StarFull } from "@/components/stars";
 import { SiteShellProvider } from "@/components/site-chrome-context";
 import {
   APP_STORE_BADGE_SRC,
-  APP_STORE_RATING,
   APP_STORE_URL,
   FOOTER_CONTACT_EMAIL,
-  FOOTER_SOCIAL_IMG_INSTAGRAM,
   FOOTER_SOCIAL_IMG_LINKEDIN,
   FOOTER_SOCIAL_IMG_REDNOTE,
   GOOGLE_PLAY_BADGE_SRC,
@@ -20,7 +17,6 @@ import {
   LOGO_MARK_SRC,
   SHELL_X,
   SITE_MAIN_SLOT_CLASS,
-  footerSocialUrlInstagram,
   footerSocialUrlLinkedIn,
   footerSocialUrlRednote,
 } from "@/lib/site-config";
@@ -29,6 +25,7 @@ import { LOCALE_FONT_CLASS, fontLatinRounded } from "@/lib/site-fonts";
 import { localeFromPathname, stripLocalePrefix, toLocalePath } from "@/lib/site-locale-routing";
 import { localizedTitle } from "@/lib/site-seo-copy";
 import { MELBOURNE_REGIONS } from "@/lib/melbourne-regions";
+import { MARKET_CATEGORIES } from "@/lib/market-categories";
 
 function FooterSocialLink({
   href,
@@ -152,6 +149,27 @@ function regionsLabel(locale: Locale): string {
       return "Zonas de Melbourne";
     default:
       return "Melbourne regions";
+  }
+}
+
+function categoriesLabel(locale: Locale): string {
+  switch (locale) {
+    case "zh-Hans":
+      return "按分类逛二手";
+    case "zh-Hant":
+      return "依分類逛二手";
+    case "ko":
+      return "카테고리별 중고";
+    case "ja":
+      return "カテゴリー別の中古";
+    case "vi":
+      return "Đồ cũ theo danh mục";
+    case "fr":
+      return "Occasion par catégorie";
+    case "es":
+      return "Segunda mano por categoría";
+    default:
+      return "Second-hand by category";
   }
 }
 
@@ -468,21 +486,12 @@ export function SiteChrome({
                       {t.downloadLine}
                     </p>
                     <p className="mt-1 text-xs leading-snug text-gray-600 sm:text-sm">{t.slogan}</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5">
-                      <span
-                        className="inline-flex items-center gap-0.5"
-                        role="img"
-                        aria-label={t.ratingAria}
-                      >
-                        {[0, 1, 2, 3, 4].map((i) => (
-                          <StarFull key={i} className="h-4 w-4 text-brand-500" />
-                        ))}
-                      </span>
-                      <span className="text-xs font-semibold text-gray-700">
-                        {APP_STORE_RATING}
-                      </span>
-                      <span className="text-xs text-gray-500">App Store</span>
-                    </div>
+                    {/* No star rating here. It showed the Apple 5.0 (from 18 ratings) site-wide
+                        while Google Play sits at 4.6 — selective disclosure over a combined base
+                        of 28. The honest version, naming both figures with an as-of date, lives
+                        in prose on /about. Do not reinstate it, and never promote it into an
+                        aggregateRating: first-party rating markup on your own product is a
+                        known manual-action trigger. */}
                   </div>
                 </div>
 
@@ -535,20 +544,12 @@ export function SiteChrome({
                     />
                   </div>
                 </FooterSocialLink>
-                <FooterSocialLink
-                  href={footerSocialUrlInstagram()}
-                  ariaLabel={t.footerSocialInstagramAria}
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                    <Image
-                      src={FOOTER_SOCIAL_IMG_INSTAGRAM}
-                      alt=""
-                      width={32}
-                      height={32}
-                      className="h-full w-auto max-w-full object-contain"
-                    />
-                  </div>
-                </FooterSocialLink>
+                {/* Instagram is deliberately absent. The link pointed at
+                    https://www.instagram.com/?hl=en — Instagram's generic homepage — on every
+                    page in eight languages, labelled "PopOut Market on Instagram". A dead social
+                    link is a weak entity signal and it must never enter Organization.sameAs.
+                    Restore it only once @popoutmarket has content and confirmed ownership; set
+                    NEXT_PUBLIC_FOOTER_SOCIAL_INSTAGRAM_URL and re-add this block. */}
                 <FooterSocialLink
                   href={footerSocialUrlLinkedIn()}
                   ariaLabel={t.footerSocialLinkedInAria}
@@ -634,6 +635,23 @@ export function SiteChrome({
                     />
                   </svg>
                 </Link>
+              </div>
+
+              <div className="mt-5">
+                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-500 min-[760px]:text-left">
+                  {categoriesLabel(locale)}
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-2 min-[760px]:justify-start">
+                  {MARKET_CATEGORIES.map((category) => (
+                    <Link
+                      key={category.path}
+                      href={withLocale(category.path)}
+                      className="inline-flex items-center rounded-full border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-black/70 transition-colors hover:border-brand-500 hover:text-brand-700"
+                    >
+                      {category.name[locale]}
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               <div className="mt-5">

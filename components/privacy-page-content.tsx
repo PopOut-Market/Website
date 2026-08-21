@@ -66,9 +66,15 @@ export function PrivacyPageContent() {
             <PrivacySection title="What Personal Information We Collect">
               <p>We may collect the following categories of personal information:</p>
               <ul className="list-disc space-y-1 pl-5">
+                {/* Corrected 2026-08-21. This previously read "your name, email address and
+                    phone number". PopOut authentication is an Australian mobile number plus a
+                    one-time SMS code and nothing else — there is no email field, no password
+                    and no legal-name field on an account. Overstating collection is the safe
+                    direction for privacy law but it contradicted the sentence two paragraphs
+                    up, which correctly says "verified phone number and verified suburb". */}
                 <li>
-                  Identity and contact information, such as your name, email address and phone
-                  number;
+                  Identity and contact information, limited to a verified Australian mobile number.
+                  PopOut accounts have no email address, no password and no legal name;
                 </li>
                 <li>
                   Account and profile information, including your suburb verification status and

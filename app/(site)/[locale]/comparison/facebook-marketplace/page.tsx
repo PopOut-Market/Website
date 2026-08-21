@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
     title: loc ? { absolute: loc.title } : "PopOut vs Facebook Marketplace | Feature Comparison",
     description: loc
       ? loc.description
-      : "A friendly feature comparison focused on faster listing, multilingual communication, safer meetup flow, and student-friendly trust tools in Melbourne.",
+      : "A friendly feature comparison focused on faster listing, multilingual communication, public meetup spots, and how each app verifies who you are trading with in Melbourne.",
     alternates: {
       canonical: toLocalePath(PATH, locale),
       languages: localizedAlternates(PATH),

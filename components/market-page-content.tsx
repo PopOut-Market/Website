@@ -152,7 +152,12 @@ export function MarketPageContent() {
     <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col bg-surface-base`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
         <div className="w-full shrink-0 pb-6 pt-8">
-          <h1 className="text-balance text-xl font-semibold tracking-tight text-black sm:text-2xl">
+          {/* Was an <h1>. The page's real <h1> is now server-rendered above this
+              component (see app/(site)/[locale]/market/page.tsx) so that a
+              crawler which runs no JavaScript sees a heading describing the page
+              rather than the current value of an area picker. This stays a
+              heading for screen-reader structure, one level down. */}
+          <h2 className="text-balance text-xl font-semibold tracking-tight text-black sm:text-2xl">
             <button
               ref={areaTriggerRef}
               type="button"
@@ -172,7 +177,7 @@ export function MarketPageContent() {
                 <path d="M3 7l7 6 7-6z" />
               </svg>
             </button>
-          </h1>
+          </h2>
         </div>
 
         <div className="w-full shrink-0 pb-5">

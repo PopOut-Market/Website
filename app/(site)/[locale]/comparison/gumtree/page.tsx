@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
     title: loc ? { absolute: loc.title } : "PopOut vs Gumtree | Feature Comparison",
     description: loc
       ? loc.description
-      : "Explore key workflow differences in listing setup, multilingual chat, AI auto-reply, and student verification support.",
+      : "Explore key workflow differences in listing setup, multilingual chat, account verification, and where the handover actually happens.",
     alternates: {
       canonical: toLocalePath(PATH, locale),
       languages: localizedAlternates(PATH),

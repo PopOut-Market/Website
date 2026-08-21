@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 // Site-wide social share image (Open Graph). Placed at the app root so every
 // route inherits it. Generated at build time with next/og.
-export const alt = "PopOut Market — Melbourne's second-hand marketplace";
+export const alt = "PopOut Market — the neighbourhood app for Melbourne";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -59,7 +59,7 @@ export default function Image() {
             color: "#374151",
           }}
         >
-          Melbourne&apos;s second-hand marketplace
+          The neighbourhood app for Melbourne
         </div>
         <div
           style={{

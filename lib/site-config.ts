@@ -41,14 +41,32 @@ export const LOGO_MARK_SRC = "/images/app-icon.png";
 export const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 export const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
-export const APP_STORE_URL = "https://apps.apple.com/au/app/popout-market-buy-sell/id6761421626";
+// Canonical Apple URL, confirmed against the iTunes Lookup API on 2026-08-21.
+// The old slug `popout-market-buy-sell` still 301s here, but it hard-codes the
+// retired "buy & sell" positioning into every link, share card and sameAs entry
+// the site emits. Apple now serves this listing as `popout-market`.
+export const APP_STORE_URL = "https://apps.apple.com/au/app/popout-market/id6761421626";
 export const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=au.com.popoutmarket";
 
 export const FOOTER_CONTACT_EMAIL = "contact@popoutmarket.com.au";
 
-/** Real App Store rating shown in the footer (source: App Store). Update this if
- *  the live store rating changes — it is displayed without a count by choice. */
-export const APP_STORE_RATING = "5.0";
+/**
+ * Store ratings, for prose use on /about only — never as a star display and never
+ * as schema.org `aggregateRating`.
+ *
+ * The footer used to render "★★★★★ 5.0 App Store" site-wide. That is the Apple
+ * figure from 18 ratings, while Google Play sits at 4.6 from 10 reviews: showing
+ * only the higher one over a combined base of 28 is selective disclosure. Quote
+ * both, with the as-of date, or quote neither. First-party `aggregateRating`
+ * markup on your own product is a known manual-action trigger — do not add it.
+ */
+export const STORE_RATINGS = {
+  appleRating: "5.0",
+  appleRatingCount: 18,
+  playRating: "4.6",
+  playReviewCount: 10,
+  asOf: "2026-08-21",
+} as const;
 
 /** Registered office / postal address shown in the site footer. */
 export const FOOTER_ADDRESS_LINE = "1003/151 City Rd, Southbank VIC 3006, Australia";

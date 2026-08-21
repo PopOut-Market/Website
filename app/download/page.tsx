@@ -11,7 +11,7 @@ import Image from "next/image";
 
 const TITLE = "Download PopOut Market — iOS & Android";
 const DESCRIPTION =
-  "Download the PopOut Market app — Melbourne's second-hand marketplace. Available on the App Store and Google Play.";
+  "Download the PopOut Market app — the neighbourhood app for Melbourne. Buy and sell second-hand with verified neighbours, see local shop specials on the map, and ask your neighbours anything. Free on the App Store and Google Play.";
 
 // Same share card as the homepage: the OG logo image + title/description, on
 // both Open Graph and Twitter.
@@ -59,7 +59,7 @@ export default function DownloadPage() {
           PopOut Market
         </h1>
         <p className="mt-2 text-sm text-gray-700 sm:text-base">
-          Melbourne&apos;s second-hand marketplace
+          The neighbourhood app for Melbourne
         </p>
         <p className="mt-1 text-xs text-gray-600 sm:text-sm">
           Download the PopOut Market app for iOS or Android

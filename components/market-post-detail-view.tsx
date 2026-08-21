@@ -72,12 +72,10 @@ function PinIcon() {
 }
 
 type MarketPostDetailViewCopy = {
-  marketPostDeliverableBadge: string;
   marketPostFixedPriceLabel: string;
   marketPostDescriptionHeading: string;
   marketPostPreferredMeetupLabel: string;
   marketPostOtherItemsHeading: string;
-  marketPostSellerVerifiedLabel: string;
   marketPostContactSellerCta: string;
   marketPostListedInOn: string;
   marketPostListedIn: string;
@@ -201,11 +199,11 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
         </div>
         <div className="min-w-0 flex-1">
           <p className="truncate text-base font-semibold text-black">{detail.sellerLabel}</p>
-          {detail.sellerVerifiedSuburbLabel ? (
-            <p className="truncate text-sm text-black/55">
-              {copy.marketPostSellerVerifiedLabel} {detail.sellerVerifiedSuburbLabel}
-            </p>
-          ) : null}
+          {/* The "Verified in {suburb}" line is deliberately not rendered. The app
+              removed it from its own seller card on 2026-05-17 because the value
+              drifts: it reports the suburb the seller verified in, which is often
+              not where the listing is. The RPC still returns the field; the website
+              must not resurrect a label the product retired. */}
         </div>
       </div>
 

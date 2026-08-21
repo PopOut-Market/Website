@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Marketing + market-browsing website for **PopOut Market**, a Melbourne second-hand marketplace app. Next.js (App Router) on React 19, TypeScript (strict), Tailwind CSS v4, Supabase. Deployed on Netlify. The site is SEO-focused (many suburb / comparison landing pages) and fully multilingual (8 locales).
+Marketing + market-browsing website for **PopOut Market**, the neighbourhood app for Melbourne. Next.js (App Router) on React 19, TypeScript (strict), Tailwind CSS v4, Supabase. Deployed on Netlify. SEO/GEO-focused (category, suburb and comparison landing pages) and fully multilingual (8 locales).
+
+**Positioning (matches the live App Store listing — keep them in sync).** Subtitle *"Your Neighbourhood Life Guide"*; four pillars: Local Deals & Tips, Secondhand Market, Neighbourhood Life, 100% Real Neighbours. Second-hand is one pillar, not the whole product — but it is the pillar the site actually ranks for, so it stays first and largest on the homepage and keeps the "second-hand / 二手 / 중고 / 中古" vocabulary in every URL and `<title>` that already carries it.
+
+**Two rules that are not negotiable.**
+1. **Never describe a feature the app does not ship.** Copy drifts out of sync with the product faster than anyone expects, and on this site a claim can end up inside JSON-LD or a competitor comparison, where it is much harder to spot. Verify every product claim against `app-v2/docs/features/` before you write it, and re-verify when you touch a page you did not write. Specifically: there is no auto-reply, no student verification, no "Safety Zone" concept, and no condition / negotiable / delivery field on a listing — the handover is always in person.
+2. **Verification is phrased exactly one way:** "an Australian mobile number and a one-time location check", re-checked every 30 days, confirming the suburb only, GPS not stored. Never "identity check", "ID check", "background check", "age check", and never a scam statistic.
 
 ## Commands
 
@@ -31,10 +37,10 @@ Supabase vars are read with **Expo prefix first, Next prefix as fallback** (the 
 
 ### Locale routing (the central mechanism)
 
-The app supports 8 locales (`en`, `zh-Hans`, `zh-Hant`, `ko`, `ja`, `vi`, `fr`, `es`) but **the App Router file tree has NO `[locale]` segment**. Instead:
+The site supports 8 locales (`en`, `zh-Hans`, `zh-Hant`, `ko`, `ja`, `vi`, `fr`, `es`). Routes live under **`app/(site)/[locale]/…`** — the locale is a real dynamic segment, resolved with `localeFromParams()` from `lib/server-locale.ts`.
 
-- `middleware.ts` runs on every non-API/non-admin/non-asset path. If the URL lacks a locale prefix (e.g. `/about`), it **308-redirects** to a locale-prefixed URL (e.g. `/en/about`), picking the locale from the `popout_locale` cookie → referer → `Accept-Language` → default `en`. If the URL already has a locale prefix, it **rewrites** to the un-prefixed path so the route files match, and refreshes the cookie.
-- So a request to `/en/about` is served by `app/(site)/about/page.tsx`. The browser keeps the locale in the URL; the route tree never sees it.
+- `middleware.ts` runs on every non-API/non-admin/non-asset path. If the URL lacks a locale prefix (e.g. `/about`), it **308-redirects** to a locale-prefixed URL (e.g. `/en/about`), picking the locale from the `popout_locale` cookie → referer → `Accept-Language` → default `en`.
+- Every path is therefore 8 URLs. **A thin page is never a one-page problem here — it is an eight-URL problem.** Weigh that before adding a route.
 - `lib/site-locale-routing.ts` is the single source for segment↔code mapping (`localeFromSegment`, `localeSegment`, `stripLocalePrefix`, `toLocalePath`). `LEGACY_SUBURB_REDIRECTS` in the middleware maps old SEO slugs to new `/melbourne-suburbs/<x>` paths.
 - When adding/removing a locale, update `lib/site-i18n.ts` (`Locale`, `LOCALES`, `LANGUAGE_LIBRARY`, `COPY`), `lib/site-locale-routing.ts` maps, and `lib/seo.ts` (`localizedAlternates`, `LOCALE_SEGMENTS`).
 
@@ -64,6 +70,8 @@ Tailwind v4 (`@import "tailwindcss"` in `app/globals.css`, PostCSS plugin). Shar
 ## Conventions
 
 - Page files stay thin (metadata + render a content component); put markup/logic in `components/*-content.tsx` marked `"use client"`.
-- New indexable routes must be added to `app/sitemap.ts` (`INDEXABLE_PATHS`) and given `canonical` + `localizedAlternates(path)` in their `metadata`.
+- New indexable routes must be added to `app/sitemap.ts` (`INDEXABLE_PATHS`) and given `canonical` + `localizedAlternates(path)` in their `metadata`. Mark each entry `live` or `static` so its `lastModified` is honest — do not stamp build time on authored pages.
+- **A page that renders data must render it on the server.** Every page body is `"use client"`, and no AI retrieval crawler executes JavaScript, so a `useEffect` fetch is invisible to them. Use `lib/supabase/server-feed.ts`, and read its header comment first: the RPC must be called over **GET** and the route needs **`export const dynamic = "force-static"`** alongside `revalidate`, or the page silently becomes on-demand SSR.
+- **JSON-LD comes from `lib/jsonld.ts`.** One `Organization`/`WebSite`/`MobileApplication` node, referenced by `@id`. Do not declare a second one — a one-character difference in `legalName` splits the entity. Never emit `FAQPage` (rich result deprecated 2026-05-07), `LocalBusiness` (no visitable premises), `aggregateRating` on our own product, or `Event` for any promotion or discount.
 - `eslint.config.mjs` disables several `react-hooks` rules (`exhaustive-deps`, `immutability`, `set-state-in-effect`) — don't rely on them firing.
 - Legal copy source-of-truth is in `docs/` (`PRIVACY_POLICY_WEBSITE_SOURCE.md`, `TERMS_OF_USE_WEBSITE_SOURCE.md`).

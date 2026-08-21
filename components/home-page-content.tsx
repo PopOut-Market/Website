@@ -1,179 +1,218 @@
 "use client";
 
 import { AiPostDemo } from "@/components/ai-post-demo";
-import { AutoReplyDemo } from "@/components/auto-reply-demo";
-import { HeroCarousel } from "@/components/hero-carousel";
+import { BrandEmphasis } from "@/components/brand-emphasis";
+import { HomeListingStrip } from "@/components/home-listing-strip";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { TranslationDemo } from "@/components/translation-demo";
-import { useSectionVisible } from "@/lib/use-section-visible";
-import { useReducedMotion } from "@/lib/use-reduced-motion";
+import {
+  APP_STORE_URL,
+  INNER_MAX,
+  PRIMARY_BUTTON_CLASS,
+  SECONDARY_PILL_CLASS,
+} from "@/lib/site-config";
+import type { FeedListing } from "@/lib/supabase/server-feed";
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
-// useLayoutEffect on the client (sync, pre-paint), useEffect on the server (no SSR warning).
-const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+/**
+ * The homepage, rebuilt around the app's actual positioning.
+ *
+ * Two rules govern the section order, and both were deliberate:
+ *
+ *  1. The second-hand block stays first and stays the largest. This page is the
+ *     one URL verified to rank #1 and to be quoted first by an answer engine for
+ *     `melbourne second hand marketplace app`. Leading with Local Deals would
+ *     demote a vertical holding ~1,100 live listings in favour of one that is a
+ *     few weeks old and covers 16 CBD shops. The repositioning is *added*
+ *     (sections 4-6), not substituted.
+ *  2. Every claim maps to something the app ships today. The previous version of
+ *     this page led with an AI auto-reply demo for a feature switched off for
+ *     every user on 2026-06-19.
+ *
+ * The rotating-word <h1> is gone. It hard-coded "used {item}" with no geography,
+ * and its invisible width-measuring span meant the server HTML read
+ * "Find used furniturefurniture in PopOut Market" — the doubled word being
+ * exactly what a text-extracting crawler took as the page's primary heading.
+ */
 
-export function HomePageContent() {
-  const { locale, t, openLanguageModal, localizePath } = useSiteShell();
-  const { ref: heroRef, active: heroActive } = useSectionVisible({
-    startThreshold: 0.12,
-    stopThreshold: 0.05,
-    pauseDelayMs: 700,
-  });
-  const reducedMotion = useReducedMotion();
-  const [locationIndex, setLocationIndex] = useState(0);
-  const [locationVisible, setLocationVisible] = useState(true);
-  const locationCycleTimerRef = useRef<number | null>(null);
-  const locationTransitionTimerRef = useRef<number | null>(null);
-  const measureRef = useRef<HTMLSpanElement | null>(null);
-  const [slotWidth, setSlotWidth] = useState<number>();
+function Section({
+  id,
+  title,
+  children,
+  tone = "white",
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+  tone?: "white" | "raised";
+}) {
+  return (
+    <section
+      id={id}
+      className={`w-full px-4 py-14 sm:px-6 sm:py-20 ${tone === "raised" ? "bg-surface-raised" : "bg-white"}`}
+    >
+      <div className={INNER_MAX}>
+        <h2 className="text-balance text-2xl font-bold leading-tight tracking-tight text-black sm:text-3xl md:text-4xl">
+          <BrandEmphasis text={title} />
+        </h2>
+        {children}
+      </div>
+    </section>
+  );
+}
 
-  const items = t.heroRotatingItems;
-  const rotatingItem = items[locationIndex % items.length] ?? "";
+export function HomePageContent({
+  listings,
+  priceLabels,
+  suburbCount,
+}: {
+  listings: FeedListing[];
+  priceLabels: string[];
+  suburbCount: number;
+}) {
+  const { t, localizePath } = useSiteShell();
 
-  // Per-locale H1 template with {brand} + {item}; word order is locale-native.
-  const titleParts = t.heroTitleTemplate.split(/(\{brand\}|\{item\})/);
-  const rotatingClass = `text-black transition-opacity duration-300 ease-out ${
-    locationVisible ? "opacity-100" : "opacity-0"
-  }`;
-
-  const clearLocationTimers = useCallback(() => {
-    if (locationCycleTimerRef.current !== null) {
-      window.clearTimeout(locationCycleTimerRef.current);
-      locationCycleTimerRef.current = null;
-    }
-    if (locationTransitionTimerRef.current !== null) {
-      window.clearTimeout(locationTransitionTimerRef.current);
-      locationTransitionTimerRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!heroActive || reducedMotion) {
-      clearLocationTimers();
-      return;
-    }
-
-    // Fade the word out → resize the slot to the next word while it's hidden → fade
-    // the new word in at its settled width. The length eases between widths with no
-    // overlap and no trailing gap (the word is never shown at a mismatched width).
-    const runCycle = () => {
-      setLocationVisible(false);
-      locationTransitionTimerRef.current = window.setTimeout(() => {
-        setLocationIndex((prev) => prev + 1);
-        locationCycleTimerRef.current = window.setTimeout(() => {
-          setLocationVisible(true);
-          locationTransitionTimerRef.current = window.setTimeout(runCycle, 1500);
-        }, 400);
-      }, 300);
-    };
-
-    locationCycleTimerRef.current = window.setTimeout(runCycle, 1500);
-
-    return clearLocationTimers;
-  }, [heroActive, reducedMotion, clearLocationTimers]);
-
-  // Measure the new word SYNCHRONOUSLY (before paint) so the slot's width transition
-  // starts immediately on change and reliably settles before the word fades back in.
-  useIsoLayoutEffect(() => {
-    const w = measureRef.current?.offsetWidth;
-    if (w) setSlotWidth(w); // ignore 0 → slot stays auto (= word width), never collapses
-  }, [rotatingItem]);
-
-  // Re-measure after first paint (layout settled) and on font resize (the title is
-  // clamp()-sized, so word widths change). Zero widths are ignored, as above.
-  useEffect(() => {
-    const el = measureRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.offsetWidth;
-      if (w) setSlotWidth(w);
-    };
-    const raf = requestAnimationFrame(measure);
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-    };
-  }, []);
+  const trustLine = t.heroTrustLine.replace("{count}", String(suburbCount));
+  const coverageTitle = t.homeCoverageTitle.replace("{count}", String(suburbCount));
 
   return (
     <>
-      <section
-        ref={heroRef as React.RefObject<HTMLElement>}
-        className="flex flex-col items-center justify-center bg-white px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16 md:pt-24"
-      >
-        <div className="flex max-w-4xl flex-col items-center text-center">
-          <h1 className="whitespace-nowrap text-[clamp(1rem,4.5vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-black">
-            {titleParts.map((part, i) => {
-              if (part === "{brand}") {
-                return (
-                  <span key={i} className="text-black">
-                    PopOut Market
-                  </span>
-                );
-              }
-              if (part === "{item}") {
-                return (
-                  <span
-                    key={i}
-                    className="relative inline-block transition-[width] duration-[360ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-                    style={{ width: slotWidth }}
-                  >
-                    {/* Invisible in-flow measurer: sets height/baseline + the target width. */}
-                    <span ref={measureRef} aria-hidden className="invisible whitespace-nowrap">
-                      {rotatingItem}
-                    </span>
-                    {/* Visible word — only ever shown at the settled width (it fades while
-                        the slot resizes), so it never overflows or leaves a gap. */}
-                    <span
-                      aria-live="polite"
-                      className={`absolute left-0 top-0 whitespace-nowrap ${rotatingClass}`}
-                    >
-                      {rotatingItem}
-                    </span>
-                  </span>
-                );
-              }
-              return part ? <span key={i}>{part}</span> : null;
-            })}
+      {/* 1 — Hero */}
+      <section className="flex flex-col items-center bg-white px-4 pb-14 pt-12 sm:px-6 sm:pb-16 sm:pt-16 md:pt-24">
+        <div className="flex max-w-3xl flex-col items-center text-center">
+          <h1 className="text-balance text-[clamp(1.75rem,5.5vw,3.5rem)] font-bold leading-[1.08] tracking-tight text-black">
+            {t.heroTitle}
           </h1>
-
-          <p className="mt-4 max-w-2xl text-balance text-base text-black/55 sm:text-lg">
-            {t.heroSecondaryPrefix}
-            {t.heroSecondaryLink ? (
-              <button
-                type="button"
-                onClick={() => openLanguageModal()}
-                className="rounded-sm font-bold text-black transition-colors hover:text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
-              >
-                {t.heroSecondaryLink}
-              </button>
-            ) : null}
-            {t.heroSecondarySuffix}
+          <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-black/60 sm:text-lg">
+            {t.heroLead}
           </p>
-        </div>
+          <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-black/45">
+            {trustLine}
+          </p>
 
-        <div className="mt-10 w-full sm:mt-12">
-          <HeroCarousel
-            locale={locale}
-            noImageAria={t.marketPostNoImageAria}
-            loadingListingsAria={t.marketSupabaseLoadingAria}
-          />
+          <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+            <Link
+              href={APP_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${PRIMARY_BUTTON_CLASS} w-full px-8 py-4 text-base sm:w-auto sm:text-lg`}
+            >
+              {t.heroGetAppCta}
+            </Link>
+            <Link
+              href={localizePath("/market")}
+              className={`${SECONDARY_PILL_CLASS} w-full px-8 py-4 text-base sm:w-auto sm:text-lg`}
+            >
+              {t.heroBrowseCta}
+            </Link>
+          </div>
         </div>
-
-        <Link
-          href={localizePath("/market")}
-          className="mt-8 inline-flex items-center justify-center rounded-full bg-brand-500 px-8 py-4 text-base font-bold text-white shadow-[0_5px_0_0_var(--color-brand-700)] transition-all duration-100 hover:bg-brand-600 active:translate-y-[5px] active:shadow-[0_0_0_0_var(--color-brand-700)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 motion-reduce:transition-none sm:mt-10 sm:text-lg"
-        >
-          {t.heroExploreCta}
-        </Link>
       </section>
 
+      {/* 2 — Second-hand. First and largest, on purpose: this is the equity. */}
+      <Section id="second-hand" title={t.homeMarketTitle} tone="raised">
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">
+          {t.homeMarketSubtitle}
+        </p>
+
+        <div className="mt-5 flex flex-wrap gap-2" aria-hidden>
+          {[t.homeMarketFilterAll, t.homeMarketFilterGiveaway, t.homeMarketFilterUnder20].map(
+            (chip, i) => (
+              <span
+                key={chip}
+                className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold ${
+                  i === 0
+                    ? "border-brand-500 bg-brand-500 text-white"
+                    : "border-gray-400 bg-white text-gray-900"
+                }`}
+              >
+                {chip}
+              </span>
+            ),
+          )}
+        </div>
+
+        <div className="mt-6">
+          <HomeListingStrip listings={listings} priceLabels={priceLabels} />
+        </div>
+
+        <div className="mt-7">
+          <Link
+            href={localizePath("/market")}
+            className={`${SECONDARY_PILL_CLASS} px-6 py-3 text-sm sm:text-base`}
+          >
+            {t.homeMarketBrowseAll}
+          </Link>
+        </div>
+      </Section>
+
+      {/* 3 — Translation. Rescoped from listings-only to listings, chat AND
+          community posts; all three are true today. */}
       <TranslationDemo t={t} />
+
+      {/* 4 — AI listing creation, plus the bulk flow the site has never mentioned. */}
       <AiPostDemo t={t} />
-      <AutoReplyDemo t={t} />
+      <div className="bg-white px-4 pb-14 sm:px-6">
+        <div className={INNER_MAX}>
+          <p className="text-balance text-center text-base font-medium text-black/55 sm:text-lg">
+            {t.homeBulkListingLine}
+          </p>
+        </div>
+      </div>
+
+      {/* 5 — Local deals on the map. NEW: App Store pillar 1. */}
+      <Section id="local-shops" title={t.homeShopsTitle} tone="raised">
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">
+          {t.homeShopsSubtitle}
+        </p>
+        <div className="mt-6">
+          <Link
+            href={localizePath("/melbourne-cbd-asian-grocery-guide")}
+            className={`${SECONDARY_PILL_CLASS} px-6 py-3 text-sm sm:text-base`}
+          >
+            {t.homeShopsCta}
+          </Link>
+        </div>
+      </Section>
+
+      {/* 6 — Community. NEW: App Store pillar 3.
+          No post content of any kind is rendered here, and none ever should be:
+          the app's own spec forbids making a community post publicly searchable,
+          and the live /l/ share handler serves `noindex, nofollow` to enforce it.
+          The five topic names are product labels, not user content. */}
+      <Section id="community" title={t.homeCommunityTitle}>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">
+          {t.homeCommunitySubtitle}
+        </p>
+        <p className="mt-5 text-sm font-semibold text-black/70 sm:text-base">
+          {t.homeCommunityTopics}
+        </p>
+      </Section>
+
+      {/* 7 — Verification. NEW: App Store pillar 4. Occupies the slot the
+          auto-reply demo vacated. Phrasing is load-bearing: an Australian mobile
+          number and a one-time location check, never an identity, ID, age or
+          background check, and never a scam statistic. */}
+      <Section id="real-neighbours" title={t.homeTrustTitle} tone="raised">
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">
+          {t.homeTrustSubtitle}
+        </p>
+      </Section>
+
+      {/* 8 — Coverage. `aboutVisionP1` is promoted out of /about, where the
+          brand's clearest statement of what it is for was buried. */}
+      <Section id="coverage" title={coverageTitle}>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/60">{t.aboutVisionP1}</p>
+        <div className="mt-6">
+          <Link
+            href={localizePath("/melbourne-suburbs")}
+            className={`${SECONDARY_PILL_CLASS} px-6 py-3 text-sm sm:text-base`}
+          >
+            {t.homeCoverageCta}
+          </Link>
+        </div>
+      </Section>
     </>
   );
 }

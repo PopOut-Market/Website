@@ -120,12 +120,10 @@ export function MarketPostPageContent() {
 
   const detailCopy = useMemo(
     () => ({
-      marketPostDeliverableBadge: t.marketPostDeliverableBadge,
       marketPostFixedPriceLabel: t.marketPostFixedPriceLabel,
       marketPostDescriptionHeading: t.marketPostDescriptionHeading,
       marketPostPreferredMeetupLabel: t.marketPostPreferredMeetupLabel,
       marketPostOtherItemsHeading: t.marketPostOtherItemsHeading,
-      marketPostSellerVerifiedLabel: t.marketPostSellerVerifiedLabel,
       marketPostContactSellerCta: t.marketPostContactSellerCta,
       marketPostListedInOn: t.marketPostListedInOn,
       marketPostListedIn: t.marketPostListedIn,
