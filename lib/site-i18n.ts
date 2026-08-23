@@ -58,6 +58,10 @@ export type SiteCopy = {
   marketLocationDeniedHint: string;
   marketLocationUnsupportedHint: string;
   marketLocationRetry: string;
+  marketPaginationAria: string;
+  marketPagePrev: string;
+  marketPageNext: string;
+  marketPageNumberAria: string;
   marketPostBack: string;
   marketPostBackAria: string;
   marketPostNotFoundTitle: string;
@@ -245,6 +249,18 @@ export type SiteCopy = {
   homeCommunityTopics: string;
   homeTrustTitle: string;
   homeTrustSubtitle: string;
+  homeTrustStep1: string;
+  homeTrustStep2: string;
+  homeTrustStep3: string;
+  topicDeals: string;
+  topicAsk: string;
+  topicLife: string;
+  topicBuy: string;
+  topicOther: string;
+  safetyHeading: string;
+  safetyReport: string;
+  safetyRestrict: string;
+  safetyAppeal: string;
   homeCoverageTitle: string;
   homeCoverageCta: string;
   notFoundTitle: string;
@@ -285,6 +301,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "This browser does not support location, so distances cannot be shown.",
     marketLocationRetry: "Ask for location again",
+    marketPaginationAria: "Listing pages",
+    marketPagePrev: "Previous",
+    marketPageNext: "Next",
+    marketPageNumberAria: "Page {page}",
     marketPostBack: "Back",
     marketPostBackAria: "Back to Market",
     marketPostNotFoundTitle: "Listing not found",
@@ -494,7 +514,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "Smoother cross-language posts and chat",
     comparisonFbCard3Title: "Verified neighbours",
     comparisonFbCard3Body: "Australian mobile number plus a one-time location check",
-    heroTitle: "Everything in your Melbourne suburb, in one feed",
+    heroTitle: "Everything happening in {suburb}",
     heroLead:
       "PopOut Market is the neighbourhood app for Melbourne. Buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything — each of you writing in your own language.",
     heroTrustLine:
@@ -512,7 +532,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Add a whole room's photos at once — PopOut sorts them into separate drafts.",
     homeShopsTitle: "Local shops on the *map*",
     homeShopsSubtitle:
-      "Neighbours walk the shops nearby and post what they find, with the product name and price written on the photo and translated into every language the app speaks. The map covers 16 shops in Melbourne CBD and Docklands, 14 of them independent Asian grocers.",
+      "Neighbours walk the shops nearby and post what they find, with the product name and price written on the photo and translated into every language the app speaks.",
     homeShopsCta: "See the Melbourne CBD Asian grocery guide",
     homeCommunityTitle: "Ask your neighbours *anything*",
     homeCommunitySubtitle:
@@ -521,6 +541,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "Real neighbours, *not anonymous accounts*",
     homeTrustSubtitle:
       "Every account is verified with an Australian mobile number and a one-time location check that confirms your suburb and is then discarded, re-checked every 30 days. The PopOut Market Rules are published in eight languages and readable without an account, and anything can be reported, restricted and appealed.",
+    homeTrustStep1: "Australian mobile number",
+    homeTrustStep2: "One-time location check",
+    homeTrustStep3: "Re-checked every 30 days",
+    topicDeals: "What neighbours have found on sale at shops nearby.",
+    topicAsk: "Questions about the area, and what is going on in it.",
+    topicLife: "Recommendations and everyday know-how from people who live here.",
+    topicBuy: "Wanted posts, for when it is not on the market yet.",
+    topicOther: "Anything that does not fit the other four.",
+    safetyHeading: "If something goes wrong",
+    safetyReport: "Report any listing, post or message.",
+    safetyRestrict: "What breaks the rules gets restricted.",
+    safetyAppeal: "The person restricted can appeal, once.",
     homeCoverageTitle: "Live in *{count} Melbourne suburbs*",
     homeCoverageCta: "See every Melbourne suburb",
     notFoundTitle: "Page not found",
@@ -557,6 +589,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationDeniedHint: "在浏览器中允许位置权限后，可显示到见面地点的直线距离。",
     marketLocationUnsupportedHint: "当前浏览器不支持定位，无法显示距离。",
     marketLocationRetry: "再次请求位置",
+    marketPaginationAria: "商品分页",
+    marketPagePrev: "上一页",
+    marketPageNext: "下一页",
+    marketPageNumberAria: "第 {page} 页",
     marketPostBack: "返回",
     marketPostBackAria: "返回市集",
     marketPostNotFoundTitle: "找不到该商品",
@@ -753,7 +789,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "多语言帖子与聊天更顺畅",
     comparisonFbCard3Title: "认证过的邻居",
     comparisonFbCard3Body: "澳洲手机号 + 一次性定位核验",
-    heroTitle: "你所在的墨尔本城区，一切尽在同一个信息流",
+    heroTitle: "{suburb} 的大小事",
     heroLead:
       "PopOut Market 是墨尔本的邻里生活 App：和身边通过认证的邻居买卖二手好物，在地图上看到本地商铺正在打折的商品，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
     heroTrustLine:
@@ -770,7 +806,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次性上传整间房的照片——PopOut 会自动帮你拆成一条条商品草稿。",
     homeShopsTitle: "本地商铺，都在*地图*上",
     homeShopsSubtitle:
-      "邻居逛完附近的店，就把发现的好价发上来：商品名和价格直接标在照片上，并翻译成 App 支持的每一种语言。地图目前覆盖墨尔本 CBD 与 Docklands 的 16 家店铺，其中 14 家是独立经营的亚洲超市。",
+      "邻居逛完附近的店，就把发现的好价发上来：商品名和价格直接标在照片上，并翻译成 App 支持的每一种语言。",
     homeShopsCta: "查看墨尔本 CBD 亚洲超市指南",
     homeCommunityTitle: "邻里之间，*什么都能问*",
     homeCommunitySubtitle:
@@ -779,6 +815,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "真实的邻居，*不是匿名账号*",
     homeTrustSubtitle:
       "每个账号都要通过澳洲手机号验证和一次性定位核验：定位只用来确认你所在的城区，确认后立即丢弃，每 30 天重新核验一次。《PopOut Market 社区规则》以八种语言发布，不注册也能查看；任何内容都可以举报、限制，也都可以申诉。",
+    homeTrustStep1: "澳洲手机号",
+    homeTrustStep2: "一次性定位核验",
+    homeTrustStep3: "每 30 天重新核验一次",
+    topicDeals: "邻居在附近店铺发现的打折好价。",
+    topicAsk: "关于所在城区的提问，和这里正在发生的事。",
+    topicLife: "住在这里的人分享的推荐和生活经验。",
+    topicBuy: "市集上还没有的东西，可以发帖求购。",
+    topicOther: "放不进上面四个分类的内容。",
+    safetyHeading: "遇到问题时",
+    safetyReport: "商品、帖子和消息都可以举报。",
+    safetyRestrict: "违反规则的内容会被限制。",
+    safetyAppeal: "被限制的人可以申诉一次。",
     homeCoverageTitle: "已覆盖*墨尔本 {count} 个城区*",
     homeCoverageCta: "查看全部墨尔本城区",
     notFoundTitle: "页面未找到",
@@ -814,6 +862,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationDeniedHint: "請在瀏覽器允許位置，以顯示到面交點的直線距離。",
     marketLocationUnsupportedHint: "此瀏覽器不支援定位，無法顯示距離。",
     marketLocationRetry: "再次要求位置",
+    marketPaginationAria: "商品分頁",
+    marketPagePrev: "上一頁",
+    marketPageNext: "下一頁",
+    marketPageNumberAria: "第 {page} 頁",
     marketPostBack: "返回",
     marketPostBackAria: "返回市集",
     marketPostNotFoundTitle: "找不到刊登",
@@ -1008,7 +1060,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "多語貼文與聊天更順暢",
     comparisonFbCard3Title: "經驗證的鄰居",
     comparisonFbCard3Body: "澳洲手機號碼加上一次性位置確認",
-    heroTitle: "你所在的墨爾本社區，大小事全在同一個動態",
+    heroTitle: "{suburb} 正在發生的事",
     heroLead:
       "PopOut Market 是專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，在地圖上看見在地店家的最新優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
     heroTrustLine:
@@ -1025,7 +1077,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次上傳整個房間的照片——PopOut 會自動整理成一則則刊登初稿。",
     homeShopsTitle: "在地店家，就在*地圖上*",
     homeShopsSubtitle:
-      "鄰居逛過附近的店家後把發現貼上來，商品名稱與價格直接標在照片上，並翻譯成 App 支援的每一種語言。地圖目前收錄墨爾本 CBD 與 Docklands 共 16 家店，其中 14 家是獨立經營的亞洲超市。",
+      "鄰居逛過附近的店家後把發現貼上來，商品名稱與價格直接標在照片上，並翻譯成 App 支援的每一種語言。",
     homeShopsCta: "查看墨爾本 CBD 亞洲超市指南",
     homeCommunityTitle: "有問題，*儘管問鄰居*",
     homeCommunitySubtitle:
@@ -1034,6 +1086,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "真實的鄰居，*不是匿名帳號*",
     homeTrustSubtitle:
       "每個帳號都需要通過澳洲手機號碼驗證，以及一次性的位置確認——僅用來確認你所在的城區，確認後隨即刪除，之後每 30 天再確認一次。PopOut Market 使用守則以八種語言公開，不需帳號也能閱讀；任何內容都可以檢舉、限制與申訴。",
+    homeTrustStep1: "澳洲手機號碼",
+    homeTrustStep2: "一次性位置確認",
+    homeTrustStep3: "每 30 天重新確認",
+    topicDeals: "鄰居在附近店家發現的優惠。",
+    topicAsk: "關於這一區的提問，以及正在發生的事。",
+    topicLife: "來自在地居民的推薦與生活訣竅。",
+    topicBuy: "徵求貼文——市集上還沒出現的東西。",
+    topicOther: "不屬於前面四個主題的內容。",
+    safetyHeading: "如果出了問題",
+    safetyReport: "任何刊登、貼文或訊息都可以檢舉。",
+    safetyRestrict: "違反守則的內容會被限制。",
+    safetyAppeal: "被限制的人可以申訴一次。",
     homeCoverageTitle: "已在*墨爾本 {count} 個區域*上線",
     homeCoverageCta: "查看所有墨爾本區域",
     notFoundTitle: "找不到頁面",
@@ -1072,6 +1136,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "이 브라우저는 위치 정보를 지원하지 않아 거리를 표시할 수 없습니다.",
     marketLocationRetry: "위치 다시 요청",
+    marketPaginationAria: "상품 목록 페이지",
+    marketPagePrev: "이전",
+    marketPageNext: "다음",
+    marketPageNumberAria: "{page}페이지",
     marketPostBack: "뒤로",
     marketPostBackAria: "마켓으로 돌아가기",
     marketPostNotFoundTitle: "게시글을 찾을 수 없습니다",
@@ -1272,7 +1340,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "언어 간 게시물과 채팅이 더 매끄럽게",
     comparisonFbCard3Title: "인증된 이웃",
     comparisonFbCard3Body: "호주 휴대폰 번호와 한 번의 위치 확인",
-    heroTitle: "멜버른 우리 동네의 모든 것, 피드 하나에",
+    heroTitle: "{suburb}에서 지금 일어나는 일",
     heroLead:
       "PopOut Market은 멜버른을 위한 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 지도에서 동네 가게의 지금 할인 정보를 확인하고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
     heroTrustLine:
@@ -1290,7 +1358,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "방 안 물건을 한꺼번에 찍어 올려 보세요 — PopOut이 물건별 등록 초안으로 나눠 줍니다.",
     homeShopsTitle: "*지도*로 보는 동네 가게",
     homeShopsSubtitle:
-      "이웃들이 근처 가게를 직접 둘러보고 찾은 정보를 올립니다. 사진 위에 상품명과 가격이 적혀 있고, 앱이 지원하는 모든 언어로 번역됩니다. 지도에는 멜버른 CBD와 Docklands의 가게 16곳이 있고, 그중 14곳은 개인이 운영하는 아시안 식료품점입니다.",
+      "이웃들이 근처 가게를 직접 둘러보고 찾은 정보를 올립니다. 사진 위에 상품명과 가격이 적혀 있고, 앱이 지원하는 모든 언어로 번역됩니다.",
     homeShopsCta: "멜버른 CBD 아시안 식료품점 가이드 보기",
     homeCommunityTitle: "이웃에게 *무엇이든* 물어보세요",
     homeCommunitySubtitle:
@@ -1299,6 +1367,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "익명 계정이 아니라 *진짜 이웃*입니다",
     homeTrustSubtitle:
       "모든 계정은 호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. 위치 정보는 거주 지역만 확인한 뒤 바로 삭제되고, 30일마다 다시 확인합니다. PopOut Market 이용 규칙은 8개 언어로 공개되어 계정 없이도 읽을 수 있으며, 무엇이든 신고하고 제한할 수 있고 이의도 제기할 수 있습니다.",
+    homeTrustStep1: "호주 휴대폰 번호",
+    homeTrustStep2: "한 번의 위치 확인",
+    homeTrustStep3: "30일마다 재확인",
+    topicDeals: "이웃이 근처 가게에서 찾은 할인 소식.",
+    topicAsk: "동네에 대한 궁금증과 지금 일어나는 일.",
+    topicLife: "여기 사는 사람들의 추천과 생활 요령.",
+    topicBuy: "마켓에 아직 없는 물건을 찾는 글.",
+    topicOther: "앞의 네 가지에 해당하지 않는 글.",
+    safetyHeading: "문제가 생겼을 때",
+    safetyReport: "상품, 게시글, 메시지 무엇이든 신고할 수 있습니다.",
+    safetyRestrict: "규칙을 어기면 제한됩니다.",
+    safetyAppeal: "제한된 사람은 한 번 이의를 제기할 수 있습니다.",
     homeCoverageTitle: "지금 *멜버른 {count}개 지역*에서 이용할 수 있어요",
     homeCoverageCta: "멜버른 전체 지역 보기",
     notFoundTitle: "페이지를 찾을 수 없습니다",
@@ -1337,6 +1417,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "このブラウザは位置情報に対応していないため、距離を表示できません。",
     marketLocationRetry: "位置情報を再リクエスト",
+    marketPaginationAria: "商品一覧のページ送り",
+    marketPagePrev: "前へ",
+    marketPageNext: "次へ",
+    marketPageNumberAria: "{page}ページ目",
     marketPostBack: "戻る",
     marketPostBackAria: "マーケットに戻る",
     marketPostNotFoundTitle: "出品が見つかりません",
@@ -1543,7 +1627,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "言語をまたぐ投稿やチャットがよりスムーズに",
     comparisonFbCard3Title: "認証済みのご近所さん",
     comparisonFbCard3Body: "オーストラリアの携帯電話番号と一度きりの位置情報チェック",
-    heroTitle: "メルボルンのご近所のすべてが、ひとつのフィードに",
+    heroTitle: "{suburb}で、いま起きていること",
     heroLead:
       "PopOut Market は、メルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店のいまのお買い得情報を地図で見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
     heroTrustLine:
@@ -1561,7 +1645,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "部屋全体の写真をまとめて追加すれば、PopOut がそれぞれ別の下書きに振り分けます。",
     homeShopsTitle: "近くのお店が*地図*でわかる",
     homeShopsSubtitle:
-      "近所の人が実際にお店を歩いて見つけたものを投稿。商品名と価格は写真に書き込まれ、アプリが対応するすべての言語に翻訳されます。地図にはメルボルン CBD とドックランズの16店舗が掲載されていて、そのうち14店舗は個人経営のアジア系食料品店です。",
+      "近所の人が実際にお店を歩いて見つけたものを投稿。商品名と価格は写真に書き込まれ、アプリが対応するすべての言語に翻訳されます。",
     homeShopsCta: "メルボルン CBD のアジア食材店ガイドを見る",
     homeCommunityTitle: "ご近所さんに*なんでも*聞いてみよう",
     homeCommunitySubtitle:
@@ -1570,6 +1654,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "*匿名アカウントではなく*、本物のご近所さん",
     homeTrustSubtitle:
       "アカウントはすべて、オーストラリアの携帯電話番号と、お住まいのサバーブを確認したらすぐに破棄される一度きりの位置情報チェックで認証され、30日ごとに再確認されます。PopOut Market のルールは8言語で公開されていてアカウントがなくても読め、気になることはいつでも通報でき、出品の制限や異議申し立ての仕組みも整っています。",
+    homeTrustStep1: "オーストラリアの携帯電話番号",
+    homeTrustStep2: "一度きりの位置情報チェック",
+    homeTrustStep3: "30日ごとに再確認",
+    topicDeals: "ご近所さんが近くのお店で見つけたお買い得。",
+    topicAsk: "エリアについての質問と、いま起きていること。",
+    topicLife: "ここに住む人のおすすめと、日々の知恵。",
+    topicBuy: "まだ出品されていないものを探すときの投稿。",
+    topicOther: "ほかの4つに当てはまらないもの。",
+    safetyHeading: "何かあったときは",
+    safetyReport: "出品・投稿・メッセージ、どれでも通報できます。",
+    safetyRestrict: "ルールに反したものは制限されます。",
+    safetyAppeal: "制限された人は、一度だけ異議を申し立てられます。",
     homeCoverageTitle: "*メルボルンの{count}の地域*に広がっています",
     homeCoverageCta: "メルボルンの地域をすべて見る",
     notFoundTitle: "ページが見つかりません",
@@ -1608,6 +1704,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "Trình duyệt này không hỗ trợ định vị nên không thể hiển thị khoảng cách.",
     marketLocationRetry: "Yêu cầu vị trí lại",
+    marketPaginationAria: "Các trang tin đăng",
+    marketPagePrev: "Trước",
+    marketPageNext: "Sau",
+    marketPageNumberAria: "Trang {page}",
     marketPostBack: "Quay lại",
     marketPostBackAria: "Quay lại chợ",
     marketPostNotFoundTitle: "Không tìm thấy tin",
@@ -1818,7 +1918,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "Bài đăng và trò chuyện khác ngôn ngữ mượt mà hơn",
     comparisonFbCard3Title: "Hàng xóm đã xác minh",
     comparisonFbCard3Body: "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất",
-    heroTitle: "Cả khu phố Melbourne của bạn, gói gọn trong một bảng tin",
+    heroTitle: "Mọi chuyện ở {suburb}",
     heroLead:
       "PopOut Market là ứng dụng khu phố dành cho Melbourne. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, xem ưu đãi đang có tại các cửa hàng địa phương ngay trên bản đồ, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
     heroTrustLine:
@@ -1836,7 +1936,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Tải ảnh cả căn phòng lên một lượt — PopOut tự tách thành từng tin đăng nháp riêng.",
     homeShopsTitle: "Cửa hàng địa phương ngay trên *bản đồ*",
     homeShopsSubtitle:
-      "Hàng xóm dạo quanh các cửa hàng gần nhà rồi đăng lại những gì họ thấy, kèm tên sản phẩm và giá ghi ngay trên ảnh, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ. Bản đồ hiện có 16 cửa hàng ở Melbourne CBD và Docklands, trong đó 14 là tiệm tạp hóa châu Á tư nhân.",
+      "Hàng xóm dạo quanh các cửa hàng gần nhà rồi đăng lại những gì họ thấy, kèm tên sản phẩm và giá ghi ngay trên ảnh, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ.",
     homeShopsCta: "Xem cẩm nang tiệm tạp hóa châu Á ở Melbourne CBD",
     homeCommunityTitle: "Hỏi hàng xóm *bất cứ điều gì*",
     homeCommunitySubtitle:
@@ -1846,6 +1946,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "Hàng xóm thật, *không phải tài khoản ẩn danh*",
     homeTrustSubtitle:
       "Mọi tài khoản đều được xác minh bằng số điện thoại di động Úc và một lần kiểm tra vị trí duy nhất — chỉ để xác nhận khu vực (suburb) của bạn rồi xóa ngay, và được kiểm tra lại mỗi 30 ngày. Quy tắc PopOut Market được công bố bằng tám ngôn ngữ, ai cũng đọc được mà không cần tài khoản; mọi nội dung đều có thể được báo cáo, hạn chế và khiếu nại.",
+    homeTrustStep1: "Số điện thoại di động Úc",
+    homeTrustStep2: "Một lần kiểm tra vị trí duy nhất",
+    homeTrustStep3: "Kiểm tra lại mỗi 30 ngày",
+    topicDeals: "Những gì hàng xóm thấy đang giảm giá ở tiệm gần nhà.",
+    topicAsk: "Câu hỏi về khu bạn ở, và những gì đang diễn ra ở đó.",
+    topicLife: "Gợi ý và kinh nghiệm hằng ngày từ người sống ở đây.",
+    topicBuy: "Tin cần mua, khi món đồ chưa có trên chợ.",
+    topicOther: "Những gì không thuộc bốn mục còn lại.",
+    safetyHeading: "Nếu có điều gì không ổn",
+    safetyReport: "Báo cáo tin đăng, bài viết hay tin nhắn.",
+    safetyRestrict: "Nội dung vi phạm quy tắc sẽ bị hạn chế.",
+    safetyAppeal: "Người bị hạn chế được khiếu nại một lần.",
     homeCoverageTitle: "Đã có mặt tại *{count} khu vực ở Melbourne*",
     homeCoverageCta: "Xem tất cả khu vực ở Melbourne",
     notFoundTitle: "Không tìm thấy trang",
@@ -1886,6 +1998,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "Ce navigateur ne prend pas en charge la géolocalisation, la distance ne peut pas s’afficher.",
     marketLocationRetry: "Redemander la position",
+    marketPaginationAria: "Pages d’annonces",
+    marketPagePrev: "Précédent",
+    marketPageNext: "Suivant",
+    marketPageNumberAria: "Page {page}",
     marketPostBack: "Retour",
     marketPostBackAria: "Retour au marché",
     marketPostNotFoundTitle: "Annonce introuvable",
@@ -2102,7 +2218,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "Annonces et conversations entre langues plus fluides",
     comparisonFbCard3Title: "Voisins vérifiés",
     comparisonFbCard3Body: "Numéro de mobile australien et contrôle de localisation ponctuel",
-    heroTitle: "Tout ce qui se passe dans votre quartier de Melbourne, dans un seul fil",
+    heroTitle: "Tout ce qui se passe à {suburb}",
     heroLead:
       "PopOut Market, c'est l'appli de quartier de Melbourne. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, repérez sur la carte les promos du moment dans les commerces du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
     heroTrustLine:
@@ -2120,7 +2236,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Ajoutez d'un coup les photos de toute une pièce — PopOut les répartit en brouillons distincts.",
     homeShopsTitle: "Les commerces du quartier, sur la *carte*",
     homeShopsSubtitle:
-      "Des voisins font le tour des commerces du coin et publient leurs trouvailles : le nom du produit et son prix sont inscrits sur la photo et traduits dans toutes les langues de l'appli. La carte couvre 16 commerces du CBD de Melbourne et de Docklands, dont 14 épiceries asiatiques indépendantes.",
+      "Des voisins font le tour des commerces du coin et publient leurs trouvailles : le nom du produit et son prix sont inscrits sur la photo et traduits dans toutes les langues de l'appli.",
     homeShopsCta: "Voir le guide des épiceries asiatiques du CBD de Melbourne",
     homeCommunityTitle: "Demandez *tout ce que vous voulez* à vos voisins",
     homeCommunitySubtitle:
@@ -2129,6 +2245,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "De vrais voisins, *pas des comptes anonymes*",
     homeTrustSubtitle:
       "Chaque compte est vérifié par un numéro de mobile australien et un contrôle de localisation ponctuel : il confirme votre quartier, puis la position est supprimée ; le contrôle est renouvelé tous les 30 jours. Les Règles de PopOut Market sont publiées en huit langues et consultables sans compte, et tout peut être signalé, restreint, puis contesté.",
+    homeTrustStep1: "Numéro de mobile australien",
+    homeTrustStep2: "Contrôle de localisation ponctuel",
+    homeTrustStep3: "Renouvelé tous les 30 jours",
+    topicDeals: "Les promos repérées par des voisins dans les commerces du coin.",
+    topicAsk: "Des questions sur le quartier, et ce qui s'y passe.",
+    topicLife: "Recommandations et astuces du quotidien, par ceux qui vivent ici.",
+    topicBuy: "Ce que l'on cherche, quand ce n'est pas encore en vente.",
+    topicOther: "Tout ce qui n'entre pas dans les quatre autres.",
+    safetyHeading: "En cas de problème",
+    safetyReport: "Signalez toute annonce, publication ou message.",
+    safetyRestrict: "Ce qui enfreint les Règles est restreint.",
+    safetyAppeal: "La personne restreinte peut contester, une fois.",
     homeCoverageTitle: "Déjà présent dans *{count} quartiers de Melbourne*",
     homeCoverageCta: "Voir tous les quartiers de Melbourne",
     notFoundTitle: "Page introuvable",
@@ -2169,6 +2297,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     marketLocationUnsupportedHint:
       "Este navegador no admite ubicación, así que no se pueden mostrar las distancias.",
     marketLocationRetry: "Volver a pedir ubicación",
+    marketPaginationAria: "Páginas de anuncios",
+    marketPagePrev: "Anterior",
+    marketPageNext: "Siguiente",
+    marketPageNumberAria: "Página {page}",
     marketPostBack: "Volver",
     marketPostBackAria: "Volver al mercado",
     marketPostNotFoundTitle: "Anuncio no encontrado",
@@ -2386,7 +2518,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard2Body: "Publicaciones y chats entre idiomas más fluidos",
     comparisonFbCard3Title: "Vecinos verificados",
     comparisonFbCard3Body: "Número de móvil australiano y una única comprobación de ubicación",
-    heroTitle: "Todo lo que pasa en tu barrio de Melbourne, en un solo feed",
+    heroTitle: "Todo lo que pasa en {suburb}",
     heroLead:
       "PopOut Market es la app de barrio de Melbourne. Compra y vende de segunda mano con vecinos verificados cerca de ti, mira en el mapa las ofertas del momento en las tiendas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
     heroTrustLine:
@@ -2404,7 +2536,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Añade de una vez las fotos de toda una habitación — PopOut las separa en borradores distintos.",
     homeShopsTitle: "Las tiendas del barrio, en el *mapa*",
     homeShopsSubtitle:
-      "Los vecinos recorren las tiendas cercanas y publican lo que encuentran, con el nombre del producto y el precio escritos sobre la foto y traducidos a todos los idiomas de la app. El mapa cubre 16 tiendas del CBD de Melbourne y Docklands, 14 de ellas supermercados asiáticos independientes.",
+      "Los vecinos recorren las tiendas cercanas y publican lo que encuentran, con el nombre del producto y el precio escritos sobre la foto y traducidos a todos los idiomas de la app.",
     homeShopsCta: "Ver la guía de supermercados asiáticos del CBD de Melbourne",
     homeCommunityTitle: "Pregunta a tus vecinos *lo que quieras*",
     homeCommunitySubtitle:
@@ -2414,6 +2546,18 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeTrustTitle: "Vecinos de verdad, *no cuentas anónimas*",
     homeTrustSubtitle:
       "Cada cuenta se verifica con un número de móvil australiano y una única comprobación de ubicación que confirma tu barrio y después se descarta, y se repite cada 30 días. Las Normas de PopOut Market están publicadas en ocho idiomas y se pueden leer sin tener cuenta; todo se puede denunciar, restringir y apelar.",
+    homeTrustStep1: "Número de móvil australiano",
+    homeTrustStep2: "Una única comprobación de ubicación",
+    homeTrustStep3: "Se repite cada 30 días",
+    topicDeals: "Lo que los vecinos encuentran en oferta en tiendas cercanas.",
+    topicAsk: "Preguntas sobre la zona y lo que pasa en ella.",
+    topicLife: "Recomendaciones y consejos del día a día de quien vive aquí.",
+    topicBuy: "Lo que alguien busca y aún no está en el Mercado.",
+    topicOther: "Todo lo que no encaja en los otros cuatro.",
+    safetyHeading: "Si algo va mal",
+    safetyReport: "Denuncia cualquier anuncio, publicación o mensaje.",
+    safetyRestrict: "Lo que incumple las normas se restringe.",
+    safetyAppeal: "La persona restringida puede apelar una vez.",
     homeCoverageTitle: "Ya disponible en *{count} barrios de Melbourne*",
     homeCoverageCta: "Ver todos los barrios de Melbourne",
     notFoundTitle: "Página no encontrada",

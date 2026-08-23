@@ -153,7 +153,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
         heading: "Mua bán đồ cũ ở Melbourne diễn ra như thế nào",
         paragraphs: [
           "Trong một chợ đồ cũ Melbourne thực sự, người ta không chỉ quan tâm đến giá. Họ còn để ý việc lấy hàng có tiện không, có cùng khu vực hay không, người bán có trả lời tin nhắn nhanh không, và món đồ có kịp với lịch chuyển nhà hay không. Chính những yếu tố thực tế đó mới quyết định một tin đăng đồ cũ có thật sự hữu ích hay không.",
-          "PopOut Market được xây dựng quanh những nhu cầu thực tế đó: khám phá theo khu vực, chat đa ngôn ngữ có dịch tự động, gợi ý trả lời tự động bằng AI, và hẹn lấy hàng rõ ràng hơn cho những người mua bán đồ cũ ngay trong Melbourne, thay vì một danh sách chung chung trên toàn quốc. Đây vừa là chợ đồ cũ Melbourne, vừa là nền tảng mua bán đồ cũ cùng khu vực.",
+          "PopOut Market được xây dựng quanh những nhu cầu thực tế đó: khám phá theo khu vực, chat đa ngôn ngữ có dịch tự động, và hẹn lấy hàng rõ ràng hơn cho những người mua bán đồ cũ ngay trong Melbourne, thay vì một danh sách chung chung trên toàn quốc. Đây vừa là chợ đồ cũ Melbourne, vừa là nền tảng mua bán đồ cũ cùng khu vực.",
         ],
       },
       {

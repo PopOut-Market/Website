@@ -235,6 +235,52 @@ export async function fetchActiveSuburbCount(revalidate = 86400): Promise<number
   }
 }
 
+/**
+ * Names of the active suburbs, alphabetical.
+ *
+ * Used to make "336 suburbs" concrete: 336 is an abstraction, Nunawading is not.
+ * The page renders a sample of these as chips so a reader from Werribee South
+ * sees their own suburb on it.
+ *
+ * The count *claim* deliberately does NOT come from here — it comes from
+ * `fetchActiveSuburbCount()`'s exact head request, which cannot be affected by
+ * page size. Because the page publishes only one number, the two reads can never
+ * contradict each other on screen.
+ *
+ * The explicit total check is not paranoia: this project has silently
+ * undercounted past PostgREST's 1000-row page cap before. There are 336 rows
+ * today, comfortably under it, but a mismatch returns [] rather than a truncated
+ * list — the section then omits the field entirely. Never an invented name.
+ */
+export async function fetchActiveSuburbNames(revalidate = 86400): Promise<string[]> {
+  if (!isServerSupabaseConfigured()) return [];
+  try {
+    const res = await fetch(
+      `${supabaseUrl()}/rest/v1/suburbs?select=name&is_active=eq.true&order=name.asc`,
+      {
+        headers: {
+          apikey: supabaseAnonKey(),
+          Authorization: `Bearer ${supabaseAnonKey()}`,
+          Prefer: "count=exact",
+          Range: "0-999",
+        },
+        next: { revalidate },
+      },
+    );
+    if (!res.ok) return [];
+    const total = Number.parseInt(res.headers.get("content-range")?.split("/")[1] ?? "", 10);
+    const rows: unknown = await res.json();
+    if (!Array.isArray(rows)) return [];
+    if (Number.isFinite(total) && total !== rows.length) return [];
+    return rows
+      .map((r) => (r as { name?: unknown }).name)
+      .filter((n): n is string => typeof n === "string" && n.trim().length > 0)
+      .map((n) => n.trim());
+  } catch {
+    return [];
+  }
+}
+
 /** `1234` -> `$12.34`, `0` -> `Free`. Matches how the app renders a $0 price. */
 export function formatPriceLabel(locale: Locale, priceCents: number, freeLabel: string): string {
   if (!Number.isFinite(priceCents) || priceCents <= 0) return freeLabel;

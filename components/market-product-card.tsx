@@ -10,6 +10,17 @@ type MarketProductCardCopy = {
 };
 
 type MarketProductCardProps = {
+  /**
+   * Marks the card's link `rel="nofollow"`. Listing pages are `noindex, follow`
+   * and turn over in weeks, so a grid of them should not spend crawl budget.
+   */
+  nofollow?: boolean;
+  /**
+   * Heading level for the title. A grid of cards is not a page of sections: on
+   * /market the area picker is the `<h2>`, so cards must sit below it. Only a
+   * card that IS the page's subject should be a `<h2>`.
+   */
+  titleAs?: "h2" | "h3" | "p";
   product: MarketProduct;
   regionLabel: string;
   copy: MarketProductCardCopy;
@@ -20,7 +31,14 @@ type MarketProductCardProps = {
 const CARD_CLASS =
   "flex min-w-0 flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card transition-[border-color,transform] duration-150 hover:border-black/25 hover:-translate-y-px motion-reduce:transform-none";
 
-export function MarketProductCard({ product, regionLabel, copy, href }: MarketProductCardProps) {
+export function MarketProductCard({
+  product,
+  regionLabel,
+  copy,
+  href,
+  nofollow,
+  titleAs: TitleTag = "h2",
+}: MarketProductCardProps) {
   const inner = (
     <>
       <div
@@ -47,9 +65,9 @@ export function MarketProductCard({ product, regionLabel, copy, href }: MarketPr
         ) : null}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
-        <h2 className="line-clamp-2 min-h-[2.5rem] text-left text-[0.95rem] font-semibold leading-snug text-black sm:text-base">
+        <TitleTag className="line-clamp-2 min-h-[2.5rem] text-left text-[0.95rem] font-semibold leading-snug text-black sm:text-base">
           {product.title}
-        </h2>
+        </TitleTag>
         <div className="mt-auto flex items-baseline justify-between gap-2">
           <span className="truncate text-lg font-bold tabular-nums text-black">
             {product.priceLabel}
@@ -64,6 +82,7 @@ export function MarketProductCard({ product, regionLabel, copy, href }: MarketPr
     return (
       <Link
         href={href}
+        rel={nofollow ? "nofollow" : undefined}
         className={`${CARD_CLASS} block text-inherit no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700`}
       >
         {inner}

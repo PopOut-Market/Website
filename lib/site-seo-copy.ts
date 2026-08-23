@@ -12,11 +12,15 @@ type SeoEntry = {
 // Localized SEO copy per logical path. `en` is the fallback for any locale that
 // is not translated yet, so partial language coverage is always safe.
 //
-// GEO note: the product is launching in Melbourne, Australia first and will roll
-// out to more Australian cities later. Copy therefore anchors on "Melbourne,
-// Australia" (so it ranks for both the city and the country) while making the
-// "starting in Melbourne, more cities coming soon" framing explicit. Keep this
-// framing when editing — do NOT imply nationwide coverage already exists.
+// GEO note: the product operates in Melbourne, Australia. Copy anchors on
+// "Melbourne, Australia" so it ranks for both the city and the country, and must
+// NOT imply coverage of any other city.
+//
+// The old "more Australian cities coming soon" clause has been removed from every
+// locale on purpose: it named no city and no date, it is the kind of claim that
+// cannot be checked, and an answer engine was repeating it back verbatim as
+// though it were a fact about the product. Replace forward-looking scope with a
+// checkable present-tense one (the live active-suburb count) or with nothing.
 // NOTE: the homepage descriptions state "336 Melbourne suburbs". Every rendered
 // page reads that figure live (see `fetchActiveSuburbCount`), but metadata is
 // authored copy in 8 locales, so it is written out here. Suburbs are activated by
@@ -107,7 +111,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     en: {
       title: "Melbourne, Australia Second-Hand Market | PopOut Market",
       description:
-        "Browse Melbourne second-hand listings by suburb and trade locally with PopOut Market — a second-hand market for Melbourne, Australia, covering the city and CBD now, with more Australian cities coming soon.",
+        "Browse Melbourne second-hand listings by suburb and trade locally with PopOut Market — a second-hand market for Melbourne, Australia, covering the city and its inner suburbs.",
       keywords: [
         "Australia second hand market",
         "second hand market Australia",
@@ -121,7 +125,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     "zh-Hans": {
       title: "澳洲墨尔本二手市集 | PopOut Market",
       description:
-        "按郊区浏览澳大利亚墨尔本的二手商品，对比附近的闲置好物，用 PopOut Market 在墨尔本市区与 CBD 社区进行同城二手交易。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。",
+        "按郊区浏览澳大利亚墨尔本的二手商品，对比附近的闲置好物，用 PopOut Market 在墨尔本市区与 CBD 社区进行同城二手交易。已覆盖墨尔本市区与周边城区。",
       keywords: [
         "澳洲二手市集",
         "澳大利亚二手",
@@ -135,7 +139,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     ko: {
       title: "호주 멜버른 중고마켓 | PopOut Market",
       description:
-        "동네별로 호주 멜버른 중고 매물을 둘러보고 주변의 가까운 물건을 비교하세요. PopOut Market로 멜버른 시내와 CBD에서 동네 중고거래를 시작하고, 호주 내 더 많은 도시로 확대될 예정입니다.",
+        "동네별로 호주 멜버른 중고 매물을 둘러보고 주변의 가까운 물건을 비교하세요. PopOut Market로 멜버른 시내와 CBD에서 동네 중고거래를 시작하고, 멜버른 도심과 인근 지역에서 이용할 수 있습니다.",
       keywords: [
         "호주 중고마켓",
         "호주 멜버른 중고",
@@ -151,32 +155,32 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     es: {
       title: "Sobre PopOut Market | Segunda mano en Melbourne, Australia",
       description:
-        "Conoce PopOut Market, la app gratuita para comprar y vender de segunda mano por barrio en Melbourne, Australia: muebles, electrodomésticos, chat con traducción e ideal para estudiantes. Pronto en más ciudades australianas.",
+        "Conoce PopOut Market, la app gratuita para comprar y vender de segunda mano por barrio en Melbourne, Australia: muebles, electrodomésticos, chat con traducción e ideal para estudiantes.",
     },
     fr: {
       title: "À propos de PopOut Market | Occasion à Melbourne, Australie",
       description:
-        "Découvrez comment PopOut Market aide les habitants et les étudiants internationaux à acheter et vendre d'occasion à Melbourne, en Australie : recherche par quartier, messagerie multilingue et rencontres plus sûres. Bientôt dans d'autres villes australiennes.",
+        "Découvrez comment PopOut Market aide les habitants et les étudiants internationaux à acheter et vendre d'occasion à Melbourne, en Australie : recherche par quartier, messagerie multilingue et rencontres plus sûres.",
     },
     vi: {
       title: "Giới thiệu PopOut Market | Mua bán đồ cũ tại Melbourne, Úc",
       description:
-        "Tìm hiểu về PopOut Market: nền tảng và ứng dụng mua bán đồ cũ miễn phí tại Melbourne, Úc. Tìm đồ theo khu vực, nhắn tin đa ngôn ngữ, từ nội thất đến đồ thanh lý của du học sinh, sắp mở rộng tới nhiều thành phố khác ở Úc.",
+        "Tìm hiểu về PopOut Market: nền tảng và ứng dụng mua bán đồ cũ miễn phí tại Melbourne, Úc. Tìm đồ theo khu vực, nhắn tin đa ngôn ngữ, từ nội thất đến đồ thanh lý của du học sinh.",
     },
     "zh-Hant": {
       title: "關於 PopOut Market｜澳洲墨爾本同城二手交易 App",
       description:
-        "認識 PopOut Market：免費的澳洲（Australia）墨爾本二手交易平台與二手 App。可依郊區（suburb）探索附近的二手好物與中古商品，內建多語言翻譯聊天與 AI 自動回覆，讓當面交易更安全便利。現已在墨爾本上線，更多澳洲城市陸續開放，敬請期待。",
+        "認識 PopOut Market：免費的澳洲（Australia）墨爾本二手交易平台與二手 App。可依郊區（suburb）探索附近的二手好物與中古商品，內建多語言翻譯聊天，讓當面交易更安全便利。已覆蓋墨爾本 336 個城區。",
     },
     ja: {
       title: "PopOut Market とは | オーストラリア・メルボルンの中古マーケットアプリ",
       description:
-        "PopOut Market は、オーストラリア（Australia）メルボルンで使える無料の中古売買アプリです。お住まいの地域から近くの出品を探せて、多言語チャット翻訳と安心の手渡し直接取引に対応。留学生や引越しの不用品売買にも便利で、今後オーストラリアの他都市にも順次拡大予定です。",
+        "PopOut Market は、オーストラリア（Australia）メルボルンで使える無料の中古売買アプリです。お住まいの地域から近くの出品を探せて、多言語チャット翻訳と安心の手渡し直接取引に対応。留学生や引越しの不用品売買にも便利で。",
     },
     en: {
       title: "About PopOut Market | Melbourne, Australia Second-Hand Marketplace",
       description:
-        "Learn how PopOut Market helps people in Melbourne, Australia and international students buy and sell second-hand items with suburb-first discovery, multilingual communication, and safer meetup workflows — starting in Melbourne, with more Australian cities coming soon.",
+        "Learn how PopOut Market helps people in Melbourne, Australia and international students buy and sell second-hand items with suburb-first discovery, multilingual communication, and safer meetup workflows.",
       keywords: [
         "Australia second hand marketplace",
         "Melbourne second hand marketplace",
@@ -189,7 +193,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     "zh-Hans": {
       title: "关于 PopOut Market | 澳洲墨尔本社区二手交易市场",
       description:
-        "了解 PopOut Market 如何帮助澳大利亚（Australia）墨尔本本地居民和留学生买卖二手物品：按郊区发现、多语言沟通、更安全的当面交易流程。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。",
+        "了解 PopOut Market 如何帮助澳大利亚（Australia）墨尔本本地居民和留学生买卖二手物品：按郊区发现、多语言沟通、更安全的当面交易流程。已覆盖墨尔本 336 个城区。",
       keywords: [
         "澳洲二手市场",
         "澳大利亚二手",
@@ -203,7 +207,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     ko: {
       title: "PopOut Market 소개 | 호주 멜버른 동네 중고마켓",
       description:
-        "PopOut Market가 호주(Australia) 멜버른의 현지인과 유학생이 중고 물품을 사고팔도록 어떻게 돕는지 알아보세요. 동네 중심 탐색, 다국어 소통, 더 안전한 직거래 방식을 제공합니다. 현재 멜버른에서 운영 중이며, 호주 내 더 많은 도시로 확대될 예정입니다.",
+        "PopOut Market가 호주(Australia) 멜버른의 현지인과 유학생이 중고 물품을 사고팔도록 어떻게 돕는지 알아보세요. 동네 중심 탐색, 다국어 소통, 더 안전한 직거래 방식을 제공합니다. 멜버른 336개 서버브에서 이용할 수 있습니다.",
       keywords: [
         "호주 중고마켓",
         "호주 멜버른 중고",

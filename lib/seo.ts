@@ -15,6 +15,56 @@ export function localizedAlternates(path: string): Record<string, string> {
   };
 }
 
+/**
+ * hreflang for a page that does NOT ship in all eight locales.
+ *
+ * Some pages are mostly authored prose rather than database rows, and shipping
+ * those in a language nobody has written costs more than it earns: an English
+ * body under a Japanese title is worse than no Japanese page at all, and it is
+ * the exact pattern Google's scaled-content-abuse policy names when it lists
+ * "automated transformations like ... translating".
+ *
+ * The alternates must then list ONLY the locales that really exist, or hreflang
+ * points crawlers at URLs that 404. `x-default` stays on `en`.
+ */
+export function localizedAlternatesFor(
+  path: string,
+  locales: readonly SeoLocale[],
+): Record<string, string> {
+  const normalized = path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
+  const out: Record<string, string> = {};
+  for (const locale of locales) {
+    out[HREFLANG_BY_LOCALE[locale]] = `/${SEGMENT_BY_LOCALE[locale]}${normalized}`;
+  }
+  out["x-default"] = `/en${normalized}`;
+  return out;
+}
+
+/** The locale codes used across the site, as `lib/site-i18n.ts` spells them. */
+export type SeoLocale = "en" | "zh-Hans" | "zh-Hant" | "ko" | "ja" | "vi" | "fr" | "es";
+
+const HREFLANG_BY_LOCALE: Record<SeoLocale, string> = {
+  en: "en",
+  "zh-Hans": "zh-CN",
+  "zh-Hant": "zh-TW",
+  ko: "ko",
+  ja: "ja",
+  vi: "vi",
+  fr: "fr",
+  es: "es",
+};
+
+const SEGMENT_BY_LOCALE: Record<SeoLocale, string> = {
+  en: "en",
+  "zh-Hans": "zh-cn",
+  "zh-Hant": "zh-tw",
+  ko: "ko",
+  ja: "ja",
+  vi: "vi",
+  fr: "fr",
+  es: "es",
+};
+
 export function localeSegments(): readonly string[] {
   return LOCALE_SEGMENTS;
 }

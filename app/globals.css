@@ -113,3 +113,57 @@ body {
   font-family:
     "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans CJK JP", "Segoe UI", Arial, sans-serif;
 }
+
+/* ---------------------------------------------------------------------------
+   Fire-once scroll reveal (components/motion/reveal.tsx).
+
+   The hidden state is scoped to `(scripting: enabled)` deliberately. A browser
+   with JavaScript off, a text-extracting crawler, and any engine that does not
+   support the query all ignore the rule entirely and get fully visible content
+   with no animation. That is the correct direction to fail in: this site's whole
+   server-rendering effort exists so that a non-JS reader sees the real page, and
+   an inline `opacity: 0` would have thrown that away on the lower half of the
+   homepage.
+
+   The `prefers-reduced-motion` block above zeroes every transition duration, so
+   these reveals are instant under it with no per-component code. That is the
+   backstop; the primary gate is in JS, in `useRevealOnce`, because zeroing a
+   duration cannot reveal an element CSS has set to `opacity: 0`.
+   --------------------------------------------------------------------------- */
+@media (scripting: enabled) {
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 12px));
+  }
+}
+
+[data-reveal] {
+  transition:
+    opacity var(--reveal-dur, 600ms) var(--reveal-ease, cubic-bezier(0.2, 0.8, 0.2, 1)),
+    transform var(--reveal-dur, 600ms) var(--reveal-ease, cubic-bezier(0.2, 0.8, 0.2, 1));
+}
+
+[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Typewriter caret for the homepage <h1> suburb rotator.
+   Hard on/off, never a fade: the whole point of the effect is that it reads as
+   mechanical. The `prefers-reduced-motion` block above zeroes the duration, and
+   the component additionally drops the caret entirely in that mode, so it can
+   never be left frozen mid-blink. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-caret-blink {
+  animation: caret-blink 1.06s steps(1, end) infinite;
+}

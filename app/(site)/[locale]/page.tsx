@@ -7,9 +7,11 @@ import { organizationNode, webSiteNode, mobileAppNode } from "@/lib/jsonld";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import {
   fetchActiveSuburbCount,
+  fetchActiveSuburbNames,
   fetchFeedListings,
   formatPriceLabel,
 } from "@/lib/supabase/server-feed";
+import { fetchGuideShops } from "@/lib/supabase/server-shops";
 import type { Metadata } from "next";
 
 const HOME_LISTING_COUNT = 6;
@@ -25,10 +27,19 @@ export default async function HomePage({ params }: LocaleParams) {
 
   // Server-rendered so the listings exist in the HTML for crawlers that never
   // run JavaScript — which is all of them except Googlebot's renderer.
-  const [listings, suburbCount] = await Promise.all([
+  const [listings, suburbCount, suburbNames, shops] = await Promise.all([
     fetchFeedListings({ locale, limit: HOME_LISTING_COUNT }),
     fetchActiveSuburbCount(),
+    fetchActiveSuburbNames(),
+    // 300s, not the page's 3600s. `server-shops.ts` documents why: the operator's
+    // remedy for a withdrawn shop address is immediate, and a page that cached it
+    // for an hour would keep publishing it for an hour.
+    fetchGuideShops(300),
   ]);
+
+  // The homepage degrades rather than fails: a failed directory read and an empty
+  // directory both mean "no shop wall", and the rest of the page is unaffected.
+  const shopWall = shops ?? [];
 
   const priceLabels = listings.map((l) =>
     formatPriceLabel(locale, l.priceCents, t.homeMarketFilterGiveaway),
@@ -89,7 +100,13 @@ export default async function HomePage({ params }: LocaleParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomePageContent listings={listings} priceLabels={priceLabels} suburbCount={suburbCount} />
+      <HomePageContent
+        listings={listings}
+        priceLabels={priceLabels}
+        suburbCount={suburbCount}
+        suburbNames={suburbNames}
+        shops={shopWall}
+      />
     </>
   );
 }
@@ -101,4 +118,8 @@ export { localeStaticParams as generateStaticParams } from "@/lib/locale-static-
 // required — without it Next 16 renders this route on demand, which would mean a
 // live database round-trip on every crawler hit.
 export const dynamic = "force-static";
-export const revalidate = 3600;
+// 300s, matching the shortest fetch on the page. The shop directory's addresses
+// are published here, and the operator's withdrawal remedy is immediate — see
+// lib/supabase/server-shops.ts. Everything else on the page tolerates the shorter
+// window fine; the reverse is not true.
+export const revalidate = 300;

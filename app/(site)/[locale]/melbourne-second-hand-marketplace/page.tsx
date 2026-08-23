@@ -45,7 +45,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
         list: [
           "Publica en minutos: añade unas fotos y una descripción breve para poner un artículo a la venta.",
           "Descubre por barrio: los compradores miran primero lo que tienen cerca, así la distancia y el horario de recogida son realistas.",
-          "Chatea en cualquier idioma: habla directamente con la otra persona gracias al chat multilingüe con traducción integrada y a la respuesta automática con IA.",
+          "Chatea en cualquier idioma: habla directamente con la otra persona gracias al chat multilingüe con traducción integrada.",
           "Quedad de forma segura: acuerda un lugar público y cómodo y confirma la entrega con un proceso más claro dentro de la app.",
         ],
       },
@@ -118,7 +118,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
         list: [
           "Publiez en quelques minutes : ajoutez quelques photos et une courte description pour mettre un article en ligne.",
           "Découvrez par quartier : les acheteurs parcourent d'abord ce qui se trouve à proximité, donc la distance et l'horaire de récupération restent réalistes.",
-          "Discutez dans toutes les langues : échangez directement avec l'autre personne grâce au chat multilingue avec traduction intégrée et à la réponse automatique par IA.",
+          "Discutez dans toutes les langues : échangez directement avec l'autre personne grâce au chat multilingue avec traduction intégrée.",
           "Rencontrez-vous en toute sécurité : convenez d'un lieu public et pratique, puis confirmez la remise grâce à un parcours clair dans l'appli.",
         ],
       },
@@ -191,7 +191,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
         list: [
           "Đăng tin trong vài phút: thêm vài tấm ảnh và một mô tả ngắn là đăng được món đồ.",
           "Khám phá theo khu: người mua duyệt những gì gần mình trước, nên khoảng cách và thời gian nhận hàng luôn thực tế.",
-          "Chat đa ngôn ngữ: nhắn trực tiếp với người kia, có hỗ trợ dịch để vượt qua rào cản ngôn ngữ, cùng tính năng tự động trả lời bằng AI.",
+          "Chat đa ngôn ngữ: nhắn trực tiếp với người kia, có hỗ trợ dịch để vượt qua rào cản ngôn ngữ.",
           "Gặp trực tiếp an toàn: hẹn ở nơi công cộng, tiện lợi và xác nhận việc nhận hàng qua quy trình rõ ràng trong app.",
         ],
       },

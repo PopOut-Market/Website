@@ -26,6 +26,8 @@ type IndexablePath = {
   /** ISO date of the last substantive content edit. Only used when `static`. */
   contentUpdated: string;
   priority: number;
+  /** Locale segments this path exists in. Defaults to all of them. */
+  locales?: readonly string[];
 };
 
 /** Bump this when you materially rewrite a static page's copy. */
@@ -43,6 +45,16 @@ const INDEXABLE_PATHS: IndexablePath[] = [
     contentUpdated: REPOSITIONING_EDIT,
     priority: 0.8,
   })),
+
+  // Ships in 4 locales only — see lib/grocery-guide-copy.ts. Emitting the other
+  // four here would put URLs in the sitemap that deliberately 404.
+  {
+    path: "/melbourne-cbd-asian-grocery-guide",
+    freshness: "live",
+    contentUpdated: REPOSITIONING_EDIT,
+    priority: 0.8,
+    locales: ["en", "zh-cn", "zh-tw", "ko"],
+  },
 
   { path: "/about", freshness: "static", contentUpdated: REPOSITIONING_EDIT, priority: 0.7 },
   { path: "/faq", freshness: "static", contentUpdated: REPOSITIONING_EDIT, priority: 0.7 },
@@ -141,7 +153,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const lastModified =
       entry.freshness === "live" ? buildTime : new Date(`${entry.contentUpdated}T00:00:00Z`);
 
-    for (const seg of locales) {
+    for (const seg of entry.locales ?? locales) {
       const localized = entry.path === "/" ? `/${seg}` : `/${seg}${entry.path}`;
       entries.push({
         url: `${base}${localized}`,

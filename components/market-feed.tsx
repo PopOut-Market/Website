@@ -1,5 +1,7 @@
 "use client";
 
+import { MarketPagination } from "@/components/market-pagination";
+import { toLocalePath } from "@/lib/site-locale-routing";
 import { MarketProductCard } from "@/components/market-product-card";
 import { createMockMarketProducts } from "@/lib/market-mock";
 import type { MarketProduct } from "@/lib/market-product";
@@ -16,10 +18,40 @@ type MarketFeedProps = {
   suburbName: string;
   locale: Locale;
   t: SiteCopy;
+  /**
+   * Listings fetched on the server for the default suburb.
+   *
+   * They exist so `/market` is not an empty page to anything that does not run
+   * JavaScript — which is every AI retrieval crawler, and was Googlebot too
+   * while `robots.txt` still blocked `/_next`. Rendering them here rather than
+   * in a second block above the feed means the page has ONE list instead of a
+   * crawler copy and a human copy sitting on top of each other.
+   *
+   * The client still fetches on mount and replaces them; these are the first
+   * paint, not the source of truth.
+   */
+  initialItems?: MarketProduct[];
 };
 
-/** Mirrors the app's home feed: 20-row pages, stable shuffle, dedupe by id. */
-const PAGE_SIZE = 20;
+/**
+ * Listings per page.
+ *
+ * The grid was an infinite scroll of 20-row pages. It is now classic pagination:
+ * a reader can tell how far in they are, can come back to where they were, and —
+ * on a page whose whole job is browsing stock — is not forced to scroll past
+ * everything to reach the footer.
+ */
+const PAGE_SIZE = 25;
+
+/**
+ * Fetch one extra row to learn whether another page exists.
+ *
+ * `get_home_feed` returns rows and no total, so "is there a next page" cannot be
+ * asked directly. Asking for 26 and rendering 25 answers it exactly, with no
+ * second query and no guessed page count. The RPC caps `p_limit` at 50, so this
+ * is comfortably inside it.
+ */
+const PROBE_SIZE = PAGE_SIZE + 1;
 
 const GRID_CLASS =
   "grid w-full list-none auto-rows-fr gap-3 p-0 [grid-template-columns:repeat(auto-fill,minmax(min(100%,10.25rem),1fr))] lg:gap-4 lg:[grid-template-columns:repeat(auto-fill,minmax(min(100%,12.3rem),1fr))]";
@@ -42,7 +74,7 @@ function dedupe(products: MarketProduct[], seen: Set<string>): MarketProduct[] {
   return out;
 }
 
-export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps) {
+export function MarketFeed({ suburbId, suburbName, locale, t, initialItems }: MarketFeedProps) {
   const mockProducts = useMemo(
     () => createMockMarketProducts(locale, t.marketDemoSeller, t.marketKmShort),
     [locale, t.marketDemoSeller, t.marketKmShort],
@@ -50,50 +82,49 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
 
   const configured = isSupabaseBrowserConfigured();
 
-  const [items, setItems] = useState<MarketProduct[]>([]);
+  // Seeded from the server render so the first paint is real listings, not a
+  // skeleton — and so the server HTML and the client's first render agree.
+  const [items, setItems] = useState<MarketProduct[]>(initialItems ?? []);
   const [hasLocalListing, setHasLocalListing] = useState<boolean | null>(null);
-  const [phase, setPhase] = useState<Phase>("skeleton");
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  const [phase, setPhase] = useState<Phase>(
+    initialItems && initialItems.length > 0 ? "list" : "skeleton",
+  );
   const [transitioning, setTransitioning] = useState(false);
+  /** 1-indexed. */
+  const [page, setPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  /** Highest page confirmed to exist, so the control never invents one. */
+  const [knownPages, setKnownPages] = useState(1);
 
   // Invalidates in-flight responses after suburb/locale changes (and concurrent loads).
   const genRef = useRef(0);
-  const offsetRef = useRef(0);
-  const seenRef = useRef<Set<string>>(new Set());
+
   const seedRef = useRef<number | null>(null);
   const loadingRef = useRef(false);
   const prevLocaleRef = useRef(locale);
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // Latest-value refs so loadMore() (called from the observer) doesn't go stale.
   const itemsRef = useRef<MarketProduct[]>(items);
   itemsRef.current = items;
-  const hasMoreRef = useRef(hasMore);
-  hasMoreRef.current = hasMore;
-  const phaseRef = useRef(phase);
-  phaseRef.current = phase;
-  // Always points at the latest loadMore so the duplicate-page chain isn't stale.
-  const loadMoreRef = useRef<() => void>(() => {});
 
   if (seedRef.current === null) {
     seedRef.current = newSeed();
   }
 
-  /** Reset pagination and load page 0. `clearVisible` shows a skeleton; otherwise the
-   *  old grid stays up until the new first page lands (suburb-switch transition). */
-  const loadFirstPage = useCallback(
-    async (clearVisible: boolean) => {
+  /**
+   * Load one page.
+   *
+   * `clearVisible` shows a skeleton; otherwise the current grid stays up until
+   * the new rows land, which is what makes a suburb switch feel like a filter
+   * rather than a reload.
+   */
+  const loadPage = useCallback(
+    async (target: number, clearVisible: boolean) => {
       if (!isSupabaseBrowserConfigured()) {
         return;
       }
       const gen = ++genRef.current;
-      offsetRef.current = 0;
-      seenRef.current = new Set();
       loadingRef.current = true;
-      setHasMore(true);
-      setLoadingMore(false);
       const keptItems = !clearVisible && itemsRef.current.length > 0;
       if (keptItems) {
         setTransitioning(true);
@@ -113,8 +144,9 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
           locale,
           sellerFallback: t.marketDemoSeller,
           kmSuffix: t.marketKmShort,
-          offset: 0,
-          limit: PAGE_SIZE,
+          offset: (target - 1) * PAGE_SIZE,
+          // One extra row, purely to answer "is there a next page".
+          limit: PROBE_SIZE,
           jitterSeed: seedRef.current!,
         });
         if (gen !== genRef.current) {
@@ -124,12 +156,25 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
           setPhase("error");
           return;
         }
-        const fresh = dedupe(products, seenRef.current);
-        offsetRef.current = products.length;
-        setHasMore(products.length >= PAGE_SIZE);
-        setItems(fresh);
+
+        const more = products.length > PAGE_SIZE;
+        // Dedupe within the page only. Pages are now independent windows over a
+        // stable ordering, so there is no cross-page `seen` set to maintain —
+        // and keeping one would wrongly blank a row that legitimately appears
+        // on the page you navigated back to.
+        const visible = dedupe(products.slice(0, PAGE_SIZE), new Set());
+
+        setHasNext(more);
+        setKnownPages((prev) => Math.max(prev, more ? target + 1 : target));
+        setItems(visible);
         setHasLocalListing(hll);
-        setPhase(fresh.length ? "list" : "empty");
+        setPage(target);
+        setPhase(visible.length ? "list" : "empty");
+
+        // Land at the top of the grid, not halfway down the page the reader just left.
+        if (target !== 1) {
+          scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+        }
       } catch {
         if (gen === genRef.current) {
           setPhase("error");
@@ -144,64 +189,21 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
     [suburbId, locale, t.marketDemoSeller, t.marketKmShort],
   );
 
-  const loadMore = useCallback(async () => {
-    if (!isSupabaseBrowserConfigured()) {
-      return;
-    }
-    if (loadingRef.current || !hasMoreRef.current || phaseRef.current !== "list") {
-      return;
-    }
-    const gen = genRef.current;
-    loadingRef.current = true;
-    setLoadingMore(true);
-    let chainDuplicatePage = false;
-    try {
-      const client = getSupabaseBrowserClient();
-      const { products, errorMessage } = await fetchMarketListings(client, {
-        suburbId,
-        locale,
-        sellerFallback: t.marketDemoSeller,
-        kmSuffix: t.marketKmShort,
-        offset: offsetRef.current,
-        limit: PAGE_SIZE,
-        jitterSeed: seedRef.current!,
-      });
-      if (gen !== genRef.current) {
+  const goToPage = useCallback(
+    (target: number) => {
+      if (target < 1 || loadingRef.current) {
         return;
       }
-      if (errorMessage) {
-        return; // keep what's already shown
-      }
-      offsetRef.current += products.length;
-      const more = products.length >= PAGE_SIZE;
-      setHasMore(more);
-      const fresh = dedupe(products, seenRef.current);
-      if (fresh.length) {
-        setItems((prev) => [...prev, ...fresh]);
-      } else if (more) {
-        // A full page of all-duplicate ids doesn't grow the DOM, so the sentinel
-        // never moves and the observer won't re-fire — advance the offset ourselves.
-        chainDuplicatePage = true;
-      }
-    } catch {
-      // keep what's already shown
-    } finally {
-      if (gen === genRef.current) {
-        loadingRef.current = false;
-        setLoadingMore(false);
-        if (chainDuplicatePage) {
-          queueMicrotask(() => loadMoreRef.current());
-        }
-      }
-    }
-  }, [suburbId, locale, t.marketDemoSeller, t.marketKmShort]);
-
-  loadMoreRef.current = loadMore;
+      void loadPage(target, false);
+    },
+    [loadPage],
+  );
 
   const refresh = useCallback(() => {
     seedRef.current = newSeed();
-    void loadFirstPage(true);
-  }, [loadFirstPage]);
+    setKnownPages(1);
+    void loadPage(1, true);
+  }, [loadPage]);
 
   // Suburb switch keeps the old grid (transition); language switch forces a skeleton.
   useEffect(() => {
@@ -210,33 +212,10 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
     }
     const localeChanged = prevLocaleRef.current !== locale;
     prevLocaleRef.current = locale;
-    void loadFirstPage(localeChanged);
-  }, [suburbId, locale, configured, loadFirstPage]);
-
-  // Infinite scroll: observe a sentinel near the bottom of the scroll container.
-  useEffect(() => {
-    if (phase !== "list") {
-      return;
-    }
-    const sentinel = sentinelRef.current;
-    const root = scrollRef.current;
-    if (!sentinel || !root) {
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          void loadMore();
-        }
-      },
-      { root, rootMargin: "600px 0px" },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-    // Re-arm on append (items.length), sentinel mount/unmount (hasMore), and when a
-    // suburb-switch transition completes (transitioning) — IntersectionObserver only
-    // fires on state *changes*, so a still-intersecting sentinel needs a fresh observe().
-  }, [phase, loadMore, items.length, hasMore, transitioning]);
+    // A different suburb is a different result set, so paging restarts at 1.
+    setKnownPages(1);
+    void loadPage(1, localeChanged);
+  }, [suburbId, locale, configured, loadPage]);
 
   if (!configured) {
     return (
@@ -251,7 +230,8 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
               <MarketProductCard
                 product={product}
                 regionLabel={product.suburbLabel ?? suburbName}
-                href={`/market/p/${encodeURIComponent(product.id)}?area=${encodeURIComponent(suburbName)}`}
+                href={toLocalePath(`/market/p/${encodeURIComponent(product.id)}`, locale)}
+                nofollow
                 copy={{
                   postNoImageAria: t.marketPostNoImageAria,
                   badgeNew: t.marketBadgeNew,
@@ -332,7 +312,9 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
                 <MarketProductCard
                   product={product}
                   regionLabel={product.suburbLabel ?? suburbName}
-                  href={`/market/p/${encodeURIComponent(product.id)}?area=${encodeURIComponent(suburbName)}`}
+                  href={toLocalePath(`/market/p/${encodeURIComponent(product.id)}`, locale)}
+                  nofollow
+                  titleAs="h3"
                   copy={{
                     postNoImageAria: t.marketPostNoImageAria,
                     badgeNew: t.marketBadgeNew,
@@ -341,16 +323,14 @@ export function MarketFeed({ suburbId, suburbName, locale, t }: MarketFeedProps)
               </li>
             ))}
           </ul>
-          {hasMore ? <div ref={sentinelRef} aria-hidden className="h-px w-full" /> : null}
-          {loadingMore ? (
-            <div
-              className="flex items-center justify-center py-6"
-              role="status"
-              aria-label={t.marketSupabaseLoadingAria}
-            >
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-black/15 border-t-brand-500" />
-            </div>
-          ) : null}
+          <MarketPagination
+            page={page}
+            knownPages={knownPages}
+            hasNext={hasNext}
+            busy={transitioning}
+            onGo={goToPage}
+            t={t}
+          />
         </>
       ) : null}
     </div>

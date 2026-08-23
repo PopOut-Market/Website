@@ -6,11 +6,15 @@ import { COPY } from "@/lib/site-i18n";
 import { SITE_ORIGIN } from "@/lib/seo";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import { fetchFeedListings, formatPriceLabel } from "@/lib/supabase/server-feed";
+import type { MarketProduct } from "@/lib/market-product";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
 const PATH = "/market";
-const SSR_LISTING_COUNT = 24;
+// Must equal `PAGE_SIZE` in components/market-feed.tsx. The server render IS
+// page 1; a different number here means the grid visibly changes length the
+// moment the client's own fetch lands.
+const SSR_LISTING_COUNT = 25;
 
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const locale = await localeFromParams(params);
@@ -22,9 +26,19 @@ export default async function MarketPage({ params }: LocaleParams) {
   const t = COPY[locale];
 
   const listings = await fetchFeedListings({ locale, limit: SSR_LISTING_COUNT });
-  const priceLabels = listings.map((l) =>
-    formatPriceLabel(locale, l.priceCents, t.homeMarketFilterGiveaway),
-  );
+  // Shape the server rows the way the client feed already expects, so seeding it
+  // is a straight assignment and the server and client renders agree.
+  const initialItems: MarketProduct[] = listings.map((l) => ({
+    id: l.id,
+    title: l.title,
+    priceLabel: formatPriceLabel(locale, l.priceCents, t.homeMarketFilterGiveaway),
+    distanceLabel: "",
+    sellerLabel: t.marketDemoSeller,
+    isNew: false,
+    suburbLabel: l.suburbName,
+    imageUrl: l.imageUrl,
+    meetupPoint: null,
+  }));
 
   const canonical = `${SITE_ORIGIN}${toLocalePath(PATH, locale)}`;
   const heading = localizedTitle(PATH, locale)?.split("|")[0]?.trim() || t.marketPageTitle;
@@ -71,16 +85,11 @@ export default async function MarketPage({ params }: LocaleParams) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <MarketServerListings
-        locale={locale}
-        heading={heading}
-        intro={intro}
-        listings={listings}
-        priceLabels={priceLabels}
-        noImageLabel={t.marketSupabaseEmpty}
-      />
+      <MarketServerListings locale={locale} heading={heading} intro={intro} />
       <Suspense fallback={null}>
-        <MarketPageContent />
+        {/* The server-fetched listings are handed to the real feed rather than
+            printed a second time above it — see market-server-listings.tsx. */}
+        <MarketPageContent initialItems={initialItems} />
       </Suspense>
     </>
   );

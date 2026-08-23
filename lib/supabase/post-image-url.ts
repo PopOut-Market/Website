@@ -1,5 +1,10 @@
 import { marketImagesBucketName } from "@/lib/supabase/browser-client";
 
+/** Origin of the Supabase project, for building public storage object URLs. */
+export function getSupabaseStorageOrigin(): string {
+  return supabaseProjectOrigin();
+}
+
 function supabaseProjectOrigin(): string {
   return (process.env.EXPO_PUBLIC_SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "")
     .trim()

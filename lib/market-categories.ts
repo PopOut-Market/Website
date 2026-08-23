@@ -214,6 +214,9 @@ type CategoryFrame = {
   h1: string;
   intro: string;
   browseAll: string;
+  /** Heading over the full category list, e.g. on /market. */
+  browseByCategory: string;
+  /** Heading over the OTHER categories, on a category page. Not interchangeable. */
   otherCategories: string;
 };
 
@@ -226,6 +229,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "These are {cat} listings live on PopOut Market right now, ranked by how close they are to central Melbourne. Every seller is a verified neighbour — an Australian mobile number plus a one-time location check — and every item is handed over in person at a public meetup spot. There is no postage and no courier step.",
     browseAll: "Browse everything for sale near you",
+    browseByCategory: "Browse by category",
     otherCategories: "Other categories in Melbourne",
   },
   "zh-Hans": {
@@ -236,6 +240,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "以下是 PopOut Market 上正在出售的二手{cat}，按距离墨尔本市中心的远近排序。每位卖家都通过澳洲手机号验证并完成了一次性定位核验，所有商品都在公共地点当面交付，没有邮寄，也没有快递环节。",
     browseAll: "浏览附近所有在售商品",
+    browseByCategory: "按分类浏览",
     otherCategories: "墨尔本其他二手分类",
   },
   "zh-Hant": {
@@ -246,6 +251,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "以下是 PopOut Market 上正在販售的二手{cat}，依距離墨爾本市中心的遠近排序。每位賣家都通過澳洲手機號碼驗證並完成一次性位置驗證，所有商品都在公共地點當面交付，沒有郵寄，也沒有快遞環節。",
     browseAll: "瀏覽附近所有在售商品",
+    browseByCategory: "依分類瀏覽",
     otherCategories: "墨爾本其他二手分類",
   },
   ko: {
@@ -256,6 +262,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "PopOut Market에 지금 올라와 있는 중고 {cat} 매물입니다. 멜버른 도심에서 가까운 순으로 정렬됩니다. 판매자는 모두 호주 휴대폰 번호와 일회성 위치 확인을 거친 이웃이며, 거래는 공공장소에서 직접 만나 진행합니다. 택배나 배송 절차는 없습니다.",
     browseAll: "근처의 모든 매물 보기",
+    browseByCategory: "카테고리별로 보기",
     otherCategories: "멜버른의 다른 중고 카테고리",
   },
   ja: {
@@ -266,6 +273,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "PopOut Market にいま出品されている中古{cat}です。メルボルン中心部からの近さ順に並んでいます。出品者はオーストラリアの携帯番号と一度きりの位置確認を済ませたご近所さんで、取引は公共の場所での手渡しのみ。郵送や宅配の手順はありません。",
     browseAll: "近くの出品をすべて見る",
+    browseByCategory: "カテゴリーから探す",
     otherCategories: "メルボルンの他のカテゴリー",
   },
   vi: {
@@ -276,6 +284,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "Đây là các tin đăng {cat} cũ đang có trên PopOut Market, xếp theo khoảng cách tới trung tâm Melbourne. Mọi người bán đều là hàng xóm đã xác minh bằng số di động Úc và một lần kiểm tra vị trí, và mọi món đồ đều được trao tay trực tiếp tại một địa điểm công cộng. Không gửi bưu điện, không chuyển phát.",
     browseAll: "Xem tất cả tin đăng gần bạn",
+    browseByCategory: "Duyệt theo danh mục",
     otherCategories: "Danh mục đồ cũ khác ở Melbourne",
   },
   fr: {
@@ -286,6 +295,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "Voici les annonces {cat} d'occasion actuellement en ligne sur PopOut Market, classées selon leur proximité avec le centre de Melbourne. Chaque vendeur est un voisin vérifié — numéro de mobile australien et vérification de position unique — et chaque objet est remis en main propre dans un lieu public. Ni envoi postal, ni livraison.",
     browseAll: "Voir toutes les annonces près de chez vous",
+    browseByCategory: "Parcourir par catégorie",
     otherCategories: "Autres catégories à Melbourne",
   },
   es: {
@@ -296,6 +306,7 @@ export const CATEGORY_COPY: Record<Locale, CategoryFrame> = {
     intro:
       "Estos son los anuncios de {cat} de segunda mano activos ahora mismo en PopOut Market, ordenados por cercanía al centro de Melbourne. Cada vendedor es un vecino verificado — número de móvil australiano y una comprobación de ubicación única — y cada artículo se entrega en persona en un lugar público. Sin envíos ni mensajería.",
     browseAll: "Ver todo lo que se vende cerca de ti",
+    browseByCategory: "Explorar por categoría",
     otherCategories: "Otras categorías en Melbourne",
   },
 };

@@ -17,6 +17,7 @@ import {
   matchSuburbByName,
   type ActiveSuburb,
 } from "@/lib/supabase/fetch-active-suburbs";
+import type { MarketProduct } from "@/lib/market-product";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -52,7 +53,7 @@ function storeSuburbName(name: string): void {
   }
 }
 
-export function MarketPageContent() {
+export function MarketPageContent({ initialItems }: { initialItems?: MarketProduct[] }) {
   const { t, locale } = useSiteShell();
   const searchParams = useSearchParams();
 
@@ -217,7 +218,13 @@ export function MarketPageContent() {
           </div>
         </div>
 
-        <MarketFeed suburbId={selected.id} suburbName={selected.name} locale={locale} t={t} />
+        <MarketFeed
+          suburbId={selected.id}
+          suburbName={selected.name}
+          locale={locale}
+          t={t}
+          initialItems={initialItems}
+        />
       </div>
 
       {areaModalOpen ? (

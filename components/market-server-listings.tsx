@@ -2,46 +2,38 @@ import Link from "next/link";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_CATEGORIES, CATEGORY_COPY } from "@/lib/market-categories";
 import { toLocalePath } from "@/lib/site-locale-routing";
-import { suburbDisplayName } from "@/lib/suburb-display";
-import type { FeedListing } from "@/lib/supabase/server-feed";
 import type { Locale } from "@/lib/site-i18n";
 
 /**
- * The server-rendered half of `/market`.
+ * The server-rendered head of `/market`: the real `<h1>`, the page's intro, and
+ * the category navigation.
  *
- * `/market` sat at priority 0.9 in the sitemap while its server HTML carried
- * seven words of page-specific text, zero links to any listing and no
- * structured data — because the feed is a `"use client"` component fetching in
- * a `useEffect`. Googlebot could not even reach the JavaScript, since
- * `robots.txt` disallowed `/_next`; no AI retrieval crawler executes JS at all.
- * So roughly 1,100 live listings were invisible to every machine that matters.
+ * It used to also render a plain text list of 24 listings. That is gone, and the
+ * reason is worth keeping: the listings are now seeded straight into the
+ * interactive `MarketFeed` below (see its `initialItems` prop), so the page has
+ * **one** list rather than a crawler copy stacked on top of a human copy. The
+ * old arrangement printed the same two dozen items twice on one screen, which
+ * read as a data dump and was the first thing anyone noticed about the page.
  *
- * This is a plain server component: a real `<h1>`, real listing links, and the
- * category cross-mesh. The interactive suburb picker and its live feed still
- * mount underneath and still own the experience for a human with JavaScript.
- * Nothing here duplicates that behaviour — it just makes the page legible
- * without it.
- *
- * Listing links carry `rel="nofollow"` and listing pages are `noindex, follow`:
- * the goal is for a crawler to see that real inventory exists and how it is
- * described, not to push ~8,800 short-lived listing URLs into the index.
+ * What stays here is what genuinely belongs above the feed: a heading that
+ * describes the page (the feed's own heading is an area picker, which is a
+ * control, not a title), a sentence of context, and links into the ten category
+ * pages so the cluster is reachable from the page it belongs to.
  */
 export function MarketServerListings({
   locale,
   heading,
   intro,
-  listings,
-  priceLabels,
-  noImageLabel,
 }: {
   locale: Locale;
   heading: string;
   intro: string;
-  listings: FeedListing[];
-  priceLabels: string[];
-  noImageLabel: string;
 }) {
-  const categoriesHeading = CATEGORY_COPY[locale].otherCategories;
+  // `browseByCategory`, NOT `otherCategories`. The latter is written for a
+  // category page, where the list genuinely is "the other categories"; on
+  // /market it produced the heading "Other categories in Melbourne" above a list
+  // of every category, which reads as nonsense.
+  const categoriesHeading = CATEGORY_COPY[locale].browseByCategory;
 
   return (
     <section className={`${SHELL_X} w-full bg-surface-base pt-8`}>
@@ -51,29 +43,7 @@ export function MarketServerListings({
         </h1>
         <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-black/60">{intro}</p>
 
-        {listings.length > 0 ? (
-          <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:grid-cols-4">
-            {listings.map((l, i) => (
-              <li key={l.id} className="min-w-0 text-sm leading-snug">
-                <Link
-                  href={toLocalePath(`/market/p/${encodeURIComponent(l.id)}`, locale)}
-                  rel="nofollow"
-                  className="text-black/70 underline-offset-2 hover:text-brand-700 hover:underline"
-                >
-                  <span className="line-clamp-1">{l.title}</span>
-                </Link>{" "}
-                <span className="tabular-nums text-black/45">{priceLabels[i]}</span>
-                {l.suburbName ? (
-                  <span className="text-black/35"> · {suburbDisplayName(l.suburbName)}</span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-6 text-sm text-black/45">{noImageLabel}</p>
-        )}
-
-        <nav aria-label={categoriesHeading} className="mt-8">
+        <nav aria-label={categoriesHeading} className="mt-6">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-black/50">
             {categoriesHeading}
           </h2>

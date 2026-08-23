@@ -53,7 +53,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       {
         heading: "Compra y vende con seguridad y chatea en tu idioma",
         paragraphs: [
-          "PopOut Market incluye un chat multilingüe con traducción dentro de la app, así que puedes acordar el precio, el estado y la hora de recogida en el idioma con el que te sientas más cómodo, con una respuesta automática por IA que facilita el primer contacto. Un proceso de encuentro en persona más seguro ayuda a que compradores y vendedores queden en puntos concurridos y bien iluminados.",
+          "PopOut Market incluye un chat multilingüe con traducción dentro de la app, así que puedes acordar el precio, el precio y la hora de recogida en el idioma con el que te sientas más cómodo. Un proceso de encuentro en persona más seguro ayuda a que compradores y vendedores queden en puntos concurridos y bien iluminados.",
           "Muy popular entre estudiantes internacionales, inquilinos y quienes cambian de apartamento, PopOut mantiene sencilla la compraventa de artículos usados en el centro y en toda Melbourne.",
         ],
       },
@@ -118,7 +118,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       {
         heading: "Échangez en toute sécurité et discutez dans votre langue",
         paragraphs: [
-          "PopOut Market intègre une messagerie multilingue avec traduction directement dans l'appli : vous pouvez convenir du prix, de l'état et de l'heure de retrait dans la langue qui vous convient le mieux, avec une réponse automatique par IA pour faciliter le premier contact. Un parcours de rencontre en personne plus sûr aide acheteurs et vendeurs à se retrouver dans des lieux fréquentés et bien éclairés du CBD.",
+          "PopOut Market intègre une messagerie multilingue avec traduction directement dans l'appli : vous pouvez convenir du prix et de l'heure de retrait dans la langue qui vous convient le mieux. Un parcours de rencontre en personne plus sûr aide acheteurs et vendeurs à se retrouver dans des lieux fréquentés et bien éclairés du CBD.",
           "Plébiscité par les étudiants internationaux, les locataires et les personnes qui changent d'appartement, PopOut simplifie les transactions au centre-ville tout en couvrant l'ensemble de Melbourne.",
         ],
       },
@@ -182,7 +182,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       {
         heading: "Giao dịch an toàn và chat bằng ngôn ngữ của bạn",
         paragraphs: [
-          "PopOut Market tích hợp chat đa ngôn ngữ có dịch ngay trong app, nên bạn có thể thống nhất giá cả, tình trạng và giờ nhận hàng bằng ngôn ngữ mình thoải mái nhất, cùng tính năng AI tự động trả lời hỗ trợ việc liên hệ. Quy trình gặp mặt trực tiếp an toàn hơn giúp người mua và người bán hẹn nhau tại những điểm đông người, sáng sủa trong khu CBD.",
+          "PopOut Market tích hợp chat đa ngôn ngữ có dịch ngay trong app, nên bạn có thể thống nhất giá cả và giờ nhận hàng bằng ngôn ngữ mình thoải mái nhất. Quy trình gặp mặt trực tiếp an toàn hơn giúp người mua và người bán hẹn nhau tại những điểm đông người, sáng sủa trong khu CBD.",
           "Được du học sinh, người thuê nhà và người chuyển căn hộ ưa chuộng, PopOut là nền tảng mua bán đồ cũ ở Melbourne giúp việc giao dịch tại trung tâm luôn đơn giản, đồng thời phủ khắp toàn Melbourne.",
         ],
       },
@@ -246,7 +246,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       {
         heading: "用母語溝通，當面交易更安心",
         paragraphs: [
-          "PopOut Market 內建多語言聊天與翻譯，你可以用最習慣的語言確認價格、成色與自取時間，還有 AI 自動回覆協助接洽。更安全的當面交易流程，讓買賣雙方在 CBD 人流密集、明亮的地點碰面完成交易。",
+          "PopOut Market 內建多語言聊天與翻譯，你可以用最習慣的語言確認價格與自取時間。發文時賣家會選定一個公共地點作為面交地點，買家在刊登頁上就能看到。",
           "PopOut Market 深受留學生、租屋族與搬家族喜愛，是旋轉拍賣(Carousell)之外實用的墨爾本二手 app 與二手平台；它讓墨爾本市區的中古買賣保持簡單，同時觸及整個墨爾本。",
         ],
       },
@@ -448,7 +448,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       {
         heading: "用母语沟通，更安心地交易",
         paragraphs: [
-          "PopOut Market 内置多语言聊天，你可以用最习惯的语言确认价格、成色与自提时间。更安全的当面交易流程，帮助买卖双方在 CBD 人流密集、明亮安全的地点见面完成交易。",
+          "PopOut Market 内置多语言聊天，你可以用最习惯的语言确认价格与自提时间。发布时卖家会选定一个公共地点作为见面点，买家在商品页上就能看到。",
           "PopOut 深受留学生、租房者和搬家人群欢迎，让墨尔本市区的二手买卖简单顺畅，同时触达整个墨尔本。",
         ],
       },
