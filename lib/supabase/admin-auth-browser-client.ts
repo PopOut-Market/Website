@@ -25,16 +25,49 @@ export function isAdminAuthConfigured(): boolean {
 }
 
 /**
- * Uses sessionStorage so that closing the browser tab clears the session,
- * requiring re-login next time. Refreshing the page keeps the session alive.
+ * Where the admin session is kept.
+ *
+ * **Production uses `sessionStorage`**, deliberately: closing the tab ends the
+ * session, so an admin console left open on a shared or unattended machine does
+ * not stay signed in indefinitely. Refreshing keeps it.
+ *
+ * **Local development uses `localStorage`** instead, because `sessionStorage` is
+ * scoped to a single tab: opening the dashboard in a new tab, or restarting the
+ * dev server and reopening it, meant signing in again every time.
+ *
+ * This is safe to ship. `process.env.NODE_ENV` is statically substituted by Next
+ * at build time, so in a production build the condition folds to `false` and the
+ * localStorage branch is removed from the bundle entirely — production cannot
+ * take this path even by accident.
  */
+const IS_DEV = process.env.NODE_ENV === "development";
+
+function backingStore(): Storage | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return IS_DEV ? window.localStorage : window.sessionStorage;
+  } catch {
+    // Private mode / storage disabled. Returning null degrades to an in-memory
+    // session for this page rather than throwing on every auth call.
+    return null;
+  }
+}
+
 const sessionStorageAdapter = {
-  getItem: (key: string) => (typeof window !== "undefined" ? sessionStorage.getItem(key) : null),
+  getItem: (key: string) => backingStore()?.getItem(key) ?? null,
   setItem: (key: string, value: string) => {
-    if (typeof window !== "undefined") sessionStorage.setItem(key, value);
+    try {
+      backingStore()?.setItem(key, value);
+    } catch {
+      /* quota or disabled storage — the session simply does not persist */
+    }
   },
   removeItem: (key: string) => {
-    if (typeof window !== "undefined") sessionStorage.removeItem(key);
+    try {
+      backingStore()?.removeItem(key);
+    } catch {
+      /* ignore */
+    }
   },
 };
 

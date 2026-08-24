@@ -34,6 +34,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
   const configured = useMemo(() => isAdminAuthConfigured(), []);
   const [identity, setIdentity] = useState<string | null>(null);
   const [checking, setChecking] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!configured) {
@@ -93,6 +94,22 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <p className="text-sm text-slate-500">Verifying session...</p>
+      </div>
+    );
+  }
+
+  // Verification could not complete, but the session was NOT thrown away.
+  if (authError && !identity) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50 px-6 text-center">
+        <p className="max-w-sm text-sm text-slate-600">{authError}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+        >
+          Try again
+        </button>
       </div>
     );
   }
