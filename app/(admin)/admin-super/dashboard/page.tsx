@@ -35,7 +35,7 @@ type Overview = {
     daily: Series;
     weekly: Series;
   };
-  activity: { messages7d: number };
+  activity: { messages7d: number; messagesTotal: number };
   sales: {
     sold: number;
     onPlatform: number;
@@ -843,21 +843,35 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Left: the three counts, stacked. Middle: how long we have been live.
-          Right: engagement, reserved — the numbers are placeholders until the
-          DAU/WAU source is wired up, and they are labelled as such so nobody
-          reads a hard zero as a measurement. */}
+      {/* Left: the all-time counts, stacked. Middle: how long we have been live.
+          Right: engagement — the DAU/WAU/MAU numbers are placeholders until that
+          source is wired up, and they are labelled as such so nobody reads a hard
+          zero as a measurement; the two 7-day counts under them are real. */}
       <div className="grid gap-4 lg:grid-cols-3">
         <Panel className="justify-center divide-y divide-slate-100">
           <StatRow label="Available posts" value={data?.posts.available ?? 0} loading={loading} />
           <StatRow label="Active users" value={data?.users.active ?? 0} loading={loading} />
-          <StatRow label="Posts · last 7 days" value={data?.posts.last7d ?? 0} loading={loading} />
           {/* The in-app figure: listings the seller completed through PopOut, i.e.
               they picked the buyer out of their own chats. It deliberately excludes
               the ones marked "Other (sold elsewhere)" — the Sales panel below shows
               both halves. Switch to `posts.byStatus` if the combined total is ever
               wanted here instead. */}
           <StatRow label="Sold" value={data?.sales.onPlatform ?? 0} loading={loading} />
+          {/* Every message ever sent, not a window — the 7-day figure sits with
+              the engagement rows on the right. */}
+          <StatRow
+            label="Messages · total"
+            value={data?.activity.messagesTotal ?? 0}
+            loading={loading}
+          />
+          {/* Downloads is the one row here that does not come from this database.
+              The hint carries the date so a stale figure looks stale instead of
+              looking live. */}
+          <StatRow
+            label="Downloads"
+            value={APP_DOWNLOADS.display}
+            hint={`Manual · ${APP_DOWNLOADS.checked}`}
+          />
         </Panel>
 
         <DayCounter />
@@ -870,18 +884,12 @@ export default function DashboardPage() {
             nightly snapshot. The hint stops a hard zero being read as a
             measurement. */}
         <Panel className="justify-center divide-y divide-slate-100">
-          {/* Downloads sits with these rather than with the marketplace counts
-              because it shares their defining property: it does not come from
-              this database. The hint carries the date so a stale figure looks
-              stale instead of looking live. */}
-          <StatRow
-            label="Downloads"
-            value={APP_DOWNLOADS.display}
-            hint={`Manual · ${APP_DOWNLOADS.checked}`}
-          />
           <StatRow label="DAU" value={0} hint="Not connected yet" />
           <StatRow label="WAU" value={0} hint="Not connected yet" />
           <StatRow label="MAU" value={0} hint="Not connected yet" />
+          {/* The two rolling-7-day counts sit together so they read as a pair:
+              what was listed against what was said in the same window. */}
+          <StatRow label="Posts · last 7 days" value={data?.posts.last7d ?? 0} loading={loading} />
           <StatRow
             label="Messages · last 7 days"
             value={data?.activity.messages7d ?? 0}

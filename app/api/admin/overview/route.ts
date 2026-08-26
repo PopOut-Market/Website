@@ -122,6 +122,7 @@ export async function GET(req: Request) {
       { data: availablePosts, error: e10 },
       { data: windowProfiles, error: e11 },
       { count: messages7d, error: e15 },
+      { count: messagesTotal, error: e15b },
       { count: bulkPosts, error: e16 },
       { data: soldPosts, error: e17 },
       { data: salesRows, error: e18 },
@@ -209,6 +210,10 @@ export async function GET(req: Request) {
         .select("*", { count: "exact", head: true })
         .gte("created_at", windowStartISO),
 
+      // Every message ever sent. A head count, so the 1000-row response cap
+      // cannot truncate it however large the table gets.
+      sb.from("messages").select("*", { count: "exact", head: true }),
+
       // How the listing was created. `batch_id` is set only by the bulk flow.
       sb.from("posts").select("*", { count: "exact", head: true }).not("batch_id", "is", null),
 
@@ -267,6 +272,7 @@ export async function GET(req: Request) {
       e10 ??
       e11 ??
       e15 ??
+      e15b ??
       e16 ??
       e17 ??
       e18 ??
@@ -555,6 +561,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       activity: {
         messages7d: messages7d ?? 0,
+        messagesTotal: messagesTotal ?? 0,
       },
       sales: {
         sold: soldOnPlatform + soldElsewhere,
