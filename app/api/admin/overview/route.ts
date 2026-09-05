@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { fetchAllRows } from "@/lib/supabase/admin-fetch-all";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 /**
@@ -41,29 +42,6 @@ const COMMUNITY_TOPICS: { slug: string; label: string }[] = [
   { slug: "want_to_buy", label: "Looking to buy" },
   { slug: "other", label: "Other" },
 ];
-
-// PostgREST caps a single response at db-max-rows (1000 on this project). Any
-// query that tallies a whole table in memory silently undercounts once the
-// table grows past that cap, so page through every row via a stable `id` order
-// until a short page marks the end.
-const PAGE_SIZE = 1000;
-type QueryError = { message?: string; code?: string } | null;
-type RangeableQuery = {
-  range: (from: number, to: number) => PromiseLike<{ data: unknown[] | null; error: QueryError }>;
-};
-async function fetchAllRows(
-  makeQuery: () => RangeableQuery,
-): Promise<{ data: unknown[]; error: QueryError }> {
-  const all: unknown[] = [];
-  for (let from = 0; ; from += PAGE_SIZE) {
-    const { data, error } = await makeQuery().range(from, from + PAGE_SIZE - 1);
-    if (error) return { data: all, error };
-    const rows = data ?? [];
-    for (const r of rows) all.push(r);
-    if (rows.length < PAGE_SIZE) break;
-  }
-  return { data: all, error: null };
-}
 
 export async function GET(req: Request) {
   const gate = await requireAdmin(req);

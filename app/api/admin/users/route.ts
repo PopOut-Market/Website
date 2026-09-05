@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { fetchAllRows } from "@/lib/supabase/admin-fetch-all";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 /**
@@ -9,10 +10,14 @@ import { requireAdmin } from "@/lib/supabase/admin-server-auth";
  * per-user breakdown (available + sold listings, and the reports against them) for
  * the expanded detail view. Service-role behind requireAdmin.
  *
- * Volume note: aggregation is done in JS over a few small full-table reads
- * (profiles / posts / post_reports / user_reports / suburbs). Negligible at
- * current scale (~100 users, ~350 posts, a few reports). If posts grow into the
- * tens of thousands, move this aggregation into a DB view/RPC.
+ * Volume note: aggregation is done in JS over full-table reads (profiles /
+ * posts / post_reports / user_reports / suburbs / reward_invitations). Each one
+ * goes through `fetchAllRows`, because PostgREST silently truncates a plain
+ * select at 1000 rows: profiles and posts are both past that, and the
+ * truncation shows up as a user list that just stops (it stopped at 934 of 963
+ * users, and every per-user post tally was computed from 1000 of 2106 posts).
+ * If these tables grow into the hundreds of thousands, move the aggregation
+ * into a DB view/RPC.
  */
 
 function env(name: string): string {
@@ -98,22 +103,45 @@ export async function GET(req: Request) {
 
   try {
     const [profRes, postRes, postRepRes, userRepRes, subRes, invRes] = await Promise.all([
-      sb
-        .from("profiles")
-        .select(
-          "id, nickname, created_at, last_active_at, is_banned, is_deleted, language, verified_suburb_id",
-        ),
-      sb
-        .from("posts")
-        .select("id, seller_id, raw_title, price_cents, status, thumbnail_path, created_at"),
-      sb.from("post_reports").select("id, reporter_id, post_id, reason, status, created_at"),
-      sb.from("user_reports").select("id, reporter_id, reported_id, reason, status, created_at"),
-      sb.from("suburbs").select("id, name"),
+      fetchAllRows(() =>
+        sb
+          .from("profiles")
+          .select(
+            "id, nickname, created_at, last_active_at, is_banned, is_deleted, language, verified_suburb_id",
+          )
+          // `not.is.true` (not `eq false`) so a NULL `is_deleted` still counts as
+          // a live user, matching the `!p.is_deleted` test this replaced.
+          .not("is_deleted", "is", true)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("posts")
+          .select("id, seller_id, raw_title, price_cents, status, thumbnail_path, created_at")
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("post_reports")
+          .select("id, reporter_id, post_id, reason, status, created_at")
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("user_reports")
+          .select("id, reporter_id, reported_id, reason, status, created_at")
+          .order("id"),
+      ),
+      fetchAllRows(() => sb.from("suburbs").select("id, name").order("id")),
       // Who invited whom — inviter nickname embedded, from the referral table.
-      sb
-        .from("reward_invitations")
-        .select("inviter_id, invitee_id, created_at, inviter:profiles!inviter_id(nickname)")
-        .order("created_at", { ascending: true }),
+      // Ordered by id for stable paging; `invitedBy` below keeps the first row
+      // per invitee, so ties are resolved by insertion order either way.
+      fetchAllRows(() =>
+        sb
+          .from("reward_invitations")
+          .select("inviter_id, invitee_id, created_at, inviter:profiles!inviter_id(nickname)")
+          .order("id"),
+      ),
     ]);
 
     const firstErr =
@@ -208,38 +236,36 @@ export async function GET(req: Request) {
       createdAt: p.created_at,
     });
 
-    const users = ((profRes.data ?? []) as ProfileRow[])
-      .filter((p) => !p.is_deleted)
-      .map((p) => {
-        const mine = postsBySeller.get(p.id) ?? [];
-        const available = mine.filter((x) => x.status === "available").sort(byNewest);
-        const sold = mine.filter((x) => x.status === "sold").sort(byNewest);
-        const reportsAgainst = (against.get(p.id) ?? []).sort((a, b) =>
-          b.createdAt.localeCompare(a.createdAt),
-        );
-        const reportedSuccessful = reportsAgainst.filter((r) => r.status === ACTIONED).length;
-        return {
-          id: p.id,
-          nickname: p.nickname || "(no name)",
-          createdAt: p.created_at,
-          lastActiveAt: p.last_active_at ?? null,
-          isBanned: !!p.is_banned,
-          language: p.language ?? null,
-          suburb: p.verified_suburb_id ? (suburbName.get(p.verified_suburb_id) ?? null) : null,
-          invitedBy: invitedBy.get(p.id) ?? null,
-          counts: {
-            posts: available.length + sold.length,
-            available: available.length,
-            sold: sold.length,
-            reportedAgainst: reportsAgainst.length,
-            reportedSuccessful,
-            reportedBy: reportedByCount.get(p.id) ?? 0,
-          },
-          availablePosts: available.map(mapPost),
-          soldPosts: sold.map(mapPost),
-          reportsAgainst,
-        };
-      });
+    const users = ((profRes.data ?? []) as ProfileRow[]).map((p) => {
+      const mine = postsBySeller.get(p.id) ?? [];
+      const available = mine.filter((x) => x.status === "available").sort(byNewest);
+      const sold = mine.filter((x) => x.status === "sold").sort(byNewest);
+      const reportsAgainst = (against.get(p.id) ?? []).sort((a, b) =>
+        b.createdAt.localeCompare(a.createdAt),
+      );
+      const reportedSuccessful = reportsAgainst.filter((r) => r.status === ACTIONED).length;
+      return {
+        id: p.id,
+        nickname: p.nickname || "(no name)",
+        createdAt: p.created_at,
+        lastActiveAt: p.last_active_at ?? null,
+        isBanned: !!p.is_banned,
+        language: p.language ?? null,
+        suburb: p.verified_suburb_id ? (suburbName.get(p.verified_suburb_id) ?? null) : null,
+        invitedBy: invitedBy.get(p.id) ?? null,
+        counts: {
+          posts: available.length + sold.length,
+          available: available.length,
+          sold: sold.length,
+          reportedAgainst: reportsAgainst.length,
+          reportedSuccessful,
+          reportedBy: reportedByCount.get(p.id) ?? 0,
+        },
+        availablePosts: available.map(mapPost),
+        soldPosts: sold.map(mapPost),
+        reportsAgainst,
+      };
+    });
 
     return NextResponse.json({ users, generatedAt: new Date().toISOString() });
   } catch (err) {

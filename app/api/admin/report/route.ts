@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { fetchAllRows } from "@/lib/supabase/admin-fetch-all";
 import { requireAdmin } from "@/lib/supabase/admin-server-auth";
 
 function env(name: string): string {
@@ -40,38 +41,68 @@ export async function GET(req: Request) {
 
   try {
     const [postsRes, interestsRes, soldPostsRes, profilesRes, allStatusRes] = await Promise.all([
-      sb.from("posts").select("created_at").gte("created_at", startISO).lte("created_at", endISO),
-      sb
-        .from("post_interests")
-        .select("created_at")
-        .gte("created_at", startISO)
-        .lte("created_at", endISO),
-      sb
-        .from("posts")
-        .select("updated_at")
-        .eq("status", "sold")
-        .gte("updated_at", startISO)
-        .lte("updated_at", endISO),
-      sb
-        .from("profiles")
-        .select("suburb_verified_at")
-        .gte("suburb_verified_at", startISO)
-        .lte("suburb_verified_at", endISO),
-      sb.from("posts").select("status").gte("created_at", startISO).lte("created_at", endISO),
+      fetchAllRows(() =>
+        sb
+          .from("posts")
+          .select("created_at")
+          .gte("created_at", startISO)
+          .lte("created_at", endISO)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("post_interests")
+          .select("created_at")
+          .gte("created_at", startISO)
+          .lte("created_at", endISO)
+          .order("post_id")
+          .order("user_id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("posts")
+          .select("updated_at")
+          .eq("status", "sold")
+          .gte("updated_at", startISO)
+          .lte("updated_at", endISO)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("profiles")
+          .select("suburb_verified_at")
+          .gte("suburb_verified_at", startISO)
+          .lte("suburb_verified_at", endISO)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("posts")
+          .select("status")
+          .gte("created_at", startISO)
+          .lte("created_at", endISO)
+          .order("id"),
+      ),
     ]);
 
     const [msgRes, meetupRes] = await Promise.all([
-      sb
-        .from("messages")
-        .select("created_at")
-        .gte("created_at", startISO)
-        .lte("created_at", endISO),
-      sb
-        .from("meetup_schedules")
-        .select("updated_at")
-        .eq("status", "met")
-        .gte("updated_at", startISO)
-        .lte("updated_at", endISO),
+      fetchAllRows(() =>
+        sb
+          .from("messages")
+          .select("created_at")
+          .gte("created_at", startISO)
+          .lte("created_at", endISO)
+          .order("id"),
+      ),
+      fetchAllRows(() =>
+        sb
+          .from("meetup_schedules")
+          .select("updated_at")
+          .eq("status", "met")
+          .gte("updated_at", startISO)
+          .lte("updated_at", endISO)
+          .order("id"),
+      ),
     ]);
 
     const firstErr =
