@@ -40,7 +40,7 @@ export async function GET(req: Request) {
   });
 
   try {
-    const [postsRes, interestsRes, soldPostsRes, profilesRes, allStatusRes] = await Promise.all([
+    const [postsRes, interestsRes, txRes, profilesRes, allStatusRes] = await Promise.all([
       fetchAllRows(() =>
         sb
           .from("posts")
@@ -58,13 +58,20 @@ export async function GET(req: Request) {
           .order("post_id")
           .order("user_id"),
       ),
+      // Completed sales, from the transaction record rather than from
+      // `posts.status = "sold"` bucketed by `updated_at`. `updated_at` moves on
+      // any later edit, so a sale drifted into whichever period the listing was
+      // last touched in; `sold_at` is written once and never moves. It is also
+      // the more complete record — 326 transactions against 305 posts still
+      // carrying the "sold" status, because a relisted or restricted post loses
+      // it. Every handover in this product is in person, so this is both the
+      // deal count and the handover count; there is no second number.
       fetchAllRows(() =>
         sb
-          .from("posts")
-          .select("updated_at")
-          .eq("status", "sold")
-          .gte("updated_at", startISO)
-          .lte("updated_at", endISO)
+          .from("transactions")
+          .select("sold_at")
+          .gte("sold_at", startISO)
+          .lte("sold_at", endISO)
           .order("id"),
       ),
       fetchAllRows(() =>
@@ -85,30 +92,19 @@ export async function GET(req: Request) {
       ),
     ]);
 
-    const [msgRes, meetupRes] = await Promise.all([
-      fetchAllRows(() =>
-        sb
-          .from("messages")
-          .select("created_at")
-          .gte("created_at", startISO)
-          .lte("created_at", endISO)
-          .order("id"),
-      ),
-      fetchAllRows(() =>
-        sb
-          .from("meetup_schedules")
-          .select("updated_at")
-          .eq("status", "met")
-          .gte("updated_at", startISO)
-          .lte("updated_at", endISO)
-          .order("id"),
-      ),
-    ]);
+    const msgRes = await fetchAllRows(() =>
+      sb
+        .from("messages")
+        .select("created_at")
+        .gte("created_at", startISO)
+        .lte("created_at", endISO)
+        .order("id"),
+    );
 
     const firstErr =
       postsRes.error ??
       interestsRes.error ??
-      soldPostsRes.error ??
+      txRes.error ??
       profilesRes.error ??
       allStatusRes.error;
 
@@ -120,9 +116,7 @@ export async function GET(req: Request) {
     }
 
     let messagesData: { created_at: string }[] = [];
-    let meetupsData: { updated_at: string }[] = [];
     let msgCountFallback: number | null = null;
-    let meetupCountFallback: number | null = null;
 
     if (msgRes.error) {
       const { count } = await sb
@@ -135,28 +129,14 @@ export async function GET(req: Request) {
       messagesData = (msgRes.data ?? []) as { created_at: string }[];
     }
 
-    if (meetupRes.error) {
-      const { count } = await sb
-        .from("meetup_schedules")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "met")
-        .gte("updated_at", startISO)
-        .lte("updated_at", endISO);
-      meetupCountFallback = count ?? 0;
-    } else {
-      meetupsData = (meetupRes.data ?? []) as { updated_at: string }[];
-    }
-
     return NextResponse.json({
       posts: postsRes.data ?? [],
       interests: interestsRes.data ?? [],
-      soldPosts: soldPostsRes.data ?? [],
+      transactions: txRes.data ?? [],
       profiles: profilesRes.data ?? [],
       allPostStatuses: allStatusRes.data ?? [],
       messages: messagesData,
-      meetups: meetupsData,
       msgCountFallback,
-      meetupCountFallback,
     });
   } catch (err) {
     return NextResponse.json(

@@ -31,7 +31,6 @@ interface PeriodBucket {
   dealResults: number;
   newUsers: number;
   messages: number;
-  meetups: number;
 }
 
 interface ReportData {
@@ -41,7 +40,6 @@ interface ReportData {
   totalDealResults: number;
   totalNewUsers: number;
   totalMessages: number;
-  totalMeetups: number;
   statusDist: { name: string; value: number }[];
 }
 
@@ -150,7 +148,6 @@ async function fetchReportData(
     dealResults: 0,
     newUsers: 0,
     messages: 0,
-    meetups: 0,
   }));
 
   function assignToBucket(
@@ -180,7 +177,6 @@ async function fetchReportData(
       totalDealResults: 0,
       totalNewUsers: 0,
       totalMessages: 0,
-      totalMeetups: 0,
       statusDist: [],
     };
   }
@@ -189,11 +185,10 @@ async function fetchReportData(
 
   const posts: { created_at?: string }[] = raw.posts ?? [];
   const interests: { created_at?: string }[] = raw.interests ?? [];
-  const soldPosts: { updated_at?: string }[] = raw.soldPosts ?? [];
+  const transactions: { sold_at?: string }[] = raw.transactions ?? [];
   const profiles: { suburb_verified_at?: string }[] = raw.profiles ?? [];
   const allPostStatuses: { status?: string }[] = raw.allPostStatuses ?? [];
   const messagesRows: { created_at?: string }[] = raw.messages ?? [];
-  const meetupsRows: { updated_at?: string }[] = raw.meetups ?? [];
 
   posts.forEach((r) => {
     if (r.created_at) assignToBucket(r.created_at, "posts");
@@ -201,17 +196,14 @@ async function fetchReportData(
   interests.forEach((r) => {
     if (r.created_at) assignToBucket(r.created_at, "likes");
   });
-  soldPosts.forEach((r) => {
-    if (r.updated_at) assignToBucket(r.updated_at, "dealResults");
+  transactions.forEach((r) => {
+    if (r.sold_at) assignToBucket(r.sold_at, "dealResults");
   });
   profiles.forEach((r) => {
     if (r.suburb_verified_at) assignToBucket(r.suburb_verified_at, "newUsers");
   });
   messagesRows.forEach((r) => {
     if (r.created_at) assignToBucket(r.created_at, "messages");
-  });
-  meetupsRows.forEach((r) => {
-    if (r.updated_at) assignToBucket(r.updated_at, "meetups");
   });
 
   const statusCounts: Record<string, number> = {};
@@ -220,10 +212,8 @@ async function fetchReportData(
   });
 
   let totalMessages = 0;
-  let totalMeetups = 0;
   for (const b of buckets) {
     totalMessages += b.messages;
-    totalMeetups += b.meetups;
   }
 
   if (totalMessages === 0 && raw.msgCountFallback != null && raw.msgCountFallback > 0) {
@@ -234,22 +224,13 @@ async function fetchReportData(
     });
   }
 
-  if (totalMeetups === 0 && raw.meetupCountFallback != null && raw.meetupCountFallback > 0) {
-    totalMeetups = raw.meetupCountFallback;
-    const avg = Math.round(totalMeetups / buckets.length);
-    buckets.forEach((b, i) => {
-      b.meetups = i === buckets.length - 1 ? totalMeetups - avg * (buckets.length - 1) : avg;
-    });
-  }
-
   return {
     periods: buckets,
     totalPosts: posts.length,
     totalLikes: interests.length,
-    totalDealResults: soldPosts.length,
+    totalDealResults: transactions.length,
     totalNewUsers: profiles.length,
     totalMessages,
-    totalMeetups,
     statusDist: Object.entries(statusCounts).map(([name, value]) => ({ name, value })),
   };
 }
@@ -418,21 +399,14 @@ function ReportContent() {
                 value={data.totalMessages}
                 color="bg-sky-50 text-sky-700"
               />
-              <SummaryKpi
-                label="Meetups"
-                value={data.totalMeetups}
-                color="bg-rose-50 text-rose-700"
-              />
             </div>
             {data.periods.length >= 2 && (
               <div className="mt-4 rounded-lg bg-slate-50 p-4">
                 <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Period-over-Period Change (Latest vs Previous)
                 </h3>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                  {(
-                    ["posts", "likes", "dealResults", "newUsers", "messages", "meetups"] as const
-                  ).map((k) => {
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                  {(["posts", "likes", "dealResults", "newUsers", "messages"] as const).map((k) => {
                     const cur = data.periods[data.periods.length - 1][k];
                     const prev = data.periods[data.periods.length - 2][k];
                     const labels: Record<string, string> = {
@@ -441,7 +415,6 @@ function ReportContent() {
                       dealResults: "Deals",
                       newUsers: "Users",
                       messages: "Messages",
-                      meetups: "Meetups",
                     };
                     return (
                       <div key={k} className="rounded-lg bg-white p-3 shadow-sm">
@@ -524,7 +497,7 @@ function ReportContent() {
           <section>
             <h2 className="mb-4 text-lg font-semibold text-slate-800">Engagement & Growth</h2>
             <p className="mb-3 text-xs text-slate-500">
-              New users, messages, and meetups per{" "}
+              New users and messages per{" "}
               {type === "weekly" ? "week" : type === "monthly" ? "month" : "quarter"}.
             </p>
             <div className="rounded-lg border border-slate-100 bg-slate-50/50 p-4">
@@ -542,7 +515,6 @@ function ReportContent() {
                   <Tooltip />
                   <Bar dataKey="newUsers" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="New Users" />
                   <Bar dataKey="messages" fill="#0ea5e9" radius={[4, 4, 0, 0]} name="Messages" />
-                  <Bar dataKey="meetups" fill="#f43f5e" radius={[4, 4, 0, 0]} name="Meetups" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -606,7 +578,6 @@ function ReportContent() {
                     <th className="px-4 py-3 text-right font-semibold text-slate-600">Deals</th>
                     <th className="px-4 py-3 text-right font-semibold text-slate-600">New Users</th>
                     <th className="px-4 py-3 text-right font-semibold text-slate-600">Messages</th>
-                    <th className="px-4 py-3 text-right font-semibold text-slate-600">Meetups</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -620,7 +591,6 @@ function ReportContent() {
                         <MetricCell value={p.dealResults} prev={prev?.dealResults} />
                         <MetricCell value={p.newUsers} prev={prev?.newUsers} />
                         <MetricCell value={p.messages} prev={prev?.messages} />
-                        <MetricCell value={p.meetups} prev={prev?.meetups} />
                       </tr>
                     );
                   })}
@@ -633,7 +603,6 @@ function ReportContent() {
                     <td className="px-4 py-3 text-right text-slate-800">{data.totalDealResults}</td>
                     <td className="px-4 py-3 text-right text-slate-800">{data.totalNewUsers}</td>
                     <td className="px-4 py-3 text-right text-slate-800">{data.totalMessages}</td>
-                    <td className="px-4 py-3 text-right text-slate-800">{data.totalMeetups}</td>
                   </tr>
                   {data.periods.length > 0 && (
                     <tr className="bg-slate-50 text-slate-500">
@@ -652,9 +621,6 @@ function ReportContent() {
                       </td>
                       <td className="px-4 py-2 text-right text-xs">
                         {(data.totalMessages / data.periods.length).toFixed(1)}
-                      </td>
-                      <td className="px-4 py-2 text-right text-xs">
-                        {(data.totalMeetups / data.periods.length).toFixed(1)}
                       </td>
                     </tr>
                   )}
@@ -824,13 +790,6 @@ function KeyInsights({ data, type }: { data: ReportData; type: ReportType }) {
   if (data.totalNewUsers > 0 && n > 0) {
     insights.push(
       `${data.totalNewUsers} new verified users joined, averaging ${(data.totalNewUsers / n).toFixed(1)} per ${periodName}.`,
-    );
-  }
-
-  if (data.totalMeetups > 0 && data.totalDealResults > 0) {
-    const meetupRate = ((data.totalMeetups / data.totalDealResults) * 100).toFixed(0);
-    insights.push(
-      `${meetupRate}% of completed deals had confirmed meetups — indicating ${Number(meetupRate) >= 50 ? "strong" : "growing"} trust in the scheduling feature.`,
     );
   }
 
