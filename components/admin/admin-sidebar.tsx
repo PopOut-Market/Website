@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { label: "Listing moderation", href: "/admin-super/dashboard/moderation", icon: "🚫" },
   { label: "Content review", href: "/admin-super/dashboard/content-review", icon: "🛡️" },
   { label: "User management", href: "/admin-super/dashboard/users", icon: "👥" },
+  { label: "Suburb map", href: "/admin-super/dashboard/user-map", icon: "🗺️" },
   { label: "Invitations", href: "/admin-super/dashboard/invitations", icon: "🔗" },
   { label: "My accounts", href: "/admin-super/dashboard/accounts", icon: "🗂️" },
   { label: "Vouchers", href: "/admin-super/dashboard/vouchers", icon: "🎟️" },
