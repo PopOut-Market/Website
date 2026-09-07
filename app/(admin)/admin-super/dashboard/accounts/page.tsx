@@ -123,7 +123,9 @@ function AccountCard({ account }: { account: Account }) {
               {account.messages.map((m) => (
                 <div key={m.id} className="border-b border-slate-100 pb-2 last:border-0">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-slate-700">{m.from}</span>
+                    <span className="min-w-0 truncate text-sm font-medium text-slate-700">
+                      {m.from}
+                    </span>
                     <span className="shrink-0 text-xs text-slate-400">
                       {new Date(m.created_at).toLocaleString()}
                     </span>

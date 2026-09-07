@@ -42,10 +42,10 @@ const COPY: Record<Locale, RegionCopy> = {
   en: {
     metaTitle: (r) => `${r} Melbourne Second-Hand App & Marketplace | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `Buy and sell second-hand across ${r} Melbourne, Australia with PopOut Market — ${count} suburbs including ${examples}. Browse local listings by area, chat in multiple languages, and meet up safely. Live in Melbourne now, with more Australian cities coming soon.`,
+      `Buy and sell second-hand across ${r} Melbourne, Australia with PopOut Market — ${count} suburbs including ${examples}. Browse local listings by area, chat in multiple languages, and meet up safely. Live in Melbourne now.`,
     h1: (r) => `${r} Melbourne Second-Hand`,
     intro: (r, count) =>
-      `PopOut Market is a second-hand app and neighbourhood marketplace for ${r} Melbourne, Australia. We cover ${count} suburbs across this part of Melbourne — find furniture, appliances, bikes and everyday items near you, chat across languages, and meet up safely. Currently live in Melbourne, with more Australian cities coming soon.`,
+      `PopOut Market is a second-hand app and neighbourhood marketplace for ${r} Melbourne, Australia. We cover ${count} suburbs across this part of Melbourne — find furniture, appliances, bikes and everyday items near you, chat across languages, and meet up safely. Currently live in Melbourne.`,
     coveredHeading: (r) => `Suburbs we cover in ${r} Melbourne`,
     coveredNote: "Every suburb below is an active PopOut service area.",
     guideLinkedNote: "Suburbs with their own guide are linked.",
@@ -57,10 +57,10 @@ const COPY: Record<Locale, RegionCopy> = {
   "zh-Hans": {
     metaTitle: (r) => `墨尔本${r}二手App与同城二手交易 | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `用 PopOut Market 在澳大利亚墨尔本${r}买卖二手：覆盖 ${count} 个 suburb，包括 ${examples} 等。按区域浏览本地二手好物，多语言沟通，更安全地当面交易。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。`,
+      `用 PopOut Market 在澳大利亚墨尔本${r}买卖二手：覆盖 ${count} 个 suburb，包括 ${examples} 等。按区域浏览本地二手好物，多语言沟通，更安全地当面交易。现已上线墨尔本。`,
     h1: (r) => `墨尔本${r}二手交易`,
     intro: (r, count) =>
-      `PopOut Market 是面向澳大利亚墨尔本${r}的二手 App 与同城二手平台。我们覆盖墨尔本${r}的 ${count} 个 suburb——在你身边找二手家具、电器、单车和日常好物，支持多语言沟通和更安全的当面交易。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。`,
+      `PopOut Market 是面向澳大利亚墨尔本${r}的二手 App 与同城二手平台。我们覆盖墨尔本${r}的 ${count} 个 suburb——在你身边找二手家具、电器、单车和日常好物，支持多语言沟通和更安全的当面交易。现已上线墨尔本。`,
     coveredHeading: (r) => `墨尔本${r}覆盖的 suburb`,
     coveredNote: "以下每个 suburb 都是 PopOut 正在开放服务的区域。",
     guideLinkedNote: "有独立介绍页的 suburb 已加链接。",
@@ -72,10 +72,10 @@ const COPY: Record<Locale, RegionCopy> = {
   "zh-Hant": {
     metaTitle: (r) => `墨爾本${r}二手App與同城二手交易 | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `用 PopOut Market 在澳洲墨爾本${r}買賣二手：涵蓋 ${count} 個 suburb，包括 ${examples} 等。依區域瀏覽本地二手好物，多語言溝通，更安全地當面交易。現已上線墨爾本，更多澳洲城市陸續開放，敬請期待。`,
+      `用 PopOut Market 在澳洲墨爾本${r}買賣二手：涵蓋 ${count} 個 suburb，包括 ${examples} 等。依區域瀏覽本地二手好物，多語言溝通，更安全地當面交易。現已上線墨爾本。`,
     h1: (r) => `墨爾本${r}二手交易`,
     intro: (r, count) =>
-      `PopOut Market 是面向澳洲墨爾本${r}的二手 App 與同城二手平台。我們涵蓋墨爾本${r}的 ${count} 個 suburb——在你身邊找二手家具、電器、單車與日常好物，支援多語言溝通與更安全的當面交易。現已上線墨爾本，更多澳洲城市陸續開放，敬請期待。`,
+      `PopOut Market 是面向澳洲墨爾本${r}的二手 App 與同城二手平台。我們涵蓋墨爾本${r}的 ${count} 個 suburb——在你身邊找二手家具、電器、單車與日常好物，支援多語言溝通與更安全的當面交易。現已上線墨爾本。`,
     coveredHeading: (r) => `墨爾本${r}涵蓋的 suburb`,
     coveredNote: "以下每個 suburb 都是 PopOut 正在開放服務的區域。",
     guideLinkedNote: "有獨立介紹頁的 suburb 已加連結。",
@@ -102,10 +102,10 @@ const COPY: Record<Locale, RegionCopy> = {
   ja: {
     metaTitle: (r) => `${r} メルボルンの中古売買アプリ・マーケット | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `PopOut Marketでオーストラリア・メルボルンの${r}の中古を売買。${examples} など ${count} のサバーブをカバー。エリア別に出品を探し、多言語でやり取りし、安全に手渡し取引できます。現在はメルボルンで提供中、今後オーストラリアの他都市にも順次拡大予定です。`,
+      `PopOut Marketでオーストラリア・メルボルンの${r}の中古を売買。${examples} など ${count} のサバーブをカバー。エリア別に出品を探し、多言語でやり取りし、安全に手渡し取引できます。現在はメルボルンで提供中。`,
     h1: (r) => `${r} メルボルンの中古売買`,
     intro: (r, count) =>
-      `PopOut Marketは、オーストラリア・メルボルンの${r}向けの中古売買アプリ・地元フリマです。メルボルン${r}の ${count} のサバーブをカバーし、近くの中古家具・家電・自転車・日用品を探して、多言語でやり取りし、安全に手渡しで取引できます。現在はメルボルンで提供中、今後オーストラリアの他都市にも順次拡大予定です。`,
+      `PopOut Marketは、オーストラリア・メルボルンの${r}向けの中古売買アプリ・地元フリマです。メルボルン${r}の ${count} のサバーブをカバーし、近くの中古家具・家電・自転車・日用品を探して、多言語でやり取りし、安全に手渡しで取引できます。現在はメルボルンで提供中。`,
     coveredHeading: (r) => `メルボルン${r}のカバー対象サバーブ`,
     coveredNote: "以下のサバーブはすべてPopOutの提供エリアです。",
     guideLinkedNote: "専用ページがあるサバーブはリンクしています。",
@@ -117,10 +117,10 @@ const COPY: Record<Locale, RegionCopy> = {
   vi: {
     metaTitle: (r) => `App đồ cũ ${r} Melbourne & chợ đồ cũ | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `Mua bán đồ cũ tại ${r} Melbourne, Úc với PopOut Market — gồm ${count} suburb như ${examples}. Duyệt tin theo khu vực, chat đa ngôn ngữ và giao dịch an toàn. Hiện đã có mặt tại Melbourne, sắp mở rộng tới nhiều thành phố khác ở Úc.`,
+      `Mua bán đồ cũ tại ${r} Melbourne, Úc với PopOut Market — gồm ${count} suburb như ${examples}. Duyệt tin theo khu vực, chat đa ngôn ngữ và giao dịch an toàn. Hiện đã có mặt tại Melbourne.`,
     h1: (r) => `Đồ cũ ${r} Melbourne`,
     intro: (r, count) =>
-      `PopOut Market là app đồ cũ và chợ mua bán đồ cũ cho khu ${r} của Melbourne, Úc. Chúng tôi bao phủ ${count} suburb ở khu vực này của Melbourne — tìm nội thất, đồ điện, xe đạp và đồ dùng hằng ngày gần bạn, chat đa ngôn ngữ và giao dịch gặp mặt an toàn. Hiện đã có mặt tại Melbourne, sắp mở rộng tới nhiều thành phố khác ở Úc.`,
+      `PopOut Market là app đồ cũ và chợ mua bán đồ cũ cho khu ${r} của Melbourne, Úc. Chúng tôi bao phủ ${count} suburb ở khu vực này của Melbourne — tìm nội thất, đồ điện, xe đạp và đồ dùng hằng ngày gần bạn, chat đa ngôn ngữ và giao dịch gặp mặt an toàn. Hiện đã có mặt tại Melbourne.`,
     coveredHeading: (r) => `Các suburb thuộc ${r} Melbourne`,
     coveredNote: "Mỗi suburb bên dưới đều là khu vực PopOut đang phục vụ.",
     guideLinkedNote: "Suburb có trang riêng đã được gắn liên kết.",
@@ -132,10 +132,10 @@ const COPY: Record<Locale, RegionCopy> = {
   fr: {
     metaTitle: (r) => `Appli d'occasion ${r} Melbourne & marché | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `Achetez et vendez d'occasion dans ${r} de Melbourne, en Australie, avec PopOut Market — ${count} quartiers dont ${examples}. Parcourez les annonces par zone, discutez en plusieurs langues et rencontrez-vous en toute sécurité. Disponible à Melbourne, bientôt dans d'autres villes australiennes.`,
+      `Achetez et vendez d'occasion dans ${r} de Melbourne, en Australie, avec PopOut Market — ${count} quartiers dont ${examples}. Parcourez les annonces par zone, discutez en plusieurs langues et rencontrez-vous en toute sécurité.`,
     h1: (r) => `Occasion ${r} Melbourne`,
     intro: (r, count) =>
-      `PopOut Market est une appli d'occasion et un marché de quartier pour ${r} de Melbourne, en Australie. Nous couvrons ${count} quartiers dans cette partie de Melbourne — trouvez meubles, électroménager, vélos et objets du quotidien près de chez vous, discutez en plusieurs langues et rencontrez-vous en toute sécurité. Disponible à Melbourne, bientôt dans d'autres villes australiennes.`,
+      `PopOut Market est une appli d'occasion et un marché de quartier pour ${r} de Melbourne, en Australie. Nous couvrons ${count} quartiers dans cette partie de Melbourne — trouvez meubles, électroménager, vélos et objets du quotidien près de chez vous, discutez en plusieurs langues et rencontrez-vous en toute sécurité.`,
     coveredHeading: (r) => `Quartiers couverts dans ${r} de Melbourne`,
     coveredNote: "Chaque quartier ci-dessous est une zone desservie par PopOut.",
     guideLinkedNote: "Les quartiers ayant leur propre page sont liés.",

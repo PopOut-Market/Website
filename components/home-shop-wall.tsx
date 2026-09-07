@@ -89,7 +89,7 @@ export function HomeShopWall({
               <p className="line-clamp-2 text-[0.8rem] font-semibold leading-snug text-black">
                 {shop.name}
               </p>
-              <p className="mt-0.5 line-clamp-2 text-[0.7rem] leading-snug text-black/45">
+              <p className="mt-0.5 line-clamp-2 text-[0.7rem] leading-snug text-black/60">
                 {shortAddress(shop.address)}
               </p>
             </figcaption>

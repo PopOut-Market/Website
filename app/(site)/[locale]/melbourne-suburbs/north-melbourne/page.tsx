@@ -15,9 +15,9 @@ const LOCALIZED_META: Partial<Record<Locale, { title: string; description: strin
       "PopOut Market, la app de segunda mano en North Melbourne: compra y vende muebles, electrodomésticos y otros artículos usados. Gratis para estudiantes en Melbourne.",
   },
   fr: {
-    title: "Corrected French SEO title and description for North Melbourne second-hand",
+    title: "Occasion à North Melbourne | Acheter et vendre d'occasion à Melbourne - PopOut Market",
     description:
-      '{"title":"Occasion à North Melbourne | Acheter et vendre d\'occasion à Melbourne - PopOut Market","description":"PopOut Market, l\'appli d\'occasion à North Melbourne : meubles, électroménager et petites annonces de seconde main. Plateforme gratuite pour les étudiants de Melbourne."}\n\nCHANGES AND RATIONALE:\n\nTitle:\n- "Occasion North Melbourne" -> "Occasion à North Melbourne": added the preposition "à" so the phrase reads as natural French ("occasion North Melbourne" is ungrammatical run-on).\n- "vendre d\'occasion Melbourne" -> "vendre d\'occasion à Melbourne": added "à" before the city; without it the phrase is broken French.\n- Brand "PopOut Market" kept in title. Length ~62 chars, within typical SERP limits.\n\nDescription:\n- "petites annonces seconde main" -> "petites annonces de seconde main": "de seconde main" is the correct French collocation; the bare "seconde main" as a modifier is incorrect.\n- "Marché gratuit pour étudiants à Melbourne" -> "Plateforme gratuite pour les étudiants de Melbourne": "Marché" duplicated the "Market" brand idea and read oddly; "plateforme" is more natural for an app. Added the article "les" and used "de Melbourne" (students of/from Melbourne) which is more idiomatic than "à Melbourne" here. Length ~150 chars, within SERP limits.\n- No keyword stuffing; "occasion" and "seconde main" appear naturally and are accurate synonyms. Accent on "l\'appli" and "électroménager" correct.',
+      "PopOut Market, l'appli d'occasion à North Melbourne : meubles, électroménager et petites annonces de seconde main à Melbourne.",
   },
   vi: {
     title: "Đồ cũ North Melbourne | Mua bán đồ second-hand Melbourne - PopOut Market",

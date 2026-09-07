@@ -114,8 +114,7 @@ export async function GET(req: Request) {
       { count: totalUsersAll, error: e3 },
       { count: activeUsers, error: e3b },
       statusCounts,
-      { data: languageRows, error: e5 },
-      { data: suburbRows, error: e6 },
+      { data: activeProfileRows, error: e5 },
       { data: suburbNames, error: e7 },
       { data: windowPosts, error: e8 },
       { data: categoryRows, error: e9 },
@@ -150,19 +149,15 @@ export async function GET(req: Request) {
           sb.from("posts").select("*", { count: "exact", head: true }).eq("status", status),
         ),
       ),
+      // ONE scan of the active-profile set feeds BOTH the language split and the
+      // suburb split. These were two separate `fetchAllRows` calls with
+      // byte-identical predicates, so every request paged the whole table twice
+      // and threw half of it away. Same rows, same filters, same order — the two
+      // tallies just read different columns off the one result.
       fetchAllRows(() =>
         sb
           .from("profiles")
-          .select("language")
-          .eq("is_deleted", false)
-          .eq("is_banned", false)
-          .is("deleted_at", null)
-          .order("id"),
-      ),
-      fetchAllRows(() =>
-        sb
-          .from("profiles")
-          .select("verified_suburb_id")
+          .select("language, verified_suburb_id")
           .eq("is_deleted", false)
           .eq("is_banned", false)
           .is("deleted_at", null)
@@ -265,7 +260,6 @@ export async function GET(req: Request) {
       e3b ??
       e4 ??
       e5 ??
-      e6 ??
       e7 ??
       e8 ??
       e9 ??
@@ -310,7 +304,7 @@ export async function GET(req: Request) {
     if (otherStatus > 0) byStatus.push({ status: "(other)", count: otherStatus });
     byStatus.sort((a, b) => b.count - a.count);
 
-    const byLanguage = [...tally(languageRows, "language", "(not set)").entries()]
+    const byLanguage = [...tally(activeProfileRows, "language", "(not set)").entries()]
       .map(([code, count]) => ({ code, count }))
       .sort((a, b) => b.count - a.count);
 
@@ -320,7 +314,7 @@ export async function GET(req: Request) {
       if (row.name) nameById.set(String(row.id), row.name);
     }
     const suburbCounts = new Map<string, number>();
-    for (const r of suburbRows ?? []) {
+    for (const r of activeProfileRows ?? []) {
       const id = (r as { verified_suburb_id: string | number | null }).verified_suburb_id;
       const label = id == null ? "(not set)" : (nameById.get(String(id)) ?? `Suburb #${id}`);
       suburbCounts.set(label, (suburbCounts.get(label) ?? 0) + 1);

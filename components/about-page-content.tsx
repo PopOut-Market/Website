@@ -1,62 +1,15 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { Reveal } from "@/components/motion/reveal";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRevealOnce } from "@/lib/use-reveal-once";
 import { INNER_MAX, POPOUT_BRAND_GRADIENT_TEXT_CLASS, SHELL_X } from "@/lib/site-config";
 import { SITE_ORIGIN } from "@/lib/seo";
 import { useSiteShell } from "@/components/site-chrome-context";
 import type { Locale } from "@/lib/site-i18n";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
-
-function useInViewOnce(rootMargin = "0px 0px -10% 0px") {
-  const ref = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setInView(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e?.isIntersecting) setInView(true);
-      },
-      { threshold: 0, rootMargin },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [rootMargin]);
-
-  return { ref, inView };
-}
-
-function StaggerBlock({
-  show,
-  delayMs,
-  children,
-}: {
-  show: boolean;
-  delayMs: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className="transition-all duration-[400ms]"
-      style={{
-        opacity: show ? 1 : 0,
-        transform: show ? "translateY(0)" : "translateY(1.25rem)",
-        transitionDelay: show ? `${delayMs}ms` : "0ms",
-        transitionTimingFunction: ease,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
 
 function aboutSeoCopy(locale: Locale) {
   if (locale === "zh-Hans") {
@@ -151,8 +104,7 @@ function aboutSeoCopy(locale: Locale) {
 
 export function AboutPageContent() {
   const { localizePath, locale, t } = useSiteShell();
-  const { ref: shellRef, inView: shellInView } = useInViewOnce("0px 0px -8% 0px");
-  const [animate, setAnimate] = useState(false);
+  const { ref: shellRef, shown } = useRevealOnce<HTMLDivElement>();
   const extra = aboutSeoCopy(locale);
 
   const jsonLd = {
@@ -235,37 +187,31 @@ export function AboutPageContent() {
     ],
   };
 
-  useEffect(() => {
-    if (!shellInView) return;
-    const id = window.requestAnimationFrame(() => setAnimate(true));
-    return () => window.cancelAnimationFrame(id);
-  }, [shellInView]);
-
   return (
     <div className={`${SHELL_X} flex min-h-0 flex-1 flex-col pb-16 pt-8 sm:pb-24 sm:pt-12`}>
-      <div className={INNER_MAX}>
+      <div className={INNER_MAX} ref={shellRef}>
         <BackNavLink href={localizePath("/")}>{t.footerBackHome}</BackNavLink>
 
-        <article
-          ref={shellRef as React.RefObject<HTMLElement>}
-          className="mt-8 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card transition-opacity duration-[400ms] sm:mt-10"
-          style={{
-            opacity: shellInView ? 1 : 0,
-            transitionTimingFunction: ease,
-          }}
+        <Reveal
+          as="article"
+          show={shown}
+          distance="none"
+          durationMs={400}
+          easing={ease}
+          className="mt-8 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-card sm:mt-10"
         >
           <div className="px-5 py-8 sm:px-10 sm:py-12">
-            <StaggerBlock show={animate} delayMs={0}>
+            <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={0}>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
                 {t.aboutPageTitle}
               </p>
               <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
                 {t.aboutMainHeading}
               </h1>
-            </StaggerBlock>
+            </Reveal>
 
             <div className="mt-10 space-y-10 sm:mt-14 sm:space-y-12">
-              <StaggerBlock show={animate} delayMs={100}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={100}>
                 <section>
                   <p className="mb-8 mt-4 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold sm:text-base">
                     <span className={POPOUT_BRAND_GRADIENT_TEXT_CLASS}>{extra.introHighlight}</span>
@@ -280,9 +226,9 @@ export function AboutPageContent() {
                     {t.aboutOurStoryP2}
                   </p>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={150}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={150}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {t.aboutWhyTitle}
@@ -314,9 +260,9 @@ export function AboutPageContent() {
                     </div>
                   </div>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={175}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={175}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.localTitle}
@@ -328,9 +274,9 @@ export function AboutPageContent() {
                     {extra.localP2}
                   </p>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={190}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={190}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.languageTitle}
@@ -342,9 +288,9 @@ export function AboutPageContent() {
                     {extra.languageP2}
                   </p>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={200}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={200}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {t.aboutPrivacyTitle}
@@ -390,9 +336,9 @@ export function AboutPageContent() {
                     </Link>
                   </div>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={230}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={230}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.studentTitle}
@@ -404,9 +350,9 @@ export function AboutPageContent() {
                     {extra.studentP2}
                   </p>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={250}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={250}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {t.aboutVisionTitle}
@@ -421,9 +367,9 @@ export function AboutPageContent() {
                     {t.aboutVisionP3}
                   </p>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={300}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={300}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {extra.legalTitle}
@@ -440,9 +386,9 @@ export function AboutPageContent() {
                     ))}
                   </ul>
                 </section>
-              </StaggerBlock>
+              </Reveal>
 
-              <StaggerBlock show={animate} delayMs={320}>
+              <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={320}>
                 <section>
                   <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
                     {t.aboutFeedbackTitle}
@@ -459,10 +405,10 @@ export function AboutPageContent() {
                     </a>
                   </div>
                 </section>
-              </StaggerBlock>
+              </Reveal>
             </div>
           </div>
-        </article>
+        </Reveal>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

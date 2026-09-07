@@ -20,10 +20,18 @@ const NUMBER_LOCALE: Record<Locale, string> = {
   es: "es-ES",
 };
 
-/** Prices are always AUD on this marketplace (the backend dropped the currency column). */
-function formatMoney(locale: Locale, cents: number): string {
+/**
+ * Prices are always AUD on this marketplace (the backend dropped the currency column).
+ *
+ * `freeLabel` carries the reader's own word for a $0 listing. It is optional and
+ * falls back to "FREE" so a caller that has no copy to hand still renders
+ * something sane — but every caller in the app passes it, because the server
+ * render (see server-feed.ts formatPriceLabel) already localises this and a
+ * client refetch that did not would flip the label back to English.
+ */
+function formatMoney(locale: Locale, cents: number, freeLabel = "FREE"): string {
   if (!cents || cents <= 0) {
-    return "FREE";
+    return freeLabel;
   }
   try {
     return new Intl.NumberFormat(NUMBER_LOCALE[locale], {
@@ -109,7 +117,6 @@ type PostDetailRow = {
   seller_id?: string | null;
   status?: string | null;
   price_cents: number;
-  accept_offers?: boolean | null;
   created_at?: string | null;
   title?: string | null;
   description?: string | null;
@@ -185,7 +192,7 @@ function photoUrlsFrom(paths: string[] | null | undefined): string[] {
 
 function mapPostRowToDetail(
   raw: PostDetailRow,
-  options: { locale: Locale; sellerFallback: string; kmSuffix: string },
+  options: { locale: Locale; sellerFallback: string; kmSuffix: string; freeLabel?: string },
 ): MarketPostDetail {
   const seller = raw.seller_nickname?.trim();
   const photoUrls = photoUrlsFrom(raw.photo_paths);
@@ -205,7 +212,7 @@ function mapPostRowToDetail(
   return {
     id: String(raw.id),
     title: (raw.title ?? "").toString(),
-    priceLabel: formatMoney(options.locale, raw.price_cents),
+    priceLabel: formatMoney(options.locale, raw.price_cents, options.freeLabel),
     sellerLabel: seller && seller.length > 0 ? seller : options.sellerFallback,
     // The backend exposes only a default-avatar key (not a URL), so no image here.
     sellerAvatarUrl: null,
@@ -235,8 +242,6 @@ function mapPostRowToDetail(
     categoryLabel: raw.category_name?.trim() || null,
     statusLabel: statusRaw.length > 0 ? statusRaw : "unknown",
     // get_post_detail does not return delivery info.
-    deliveryLabel: "unknown",
-    offerLabel: raw.accept_offers ? "yes" : "no",
     otherItems: [],
   };
 }
@@ -248,6 +253,8 @@ export async function fetchMarketPostDetail(
     locale: Locale;
     sellerFallback: string;
     kmSuffix: string;
+    /** The reader's word for a $0 listing, e.g. the Giveaway filter label. */
+    freeLabel?: string;
   },
 ): Promise<{ detail: MarketPostDetail | null; errorMessage: string | null }> {
   try {
@@ -286,7 +293,7 @@ export async function fetchMarketPostDetail(
         (r): SellerOtherItem => ({
           id: String(r.id),
           title: (r.title ?? "").toString(),
-          priceLabel: formatMoney(options.locale, r.price_cents),
+          priceLabel: formatMoney(options.locale, r.price_cents, options.freeLabel),
           imageUrl: getPostImageUrl(r.thumbnail_path, r.updated_at),
         }),
       );

@@ -48,8 +48,6 @@ function demoDetailFromPostId(
     meetupLabel: null,
     categoryLabel: null,
     statusLabel: "active",
-    deliveryLabel: "yes",
-    offerLabel: "yes",
     otherItems: [],
   };
 }
@@ -64,9 +62,14 @@ export function MarketPostPageContent() {
   // (incl. the Fitzory->Fitzroy alias) against the Supabase list, so we don't gate
   // it on the frozen 8 here — that would drop the suburb for the 10 new ones.
   const areaParam = searchParams.get("area")?.trim() ?? "";
-  const backHref = areaParam ? `/market?area=${encodeURIComponent(areaParam)}` : "/market";
 
-  const { locale, t } = useSiteShell();
+  const { locale, t, localizePath } = useSiteShell();
+  // Localised: an unprefixed href costs a 308 and lets middleware re-pick the
+  // locale from a cookie, which can drop a reader out of the language they
+  // arrived in from a shared link.
+  const backHref = localizePath(
+    areaParam ? `/market?area=${encodeURIComponent(areaParam)}` : "/market",
+  );
   const configured = isSupabaseBrowserConfigured();
 
   const [detail, setDetail] = useState<MarketPostDetail | null>(null);
@@ -96,6 +99,7 @@ export function MarketPostPageContent() {
         locale,
         sellerFallback: t.marketDemoSeller,
         kmSuffix: t.marketKmShort,
+        freeLabel: t.homeMarketFilterGiveaway,
       });
       if (err) {
         console.error("[PopOut Market] Post detail failed:", err);
@@ -120,7 +124,6 @@ export function MarketPostPageContent() {
 
   const detailCopy = useMemo(
     () => ({
-      marketPostFixedPriceLabel: t.marketPostFixedPriceLabel,
       marketPostDescriptionHeading: t.marketPostDescriptionHeading,
       marketPostPreferredMeetupLabel: t.marketPostPreferredMeetupLabel,
       marketPostOtherItemsHeading: t.marketPostOtherItemsHeading,
@@ -209,7 +212,7 @@ export function MarketPostPageContent() {
   return (
     <section className={`${SHELL_X} flex min-h-0 flex-1 flex-col bg-gray-50`}>
       <div className={`${INNER_MAX} flex min-h-0 flex-1 flex-col`}>
-        <MarketPostDetailView detail={detail} copy={detailCopy} />
+        <MarketPostDetailView detail={detail} copy={detailCopy} localizePath={localizePath} />
       </div>
     </section>
   );

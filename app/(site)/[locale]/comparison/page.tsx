@@ -576,14 +576,9 @@ export default async function ComparisonHubPage({ params }: LocaleParams) {
         inLanguage: c.inLanguage,
         about: { "@type": "Thing", name: "Melbourne second-hand apps comparison" },
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: c.faq.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
-        })),
-      },
+      // Deliberately no FAQPage node. Google deprecated the rich result on
+      // 7 May 2026 (see lib/jsonld.ts), so it earns nothing and still has to be
+      // kept in sync with the visible copy. The Q&As below stay on the page.
     ],
   };
 

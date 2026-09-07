@@ -33,6 +33,15 @@ type IndexablePath = {
 /** Bump this when you materially rewrite a static page's copy. */
 const REPOSITIONING_EDIT = "2026-08-21";
 const LAST_SEO_PASS = "2026-06-17";
+/**
+ * 2026-09-06: the pass that removed advice naming filters the app does not have
+ * (delivery, student-posted, condition, recency) from the eight suburb pages, the
+ * unverifiable "more Australian cities coming soon" clause from the region and
+ * app pages, and the banned "verify their identity" wording from /child-safety.
+ * Body copy changed on every page carrying this date, so it is a real edit, not a
+ * touch — the whole point of hand-maintaining these (see the header note).
+ */
+const CLAIM_CORRECTION_EDIT = "2026-09-06";
 
 const INDEXABLE_PATHS: IndexablePath[] = [
   { path: "/", freshness: "live", contentUpdated: REPOSITIONING_EDIT, priority: 1 },
@@ -62,7 +71,7 @@ const INDEXABLE_PATHS: IndexablePath[] = [
   {
     path: "/melbourne-second-hand-app",
     freshness: "static",
-    contentUpdated: LAST_SEO_PASS,
+    contentUpdated: CLAIM_CORRECTION_EDIT,
     priority: 0.7,
   },
   {
@@ -120,15 +129,19 @@ const INDEXABLE_PATHS: IndexablePath[] = [
   ].map((slug) => ({
     path: `/melbourne-suburbs/${slug}`,
     freshness: "static" as const,
-    contentUpdated: LAST_SEO_PASS,
+    contentUpdated: CLAIM_CORRECTION_EDIT,
     priority: 0.6,
   })),
 
+  // Simplified-Chinese body, canonicalised to /zh-cn (see the page's `alternates`).
+  // Submitting the other seven locale URLs asks for a crawl of pages that point
+  // straight back here. They stay reachable and 200 — just not advertised.
   {
     path: "/melbourne-graduation-move-out-guide-2026",
     freshness: "static",
-    contentUpdated: LAST_SEO_PASS,
+    contentUpdated: CLAIM_CORRECTION_EDIT,
     priority: 0.6,
+    locales: ["zh-cn"],
   },
 
   // Indexable, factual, and among the pages people most often ask an assistant
@@ -136,7 +149,13 @@ const INDEXABLE_PATHS: IndexablePath[] = [
   // sitemap, so nothing pointed a crawler at them.
   { path: "/privacy", freshness: "static", contentUpdated: REPOSITIONING_EDIT, priority: 0.4 },
   { path: "/terms", freshness: "static", contentUpdated: LAST_SEO_PASS, priority: 0.4 },
-  { path: "/child-safety", freshness: "static", contentUpdated: LAST_SEO_PASS, priority: 0.4 },
+  {
+    path: "/child-safety",
+    freshness: "static",
+    contentUpdated: CLAIM_CORRECTION_EDIT,
+    priority: 0.4,
+  },
+  { path: "/contact", freshness: "static", contentUpdated: LAST_SEO_PASS, priority: 0.4 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

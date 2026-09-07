@@ -1,5 +1,8 @@
+import { organizationNode } from "@/lib/jsonld";
+import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { OG_IMAGE } from "@/lib/seo";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -30,7 +33,6 @@ export const metadata: Metadata = {
     canonical: "/zh-cn/melbourne-graduation-move-out-guide-2026",
     languages: {
       "zh-CN": "/zh-cn/melbourne-graduation-move-out-guide-2026",
-      "zh-TW": "/zh-tw/melbourne-graduation-move-out-guide-2026",
       "x-default": "/zh-cn/melbourne-graduation-move-out-guide-2026",
     },
   },
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
     description,
     type: "article",
     locale: "zh_CN",
-    url: "https://www.popoutmarket.com.au/melbourne-graduation-move-out-guide-2026",
+    url: "https://www.popoutmarket.com.au/zh-cn/melbourne-graduation-move-out-guide-2026",
     images: [OG_IMAGE],
   },
 };
@@ -62,21 +64,18 @@ const faqItems = [
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
+    // The Article's author/publisher reference this by @id, so the node has to be
+    // in the graph — a dangling @id names an entity the page never defines.
+    organizationNode(),
     {
       "@type": "Article",
       headline: title,
       description,
       inLanguage: "zh-CN",
       datePublished: "2026-04-01",
-      dateModified: "2026-06-17",
-      author: {
-        "@type": "Organization",
-        name: "PopOut Market",
-      },
-      publisher: {
-        "@type": "Organization",
-        name: "PopOut Market Pty Ltd",
-      },
+      dateModified: "2026-09-07",
+      author: { "@id": "https://www.popoutmarket.com.au/#organization" },
+      publisher: { "@id": "https://www.popoutmarket.com.au/#organization" },
       about: [
         { "@type": "EducationalOrganization", name: "University of Melbourne" },
         { "@type": "EducationalOrganization", name: "RMIT University" },
@@ -88,20 +87,12 @@ const jsonLd = {
       },
       mainEntityOfPage: {
         "@type": "WebPage",
-        "@id": "https://www.popoutmarket.com.au/melbourne-graduation-move-out-guide-2026",
+        "@id": "https://www.popoutmarket.com.au/zh-cn/melbourne-graduation-move-out-guide-2026",
       },
     },
-    {
-      "@type": "FAQPage",
-      mainEntity: faqItems.map((item) => ({
-        "@type": "Question",
-        name: item.q,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: item.a,
-        },
-      })),
-    },
+    // Deliberately no FAQPage node. Google deprecated the rich result on
+    // 7 May 2026 (see lib/jsonld.ts), so it earns nothing and still has to be
+    // kept in sync with the visible copy. The Q&As below stay on the page.
     {
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -122,7 +113,10 @@ const jsonLd = {
   ],
 };
 
-export default function GraduationMoveOutGuidePage() {
+export default async function GraduationMoveOutGuidePage({ params }: LocaleParams) {
+  const locale = await localeFromParams(params);
+  const marketPath = (area: string) =>
+    toLocalePath(`/market?area=${encodeURIComponent(area)}`, locale);
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
       <div className={`${INNER_MAX} max-w-4xl`}>
@@ -134,7 +128,9 @@ export default function GraduationMoveOutGuidePage() {
         <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">1) 2026 关键卖货时间表</h2>
           <p className="mt-3 text-sm leading-relaxed text-gray-700">
-            根据 UniMelb 与 RMIT 常见学期节奏，交易高峰通常集中在 6 月下旬与 11 月中旬到 12 月初。
+            墨尔本大学 2026 年第二学期考试期为 11 月 2 日至 11 月 20
+            日（以校方公布的校历为准）。结合 RMIT 的相近节奏，交易高峰通常集中在 6 月下旬与 11
+            月中旬到 12 月初。
           </p>
           <div className="mt-4 rounded-xl border border-black/10 bg-brand-tint p-4">
             <p className="text-sm font-semibold text-gray-900">S1 搬家高峰：6 月下旬</p>
@@ -142,7 +138,7 @@ export default function GraduationMoveOutGuidePage() {
               考试周后 1 周通常是家具与教材出货黄金窗口。
             </p>
             <p className="mt-3 text-sm font-semibold text-gray-900">
-              S2 毕业清仓：11 月中旬 - 12 月初
+              S2 毕业清仓：11 月中旬 - 12 月初（考试 11/2–11/20 结束后）
             </p>
             <p className="mt-1 text-sm text-gray-700">全年需求最强窗口，建议提前备图并分批上架。</p>
             <p className="mt-3 text-sm font-semibold text-gray-900">春节前离澳人群提醒</p>
@@ -236,19 +232,19 @@ export default function GraduationMoveOutGuidePage() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/market?area=Carlton"
+            href={marketPath("Carlton")}
             className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 Carlton 在售
           </Link>
           <Link
-            href="/market?area=Parkville"
+            href={marketPath("Parkville")}
             className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 Parkville 在售
           </Link>
           <Link
-            href="/market?area=Melbourne%20CBD"
+            href={marketPath("Melbourne CBD")}
             className="inline-flex items-center rounded-xl border border-black/5 bg-white px-4 py-2 text-sm font-semibold text-gray-900 transition-colors hover:border-brand-500"
           >
             查看 CBD 在售

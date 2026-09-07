@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -35,7 +36,7 @@ function getCopy(locale: string): FitzroyCopy {
           "Fitzroy 的二手需求不仅集中在家具和日常家电，还包括古着服饰、装饰摆件、乐器和个性化通勤用品。区域内店铺与社区活动密度高，商品类型更偏向“实用 + 风格化”并存。",
         communityTitle: "社区特点与交易需求",
         communityBody:
-          "本区用户普遍关注可持续消费与再利用，愿意购买有设计感或可长期使用的二手物品。相比标准化家居区，Fitzroy 的交易更强调风格匹配与成色细节，优质商品流转速度通常更快。",
+          "本区用户普遍关注可持续消费与再利用，愿意购买有设计感或可长期使用的二手物品。相比标准化家居区，Fitzroy 的交易更强调风格匹配与个人品味，优质商品流转速度通常更快。",
         scenariosTitle: "典型二手交易场景",
         scenarios: [
           "创意行业用户更新工作室或居家布置，出售装饰品、乐器配件与风格家具。",
@@ -44,10 +45,10 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "如何更高效在 Fitzroy 找到合适二手物品",
         practicalBody:
-          "建议先按“最近发布”“同区距离”“成色描述完整”筛选，再使用 “Fitzroy + 品类词” 搜索（如 vintage chair、record、lamp）。若你有明确风格偏好，可先收藏关键词并持续追踪新上架。",
+          "建议先把所在区域设为 Fitzroy，首页会优先显示附近且较新的在售商品；预算有限时可切换到“免费赠送”或“$20 以内”价格标签，想整类浏览就点开“分类”分类页。再用 “Fitzroy + 品类词” 搜索（如 vintage chair、record、lamp），并按价格收窄结果。搜索支持八种语言互相匹配，用中文关键词也能找到英文标题的商品。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先浏览 Fitzroy 在售列表，再对比 Carlton 与 North Melbourne 的同类商品。若你更看重风格和独特性，优先选择描述清晰、图片完整且可快速沟通的卖家。",
+          "先浏览 Fitzroy 在售列表，再对比 Carlton 与 North Melbourne 的同类商品。若你更看重风格和独特性，优先选择描述清晰、风格与你相符的商品，看中后与卖家约好当面交收的时间和地点。",
         marketCta: "查看 Fitzroy 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -60,7 +61,7 @@ function getCopy(locale: string): FitzroyCopy {
           "Fitzroy 二手需求除了家具與日常家電，也涵蓋古著、裝飾擺件、樂器與個性化通勤用品。此區商品供給呈現「實用 + 風格化」並存的特點。",
         communityTitle: "社群特徵與交易需求",
         communityBody:
-          "本區使用者普遍重視可持續消費與再利用，偏好具設計感或可長期使用的二手物件。相較標準化家居區，Fitzroy 交易更重視風格匹配與成色細節。",
+          "本區使用者普遍重視可持續消費與再利用，偏好具設計感或可長期使用的二手物件。相較標準化家居區，Fitzroy 交易更重視風格匹配與個人品味。",
         scenariosTitle: "典型二手交易場景",
         scenarios: [
           "創意工作者更新工作室或住家配置，轉售裝飾品、樂器配件與風格家具。",
@@ -69,10 +70,10 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "如何更有效在 Fitzroy 找到合適二手物品",
         practicalBody:
-          "建議先用「最近發布」「同區距離」「成色描述完整」篩選，再用 “Fitzroy + 品類詞” 搜尋（如 vintage chair、record、lamp）。若有明確風格偏好，可先收藏關鍵字並持續追蹤。",
+          "建議先把所在區域設為 Fitzroy，首頁就會優先顯示附近且較新的在售商品；預算有限時可切換到「免費贈送」或「$20 以內」價格標籤，想整類瀏覽就點開「分類」分類頁。再用 “Fitzroy + 品類詞” 搜尋（如 vintage chair、record、lamp），並依價格收窄結果。搜尋支援八種語言互相比對，用中文關鍵字也找得到英文標題的商品。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先看 Fitzroy 列表，再與 Carlton、North Melbourne 的同類商品比較。若你更重視風格與獨特性，優先選擇圖片完整、描述清楚且可快速回覆的賣家。",
+          "先看 Fitzroy 列表，再與 Carlton、North Melbourne 的同類商品比較。若你更重視風格與獨特性，優先挑選描述清楚、風格與你相符的商品，看中後再與賣家約好當面交收的時間與地點。",
         marketCta: "查看 Fitzroy 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -85,7 +86,7 @@ function getCopy(locale: string): FitzroyCopy {
           "Second-hand demand in Fitzroy goes beyond standard furniture and appliances. Popular categories include vintage clothing, decor pieces, music-related gear, and distinctive lifestyle items.",
         communityTitle: "Community profile and demand pattern",
         communityBody:
-          "Local buyers often value sustainability, design, and item character. Compared with more utility-driven suburbs, Fitzroy listings tend to emphasize style, condition detail, and uniqueness.",
+          "Local buyers often value sustainability, design, and item character. Compared with more utility-driven suburbs, Fitzroy listings tend to emphasize style, personal taste, and uniqueness.",
         scenariosTitle: "Typical second-hand scenarios",
         scenarios: [
           "Creative workers rotating studio decor, accessories, and design-forward furniture.",
@@ -94,10 +95,10 @@ function getCopy(locale: string): FitzroyCopy {
         ],
         practicalTitle: "How to find better second-hand options in Fitzroy",
         practicalBody:
-          "Filter by recently posted, nearby distance, and complete condition notes first. Then search with “Fitzroy + item terms” (for example, vintage chair, record, lamp) to surface more relevant local listings.",
+          "Set your suburb to Fitzroy first, so the feed puts nearby, freshly posted items on top; on a tight budget, switch to the “免费赠送” or “$20 以内” chip, or open the “分类” page to browse a whole category. Then search with “Fitzroy + item terms” (for example, vintage chair, record, lamp) and narrow the results by price. Search matches across all eight languages, so a keyword in your own language still finds English listings.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Start with Fitzroy listings, then compare similar items in Carlton and North Melbourne. If style and uniqueness matter most, prioritize posts with clearer photos and faster seller response.",
+          "Start with Fitzroy listings, then compare similar items in Carlton and North Melbourne. If style and uniqueness matter most, prioritize posts whose description matches the look you want, then agree with the seller on a time and place to hand the item over in person.",
         marketCta: "Explore Fitzroy listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneFitzroySuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneFitzroySuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

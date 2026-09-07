@@ -75,7 +75,7 @@ const SECTION_PADDING = "px-4 pb-16 pt-20 sm:px-6 sm:pb-20 sm:pt-28";
 const SECTION_HEADING =
   "text-balance text-xl font-semibold tracking-tight text-gray-800 sm:text-2xl md:text-3xl";
 const SECTION_SUBTITLE =
-  "mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-500 sm:text-base";
+  "mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-600 sm:text-base";
 
 /**
  * The background rhythm, strictly alternating from the hero down so no two
@@ -172,7 +172,13 @@ export function HomePageContent({
           {/* `text-pretty`, not `text-balance`: balancing re-computes the line break
               from the full text, so every rotation of the suburb name would shift
               where the heading wraps. `text-pretty` only guards against orphans. */}
-          <h1 className="text-pretty text-[clamp(1.75rem,5.5vw,3.5rem)] font-bold leading-[1.08] tracking-tight text-black">
+          {/* `min-h`: the rotating suburb name changes how the heading wraps, so
+              without a reserved two-line box the lead, the trust line and both
+              CTAs below shift a whole line every 2.5s. Measured CLS at 390px was
+              0.59 on /vi and 0.34-0.45 on /ko and /es — Google's "poor" band —
+              against 0.006 on /en, where the names happen not to re-wrap.
+              `em`, so the reserve tracks the clamp()-sized text. */}
+          <h1 className="flex min-h-[2.16em] flex-col justify-center text-pretty text-[clamp(1.75rem,5.5vw,3.5rem)] font-bold leading-[1.08] tracking-tight text-black">
             {heroTitleParts.map((part, i) =>
               part === "{suburb}" ? (
                 <HeroSuburbRotator key={i} suburbs={HERO_SUBURBS} active={heroActive} />
@@ -184,7 +190,7 @@ export function HomePageContent({
           <p className="mt-5 max-w-2xl text-balance text-base leading-relaxed text-black/60 sm:text-lg">
             {t.heroLead}
           </p>
-          <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-black/45">
+          <p className="mt-4 max-w-xl text-balance text-sm leading-relaxed text-black/60">
             {trustLine}
           </p>
 

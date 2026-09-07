@@ -251,7 +251,7 @@ export function RestrictionLookup({ onAccessEnded }: { onAccessEnded: () => void
             inputMode="numeric"
             placeholder="e.g. 1042"
             disabled={looking}
-            className="w-40 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+            className="w-40 rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
           />
         </div>
         <button
@@ -357,7 +357,7 @@ export function RestrictionLookup({ onAccessEnded }: { onAccessEnded: () => void
                     value={reason}
                     onChange={(e) => setReason(e.target.value as CommunityReasonCode)}
                     disabled={busy !== null}
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50 sm:max-w-xs"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50 sm:max-w-xs"
                   >
                     <option value="">Pick a reason…</option>
                     {COMMUNITY_REASON_CODES.map((code) => (
@@ -380,7 +380,7 @@ export function RestrictionLookup({ onAccessEnded }: { onAccessEnded: () => void
                     onChange={(e) => setNote(e.target.value.slice(0, NOTE_MAX_LENGTH))}
                     rows={2}
                     disabled={busy !== null}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
                   />
                   <p className="mt-0.5 text-right text-xs text-slate-400">
                     {note.length}/{NOTE_MAX_LENGTH}

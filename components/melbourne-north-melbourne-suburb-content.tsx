@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -35,7 +36,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
           "该区生活便利、通勤半径短，常见二手品类覆盖家具、电器、厨房用品、儿童相关用品，以及运动和通勤类物品。由于居住结构多元，买卖双方需求跨度较大，容易形成高匹配交易。",
         communityTitle: "社区特点与交易需求",
         communityBody:
-          "North Melbourne 社区感较强，居民在搬家、换租和家庭升级时会持续释放可再利用物品。部分住户会在本地社区渠道发布信息，因此同区交易通常更强调响应速度和取货便利。",
+          "North Melbourne 社区感较强，居民在搬家、换租和家庭升级时会持续释放可再利用物品。部分住户会在本地社区渠道发布信息，因此同区交易通常更看重当面取货是否顺路。",
         scenariosTitle: "典型二手交易场景",
         scenarios: [
           "家庭住户更新家具时，出售大件家具、窗帘、收纳和厨房电器。",
@@ -44,10 +45,10 @@ function getCopy(locale: string): NorthMelbourneCopy {
         ],
         practicalTitle: "如何更高效在 North Melbourne 找到合适二手物品",
         practicalBody:
-          "建议先按“可送货”“同区发布”“发布时间新”筛选，再使用“North Melbourne + 品类”关键词检索。若你通勤依赖火车或电车，可追加附近站点关键词（如 South Kensington）来提高就近匹配效率。",
+          "建议先把首页的区域设为 North Melbourne：首页会自动把距离更近、发布更新的商品排在前面，再用“免费赠送”或“$20 以内”价格标签收窄到预算之内。想整类慢慢逛，就点价格标签后面的“分类”进入分类页；目标明确时直接搜索品类关键词（餐桌、婴儿推车、咖啡机），并在结果页按价格区间筛选。用中文输入也能匹配到英文标题，因为搜索在八种语言之间互通；若你通勤依赖火车或电车，可优先联系碰面地点靠近 South Kensington 等站点的卖家，取货更顺路。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先查看 North Melbourne 列表，再与 Carlton、Flemington 等邻近区域对比同类商品。若价格接近，优先选择同区自提或送货条件明确的卖家，通常更省时省力。",
+          "先查看 North Melbourne 列表，再把区域切到 Carlton 或 Parkville 对比同类商品。若价格接近，优先选择碰面地点更好到达的卖家；所有交易都是当面完成，取货是否顺路通常更省时省力。",
         marketCta: "查看 North Melbourne 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -60,7 +61,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
           "此區通勤便利、生活機能完整，常見二手品類涵蓋家具、家電、廚房用品、兒童用品，以及運動與通勤類物件。因住戶結構多樣，買賣需求跨度大，媒合機會高。",
         communityTitle: "社群特徵與交易需求",
         communityBody:
-          "North Melbourne 社區感較強，住戶在搬家、換租與家庭升級時會持續釋出可再利用物品。部分住戶會透過在地社群管道發布資訊，因此同區交易更重視回覆速度與取貨便利。",
+          "North Melbourne 社區感較強，住戶在搬家、換租與家庭升級時會持續釋出可再利用物品。部分住戶會透過在地社群管道發布資訊，因此同區交易更看重當面取貨是否順路。",
         scenariosTitle: "典型二手交易場景",
         scenarios: [
           "家庭住戶更新家居時，釋出大件家具、窗簾、收納與廚房家電。",
@@ -69,10 +70,10 @@ function getCopy(locale: string): NorthMelbourneCopy {
         ],
         practicalTitle: "如何更有效在 North Melbourne 找到合適二手物品",
         practicalBody:
-          "建議先用「可送貨」「同區發布」「發布時間新」篩選，再以「North Melbourne + 品類」關鍵字搜尋。若你仰賴大眾運輸，可加入附近站點詞（如 South Kensington）提高就近匹配效率。",
+          "建議先把首頁的區域設為 North Melbourne：首頁會自動把距離較近、發布較新的商品排在前面，再用「免費贈送」或「$20 以內」價格標籤收窄到預算之內。想整類慢慢逛，就點價格標籤後面的「分類」進入分類頁；目標明確時直接搜尋品類關鍵字（餐桌、嬰兒推車、咖啡機），並在結果頁依價格區間篩選。用中文輸入同樣能對應到英文標題，因為搜尋在八種語言之間互通；若你仰賴大眾運輸，可優先聯絡碰面地點靠近 South Kensington 等站點的賣家，取貨更順路。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先看 North Melbourne 列表，再與 Carlton、Flemington 交叉比價。若價格接近，優先選擇同區自提或送貨條件明確的賣家，通常交易更省時。",
+          "先看 North Melbourne 列表，再把區域切到 Carlton 或 Parkville 交叉比價。若價格接近，優先選擇碰面地點較好到達的賣家；所有交易都是當面完成，取貨是否順路通常就決定了省不省時。",
         marketCta: "查看 North Melbourne 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -85,7 +86,7 @@ function getCopy(locale: string): NorthMelbourneCopy {
           "With convenient access and diverse households, common second-hand demand includes furniture, appliances, kitchen essentials, child-related items, and mobility or sport gear.",
         communityTitle: "Community profile and demand pattern",
         communityBody:
-          "North Melbourne has strong neighborhood-level activity. Move-outs, lease changes, and household upgrades keep reusable goods circulating regularly, with local convenience often driving purchase decisions.",
+          "North Melbourne has strong neighborhood-level activity. Move-outs, lease changes, and household upgrades keep reusable goods circulating regularly, with how easy the in-person pickup is often driving purchase decisions.",
         scenariosTitle: "Typical second-hand scenarios",
         scenarios: [
           "Family home updates listing larger furniture, soft furnishings, storage, and kitchen appliances.",
@@ -94,10 +95,10 @@ function getCopy(locale: string): NorthMelbourneCopy {
         ],
         practicalTitle: "How to find better second-hand options in North Melbourne",
         practicalBody:
-          "Start with filters like delivery available, same-area listings, and recently posted. Then combine “North Melbourne + item keywords”. If you rely on transit, nearby station terms (such as South Kensington) can improve local matching.",
+          "Set your suburb to North Melbourne first: the feed already ranks nearer and newer listings ahead, and the Giveaway or Under $20 chip narrows it to your budget. To browse a whole category, tap the Category pill at the end of that row; when you know what you want, search the item word instead — dining table, stroller, coffee machine — and narrow those results by price. Typing in your own language still matches English titles, because search works across all eight; and if you rely on transit, favour sellers whose meetup spot sits near a station such as South Kensington.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Review North Melbourne listings first, then compare similar items in Carlton and Flemington. If prices are similar, prioritize local pickup or clearly defined delivery terms.",
+          "Review North Melbourne listings first, then set your suburb to Carlton or Parkville to compare similar items. If prices are similar, prioritize the seller whose meetup spot is easiest to reach — every handover is in person, so a convenient pickup usually saves the most time.",
         marketCta: "Explore North Melbourne listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneNorthMelbourneSuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneNorthMelbourneSuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

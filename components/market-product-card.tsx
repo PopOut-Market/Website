@@ -59,7 +59,7 @@ export function MarketProductCard({
           </div>
         )}
         {product.isNew ? (
-          <div className="absolute left-2 top-2 z-[1] rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+          <div className="absolute left-2 top-2 z-[1] max-w-[calc(100%-1rem)] truncate rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold text-white">
             {copy.badgeNew}
           </div>
         ) : null}

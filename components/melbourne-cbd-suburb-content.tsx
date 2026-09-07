@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -44,10 +45,10 @@ function getCopy(locale: string): CbdCopy {
         ],
         practicalTitle: "如何更高效在 CBD 找到合适二手物品",
         practicalBody:
-          "建议你多浏览 App 并持续筛选，因为 CBD 在售物品数量大、更新快，花更多时间更容易找到性价比高或有惊喜的商品。筛选时可优先关注“可送货”“学生发布”，并尝试搜索你居住的公寓名称，查看是否有同一学生公寓内的用户在售卖，通常沟通和取货都会更方便。",
+          "CBD 在售物品多、更新也快，先把区域设为 Melbourne CBD，首页就会把离这里更近、发布更新的商品排在前面。首页的价格筛选只有“All”“免费赠送”“$20 以内”三个，想低价入手就切到后两个；要按品类翻书桌、椅子、冰箱、洗衣机，点同一行末尾的“分类”进入分类页面浏览。找具体物品用搜索更快：输入公寓名称或“书桌”这类关键词，八种语言互通，用中文也能搜到英文标题，再按价格收窄结果，最后和卖家约好当面交收。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先进入 CBD 列表查看当前在售，再根据你的预算与居住周期缩小范围；若暂时没有匹配商品，可以继续浏览其他墨尔本区域页面，常能找到通勤可达且性价比更高的替代选择。",
+          "先进入 CBD 列表查看当前在售，再按你的预算与实际居住时长判断要不要入手；若暂时没有匹配商品，可以继续浏览其他墨尔本区域页面，常能找到通勤可达且性价比更高的替代选择。",
         marketCta: "查看 Melbourne CBD 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -69,10 +70,10 @@ function getCopy(locale: string): CbdCopy {
         ],
         practicalTitle: "如何更有效在 CBD 找到合適二手物品",
         practicalBody:
-          "建議優先篩選「可當日面交」「公寓尺寸友善」「可短期使用」的商品，並比較賣家刊登時長、物品狀況與取貨便利性。對學生族群而言，可先鎖定學習與租住必需品組合，避免重複購買。",
+          "CBD 在售商品多、更新也快，先把區域設為 Melbourne CBD，首頁就會把離這裡較近、剛刊登不久的商品排在前面。首頁的價格篩選只有「All」「免費贈送」「$20 以內」三個，想用低價入手就切到後兩個；想依品類翻書桌、椅子、冰箱、洗衣機，點同一列最後的「分類」進入分類頁面瀏覽。要找特定物品用搜尋更快：輸入公寓名稱或「書桌」之類的關鍵字，八種語言互通，用中文也能搜到英文標題，再依價格縮小結果，最後和賣家約好當面交收。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先進入 CBD 列表查看目前在售商品，再依預算與居住週期縮小範圍；若暫時沒有合適選項，可延伸瀏覽其他墨爾本區域，常能找到通勤可達且更高性價比的替代品。",
+          "先進入 CBD 列表查看目前在售商品，再依預算與實際居住時間判斷要不要入手；若暫時沒有合適選項，可延伸瀏覽其他墨爾本區域，常能找到通勤可達且更高性價比的替代品。",
         marketCta: "查看 Melbourne CBD 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -94,10 +95,10 @@ function getCopy(locale: string): CbdCopy {
         ],
         practicalTitle: "How to find better second-hand options in CBD",
         practicalBody:
-          "Start with listings that are same-day pickup friendly, apartment-size suitable, and practical for short stays. Compare listing freshness, item condition, and pickup convenience before deciding. Students usually save more by prioritizing study-and-living essentials first.",
+          "CBD listings are plentiful and turn over quickly, so set your suburb to Melbourne CBD first and the feed will put closer, more recently posted items ahead of the rest. The home feed carries three price chips — All, Giveaway, and Under $20 — and the Category pill at the end of that row opens category browsing for desks, chairs, refrigerators, and washing machines. For something specific, search the keyword in whichever of the eight languages you use, since a Chinese or Korean keyword still matches an English title, then narrow those results by price and message the seller to arrange the in-person handover.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Open the CBD listings first, then narrow by budget and length of stay. If current supply is limited, check nearby Melbourne suburb pages below for commute-friendly alternatives with stronger value.",
+          "Open the CBD listings first, then weigh each option against your budget and how long you plan to stay. If current supply is limited, check nearby Melbourne suburb pages below for commute-friendly alternatives with stronger value.",
         marketCta: "Explore Melbourne CBD listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneCbdSuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneCbdSuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

@@ -30,7 +30,5 @@ export type MarketPostDetail = {
   meetupLabel: string | null;
   categoryLabel: string | null;
   statusLabel: string;
-  deliveryLabel: string;
-  offerLabel: string;
   otherItems: SellerOtherItem[];
 };

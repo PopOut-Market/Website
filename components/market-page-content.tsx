@@ -293,6 +293,17 @@ export function MarketPageContent({ initialItems }: { initialItems?: MarketProdu
             aria-label={selectedLabel}
             className="flex w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-black/10 bg-white shadow-card"
           >
+            <div className="flex items-center justify-between gap-3 border-b border-black/5 px-4 py-3">
+              <p className="min-w-0 truncate text-sm font-semibold text-black">{selectedLabel}</p>
+              <button
+                type="button"
+                onClick={() => setMapOpen(false)}
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/10 bg-surface-base text-black/55 transition-colors hover:border-brand-500 hover:text-black"
+                aria-label={t.marketAreaCloseAria}
+              >
+                ×
+              </button>
+            </div>
             <SuburbBoundaryMap
               suburbId={selected.id}
               center={selected.center}

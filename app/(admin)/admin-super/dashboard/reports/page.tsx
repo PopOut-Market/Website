@@ -320,7 +320,7 @@ function ReportCard({
                 value={note}
                 onChange={(e) => onNote(e.target.value)}
                 placeholder="Note (optional)"
-                className="w-36 rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:border-slate-400"
+                className="w-36 rounded border border-slate-200 px-2 py-1 text-base sm:text-xs outline-none focus:border-slate-400"
               />
               <div className="flex gap-1.5">
                 <button
@@ -492,7 +492,7 @@ function ChatThread({
                         : "bg-amber-50 text-slate-800"
                   }`}
                 >
-                  <div className="mb-0.5 flex items-center gap-2">
+                  <div className="mb-0.5 flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-semibold text-slate-500">{m.senderName}</span>
                     <span className="text-[10px] text-slate-400">{fmtTime(m.createdAt)}</span>
                     {kind === "translated" && m.targetLocale && (

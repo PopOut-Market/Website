@@ -638,7 +638,7 @@ export function SiteChrome({
               </div>
 
               <div className="mt-5">
-                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-500 min-[760px]:text-left">
+                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 min-[760px]:text-left">
                   {categoriesLabel(locale)}
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-2 min-[760px]:justify-start">
@@ -655,7 +655,7 @@ export function SiteChrome({
               </div>
 
               <div className="mt-5">
-                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-500 min-[760px]:text-left">
+                <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-gray-600 min-[760px]:text-left">
                   {regionsLabel(locale)}
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-2 min-[760px]:justify-start">

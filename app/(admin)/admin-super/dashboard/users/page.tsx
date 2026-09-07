@@ -143,13 +143,13 @@ export default function UsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name…"
-            className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-base sm:text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
           />
         </div>
         <select
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+          className="rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
           aria-label="Sort users"
         >
           {SORTS.map((s) => (

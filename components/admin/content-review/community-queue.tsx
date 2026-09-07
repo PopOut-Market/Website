@@ -458,7 +458,7 @@ function CommunityCard({
                   value={reason}
                   onChange={(e) => setReason(e.target.value as CommunityReasonCode)}
                   disabled={busy !== null}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50 sm:max-w-xs"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50 sm:max-w-xs"
                 >
                   <option value="">Pick a reason…</option>
                   {COMMUNITY_REASON_CODES.map((code) => (
@@ -483,7 +483,7 @@ function CommunityCard({
                   rows={2}
                   disabled={busy !== null}
                   placeholder="Operator-only note…"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
                 />
                 <p className="mt-0.5 text-right text-xs text-slate-400">
                   {note.length}/{NOTE_MAX_LENGTH}

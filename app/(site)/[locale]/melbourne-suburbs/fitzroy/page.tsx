@@ -15,9 +15,9 @@ const LOCALIZED_META: Partial<Record<Locale, { title: string; description: strin
       "App gratis para comprar y vender artículos de segunda mano en Fitzroy. Encuentra muebles, electrodomésticos y productos usados cerca de ti en Melbourne.",
   },
   fr: {
-    title: "Corrected French SEO metadata for Fitzroy second-hand page",
+    title: "Achat et vente d'occasion à Fitzroy, Melbourne | PopOut Market",
     description:
-      '{"title":"Achat et vente d\'occasion à Fitzroy, Melbourne | PopOut Market","description":"PopOut Market : l\'appli gratuite pour acheter et vendre d\'occasion à Fitzroy. Meubles, électroménager et petites annonces de seconde main à Melbourne."}\n\nNotes on the changes:\n- Title: replaced the keyword-stuffed "Occasion Fitzroy Melbourne | Acheter Vendre d\'Occasion Fitzroy" (which repeated "Fitzroy" and "occasion" and read as a fragmented list) with the natural French phrase "Achat et vente d\'occasion à Fitzroy, Melbourne". Kept the brand "PopOut Market" in the title as required.\n- "Acheter Vendre" was ungrammatical without a conjunction; "Achat et vente" is the idiomatic noun phrase for a title, and the description retains the verb form "acheter et vendre" correctly.\n- Description: changed "appli d\'occasion gratuite" to "l\'appli gratuite pour acheter et vendre d\'occasion" — "appli d\'occasion" wrongly implies a second-hand app rather than an app for second-hand goods. Added the article "l\'" for natural phrasing.\n- "seconde main" kept as is (correct and common French term); "petites annonces" and "électroménager" are accurate, natural terms. No keyword stuffing remains; all claims are accurate.',
+      "PopOut Market : l'appli gratuite pour acheter et vendre d'occasion à Fitzroy. Meubles, électroménager et petites annonces de seconde main à Melbourne.",
   },
   vi: {
     title: "Đồ Cũ Fitzroy | Mua Bán Đồ Cũ Melbourne Fitzroy - PopOut Market",

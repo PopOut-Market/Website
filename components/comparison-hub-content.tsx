@@ -75,7 +75,7 @@ export function ComparisonHubContent() {
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">{copy.intro}</p>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.purposeTitle}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">{copy.purposeBody}</p>

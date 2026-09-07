@@ -36,7 +36,7 @@ export function TermsPageContent() {
             <p>Version: 1.0</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
+          <p className="mt-3 text-xs italic text-gray-600">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <TermsSection title="1. About the Application">
@@ -88,8 +88,7 @@ export function TermsPageContent() {
                 <li>Email address and preferred username;</li>
                 <li>Telephone number (verified via SMS OTP);</li>
                 <li>Current suburb (verified via GPS mapping every 30 days);</li>
-                <li>Optional profile image and recovery email;</li>
-                <li>Optional university email for identity verification;</li>
+                <li>Optional profile image;</li>
                 <li>User-generated content, including images and descriptions processed by AI;</li>
                 <li>
                   Communication data and chat history, including AI-assisted translation/moderation;

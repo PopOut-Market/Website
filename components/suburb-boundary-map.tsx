@@ -13,7 +13,14 @@ const FILL_COLOR = "#404040"; // neutral grey — a faint wash over the selected
 const OUTLINE_COLOR = "#171717"; // near-black — a clearly visible dotted boundary
 const MARKER_COLOR = "#ff8c00"; // brand orange — the meet-up pin
 
-// CARTO Voyager raster basemap — free, no API key. Attribution is required.
+// CARTO Voyager raster basemap. Attribution is required.
+//
+// NOTE (2026-09): CARTO's keyless endpoint now stamps its tiles with an
+// "API KEY REQUIRED / carto.com/basemaps/apikey" watermark. It still returns
+// HTTP 200 and a real Melbourne tile, so nothing errors — the watermark is
+// simply baked into the image, faint grey on a light map. To remove it, get a
+// CARTO API key (or move to another provider) and put it in the URL below; the
+// style and everything around it stays as it is.
 const TILE_URL = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const TILE_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
@@ -171,6 +178,11 @@ export function SuburbBoundaryMap({
     <div
       ref={containerRef}
       className={className ? `${className} isolate` : "isolate"}
+      // A bare <div> exposes no role, so `aria-label` on it was announced by
+      // nothing. The static banner is a picture of a suburb; the interactive
+      // instance is a region the reader can pan and zoom, and must NOT be
+      // `img` or its Leaflet controls disappear from assistive technology.
+      role={interactive ? "region" : "img"}
       aria-label={title}
     />
   );
