@@ -154,7 +154,7 @@ export default function UserMapPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Find a suburb…"
-              className="w-40 rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-slate-400"
+              className="w-40 rounded-lg border border-slate-200 px-3 py-1.5 text-base text-slate-900 outline-none placeholder:text-slate-400 focus:border-slate-400 sm:text-sm"
             />
           </div>
 
