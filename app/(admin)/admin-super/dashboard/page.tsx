@@ -813,24 +813,47 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Navigating away mid-flight used to leave the request running and let its
+    // response write into a component nobody is looking at, so bouncing between
+    // dashboard and reward-review stacked up overlapping loads. `cancelled` drops
+    // the late write and the abort frees the browser connection. It cannot recall
+    // work the server has already begun — /api/admin/overview fans its queries
+    // out on arrival — so this is client-side hygiene, not a saving on Supabase.
+    let cancelled = false;
+    const ac = new AbortController();
+
     async function load() {
       setLoading(true);
       setError(null);
       try {
-        const res = await adminApiFetch("/api/admin/overview", { cache: "no-store" });
+        const res = await adminApiFetch("/api/admin/overview", {
+          cache: "no-store",
+          signal: ac.signal,
+        });
+        if (cancelled) return;
         if (!res.ok) {
           const j = await res.json().catch(() => null);
+          if (cancelled) return;
           setError(j?.error ?? `Request failed (${res.status}).`);
           return;
         }
-        setData((await res.json()) as Overview);
+        const json = (await res.json()) as Overview;
+        if (cancelled) return;
+        setData(json);
       } catch (e) {
+        // An abort is the cleanup path, not a failure worth showing the admin.
+        if (cancelled || (e instanceof DOMException && e.name === "AbortError")) return;
         setError(e instanceof Error ? e.message : "Failed to load.");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     load();
+
+    return () => {
+      cancelled = true;
+      ac.abort();
+    };
   }, []);
 
   return (

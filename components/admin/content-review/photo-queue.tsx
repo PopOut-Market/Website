@@ -425,7 +425,7 @@ function PhotoCard({
                   value={reason}
                   onChange={(e) => setReason(e.target.value as PhotoReasonCode)}
                   disabled={busy !== null}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
                 >
                   <option value="">Pick a reason…</option>
                   {PHOTO_REASON_CODES.map((code) => (

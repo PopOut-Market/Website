@@ -143,7 +143,7 @@ export function HomeTrustChain({ show }: { show: boolean }) {
       {/* The 200ms deltas are tuned so each step lands as the bar's leading edge
           reaches it (~17% at 120ms, ~46% at 320ms, ~74% at 520ms). It reads as
           one motion rather than four. */}
-      <ol className="relative grid gap-6 sm:grid-cols-3">
+      <ol className="relative grid gap-4 sm:grid-cols-3 sm:gap-6">
         {steps.map((step, i) => (
           <Reveal
             as="li"
@@ -151,7 +151,10 @@ export function HomeTrustChain({ show }: { show: boolean }) {
             show={show}
             delayMs={120 + i * 200}
             distance="lg"
-            className="flex flex-col items-start sm:items-center sm:text-center"
+            // Below `sm` each step is one row — icon beside its label — so the
+            // three read as a list under the centred heading instead of three
+            // orphaned icons down the left edge. From `sm` up it is the ribbon.
+            className="flex items-center gap-3 sm:flex-col sm:gap-0 sm:text-center"
           >
             <span
               aria-hidden
@@ -159,7 +162,7 @@ export function HomeTrustChain({ show }: { show: boolean }) {
             >
               {step.icon}
             </span>
-            <p className="mt-3 text-sm font-semibold text-black sm:text-base">{step.label}</p>
+            <p className="text-sm font-semibold text-black sm:mt-3 sm:text-base">{step.label}</p>
           </Reveal>
         ))}
       </ol>
@@ -174,7 +177,7 @@ export function HomeTrustChain({ show }: { show: boolean }) {
           as="h3"
           show={show}
           delayMs={720}
-          className="text-sm font-semibold uppercase tracking-wide text-black/45"
+          className="text-sm font-semibold uppercase tracking-wide text-black/60"
         >
           {t.safetyHeading}
         </Reveal>

@@ -4,6 +4,8 @@ import { EASE_OUT, REVEAL_MS, STAGGER_CAP, STAGGER_MS } from "@/lib/motion";
 import type { CSSProperties, ElementType, ReactNode } from "react";
 
 const DISTANCE = {
+  /** Pure fade — no rise. For a container whose children carry the movement. */
+  none: "0px",
   sm: "8px",
   md: "12px",
   lg: "16px",

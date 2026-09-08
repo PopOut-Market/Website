@@ -111,7 +111,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     en: {
       title: "Melbourne, Australia Second-Hand Market | PopOut Market",
       description:
-        "Browse Melbourne second-hand listings by suburb and trade locally with PopOut Market — a second-hand market for Melbourne, Australia, covering the city and its inner suburbs.",
+        "Browse Melbourne second-hand listings by suburb and trade locally with PopOut Market — a second-hand market for Melbourne, Australia.",
       keywords: [
         "Australia second hand market",
         "second hand market Australia",
@@ -125,7 +125,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     "zh-Hans": {
       title: "澳洲墨尔本二手市集 | PopOut Market",
       description:
-        "按郊区浏览澳大利亚墨尔本的二手商品，对比附近的闲置好物，用 PopOut Market 在墨尔本市区与 CBD 社区进行同城二手交易。已覆盖墨尔本市区与周边城区。",
+        "按郊区浏览澳大利亚墨尔本的二手商品，对比附近的闲置好物，用 PopOut Market 在墨尔本市区与 CBD 社区进行同城二手交易。",
       keywords: [
         "澳洲二手市集",
         "澳大利亚二手",
@@ -139,7 +139,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     ko: {
       title: "호주 멜버른 중고마켓 | PopOut Market",
       description:
-        "동네별로 호주 멜버른 중고 매물을 둘러보고 주변의 가까운 물건을 비교하세요. PopOut Market로 멜버른 시내와 CBD에서 동네 중고거래를 시작하고, 멜버른 도심과 인근 지역에서 이용할 수 있습니다.",
+        "동네별로 호주 멜버른 중고 매물을 둘러보고 주변의 가까운 물건을 비교하세요. PopOut Market로 멜버른 시내와 CBD에서 동네 중고거래를 시작하세요.",
       keywords: [
         "호주 중고마켓",
         "호주 멜버른 중고",
@@ -238,7 +238,7 @@ const SEO_COPY: Record<string, Partial<Record<Locale, SeoEntry>>> = {
     "zh-Hant": {
       title: "墨爾本二手常見問題 FAQ | 澳洲 PopOut Market 二手交易平台",
       description:
-        "PopOut Market 澳洲（Australia）墨爾本二手常見問題：免費二手 App 怎麼用、如何在同城刊登與買賣二手家具及家電、多語言聊天自動翻譯、更安全的面交流程，以及作為旋轉拍賣（Carousell）替代方案的說明。現已上線墨爾本，更多澳洲城市陸續開放。",
+        "PopOut Market 澳洲（Australia）墨爾本二手常見問題：免費二手 App 怎麼用、如何在同城刊登與買賣二手家具及家電、多語言聊天自動翻譯、更安全的面交流程，以及作為旋轉拍賣（Carousell）替代方案的說明。現已上線墨爾本。",
     },
     ja: {
       title: "よくある質問 FAQ | PopOut Market オーストラリア・メルボルン中古アプリ",

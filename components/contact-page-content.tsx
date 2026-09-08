@@ -126,22 +126,26 @@ export function ContactPageContent() {
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <label
+                htmlFor="contact-email"
+                className="text-xs font-semibold uppercase tracking-wide text-gray-600"
+              >
                 {copy.emailLabel}
               </label>
               <input
+                id="contact-email"
                 type="email"
                 value={FOOTER_CONTACT_EMAIL}
                 readOnly
                 aria-readonly="true"
-                className="h-11 w-full rounded-xl border border-black/5 bg-gray-50 px-3 text-sm font-medium text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+                className="h-11 w-full rounded-xl border border-black/5 bg-gray-50 px-3 text-base font-medium text-gray-700 focus-visible:outline-2 sm:text-sm focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 
             <div className="space-y-1.5">
               <label
                 htmlFor="contact-title"
-                className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+                className="text-xs font-semibold uppercase tracking-wide text-gray-600"
               >
                 {copy.titleLabel}
               </label>
@@ -154,14 +158,14 @@ export function ContactPageContent() {
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder={t.contactTitlePlaceholder}
-                className="h-11 w-full rounded-xl border border-black/5 bg-white px-3 text-sm text-gray-900 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+                className="h-11 w-full rounded-xl border border-black/5 bg-white px-3 text-base text-gray-900 transition-colors focus-visible:outline-2 sm:text-sm focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 
             <div className="space-y-1.5">
               <label
                 htmlFor="contact-main"
-                className="text-xs font-semibold uppercase tracking-wide text-gray-500"
+                className="text-xs font-semibold uppercase tracking-wide text-gray-600"
               >
                 {copy.mainLabel}
               </label>
@@ -173,7 +177,7 @@ export function ContactPageContent() {
                 value={main}
                 onChange={(event) => setMain(event.target.value)}
                 placeholder={t.contactMainPlaceholder}
-                className="min-h-40 w-full rounded-xl border border-black/5 bg-white px-3 py-3 text-sm leading-relaxed text-gray-900 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+                className="min-h-40 w-full rounded-xl border border-black/5 bg-white px-3 py-3 text-base leading-relaxed text-gray-900 transition-colors focus-visible:outline-2 sm:text-sm focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               />
             </div>
 

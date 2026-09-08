@@ -73,7 +73,7 @@ export default function FeedbackPage() {
             placeholder="Search feedback..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
           />
         </div>
 
@@ -96,7 +96,7 @@ export default function FeedbackPage() {
                   {initialOf(row.nickname)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm font-medium text-slate-800">{row.nickname}</span>
                     <span className="text-xs text-slate-400">
                       {new Date(row.created_at).toLocaleString()}

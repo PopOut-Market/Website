@@ -101,7 +101,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   fr: {
     title: "Appli d'occasion à Melbourne, Australie | Acheter et vendre · PopOut Market",
     description:
-      "PopOut Market est une appli d'occasion à Melbourne, en Australie, pour acheter et vendre près de chez vous : meubles, électroménager, vélos. Recherche par quartier, chat multilingue traduit, transactions en main propre plus sûres. Disponible à Melbourne, bientôt dans d'autres villes australiennes.",
+      "PopOut Market est une appli d'occasion à Melbourne, en Australie, pour acheter et vendre près de chez vous : meubles, électroménager, vélos. Recherche par quartier, chat multilingue traduit, transactions en main propre plus sûres.",
     h1: "Appli d'occasion à Melbourne, Australie",
     inLanguage: "fr",
     aboutThing: "appli d'occasion à Melbourne",
@@ -168,7 +168,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   vi: {
     title: "App đồ cũ tại Melbourne, Úc | Mua bán đồ cũ tại địa phương · PopOut Market",
     description:
-      "PopOut Market là app đồ cũ tại Melbourne, Úc để mua bán đồ second-hand ngay gần bạn: nội thất cũ, đồ điện cũ, xe đạp. Tìm theo khu (suburb), chat đa ngôn ngữ có dịch tự động, giao dịch gặp mặt an toàn. Hiện đã có mặt tại Melbourne, sắp mở rộng tới nhiều thành phố khác ở Úc.",
+      "PopOut Market là app đồ cũ tại Melbourne, Úc để mua bán đồ second-hand ngay gần bạn: nội thất cũ, đồ điện cũ, xe đạp. Tìm theo khu (suburb), chat đa ngôn ngữ có dịch tự động, giao dịch gặp mặt an toàn.",
     h1: "App đồ cũ tại Melbourne, Úc",
     inLanguage: "vi",
     aboutThing: "ứng dụng đồ cũ Melbourne",
@@ -235,7 +235,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   "zh-Hant": {
     title: "澳洲墨爾本二手 App | 二手交易平台與同城二手買賣 · PopOut Market",
     description:
-      "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手平台：免費買賣二手家具、電器、數碼、單車等中古好物，按社區發現附近物品，支援多語言聊天與翻譯、更安全的當面交易，適合留學生搬家與畢業清倉，也是旋轉拍賣（Carousell）的在地替代。現已上線墨爾本，更多澳洲城市陸續開放，敬請期待。",
+      "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手平台：免費買賣二手家具、電器、數碼、單車等中古好物，按社區發現附近物品，支援多語言聊天與翻譯、更安全的當面交易，適合留學生搬家與畢業清倉，也是旋轉拍賣（Carousell）的在地替代。現已上線墨爾本。",
     h1: "澳洲墨爾本二手 App",
     inLanguage: "zh-TW",
     aboutThing: "墨爾本二手 App",
@@ -302,7 +302,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   ja: {
     title: "オーストラリア・メルボルンの中古アプリ | 地元フリマアプリ・PopOut Market",
     description:
-      "PopOut Marketはオーストラリア（Australia）メルボルンの中古アプリ・フリマアプリです。中古の家具や家電、自転車などを無料で売買でき、エリア別に近所の掘り出し物を探せます。多言語チャットと安全な手渡し取引に対応。現在はメルボルンで提供中、今後オーストラリアの他都市にも順次拡大予定です。",
+      "PopOut Marketはオーストラリア（Australia）メルボルンの中古アプリ・フリマアプリです。中古の家具や家電、自転車などを無料で売買でき、エリア別に近所の掘り出し物を探せます。多言語チャットと安全な手渡し取引に対応。現在はメルボルンで提供中。",
     h1: "オーストラリア・メルボルンの中古アプリ",
     inLanguage: "ja",
     aboutThing: "メルボルンの中古アプリ",
@@ -369,7 +369,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   en: {
     title: "Melbourne, Australia Second-Hand App | Buy & Sell Locally · PopOut Market",
     description:
-      "PopOut Market is a Melbourne, Australia second-hand app for local buying and selling, with suburb-based discovery, multilingual communication, and safer meetup workflows. Live in Melbourne now, with more Australian cities coming soon.",
+      "PopOut Market is a Melbourne, Australia second-hand app for local buying and selling, with suburb-based discovery, multilingual communication, and safer meetup workflows. Live in Melbourne now.",
     h1: "Melbourne, Australia Second-Hand App",
     aboutThing: "Melbourne second-hand app",
     inLanguage: "en-AU",
@@ -429,7 +429,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
   "zh-Hans": {
     title: "澳洲墨尔本二手App | 二手交易软件与同城二手平台 · PopOut Market",
     description:
-      "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易 App（二手软件 / 二手应用）和同城二手平台：免费买卖二手家具、电器、数码、自行车等闲置，按社区发现身边好物，多语言沟通 + 更安全的当面交易，适合留学生搬家和毕业清仓。现已上线墨尔本，更多澳洲城市陆续开放，敬请期待。",
+      "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易 App（二手软件 / 二手应用）和同城二手平台：免费买卖二手家具、电器、数码、自行车等闲置，按社区发现身边好物，多语言沟通 + 更安全的当面交易，适合留学生搬家和毕业清仓。现已上线墨尔本。",
     h1: "澳洲墨尔本二手 App",
     aboutThing: "墨尔本二手App",
     inLanguage: "zh-CN",
@@ -595,14 +595,9 @@ export default async function MelbourneSecondHandAppPage({ params }: LocaleParam
         inLanguage: c.inLanguage,
         about: { "@type": "Thing", name: c.aboutThing },
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: c.faq.map((item) => ({
-          "@type": "Question",
-          name: item.q,
-          acceptedAnswer: { "@type": "Answer", text: item.a },
-        })),
-      },
+      // Deliberately no FAQPage node. Google deprecated the rich result on
+      // 7 May 2026 (see lib/jsonld.ts), so it earns nothing and still has to be
+      // kept in sync with the visible copy. The Q&As below stay on the page.
     ],
   };
 

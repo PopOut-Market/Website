@@ -436,7 +436,7 @@ export default function ListingModerationPage() {
                 }}
                 disabled={busyAny || unauthorized}
                 placeholder="e.g. 12345"
-                className="w-48 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                className="w-48 rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
               />
               <button
                 type="button"
@@ -463,7 +463,7 @@ export default function ListingModerationPage() {
                 }}
                 disabled={searchDisabled}
                 placeholder={lookupMode === "title" ? "e.g. bike, sofa, iphone" : "e.g. sooyoung"}
-                className="w-72 max-w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                className="w-72 max-w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
               />
               <button
                 type="button"
@@ -514,7 +514,7 @@ export default function ListingModerationPage() {
 
         {preview && (
           <div className="mt-4 flex flex-col gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 sm:flex-row">
-            <div className="flex shrink-0 gap-2">
+            <div className="flex shrink-0 flex-wrap gap-2 sm:flex-nowrap">
               {preview.photoUrls.length === 0 ? (
                 <div className="flex h-24 w-24 items-center justify-center rounded-lg bg-slate-100 text-2xl">
                   🖼️
@@ -579,7 +579,7 @@ export default function ListingModerationPage() {
             value={reason}
             onChange={(e) => setReason(e.target.value as RestrictReasonCode | "")}
             disabled={busyAny || unauthorized}
-            className="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+            className="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
           >
             <option value="">Select a reason…</option>
             {RESTRICT_REASON_CODES.map((code) => (
@@ -605,7 +605,7 @@ export default function ListingModerationPage() {
             rows={2}
             disabled={busyAny || unauthorized}
             placeholder="Operator-only note…"
-            className="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+            className="w-full max-w-sm rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
           />
         </div>
         <button

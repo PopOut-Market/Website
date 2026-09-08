@@ -279,14 +279,14 @@ export function MelbourneSuburbsHubContent() {
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">{copy.intro}</p>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.guideTitle}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-gray-700">{copy.guideBody}</p>
         </div>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.areaIntroTitle}
           </h2>
           <div className="mt-3 space-y-3">
@@ -337,7 +337,7 @@ export function MelbourneSuburbsHubContent() {
                 className="group rounded-2xl border border-black/5 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-200"
               >
                 <p className="text-base font-semibold text-gray-900">{region.names[locale]}</p>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-600">
                   {copy.suburbCount(region.suburbs.length)}
                 </p>
               </Link>

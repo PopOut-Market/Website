@@ -9,7 +9,10 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <AdminAuthGuard>
-      <div className="flex h-screen overflow-hidden bg-slate-50">
+      {/* `h-dvh`, not `h-screen`: on iOS Safari 100vh is the LARGE viewport, so
+          with the toolbar showing the bottom of the scroll pane sat behind it and
+          the last rows of every page were unreachable. dvh tracks the real one. */}
+      <div className="flex h-dvh overflow-hidden bg-slate-50">
         <AdminSidebar open={navOpen} onClose={() => setNavOpen(false)} />
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Mobile top bar — hidden on md+ where the sidebar is always visible. */}
@@ -38,7 +41,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
               PopOut Admin
             </span>
           </header>
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6">{children}</main>
         </div>
       </div>
     </AdminAuthGuard>

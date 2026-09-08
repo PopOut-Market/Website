@@ -92,7 +92,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 
   if (checking) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex min-h-dvh items-center justify-center bg-slate-50">
         <p className="text-sm text-slate-500">Verifying session...</p>
       </div>
     );
@@ -101,7 +101,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
   // Verification could not complete, but the session was NOT thrown away.
   if (authError && !identity) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50 px-6 text-center">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-slate-50 px-6 text-center">
         <p className="max-w-sm text-sm text-slate-600">{authError}</p>
         <button
           type="button"

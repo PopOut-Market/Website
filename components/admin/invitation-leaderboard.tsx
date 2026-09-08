@@ -174,7 +174,7 @@ export function InvitationLeaderboard({
             setPage(0);
           }}
           placeholder="Search referrer…"
-          className="w-56 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
+          className="w-56 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-base sm:text-sm text-slate-700 placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none"
         />
         <span className="text-xs text-slate-500">
           {filtered.length} referrer{filtered.length === 1 ? "" : "s"}

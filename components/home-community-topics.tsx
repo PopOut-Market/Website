@@ -114,7 +114,7 @@ export function HomeCommunityTopics({ show, labelledBy }: { show: boolean; label
             </span>
             <span className="min-w-0">
               <span className="block text-sm font-semibold text-gray-900">{topic}</span>
-              <span className="mt-1 block text-[0.8rem] leading-relaxed text-gray-500">
+              <span className="mt-1 block text-[0.8rem] leading-relaxed text-gray-600">
                 {descriptions[i]}
               </span>
             </span>

@@ -31,7 +31,7 @@ export function ChildSafetyPageContent() {
             <p>Last updated: 27 May 2026</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
+          <p className="mt-3 text-xs italic text-gray-600">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <div className="space-y-3 text-sm leading-relaxed text-gray-700 sm:text-[0.95rem]">
@@ -59,8 +59,9 @@ export function ChildSafetyPageContent() {
                   over.
                 </li>
                 <li>
-                  <strong>Account verification</strong>: All users must verify their identity
-                  through a valid Australian phone number.
+                  <strong>Account verification</strong>: Every account is verified with an
+                  Australian mobile number and a one-time location check that confirms the
+                  member&apos;s suburb and is then discarded, re-checked every 30 days.
                 </li>
                 <li>
                   <strong>Content moderation</strong>: We use automated and manual review to detect

@@ -40,8 +40,7 @@ To provide a secure and local marketplace, registration and usage may require pe
 - Email address and preferred username;
 - Telephone number (verified via SMS OTP);
 - Current suburb (verified via GPS mapping every 30 days);
-- Optional profile image and recovery email;
-- Optional university email for identity verification;
+- Optional profile image;
 - User-generated content, including images and descriptions processed by AI;
 - Communication data and chat history, including AI-assisted translation/moderation; and
 - Member activity data (ratings, reviews, transaction history).

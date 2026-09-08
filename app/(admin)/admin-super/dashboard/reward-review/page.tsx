@@ -236,6 +236,14 @@ export default function RewardReviewPage() {
    */
   const [approvedCounts, setApprovedCounts] = useState<Record<string, number>>({});
   const [countsError, setCountsError] = useState(false);
+  /**
+   * "The counts endpoint has answered at least once." Distinct from
+   * `countsError`: an unanswered request is not a zero, and a card that renders
+   * `0/N rewarded` before the first answer states something it does not know.
+   * Deliberately NOT reset on a reload — a refreshed count replaces the previous
+   * one in place, so the badge never flickers back to "unknown".
+   */
+  const [countsLoaded, setCountsLoaded] = useState(false);
 
   const [decided, setDecided] = useState<Map<number, Decided>>(new Map());
 
@@ -259,6 +267,12 @@ export default function RewardReviewPage() {
 
   const countsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countsSeq = useRef(0);
+  /**
+   * `load()` has three call sites (mount, and two refresh buttons) and awaits
+   * several times, so two runs can overlap. Without this, the slower run lands
+   * last and overwrites the newer queue with older rows.
+   */
+  const loadSeq = useRef(0);
 
   /* ------------------------------------------------------------- data loads */
 
@@ -271,14 +285,19 @@ export default function RewardReviewPage() {
       if (seq !== countsSeq.current) return;
       if (!res.ok) {
         setCountsError(true);
+        setCountsLoaded(true);
         return;
       }
       const json = await res.json();
       if (seq !== countsSeq.current) return;
       setApprovedCounts(json.counts ?? {});
       setCountsError(false);
+      setCountsLoaded(true);
     } catch {
-      if (seq === countsSeq.current) setCountsError(true);
+      if (seq === countsSeq.current) {
+        setCountsError(true);
+        setCountsLoaded(true);
+      }
     }
   }, []);
 
@@ -289,6 +308,7 @@ export default function RewardReviewPage() {
   }, [fetchApprovedCounts]);
 
   const load = useCallback(async () => {
+    const seq = ++loadSeq.current;
     if (!isAdminAuthConfigured()) {
       setError("Supabase is not configured.");
       setLoading(false);
@@ -311,6 +331,9 @@ export default function RewardReviewPage() {
           p_limit: PENDING_PAGE_SIZE,
           p_offset: page * PENDING_PAGE_SIZE,
         });
+        // A newer load() started while this page was in flight: stop here and
+        // leave every piece of state to the run that owns it.
+        if (seq !== loadSeq.current) return;
         if (rpcError) {
           if (isNotAuthorized(rpcError)) {
             setError(UNAUTHORIZED_MESSAGE);
@@ -330,6 +353,8 @@ export default function RewardReviewPage() {
       failure = e instanceof Error ? e.message : "Failed to load the queue.";
     }
 
+    if (seq !== loadSeq.current) return;
+
     // A blipped page must not wipe the pages that DID load, or the KPI renders an
     // authoritative "0 to review" next to a red banner and the queue looks empty.
     if (failure && all.length === 0) {
@@ -342,8 +367,12 @@ export default function RewardReviewPage() {
       setLoadedAt(new Date().toISOString());
     }
 
-    await countsPromise;
+    // The queue is already in state. The counts request only decides a LABEL
+    // (see the header of /api/admin/reward-approved-counts) and the cap itself is
+    // enforced in Postgres, so paint now rather than waiting on the slower of the
+    // two chains. Cards read `countsLoaded` and say "unknown" until it answers.
     setLoading(false);
+    await countsPromise;
   }, [fetchApprovedCounts]);
 
   const fetchHistory = useCallback(async () => {
@@ -514,6 +543,7 @@ export default function RewardReviewPage() {
   const cardProps = {
     approvedCounts,
     countsError,
+    countsLoaded,
     decided,
     onDecided,
     onUnauthorized,
@@ -654,7 +684,7 @@ export default function RewardReviewPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search title or seller…"
-              className="min-w-[12rem] flex-1 rounded-lg border border-slate-300 px-3 py-1.5 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="min-w-[12rem] flex-1 rounded-lg border border-slate-300 px-3 py-1.5 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
             />
             <div className="flex overflow-hidden rounded-lg border border-slate-300">
               {(
@@ -813,6 +843,7 @@ export default function RewardReviewPage() {
 type CardCommon = {
   approvedCounts: Record<string, number>;
   countsError: boolean;
+  countsLoaded: boolean;
   decided: Map<number, Decided>;
   onDecided: (claimId: number, entry: Decided, creditedOwnerId?: string | null) => void;
   onUnauthorized: () => void;
@@ -889,6 +920,7 @@ function ClaimCard({
   lane,
   approvedCounts,
   countsError,
+  countsLoaded,
   onDecided,
   onUnauthorized,
   markAlreadyRestricted,
@@ -913,7 +945,10 @@ function ClaimCard({
   const blocked = lane === "blocked";
 
   // Can we PREVIEW the coin outcome? Only affects the label — never the button.
-  const previewKnown = !countsError && sellerId !== null;
+  // `countsLoaded` gates it alongside `countsError`: before the first answer
+  // `approvedCounts` is an empty map, so without this the badge would render a
+  // confident "0/N rewarded" for every seller instead of "rewards so far unknown".
+  const previewKnown = countsLoaded && !countsError && sellerId !== null;
   const willPay = previewKnown ? rewarded < REWARD_APPROVED_CAP : null;
 
   const photos = (claim.photos ?? [])
@@ -1075,7 +1110,7 @@ function ClaimCard({
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="flex shrink-0 gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2 sm:flex-nowrap">
           {photos.length === 0 ? (
             <div className="flex h-28 w-28 items-center justify-center rounded-lg bg-slate-100 text-2xl">
               🖼️
@@ -1286,7 +1321,7 @@ function ClaimCard({
                   rows={2}
                   disabled={busy !== null}
                   placeholder="Operator-only note — never shown to the seller…"
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
                 />
               )}
             </div>
@@ -1312,7 +1347,7 @@ function ClaimCard({
               value={restrictReason}
               onChange={(e) => setRestrictReason(e.target.value as RestrictReasonCode | "")}
               disabled={busy !== null}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
             >
               <option value="">Select a reason…</option>
               {RESTRICT_REASON_CODES.map((r) => (
@@ -1328,9 +1363,9 @@ function ClaimCard({
               rows={2}
               disabled={busy !== null}
               placeholder="Internal note (optional)…"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
             />
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={restrict}
@@ -1405,6 +1440,7 @@ function ClaimCard({
               rewarded={rewarded}
               nickname={nickname}
               countsError={countsError}
+              countsPending={!countsLoaded && !countsError}
             />
           </div>
         )}
@@ -1419,18 +1455,23 @@ function ApproveHint({
   rewarded,
   nickname,
   countsError,
+  countsPending,
 }: {
   willPay: boolean | null;
   rewarded: number;
   nickname: string;
   countsError: boolean;
+  /** Counts have not answered yet — a third reason the preview is missing. */
+  countsPending: boolean;
 }) {
   if (willPay === null) {
     return (
       <p className="text-xs text-slate-500">
-        {countsError
-          ? "Can't preview the payout right now — approve anyway; the database works out the coins and the receipt will tell you what happened."
-          : "This claim has no seller profile, so the payout can't be previewed. Approving is still safe — the database works out the coins."}
+        {countsPending
+          ? "Still counting this seller's rewards so far — approving is safe either way; the database works out the coins."
+          : countsError
+            ? "Can't preview the payout right now — approve anyway; the database works out the coins and the receipt will tell you what happened."
+            : "This claim has no seller profile, so the payout can't be previewed. Approving is still safe — the database works out the coins."}
       </p>
     );
   }

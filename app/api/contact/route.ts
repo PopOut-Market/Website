@@ -85,31 +85,41 @@ export async function POST(req: NextRequest) {
   const requestIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const submittedAt = new Date().toISOString();
 
-  await transport.sendMail({
-    from: smtpFrom,
-    to: receiver,
-    replyTo: email,
-    subject: `[PopOut Contact] ${title}`,
-    text: [
-      `Email: ${email}`,
-      `Locale: ${locale || "unknown"}`,
-      `SubmittedAt: ${submittedAt}`,
-      `IP: ${requestIp}`,
-      "",
-      "Main:",
-      main,
-    ].join("\n"),
-    html: `
-      <h2>PopOut Contact Form</h2>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-      <p><strong>Locale:</strong> ${escapeHtml(locale || "unknown")}</p>
-      <p><strong>SubmittedAt:</strong> ${escapeHtml(submittedAt)}</p>
-      <p><strong>IP:</strong> ${escapeHtml(requestIp)}</p>
-      <hr />
-      <p><strong>Main:</strong></p>
-      <p>${escapeHtml(main).replaceAll("\n", "<br />")}</p>
-    `,
-  });
+  // The only unguarded await in this handler: an SMTP outage or a credential
+  // change used to surface as an unhandled rejection with nothing in the logs.
+  // No `error` string in the body — the client renders whatever it finds there
+  // verbatim, so an English SMTP message would break out of the reader's locale.
+  // Omitting it lets the form fall back to its own translated failure copy.
+  try {
+    await transport.sendMail({
+      from: smtpFrom,
+      to: receiver,
+      replyTo: email,
+      subject: `[PopOut Contact] ${title}`,
+      text: [
+        `Email: ${email}`,
+        `Locale: ${locale || "unknown"}`,
+        `SubmittedAt: ${submittedAt}`,
+        `IP: ${requestIp}`,
+        "",
+        "Main:",
+        main,
+      ].join("\n"),
+      html: `
+        <h2>PopOut Contact Form</h2>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Locale:</strong> ${escapeHtml(locale || "unknown")}</p>
+        <p><strong>SubmittedAt:</strong> ${escapeHtml(submittedAt)}</p>
+        <p><strong>IP:</strong> ${escapeHtml(requestIp)}</p>
+        <hr />
+        <p><strong>Main:</strong></p>
+        <p>${escapeHtml(main).replaceAll("\n", "<br />")}</p>
+      `,
+    });
+  } catch (mailError) {
+    console.error("[contact] sendMail failed", mailError);
+    return NextResponse.json({ ok: false }, { status: 502 });
+  }
 
   return NextResponse.json({ ok: true });
 }

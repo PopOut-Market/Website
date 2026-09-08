@@ -144,6 +144,7 @@ export function MarketFeed({ suburbId, suburbName, locale, t, initialItems }: Ma
           locale,
           sellerFallback: t.marketDemoSeller,
           kmSuffix: t.marketKmShort,
+          freeLabel: t.homeMarketFilterGiveaway,
           offset: (target - 1) * PAGE_SIZE,
           // One extra row, purely to answer "is there a next page".
           limit: PROBE_SIZE,

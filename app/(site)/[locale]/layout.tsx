@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { SiteChrome } from "@/components/site-chrome";
 import { baseMetadata } from "@/lib/root-metadata";
+import { OG_IMAGE } from "@/lib/seo";
 import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { LOCALE_SEGMENT_TO_CODE, htmlLang } from "@/lib/site-locale-routing";
 import type { Metadata } from "next";
@@ -20,12 +21,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "PopOut Market",
+    // Required, and easy to lose: an explicit `openGraph` block suppresses the
+    // og:image Next would otherwise derive from app/opengraph-image.tsx (see
+    // lib/seo.ts). Without it the twelve templates that fall back to this
+    // layout — the suburb pages, the comparison children, /contact — share to
+    // WeChat, KakaoTalk, LINE and Facebook as a blank card.
+    images: [OG_IMAGE],
     title: "PopOut Market",
     description:
       "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE.url],
     title: "PopOut Market",
     description:
       "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",

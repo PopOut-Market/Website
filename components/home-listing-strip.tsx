@@ -59,12 +59,12 @@ export function HomeListingStrip({
               ) : null}
             </div>
             <div className="flex flex-col gap-0.5 p-2.5">
-              <p className="line-clamp-2 min-h-[2.4rem] text-[0.8rem] font-semibold leading-snug text-black sm:text-sm">
+              <p className="line-clamp-2 min-h-[2.75em] text-[0.8rem] font-semibold leading-snug text-black sm:text-sm">
                 {listing.title}
               </p>
               <p className="text-sm font-bold tabular-nums text-black">{priceLabels[i]}</p>
               {listing.suburbName ? (
-                <p className="truncate text-[0.7rem] text-black/45">
+                <p className="truncate text-[0.7rem] text-black/60">
                   {suburbDisplayName(listing.suburbName)}
                 </p>
               ) : null}

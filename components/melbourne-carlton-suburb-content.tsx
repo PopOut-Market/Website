@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -44,10 +45,10 @@ function getCopy(locale: string): CarltonCopy {
         ],
         practicalTitle: "如何更高效在 Carlton 找到合适二手物品",
         practicalBody:
-          "建议按“可送货”“学生发布”“距离近”优先筛选，并结合你居住的公寓或街区关键词进行搜索。Carlton供给更新快，持续浏览几天通常能找到更匹配预算和成色的商品。",
+          "建议先把区域设为 Carlton，首页会把离你更近、发布更新的商品排在前面；再用价格标签里的“免费赠送”或“$20 以内”缩小预算，或点开“分类”按品类浏览书桌椅、床垫、单车与小家电。要找具体物品时直接搜关键词，例如书桌、微波炉、单车，再在搜索结果里按价格筛选；八种语言互相匹配，用中文搜也能命中英文标题的商品。Carlton供给更新快，持续浏览几天通常能找到更匹配预算的商品。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先查看 Carlton 列表并保存目标品类，再与附近区域（如 Melbourne CBD、Parkville）交叉比较。若同类商品价格接近，优先选择取货更方便或沟通响应更快的卖家。",
+          "先在 Carlton 浏览目标品类，再把区域切换到 Melbourne CBD、Parkville 做交叉比较。若同类商品价格接近，优先选择碰面地点更顺路的卖家；PopOut 的交易一律当面完成，联系上之后先把碰面时间和地点谈好。",
         marketCta: "查看 Carlton 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -69,10 +70,10 @@ function getCopy(locale: string): CarltonCopy {
         ],
         practicalTitle: "如何更有效在 Carlton 找到合適二手物品",
         practicalBody:
-          "建議優先篩選「可送貨」「學生發布」「距離近」，並搭配你居住的公寓或街區關鍵字搜尋。Carlton 供給更新快，持續瀏覽數日通常能找到更符合預算與成色的選項。",
+          "建議先把地區設為 Carlton，首頁會把離你較近、刊登較新的商品排在前面；再用價格標籤中的「免費贈送」或「$20 以內」縮小預算，或點開「分類」依類別瀏覽書桌椅、床墊、單車與小家電。想找特定物品時直接輸入關鍵字，例如書桌、微波爐、單車，再於搜尋結果依價格篩選；八種語言可互相對應，用中文搜尋一樣找得到英文標題的商品。Carlton 供給更新快，持續瀏覽數日通常能找到更符合預算的選項。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先查看 Carlton 在售列表並收藏目標品類，再與 Melbourne CBD、Parkville 做交叉比價；若價格接近，可優先考慮取貨便利與回覆效率更高的賣家。",
+          "先在 Carlton 瀏覽目標品類，再把地區切換到 Melbourne CBD、Parkville 做交叉比價；若價格接近，可優先考慮碰面地點較順路的賣家。PopOut 的交易一律當面完成，聯絡上之後先把碰面時間與地點談好。",
         marketCta: "查看 Carlton 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -94,10 +95,10 @@ function getCopy(locale: string): CarltonCopy {
         ],
         practicalTitle: "How to find better second-hand options in Carlton",
         practicalBody:
-          "Filter first by delivery availability, student-posted listings, and short pickup distance. Searching by your apartment or nearby street names can surface same-area sellers and make pickup coordination much easier.",
+          "Set your suburb to Carlton first — the feed puts closer and newer listings near the top — then use the Giveaway or Under $20 price chip to narrow your budget, or open Category to browse desks, chairs, mattresses, bikes and small appliances. For something specific, search the item word (desk, microwave, bike) and narrow the results by price; matching works across all eight languages, so a search in your own language still finds English titles. Carlton stock turns over quickly, so checking back over a few days usually surfaces a better match for your budget.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Start with Carlton listings, then compare nearby options in Melbourne CBD and Parkville. If prices are similar, prioritize pickup convenience, seller response speed, and clearer condition details.",
+          "Start with Carlton listings, then switch the suburb to Melbourne CBD or Parkville to compare. If prices are similar, prioritize the seller whose pickup is easiest to reach; every handover happens in person, so agree on a time and meeting spot once you are in touch.",
         marketCta: "Explore Carlton listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneCarltonSuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneCarltonSuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

@@ -402,7 +402,7 @@ function AppealCard({
             )}
 
             {!declining ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => resolve(true)}
@@ -443,10 +443,10 @@ function AppealCard({
                     rows={2}
                     disabled={busy !== null}
                     placeholder="Operator-only note…"
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-base sm:text-sm outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-200 disabled:opacity-50"
                   />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => resolve(false)}

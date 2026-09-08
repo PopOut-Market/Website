@@ -91,8 +91,8 @@ export function AsianGroceryGuideContent({
           <h2 className="text-xl font-bold tracking-tight text-black sm:text-2xl">
             {copy.headings.shopList}
           </h2>
-          <p className="mt-2 text-sm text-black/45">{fill(copy.listLabel)}</p>
-          <p className="mt-1 text-sm text-black/45">{copy.orderingNote}</p>
+          <p className="mt-2 text-sm text-black/60">{fill(copy.listLabel)}</p>
+          <p className="mt-1 text-sm text-black/60">{copy.orderingNote}</p>
 
           {groups.map((group) => (
             <div key={group.street} className="mt-8">

@@ -41,7 +41,7 @@ export function AdminSidebar({ open, onClose }: { open: boolean; onClose: () => 
 
       {/* Off-canvas on mobile (slides in from the left), static on md+. */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 max-w-[80%] shrink-0 flex-col border-r border-slate-200 bg-white transition-transform duration-200 md:static md:w-56 md:max-w-none md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-64 max-w-[80%] shrink-0 flex-col border-r border-slate-200 bg-white transition-transform duration-200 md:static md:w-56 md:max-w-none md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

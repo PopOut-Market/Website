@@ -303,7 +303,7 @@ function ReportContent() {
   return (
     <div className="space-y-6">
       {/* Top bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Link
           href="/admin-super/dashboard"
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:bg-slate-50"
@@ -350,7 +350,7 @@ function ReportContent() {
         <div id="report-content" className="space-y-8 rounded-xl bg-white p-8">
           {/* Report Header */}
           <header className="border-b border-slate-200 pb-6">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">
                   PopOut Market — {typeLabel(type)} Report
@@ -635,7 +635,7 @@ function ReportContent() {
             <p className="mb-3 text-xs text-slate-500">
               End-to-end marketplace funnel: posts created → interest (likes) → deals closed.
             </p>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <FunnelStep
                 label="Posts Created"
                 value={data.totalPosts}

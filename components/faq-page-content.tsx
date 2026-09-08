@@ -4,7 +4,6 @@ import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { BackNavLink } from "@/components/back-nav-link";
 import Link from "next/link";
-import { useMemo } from "react";
 
 type FaqItem = {
   question: string;
@@ -195,24 +194,11 @@ export function FaqPageContent() {
   const { locale, localizePath, t } = useSiteShell();
   const copy = getCopy(locale);
 
-  const faqJsonLd = useMemo(
-    () => ({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: copy.faqs.map((item) => ({
-        "@type": "Question",
-        // Strip the visible "1) " ordinal. It is a layout affordance for the
-        // on-page list; inside Question.name it becomes part of the question an
-        // assistant quotes back ("1) How does PopOut…"), which reads as broken.
-        name: item.question.replace(/^\d+\)\s*/, ""),
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: item.answer,
-        },
-      })),
-    }),
-    [copy.faqs],
-  );
+  // No FAQ structured-data node here. Google deprecated that rich result on
+  // 7 May 2026 (the reasoning lives in lib/jsonld.ts), so the markup earns
+  // nothing while committing us to keeping two copies of every answer in step.
+  // The questions and answers below are unchanged — only the invisible copy of
+  // them is gone.
 
   return (
     <section className={`${SHELL_X} flex flex-1 flex-col py-10`}>
@@ -263,11 +249,6 @@ export function FaqPageContent() {
           </div>
         </article>
       </div>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
     </section>
   );
 }

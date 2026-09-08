@@ -15,10 +15,18 @@ const NUMBER_LOCALE: Record<Locale, string> = {
   es: "es-ES",
 };
 
-/** Prices are always AUD on this marketplace (the backend dropped the currency column). */
-function formatMoney(locale: Locale, cents: number): string {
+/**
+ * Prices are always AUD on this marketplace (the backend dropped the currency column).
+ *
+ * `freeLabel` carries the reader's own word for a $0 listing. It is optional and
+ * falls back to "FREE" so a caller that has no copy to hand still renders
+ * something sane — but every caller in the app passes it, because the server
+ * render (see server-feed.ts formatPriceLabel) already localises this and a
+ * client refetch that did not would flip the label back to English.
+ */
+function formatMoney(locale: Locale, cents: number, freeLabel = "FREE"): string {
   if (!cents || cents <= 0) {
-    return "FREE";
+    return freeLabel;
   }
   try {
     return new Intl.NumberFormat(NUMBER_LOCALE[locale], {
@@ -105,13 +113,13 @@ function isRecent(createdAt: string | null | undefined): boolean {
 
 function toMarketProduct(
   raw: HomeFeedRow,
-  options: { locale: Locale; sellerFallback: string; kmSuffix: string },
+  options: { locale: Locale; sellerFallback: string; kmSuffix: string; freeLabel?: string },
 ): MarketProduct {
   const seller = raw.seller_nickname?.trim();
   return {
     id: String(raw.id),
     title: (raw.title ?? "").toString(),
-    priceLabel: formatMoney(options.locale, raw.price_cents),
+    priceLabel: formatMoney(options.locale, raw.price_cents, options.freeLabel),
     distanceLabel: formatMarketDistanceKm(null, options.kmSuffix),
     sellerLabel: seller && seller.length > 0 ? seller : options.sellerFallback,
     isNew: isRecent(raw.created_at),
@@ -133,6 +141,8 @@ export async function fetchMarketListings(
     locale: Locale;
     sellerFallback: string;
     kmSuffix: string;
+    /** The reader's word for a $0 listing, e.g. the Giveaway filter label. */
+    freeLabel?: string;
     /** Rows already fetched (page offset). */
     offset: number;
     /** Page size (the RPC rejects > 50). */
@@ -206,7 +216,7 @@ function shuffleInPlace<T>(items: T[]): void {
  */
 export async function fetchHeroCarouselListings(
   client: SupabaseClient,
-  options: { locale: Locale },
+  options: { locale: Locale; freeLabel?: string },
 ): Promise<{ listings: HeroCarouselListing[]; errorMessage: string | null }> {
   try {
     const { data, error } = await client.rpc("get_home_feed", {
@@ -226,7 +236,7 @@ export async function fetchHeroCarouselListings(
     const candidates: HeroCarouselListing[] = rows.filter(isHomeFeedRow).map((raw) => ({
       id: String(raw.id),
       title: (raw.title ?? "").toString(),
-      priceLabel: formatMoney(options.locale, raw.price_cents),
+      priceLabel: formatMoney(options.locale, raw.price_cents, options.freeLabel),
       imageUrl: getPostImageUrl(raw.thumbnail_path, raw.updated_at),
     }));
     shuffleInPlace(candidates);

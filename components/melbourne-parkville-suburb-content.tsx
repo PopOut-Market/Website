@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -44,10 +45,10 @@ function getCopy(locale: string): ParkvilleCopy {
         ],
         practicalTitle: "如何更高效在 Parkville 找到合适二手物品",
         practicalBody:
-          "建议优先使用区域筛选并结合关键词搜索（如“Parkville”“可送货”“学生发布”）。如果你住在学生公寓或共享住宅，可直接搜索公寓名称，通常更容易找到距离近、沟通快的卖家。",
+          "先把区域设为 Parkville，首页就会把离你更近、发布更新的商品排在前面；预算有限就切到价格标签里的“免费赠送”或“$20 以内”，想按品类慢慢逛，点同一行末尾的“分类”进入分类页浏览书桌椅、床垫、咖啡机。找具体物品用搜索更快：输入公寓名称或“书桌”“微波炉”这类关键词，再在结果里按价格收窄；八种语言互相匹配，用中文搜也能命中英文标题的商品。如果你住在学生公寓或共享住宅，直接搜索公寓名称通常更容易找到距离近、沟通快的卖家，谈好后约当面交收。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先浏览 Parkville 在售列表，再与邻近的 Carlton、Melbourne CBD 对比同类商品。若预算有限，优先选择“同区可自提”或“可送货”的选项，能显著降低整体交易成本与时间成本。",
+          "先浏览 Parkville 在售列表，再与邻近的 Carlton、Melbourne CBD 对比同类商品。若预算有限，先用“免费赠送”和“$20 以内”把首页过一遍，再搜索沙发、床垫、咖啡机等具体品类并按价格收窄结果，能显著降低整体交易成本与时间成本。所有交易都是当面完成，出发前先和卖家约好时间与见面地点。",
         marketCta: "查看 Parkville 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -69,10 +70,10 @@ function getCopy(locale: string): ParkvilleCopy {
         ],
         practicalTitle: "如何更有效在 Parkville 找到合適二手物品",
         practicalBody:
-          "建議優先使用區域篩選並搭配關鍵字搜尋（如「Parkville」「可送貨」「學生發布」）。若居住在學生公寓或共享住宅，可直接搜尋公寓名稱，通常更容易找到距離近、回覆快的賣家。",
+          "先把地區設為 Parkville，首頁就會把離你較近、刊登較新的商品排在前面；預算有限就切到價格標籤中的「免費贈送」或「$20 以內」，想依類別慢慢逛，就點同一列最後的「分類」進入分類頁瀏覽書桌椅、床墊、咖啡機。要找特定物品用搜尋更快：輸入大樓名稱或「書桌」「微波爐」之類的關鍵字，再於結果中依價格縮小範圍；八種語言可互相對應，用中文搜尋一樣找得到英文標題的商品。若你住在學生宿舍或分租公寓，直接搜尋大樓名稱通常較容易找到距離近、回覆快的賣家，談妥後再約當面交收。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先看 Parkville 列表，再與 Carlton、Melbourne CBD 比較同類商品。若預算有限，優先選擇「同區可自提」或「可送貨」選項，通常可有效降低交易成本與時間成本。",
+          "先看 Parkville 列表，再與 Carlton、Melbourne CBD 比較同類商品。若預算有限，先用「免費贈送」與「$20 以內」把首頁掃過一遍，再搜尋沙發、床墊、咖啡機等具體品類並依價格縮小結果，通常可有效降低交易成本與時間成本。所有交易都是當面完成，出發前先與賣家約好時間與碰面地點。",
         marketCta: "查看 Parkville 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -94,10 +95,10 @@ function getCopy(locale: string): ParkvilleCopy {
         ],
         practicalTitle: "How to find better second-hand options in Parkville",
         practicalBody:
-          "Use area filters first, then combine search terms like “Parkville”, “delivery available”, and “student posted”. If you live in student accommodation, searching by building name often surfaces nearby sellers with easier pickup coordination.",
+          "Set your suburb to Parkville first — the feed puts closer and more recently posted listings near the top — then switch to the Giveaway or Under $20 price chip when budget is tight, or open Category to browse desks, chairs, mattresses, and coffee machines. For something specific, search is faster: type the building name or an item word such as desk or microwave, then narrow those results by price; matching works across all eight languages, so a search in your own language still finds English titles. If you live in student accommodation, searching by building name often surfaces nearby sellers, and you arrange the in-person handover from there.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Review Parkville listings first, then compare similar items in Carlton and Melbourne CBD. If budget is tight, prioritize same-area pickup or delivery-enabled listings to reduce time and total transaction cost.",
+          "Review Parkville listings first, then compare similar items in Carlton and Melbourne CBD. If budget is tight, sweep the home feed with the Giveaway and Under $20 chips, then search a specific category — sofa, mattress, coffee machine — and narrow those results by price to cut both time and total transaction cost. Every handover is in person, so agree on a time and meetup spot with the seller before you set out.",
         marketCta: "Explore Parkville listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneParkvilleSuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneParkvilleSuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

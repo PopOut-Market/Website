@@ -13,25 +13,6 @@ import { useEffect, useState } from "react";
 /** Flat white card sitting on the grey listing canvas — mirrors the app's card stack. */
 const CARD = "rounded-2xl bg-white shadow-card";
 
-/** Small padlock shown in front of the fixed-price badge. */
-function LockIcon() {
-  return (
-    <svg
-      className="h-3 w-3"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect x="3" y="11" width="18" height="11" rx="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  );
-}
-
 /** Lines icon for the Description heading. */
 function DescriptionIcon() {
   return (
@@ -72,7 +53,6 @@ function PinIcon() {
 }
 
 type MarketPostDetailViewCopy = {
-  marketPostFixedPriceLabel: string;
   marketPostDescriptionHeading: string;
   marketPostPreferredMeetupLabel: string;
   marketPostOtherItemsHeading: string;
@@ -89,9 +69,11 @@ type MarketPostDetailViewCopy = {
 type MarketPostDetailViewProps = {
   detail: MarketPostDetail;
   copy: MarketPostDetailViewCopy;
+  /** `localizePath` from the site shell — keeps sibling links inside the reader's locale. */
+  localizePath: (path: string) => string;
 };
 
-export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps) {
+export function MarketPostDetailView({ detail, copy, localizePath }: MarketPostDetailViewProps) {
   const desc = detail.description?.trim() ?? "";
 
   // Single "listed in {suburb} on {date}" caption (date is already locale-formatted
@@ -151,7 +133,7 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
             </div>
           )}
           {detail.isNew ? (
-            <div className="absolute left-3 top-3 z-[1] rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
+            <div className="absolute left-3 top-3 z-[1] max-w-[calc(100%-1.5rem)] truncate rounded-full bg-brand-500 px-2 py-0.5 text-[10px] font-bold text-white">
               {copy.marketBadgeNew}
             </div>
           ) : null}
@@ -217,12 +199,6 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
             <p className="text-xl font-bold tabular-nums text-black sm:text-2xl">
               {detail.priceLabel}
             </p>
-            {detail.offerLabel === "no" ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-black/10 bg-surface-raised px-2.5 py-1 text-xs font-semibold text-black/55 sm:text-sm">
-                <LockIcon />
-                {copy.marketPostFixedPriceLabel}
-              </span>
-            ) : null}
           </div>
           {listedLine ? <span className="text-sm text-black/55">{listedLine}</span> : null}
         </div>
@@ -275,7 +251,7 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
             {detail.otherItems.slice(0, MARKET_POST_DETAIL_OTHER_ITEMS_MAX).map((item) => (
               <Link
                 key={item.id}
-                href={`/market/p/${encodeURIComponent(item.id)}`}
+                href={localizePath(`/market/p/${encodeURIComponent(item.id)}`)}
                 className="block overflow-hidden rounded-2xl border border-black/5 bg-white text-inherit no-underline shadow-card transition-[border-color,transform] duration-150 hover:-translate-y-px hover:border-black/25 motion-reduce:transform-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
               >
                 <div className="relative aspect-square w-full bg-surface-raised">
@@ -285,7 +261,7 @@ export function MarketPostDetailView({ detail, copy }: MarketPostDetailViewProps
                       alt={item.title}
                       fill
                       className="object-cover"
-                      sizes="220px"
+                      sizes="(max-width: 640px) 30vw, 220px"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-black/30">—</div>

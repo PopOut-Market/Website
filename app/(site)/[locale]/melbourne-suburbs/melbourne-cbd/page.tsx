@@ -15,9 +15,9 @@ const LOCALIZED_META: Partial<Record<Locale, { title: string; description: strin
       "Compra y vende artículos de segunda mano en Melbourne CBD con PopOut Market, la app gratuita. Muebles, electrodomésticos y otros productos usados cerca de ti.",
   },
   fr: {
-    title: "Corrected French SEO object for Melbourne CBD second-hand",
+    title: "Occasion à Melbourne CBD | PopOut Market, l'appli de seconde main",
     description:
-      '{"title":"Occasion à Melbourne CBD | PopOut Market, l\'appli de seconde main","description":"Achetez et vendez d\'occasion à Melbourne CBD sur PopOut Market, l\'appli gratuite. Meubles, électroménager et petites annonces de seconde main près de chez vous."}\n\nNotes: In the original title, "PopOut Market appli d\'occasion Melbourne" was clumsy stuffing (juxtaposed nouns with no link word, plus "Melbourne" repeated). Replaced with the natural appositive "PopOut Market, l\'appli de seconde main", which keeps the brand in the title, reads idiomatically, and removes the redundant second "Melbourne". The description was already natural and accurate; only fixed "seconde main" to the correct form "de seconde main" (an adjectival phrase requires the preposition in French).',
+      "Achetez et vendez d'occasion à Melbourne CBD sur PopOut Market, l'appli gratuite. Meubles, électroménager et petites annonces de seconde main près de chez vous.",
   },
   vi: {
     title: "Mua bán đồ cũ Melbourne CBD | PopOut Market app đồ cũ Melbourne",

@@ -34,7 +34,7 @@ export function PrivacyPageContent() {
             <p>Version: 1.6</p>
           </div>
 
-          <p className="mt-3 text-xs italic text-gray-500">{t.legalEnglishAuthoritative}</p>
+          <p className="mt-3 text-xs italic text-gray-600">{t.legalEnglishAuthoritative}</p>
 
           <div className="mt-6 space-y-6">
             <PrivacySection title="Overview">

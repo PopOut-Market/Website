@@ -1,6 +1,7 @@
 "use client";
 
 import { BackNavLink } from "@/components/back-nav-link";
+import { suburbDisplayName } from "@/lib/suburb-display";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
@@ -44,10 +45,10 @@ function getCopy(locale: string): SouthbankCopy {
         ],
         practicalTitle: "如何更高效在 Southbank 找到合适二手物品",
         practicalBody:
-          "建议先按“可送货”“距离近”“发布时间新”筛选，再结合“Southbank + 品类词”检索（如 sofa、dining table、microwave）。若你住在公寓楼，可尝试搜索楼名或附近地标关键词，提高同区匹配效率。",
+          "建议先把区域设为 Southbank，首页会自动把离你更近、发布更新的商品排在前面；预算有限就点“免费赠送”或“$20 以内”价格标签，想整类慢慢逛就点同一行末尾的“分类”进入分类页，浏览沙发、餐桌、床架与小家电。目标明确时直接搜关键词（如 sofa、dining table、microwave），再在结果页按价格区间收窄。若你住在公寓楼，可把楼名或附近地标与物品名一起输入；用中文搜也能命中英文标题，因为搜索在八种语言之间互通。",
         nextStepTitle: "下一步建议",
         nextStepBody:
-          "先查看 Southbank 在售列表，再与 Melbourne CBD、South Wharf 交叉对比。若同类商品价格接近，优先选择送货条件更明确、沟通更及时的卖家，通常整体体验更好。",
+          "先查看 Southbank 在售列表，再与 Melbourne CBD、South Wharf 交叉对比。若同类商品价格接近，优先选择已在商品上标明面交地点的卖家，约时间当面交收更省事，整体体验通常也更好。",
         marketCta: "查看 Southbank 在售二手商品",
         relatedTitle: "浏览其他墨尔本区域",
       };
@@ -69,10 +70,10 @@ function getCopy(locale: string): SouthbankCopy {
         ],
         practicalTitle: "如何更有效在 Southbank 找到合適二手物品",
         practicalBody:
-          "建議先用「可送貨」「距離近」「發布時間新」篩選，再搭配「Southbank + 品類」關鍵字搜尋。若你住在公寓，可加上樓名或附近地標詞，通常更容易找到同區賣家。",
+          "建議先把地區設為 Southbank，首頁會自動把離你較近、刊登較新的商品排在前面；預算有限就點「免費贈送」或「$20 以內」價格標籤，想整類慢慢逛就點同一列最後的「分類」進入分類頁，瀏覽沙發、餐桌、床架與小家電。目標明確時直接輸入關鍵字（例如 sofa、dining table、microwave），再於結果頁依價格區間縮小範圍。若你住在公寓大樓，可把大樓名稱或附近地標與物品名一起輸入；用中文搜尋同樣能對應到英文標題，因為搜尋在八種語言之間互通。",
         nextStepTitle: "下一步建議",
         nextStepBody:
-          "先看 Southbank 列表，再與 Melbourne CBD、South Wharf 比較同類商品。若價格接近，優先選擇送貨條件清楚、回覆更快的賣家，通常交易效率更高。",
+          "先看 Southbank 列表，再與 Melbourne CBD、South Wharf 比較同類商品。若價格接近，優先選擇已在商品上標明面交地點的賣家，約時間當面交收更省事，交易效率通常也更高。",
         marketCta: "查看 Southbank 在售二手商品",
         relatedTitle: "瀏覽其他墨爾本區域",
       };
@@ -94,10 +95,10 @@ function getCopy(locale: string): SouthbankCopy {
         ],
         practicalTitle: "How to find better second-hand options in Southbank",
         practicalBody:
-          "Filter first by delivery availability, pickup distance, and recent posting time. Then combine “Southbank” with item terms (for example, sofa, dining table, microwave) for faster matching.",
+          "Set your suburb to Southbank first — the feed already ranks closer and more recently posted listings ahead — then tap the Giveaway or Under $20 price chip when the budget is tight, or open the Category pill at the end of that row to browse sofas, dining tables, bed frames and small appliances on their own page. When you know what you want, search the item word (sofa, dining table, microwave) and narrow those results by price. If you live in an apartment tower, pair the building name or a nearby landmark with the item word; searching in your own language works too, because matching runs across all eight.",
         nextStepTitle: "Suggested next step",
         nextStepBody:
-          "Start with Southbank listings, then compare similar items in Melbourne CBD and South Wharf. If prices are close, prioritize sellers with clearer delivery terms and faster response time.",
+          "Start with Southbank listings, then compare similar items in Melbourne CBD and South Wharf. If prices are close, prioritize sellers who have already set a meetup spot on the listing, so the in-person handover is quicker to arrange.",
         marketCta: "Explore Southbank listings",
         relatedTitle: "Explore other Melbourne suburbs",
       };
@@ -157,7 +158,7 @@ export function MelbourneSouthbankSuburbContent() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
             {copy.relatedTitle}
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -167,7 +168,7 @@ export function MelbourneSouthbankSuburbContent() {
                 href={localizePath(suburbSeoPath(suburb))}
                 className="rounded-full border border-black/5 bg-white px-3 py-1.5 text-sm font-medium text-gray-800 transition hover:border-brand-500"
               >
-                {suburb}
+                {suburbDisplayName(suburb)}
               </Link>
             ))}
           </div>

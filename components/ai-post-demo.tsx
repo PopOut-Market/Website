@@ -260,7 +260,7 @@ export function AiPostDemo({ t }: { t: SiteCopy }) {
             );
           })}
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-500 sm:text-base">
+        <p className="mx-auto mt-3 max-w-xl text-balance text-sm leading-relaxed text-gray-600 sm:text-base">
           {t.aiPostDemoSubtitle}
         </p>
       </div>
