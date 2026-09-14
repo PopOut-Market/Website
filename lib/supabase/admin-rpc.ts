@@ -68,6 +68,7 @@ export const RESTRICT_REASON_CODES = [
   "prohibited_item",
   "fake_or_misleading",
   "spam",
+  "duplicate",
   "item_not_available",
   "business_or_postage",
   "other",
@@ -80,6 +81,7 @@ export const RESTRICTION_REASON_LABELS: Record<string, string> = {
   prohibited_item: "Prohibited item",
   fake_or_misleading: "Fake or misleading",
   spam: "Spam",
+  duplicate: "Duplicate listing",
   item_not_available: "Item not actually available",
   business_or_postage: "Business or postage-only listing",
   other: "Breaks a marketplace rule",
@@ -91,6 +93,8 @@ export const RESTRICTION_REASON_LABELS: Record<string, string> = {
  * once that reason is picked. Codes with no entry show nothing.
  */
 export const RESTRICT_REASON_HINTS: Record<string, string> = {
+  duplicate:
+    "the SAME item listed more than once at the same time — take down the surplus copies and leave one live, never the whole set. A relist after the first copy sold, expired or was deleted is not a duplicate, and neither are several genuinely separate units of the same model. To refuse only the reward and leave the listing up, use “Duplicate listing” in reward review instead.",
   business_or_postage:
     "the listing replaces meeting with posting, rather than offering it alongside a meetup — “ships Australia-wide”, “DM to order”, stock lists, sizes made to order. Judge only what the listing does, never who the seller is: one real item, offered by post to a buyer who can’t make the meetup, is an ordinary local sale. If it reads both ways, leave it up.",
 };
@@ -106,6 +110,16 @@ export const RESTRICT_REASONS_GENERIC_ON_APP_17: readonly string[] = [
   "item_not_available",
   "business_or_postage",
 ];
+
+/**
+ * Reasons NO released app version has a label for yet — as of app 2.2.1 the
+ * takedown screen's map (`restrictionReasonLabels.ts`) has no entry, so EVERY
+ * seller sees the generic “Breaks a marketplace rule”, not just the stragglers
+ * covered by RESTRICT_REASONS_GENERIC_ON_APP_17. The push notification is
+ * composed server-side and does carry the real wording once notification-push
+ * ships it. Move a code out of here once the app release adding its key is live.
+ */
+export const RESTRICT_REASONS_GENERIC_ON_ALL_APPS: readonly string[] = ["duplicate"];
 
 export function reasonLabel(code: string | null | undefined): string {
   if (!code) return "—";
