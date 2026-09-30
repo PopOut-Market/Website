@@ -105,25 +105,23 @@ function isConfigured(): boolean {
   return supabaseUrl().startsWith("http") && serviceRoleKey().length > 0;
 }
 
+const loggedFailures = new Set<string>();
+
 /**
- * True only inside `next build` when the directory is unconfigured and this is
- * not a Netlify production build — GitHub CI, which has no Supabase env at all,
- * or any other build that was not given the service-role key. Keep CI keyless:
- * the repo is public, so a fork's pull request could print any secret its build
- * is handed.
- *
- * Those builds have no earlier render to fall back on, so treating "no key" as a
- * failed read fails the whole build. Callers may render an empty directory
- * instead. A production build without the key (`CONTEXT=production`) still
- * counts as a failed read, so it fails loudly and the live site keeps its last
- * good deploy. So does every request-time revalidation.
+ * Says why a read failed, once per process. Without this a wrong key, a wrong
+ * project and a network error all surface as the same "Shop directory
+ * unavailable", with nothing in the log to tell them apart. It logs the HTTP
+ * status, PostgREST's error body and the project host — never the key.
  */
-export function isKeylessNonProductionBuild(): boolean {
-  return (
-    process.env.NEXT_PHASE === "phase-production-build" &&
-    process.env.CONTEXT !== "production" &&
-    !isConfigured()
-  );
+function logReadFailure(table: string, reason: string): void {
+  let host = "(no URL)";
+  try {
+    host = new URL(supabaseUrl()).host;
+  } catch {}
+  const line = `[server-shops] ${table} read failed against ${host}: ${reason}`;
+  if (loggedFailures.has(line)) return;
+  loggedFailures.add(line);
+  console.error(line);
 }
 
 /**
@@ -135,17 +133,30 @@ export function isKeylessNonProductionBuild(): boolean {
  * 404 for a URL that is in the sitemap in four locales.
  */
 async function restGet<T>(path: string, revalidate: number): Promise<T[] | null> {
-  if (!isConfigured()) return null;
+  const table = path.split("?")[0];
+  if (!isConfigured()) {
+    logReadFailure(table, "no Supabase URL or service-role key in this environment");
+    return null;
+  }
   const key = serviceRoleKey();
   try {
     const res = await fetch(`${supabaseUrl()}/rest/v1/${path}`, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
       next: { revalidate },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      logReadFailure(table, `HTTP ${res.status} ${body.slice(0, 300)}`);
+      return null;
+    }
     const json: unknown = await res.json();
-    return Array.isArray(json) ? (json as T[]) : null;
-  } catch {
+    if (!Array.isArray(json)) {
+      logReadFailure(table, "response was not an array");
+      return null;
+    }
+    return json as T[];
+  } catch (err) {
+    logReadFailure(table, err instanceof Error ? err.message : String(err));
     return null;
   }
 }

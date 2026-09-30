@@ -5,11 +5,25 @@ import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { localizedAlternatesFor, OG_IMAGE, SITE_ORIGIN } from "@/lib/seo";
 import { COPY } from "@/lib/site-i18n";
 import { toLocalePath } from "@/lib/site-locale-routing";
-import { fetchGuideShops, isKeylessNonProductionBuild } from "@/lib/supabase/server-shops";
+import { fetchGuideShops } from "@/lib/supabase/server-shops";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 const PATH = "/melbourne-cbd-asian-grocery-guide";
+
+/**
+ * `next build` anywhere but Netlify production: GitHub CI, deploy previews, a
+ * local build. Request-time revalidation is never a build, and a production
+ * build sets `CONTEXT=production`, so both keep treating a failed read as fatal.
+ *
+ * Keep the service-role key out of CI regardless: the repo is public, and a
+ * fork's pull request could print any secret its build is handed.
+ */
+function isNonProductionBuild(): boolean {
+  return (
+    process.env.NEXT_PHASE === "phase-production-build" && process.env.CONTEXT !== "production"
+  );
+}
 
 /**
  * Melbourne CBD Asian grocery guide.
@@ -58,16 +72,18 @@ export default async function Page({ params }: LocaleParams) {
   // serving the last good prerender instead of caching a 404 for a URL that is
   // in the sitemap in four locales and carries this page's hreflang cluster.
   //
-  // The exception is a non-production build with no key at all, such as CI.
-  // It has no previous render either, so the throw failed the entire build;
-  // it renders an empty directory instead. It must not 404: the homepage links here and CI
-  // checks every internal link.
+  // Except in a non-production build: there is no previous render to keep,
+  // and the throw failed the entire build over a directory those builds often
+  // cannot read. CI has no key at all, and the Netlify deploy-preview key cannot
+  // read `guide_shops`. Such a build renders an empty directory instead;
+  // server-shops has already logged why the read failed. It must not 404: the
+  // homepage links here and CI checks every internal link.
   if (read === null) {
-    if (!isKeylessNonProductionBuild()) {
+    if (!isNonProductionBuild()) {
       throw new Error("Shop directory unavailable; keeping the previous render.");
     }
     console.warn(
-      `[grocery-guide] No service-role key in this non-production build; ${toLocalePath(PATH, locale)} renders an empty directory.`,
+      `[grocery-guide] Non-production build: ${toLocalePath(PATH, locale)} renders an empty directory.`,
     );
   }
 
