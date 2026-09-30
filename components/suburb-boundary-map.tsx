@@ -13,17 +13,21 @@ const FILL_COLOR = "#404040"; // neutral grey — a faint wash over the selected
 const OUTLINE_COLOR = "#171717"; // near-black — a clearly visible dotted boundary
 const MARKER_COLOR = "#ff8c00"; // brand orange — the meet-up pin
 
-// CARTO Voyager raster basemap. Attribution is required.
+// OpenStreetMap's standard raster tiles. Keyless; attribution is required. The
+// OSMF tile policy wants this exact host (no a/b/c subdomains) and a Referer,
+// which the site's `strict-origin-when-cross-origin` policy already sends.
+// Light use from a website is fine; bulk prefetching or offline use is not.
 //
-// NOTE (2026-09): CARTO's keyless endpoint now stamps its tiles with an
-// "API KEY REQUIRED / carto.com/basemaps/apikey" watermark. It still returns
-// HTTP 200 and a real Melbourne tile, so nothing errors — the watermark is
-// simply baked into the image, faint grey on a light map. To remove it, get a
-// CARTO API key (or move to another provider) and put it in the URL below; the
-// style and everything around it stays as it is.
-const TILE_URL = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+// Replaced CARTO Voyager (2026-09): CARTO's keyless endpoint now answers every
+// request with a blank tile reading "API KEY REQUIRED" — no map at all, and
+// HTTP 200, so nothing errors. An invalid key gets the same blank tile. To go
+// back to Voyager, register a CARTO basemaps key (free for commercial use up to
+// 1M requests/month) and use CARTO's documented form,
+// `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=…`.
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const TILE_MAX_ZOOM = 19; // the standard layer's deepest level
 
 const MELBOURNE_FALLBACK: [number, number] = [-37.8136, 144.9631];
 const INITIAL_ZOOM = 13;
@@ -86,9 +90,8 @@ export function SuburbBoundaryMap({
           keyboard: interactive,
         });
         L.tileLayer(TILE_URL, {
-          subdomains: "abcd",
           attribution: TILE_ATTRIBUTION,
-          maxZoom: 20,
+          maxZoom: TILE_MAX_ZOOM,
         }).addTo(mapRef.current);
       }
       const map = mapRef.current;
