@@ -105,6 +105,25 @@ function isConfigured(): boolean {
   return supabaseUrl().startsWith("http") && serviceRoleKey().length > 0;
 }
 
+const loggedFailures = new Set<string>();
+
+/**
+ * Says why a read failed, once per process. Without this a wrong key, a wrong
+ * project and a network error all surface as the same "Shop directory
+ * unavailable", with nothing in the log to tell them apart. It logs the HTTP
+ * status, PostgREST's error body and the project host — never the key.
+ */
+function logReadFailure(table: string, reason: string): void {
+  let host = "(no URL)";
+  try {
+    host = new URL(supabaseUrl()).host;
+  } catch {}
+  const line = `[server-shops] ${table} read failed against ${host}: ${reason}`;
+  if (loggedFailures.has(line)) return;
+  loggedFailures.add(line);
+  console.error(line);
+}
+
 /**
  * Returns rows, or `null` when the read itself failed.
  *
@@ -114,17 +133,30 @@ function isConfigured(): boolean {
  * 404 for a URL that is in the sitemap in four locales.
  */
 async function restGet<T>(path: string, revalidate: number): Promise<T[] | null> {
-  if (!isConfigured()) return null;
+  const table = path.split("?")[0];
+  if (!isConfigured()) {
+    logReadFailure(table, "no Supabase URL or service-role key in this environment");
+    return null;
+  }
   const key = serviceRoleKey();
   try {
     const res = await fetch(`${supabaseUrl()}/rest/v1/${path}`, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
       next: { revalidate },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      logReadFailure(table, `HTTP ${res.status} ${body.slice(0, 300)}`);
+      return null;
+    }
     const json: unknown = await res.json();
-    return Array.isArray(json) ? (json as T[]) : null;
-  } catch {
+    if (!Array.isArray(json)) {
+      logReadFailure(table, "response was not an array");
+      return null;
+    }
+    return json as T[];
+  } catch (err) {
+    logReadFailure(table, err instanceof Error ? err.message : String(err));
     return null;
   }
 }
