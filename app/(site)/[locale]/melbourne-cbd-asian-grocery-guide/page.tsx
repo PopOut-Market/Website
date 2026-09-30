@@ -5,7 +5,7 @@ import { localeFromParams, type LocaleParams } from "@/lib/server-locale";
 import { localizedAlternatesFor, OG_IMAGE, SITE_ORIGIN } from "@/lib/seo";
 import { COPY } from "@/lib/site-i18n";
 import { toLocalePath } from "@/lib/site-locale-routing";
-import { fetchGuideShops } from "@/lib/supabase/server-shops";
+import { fetchGuideShops, isKeylessNonProductionBuild } from "@/lib/supabase/server-shops";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -52,17 +52,28 @@ export default async function Page({ params }: LocaleParams) {
 
   const t = COPY[locale];
   const copy = GUIDE_COPY[locale];
-  const shops = await fetchGuideShops(300);
+  const read = await fetchGuideShops(300);
 
   // A failed read is NOT an empty directory. Throwing here makes Next keep
   // serving the last good prerender instead of caching a 404 for a URL that is
   // in the sitemap in four locales and carries this page's hreflang cluster.
-  if (shops === null) {
-    throw new Error("Shop directory unavailable; keeping the previous render.");
+  //
+  // The exception is a deploy preview or CI build, which has no key and no
+  // previous render. There the throw failed the entire build, so it renders an
+  // empty directory instead. It must not 404: the homepage links here and CI
+  // checks every internal link.
+  if (read === null) {
+    if (!isKeylessNonProductionBuild()) {
+      throw new Error("Shop directory unavailable; keeping the previous render.");
+    }
+    console.warn(
+      `[grocery-guide] No service-role key in this non-production build; ${toLocalePath(PATH, locale)} renders an empty directory.`,
+    );
   }
 
   // Genuinely empty: the directory is the page, so there is no page to show.
-  if (shops.length === 0) notFound();
+  if (read?.length === 0) notFound();
+  const shops = read ?? [];
 
   const canonical = `${SITE_ORIGIN}${toLocalePath(PATH, locale)}`;
 
