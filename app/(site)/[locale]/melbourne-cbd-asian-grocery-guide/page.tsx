@@ -58,9 +58,9 @@ export default async function Page({ params }: LocaleParams) {
   // serving the last good prerender instead of caching a 404 for a URL that is
   // in the sitemap in four locales and carries this page's hreflang cluster.
   //
-  // The exception is a deploy preview or CI build, which has no key and no
-  // previous render. There the throw failed the entire build, so it renders an
-  // empty directory instead. It must not 404: the homepage links here and CI
+  // The exception is a non-production build with no key at all, such as CI.
+  // It has no previous render either, so the throw failed the entire build;
+  // it renders an empty directory instead. It must not 404: the homepage links here and CI
   // checks every internal link.
   if (read === null) {
     if (!isKeylessNonProductionBuild()) {

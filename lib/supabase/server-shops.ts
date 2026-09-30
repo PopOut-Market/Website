@@ -107,9 +107,10 @@ function isConfigured(): boolean {
 
 /**
  * True only inside `next build` when the directory is unconfigured and this is
- * not a Netlify production build: Netlify deploy previews and GitHub CI, neither
- * of which has the service-role key. Keep it that way — the repo is public, so a
- * fork's pull request could print any secret its build is handed.
+ * not a Netlify production build — GitHub CI, which has no Supabase env at all,
+ * or any other build that was not given the service-role key. Keep CI keyless:
+ * the repo is public, so a fork's pull request could print any secret its build
+ * is handed.
  *
  * Those builds have no earlier render to fall back on, so treating "no key" as a
  * failed read fails the whole build. Callers may render an empty directory
