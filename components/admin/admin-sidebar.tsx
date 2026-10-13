@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAdminAuth } from "./admin-auth-guard";
 
 const NAV_ITEMS = [
+  { label: "Shop requests", href: "/admin-super/dashboard/shop-requests", icon: "🏪" },
   { label: "Dashboard", href: "/admin-super/dashboard", icon: "📊" },
   { label: "Reward review", href: "/admin-super/dashboard/reward-review", icon: "🪙" },
   { label: "Appeals", href: "/admin-super/dashboard/appeals", icon: "⚖️" },
