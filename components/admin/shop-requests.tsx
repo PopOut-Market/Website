@@ -17,7 +17,9 @@ type Application = QueueItem & {
   status: string;
   abn: string;
   applicant_name: string;
-  account_contact: string;
+  account_contact: string | null;
+  contact_method?: "phone" | "email" | null;
+  contact_value?: string | null;
   shop_link: string | null;
   note: string | null;
   evidence_path: string | null;
@@ -404,8 +406,10 @@ function ApplicationReview({
           <dd>{a.applicant_name}</dd>
         </div>
         <div>
-          <dt className="font-semibold">Account mobile at submission</dt>
-          <dd>{a.account_contact}</dd>
+          <dt className="font-semibold">
+            {a.contact_method === "email" ? "Contact email" : "Contact number"}
+          </dt>
+          <dd>{a.contact_value ?? a.account_contact ?? "Not provided"}</dd>
         </div>
         <div>
           <dt className="font-semibold">ABN</dt>
