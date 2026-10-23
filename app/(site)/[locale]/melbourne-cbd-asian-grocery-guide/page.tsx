@@ -12,6 +12,20 @@ import { notFound } from "next/navigation";
 const PATH = "/melbourne-cbd-asian-grocery-guide";
 
 /**
+ * `next build` anywhere but Netlify production: GitHub CI, deploy previews, a
+ * local build. Request-time revalidation is never a build, and a production
+ * build sets `CONTEXT=production`, so both keep treating a failed read as fatal.
+ *
+ * Keep the service-role key out of CI regardless: the repo is public, and a
+ * fork's pull request could print any secret its build is handed.
+ */
+function isNonProductionBuild(): boolean {
+  return (
+    process.env.NEXT_PHASE === "phase-production-build" && process.env.CONTEXT !== "production"
+  );
+}
+
+/**
  * Melbourne CBD Asian grocery guide.
  *
  * Ships in four locales only (see `lib/grocery-guide-copy.ts`), so the other four
@@ -52,17 +66,30 @@ export default async function Page({ params }: LocaleParams) {
 
   const t = COPY[locale];
   const copy = GUIDE_COPY[locale];
-  const shops = await fetchGuideShops(300);
+  const read = await fetchGuideShops(300);
 
   // A failed read is NOT an empty directory. Throwing here makes Next keep
   // serving the last good prerender instead of caching a 404 for a URL that is
   // in the sitemap in four locales and carries this page's hreflang cluster.
-  if (shops === null) {
-    throw new Error("Shop directory unavailable; keeping the previous render.");
+  //
+  // Except in a non-production build: there is no previous render to keep,
+  // and the throw failed the entire build over a directory those builds often
+  // cannot read. CI has no key at all, and the Netlify deploy-preview key cannot
+  // read `guide_shops`. Such a build renders an empty directory instead;
+  // server-shops has already logged why the read failed. It must not 404: the
+  // homepage links here and CI checks every internal link.
+  if (read === null) {
+    if (!isNonProductionBuild()) {
+      throw new Error("Shop directory unavailable; keeping the previous render.");
+    }
+    console.warn(
+      `[grocery-guide] Non-production build: ${toLocalePath(PATH, locale)} renders an empty directory.`,
+    );
   }
 
   // Genuinely empty: the directory is the page, so there is no page to show.
-  if (shops.length === 0) notFound();
+  if (read?.length === 0) notFound();
+  const shops = read ?? [];
 
   const canonical = `${SITE_ORIGIN}${toLocalePath(PATH, locale)}`;
 
