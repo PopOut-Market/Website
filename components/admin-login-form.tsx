@@ -5,6 +5,7 @@ import {
   isAdminAuthConfigured,
 } from "@/lib/supabase/admin-auth-browser-client";
 import Link from "next/link";
+import { isLocalStaging } from "@/lib/supabase/local-staging";
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useRef, useState } from "react";
 
@@ -52,7 +53,11 @@ export function AdminLoginForm({
     if (!configured) return;
 
     const normalized = toFullPhone(phone);
-    if (!ALLOWED_PHONES.includes(normalized as (typeof ALLOWED_PHONES)[number])) {
+    // Stop before the verified staging test-OTP configuration expires: never
+    // let this test convenience fall through to an actual SMS afterward.
+    const stagingTestPhone = isLocalStaging() && normalized === "+61400000000" &&
+      Date.now() < Date.parse("2027-06-01T00:00:00Z");
+    if (!stagingTestPhone && !ALLOWED_PHONES.includes(normalized as (typeof ALLOWED_PHONES)[number])) {
       setErrorText("This phone number is not authorized for admin access.");
       return;
     }
