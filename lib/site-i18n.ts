@@ -516,7 +516,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Australian mobile number plus a one-time location check",
     heroTitle: "Everything happening in {suburb}",
     heroLead:
-      "PopOut is the neighbourhood app for Melbourne, made by PopOut Market. Buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything — each of you writing in your own language.",
+      "PopOut is the neighbourhood app for Melbourne, made by PopOut Market. Buy and sell second-hand with verified neighbours nearby, find local shops and deals, and ask your neighbours anything — each of you writing in your own language.",
     heroTrustLine:
       "Verified by an Australian mobile number and a one-time location check. Free on iOS and Android. Live in {count} Melbourne suburbs.",
     heroGetAppCta: "Get the app",
@@ -532,7 +532,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Add a whole room's photos at once — PopOut sorts them into separate drafts.",
     homeShopsTitle: "Local shops on the *map*",
     homeShopsSubtitle:
-      "Neighbours walk the shops nearby and post what they find, with the product name and price written on the photo and translated into every language the app speaks.",
+      "The Map tab pins shops across Melbourne CBD; tap one for its address, directions and photo. Specials from the Asian grocers are posted by the PopOut team in Community and translated into every language the app speaks.",
     homeShopsCta: "See the Melbourne CBD Asian grocery guide",
     homeCommunityTitle: "Ask your neighbours *anything*",
     homeCommunitySubtitle:
@@ -791,7 +791,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "澳洲手机号 + 一次性定位核验",
     heroTitle: "{suburb} 的大小事",
     heroLead:
-      "PopOut 是 PopOut Market 为墨尔本打造的邻里生活 App：和身边通过认证的邻居买卖二手好物，在地图上看到本地商铺正在打折的商品，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
+      "PopOut 是 PopOut Market 为墨尔本打造的邻里生活 App：和身边通过认证的邻居买卖二手好物，找到附近的店铺和优惠，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
     heroTrustLine:
       "澳洲手机号 + 一次性定位核验完成认证。iOS 与 Android 免费下载。已覆盖墨尔本 {count} 个城区。",
     heroGetAppCta: "下载 App",
@@ -806,7 +806,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次性上传整间房的照片——PopOut 会自动帮你拆成一条条商品草稿。",
     homeShopsTitle: "本地商铺，都在*地图*上",
     homeShopsSubtitle:
-      "邻居逛完附近的店，就把发现的好价发上来：商品名和价格直接标在照片上，并翻译成 App 支持的每一种语言。",
+      "「地图」页签上标着墨尔本 CBD 的店铺，点开能看到地址、导航和照片。亚洲超市的特价由 PopOut 团队发在「社区」里，并翻译成 App 支持的每一种语言。",
     homeShopsCta: "查看墨尔本 CBD 亚洲超市指南",
     homeCommunityTitle: "邻里之间，*什么都能问*",
     homeCommunitySubtitle:
@@ -1062,7 +1062,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "澳洲手機號碼加上一次性位置確認",
     heroTitle: "{suburb} 正在發生的事",
     heroLead:
-      "PopOut 是 PopOut Market 專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，在地圖上看見在地店家的最新優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
+      "PopOut 是 PopOut Market 專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，找到附近的店家和優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
     heroTrustLine:
       "以澳洲手機號碼與一次性位置確認完成驗證。iOS 與 Android 免費下載。已上線墨爾本 {count} 個區域。",
     heroGetAppCta: "下載 App",
@@ -1077,7 +1077,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次上傳整個房間的照片——PopOut 會自動整理成一則則刊登初稿。",
     homeShopsTitle: "在地店家，就在*地圖上*",
     homeShopsSubtitle:
-      "鄰居逛過附近的店家後把發現貼上來，商品名稱與價格直接標在照片上，並翻譯成 App 支援的每一種語言。",
+      "「地圖」分頁上標著墨爾本 CBD 的店家，點開就能看到地址、導航和照片。亞洲超市的特價由 PopOut 團隊發在「社區」裡，並翻譯成 App 支援的每一種語言。",
     homeShopsCta: "查看墨爾本 CBD 亞洲超市指南",
     homeCommunityTitle: "有問題，*儘管問鄰居*",
     homeCommunitySubtitle:
@@ -1342,7 +1342,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "호주 휴대폰 번호와 한 번의 위치 확인",
     heroTitle: "{suburb}에서 지금 일어나는 일",
     heroLead:
-      "PopOut은 PopOut Market이 만든 멜버른 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 지도에서 동네 가게의 지금 할인 정보를 확인하고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
+      "PopOut은 PopOut Market이 만든 멜버른 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 동네 가게와 할인 정보를 찾고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
     heroTrustLine:
       "호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. iOS와 Android에서 무료. 멜버른 {count}개 지역에서 이용할 수 있습니다.",
     heroGetAppCta: "앱 다운로드",
@@ -1358,7 +1358,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "방 안 물건을 한꺼번에 찍어 올려 보세요 — PopOut이 물건별 등록 초안으로 나눠 줍니다.",
     homeShopsTitle: "*지도*로 보는 동네 가게",
     homeShopsSubtitle:
-      "이웃들이 근처 가게를 직접 둘러보고 찾은 정보를 올립니다. 사진 위에 상품명과 가격이 적혀 있고, 앱이 지원하는 모든 언어로 번역됩니다.",
+      "'지도' 탭에 멜버른 CBD 가게들이 표시됩니다. 가게를 누르면 주소, 길찾기, 사진을 볼 수 있습니다. 아시안 마트 할인 정보는 PopOut 팀이 '동네 생활'에 올리고, 앱이 지원하는 모든 언어로 번역됩니다.",
     homeShopsCta: "멜버른 CBD 아시안 식료품점 가이드 보기",
     homeCommunityTitle: "이웃에게 *무엇이든* 물어보세요",
     homeCommunitySubtitle:
@@ -1629,7 +1629,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "オーストラリアの携帯電話番号と一度きりの位置情報チェック",
     heroTitle: "{suburb}で、いま起きていること",
     heroLead:
-      "PopOut は、PopOut Market がつくったメルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店のいまのお買い得情報を地図で見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
+      "PopOut は、PopOut Market がつくったメルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店やお得な情報を見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
     heroTrustLine:
       "オーストラリアの携帯電話番号と一度きりの位置情報チェックで認証。iOS / Android で無料。メルボルンの{count}の地域で利用できます。",
     heroGetAppCta: "アプリを入手",
@@ -1645,7 +1645,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "部屋全体の写真をまとめて追加すれば、PopOut がそれぞれ別の下書きに振り分けます。",
     homeShopsTitle: "近くのお店が*地図*でわかる",
     homeShopsSubtitle:
-      "近所の人が実際にお店を歩いて見つけたものを投稿。商品名と価格は写真に書き込まれ、アプリが対応するすべての言語に翻訳されます。",
+      "「マップ」タブにはメルボルン CBD のお店が並んでいます。タップすると住所、道案内、写真が見られます。アジア食材店のお買い得情報は PopOut チームが「ご近所」に投稿し、アプリが対応するすべての言語に翻訳されます。",
     homeShopsCta: "メルボルン CBD のアジア食材店ガイドを見る",
     homeCommunityTitle: "ご近所さんに*なんでも*聞いてみよう",
     homeCommunitySubtitle:
@@ -1920,7 +1920,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất",
     heroTitle: "Mọi chuyện ở {suburb}",
     heroLead:
-      "PopOut là ứng dụng khu phố dành cho Melbourne do PopOut Market phát triển. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, xem ưu đãi đang có tại các cửa hàng địa phương ngay trên bản đồ, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
+      "PopOut là ứng dụng khu phố dành cho Melbourne do PopOut Market phát triển. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, tìm cửa hàng và ưu đãi quanh đây, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
     heroTrustLine:
       "Xác minh bằng số điện thoại di động Úc và một lần kiểm tra vị trí duy nhất. Miễn phí trên iOS và Android. Đã có mặt tại {count} khu vực ở Melbourne.",
     heroGetAppCta: "Tải ứng dụng",
@@ -1936,7 +1936,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Tải ảnh cả căn phòng lên một lượt — PopOut tự tách thành từng tin đăng nháp riêng.",
     homeShopsTitle: "Cửa hàng địa phương ngay trên *bản đồ*",
     homeShopsSubtitle:
-      "Hàng xóm dạo quanh các cửa hàng gần nhà rồi đăng lại những gì họ thấy, kèm tên sản phẩm và giá ghi ngay trên ảnh, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ.",
+      "Tab Bản đồ ghim các cửa hàng ở Melbourne CBD; chạm vào một cửa hàng để xem địa chỉ, chỉ đường và ảnh. Ưu đãi ở các tiệm tạp hóa châu Á do đội ngũ PopOut đăng trong mục Cộng đồng, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ.",
     homeShopsCta: "Xem cẩm nang tiệm tạp hóa châu Á ở Melbourne CBD",
     homeCommunityTitle: "Hỏi hàng xóm *bất cứ điều gì*",
     homeCommunitySubtitle:
@@ -2220,7 +2220,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Numéro de mobile australien et contrôle de localisation ponctuel",
     heroTitle: "Tout ce qui se passe à {suburb}",
     heroLead:
-      "PopOut, c'est l'appli de quartier de Melbourne, créée par PopOut Market. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, repérez sur la carte les promos du moment dans les commerces du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
+      "PopOut, c'est l'appli de quartier de Melbourne, créée par PopOut Market. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, trouvez les commerces et les bons plans du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
     heroTrustLine:
       "Vérification par numéro de mobile australien et contrôle de localisation ponctuel. Gratuit sur iOS et Android. Disponible dans {count} quartiers de Melbourne.",
     heroGetAppCta: "Télécharger l'appli",
@@ -2236,7 +2236,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Ajoutez d'un coup les photos de toute une pièce — PopOut les répartit en brouillons distincts.",
     homeShopsTitle: "Les commerces du quartier, sur la *carte*",
     homeShopsSubtitle:
-      "Des voisins font le tour des commerces du coin et publient leurs trouvailles : le nom du produit et son prix sont inscrits sur la photo et traduits dans toutes les langues de l'appli.",
+      "L'onglet Carte situe les commerces du CBD de Melbourne : touchez-en un pour voir son adresse, l'itinéraire et une photo. Les promos des épiceries asiatiques sont publiées par l'équipe PopOut dans la rubrique Quartier et traduites dans toutes les langues de l'appli.",
     homeShopsCta: "Voir le guide des épiceries asiatiques du CBD de Melbourne",
     homeCommunityTitle: "Demandez *tout ce que vous voulez* à vos voisins",
     homeCommunitySubtitle:
@@ -2520,7 +2520,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Número de móvil australiano y una única comprobación de ubicación",
     heroTitle: "Todo lo que pasa en {suburb}",
     heroLead:
-      "PopOut es la app de barrio de Melbourne, creada por PopOut Market. Compra y vende de segunda mano con vecinos verificados cerca de ti, mira en el mapa las ofertas del momento en las tiendas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
+      "PopOut es la app de barrio de Melbourne, creada por PopOut Market. Compra y vende de segunda mano con vecinos verificados cerca de ti, encuentra tiendas y ofertas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
     heroTrustLine:
       "Verificación con número de móvil australiano y una única comprobación de ubicación. Gratis en iOS y Android. Ya disponible en {count} barrios de Melbourne.",
     heroGetAppCta: "Descargar la app",
@@ -2536,7 +2536,7 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Añade de una vez las fotos de toda una habitación — PopOut las separa en borradores distintos.",
     homeShopsTitle: "Las tiendas del barrio, en el *mapa*",
     homeShopsSubtitle:
-      "Los vecinos recorren las tiendas cercanas y publican lo que encuentran, con el nombre del producto y el precio escritos sobre la foto y traducidos a todos los idiomas de la app.",
+      "La pestaña Mapa marca las tiendas del CBD de Melbourne: toca una para ver su dirección, cómo llegar y una foto. Las ofertas de los supermercados asiáticos las publica el equipo de PopOut en la sección Barrio, traducidas a todos los idiomas de la app.",
     homeShopsCta: "Ver la guía de supermercados asiáticos del CBD de Melbourne",
     homeCommunityTitle: "Pregunta a tus vecinos *lo que quieras*",
     homeCommunitySubtitle:

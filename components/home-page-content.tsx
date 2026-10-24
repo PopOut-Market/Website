@@ -275,7 +275,7 @@ export function HomePageContent({
         </div>
       </ToneBand>
 
-      {/* 5 — Local deals on the map. NEW: App Store pillar 1. */}
+      {/* 5 — Local shops on the map (App Store pillar 1, Local Deals & Tips). */}
       <Section
         id="local-shops"
         tone="white"

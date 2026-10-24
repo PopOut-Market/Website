@@ -125,7 +125,7 @@ export function mobileAppNode() {
       "Listing, chat and community-post translation across eight languages",
       "AI-drafted listings from photos, including bulk drafts from a whole room",
       "A public meetup spot chosen when a listing is created and shown to the buyer",
-      "Local shop specials posted on a neighbourhood map",
+      "A map of shops in Melbourne CBD, each with its address, directions and photo",
       "A neighbourhood feed for local deals, questions, recommendations and wanted posts",
       "Accounts verified by Australian mobile number and a one-time location check",
     ],

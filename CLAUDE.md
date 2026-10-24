@@ -32,6 +32,7 @@ Supabase vars are read with **Expo prefix first, Next prefix as fallback** (the 
 - `next.config.ts` re-exports the Expo-prefixed values into `NEXT_PUBLIC_*` so the browser bundle can read them. `netlify.toml` whitelists these in secret-scanning (they are public-by-design).
 - Admin analytics APIs need a server-only `SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SECRET_KEY`).
 - Other overrides: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SUPABASE_MARKET_TABLE`, `NEXT_PUBLIC_MARKET_SUBURB_IDS`, `NEXT_PUBLIC_FOOTER_SOCIAL_*_URL`.
+- `NEXT_PUBLIC_PLAUSIBLE_SCRIPT_SRC`: the site's Plausible script URL (`https://plausible.io/js/pa-….js`). Unset means no analytics script at all; see `components/analytics.tsx`. The privacy policy names Plausible, so keep the two in step.
 
 ## Architecture
 

@@ -4,6 +4,8 @@ import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { BackNavLink } from "@/components/back-nav-link";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 type FaqItem = {
   question: string;
@@ -55,7 +57,7 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "5) PopOut 只能买卖二手吗？",
           answer:
-            "不只。社区（Community）版块专门用来看附近发生的事：本地折扣、关于你所在区域的提问、生活推荐，以及想收二手的人。还有一张本地商店地图，邻居会把逛到的折扣发上来，商品名和价格直接写在照片上，并翻译成 App 支持的每一种语言。",
+            "不只。「发现」里的「社区」专门用来看附近发生的事：本地折扣、关于你所在区域的提问、生活推荐，以及想收二手的人。「地图」页签上有墨尔本 CBD 的店铺，每家都能看到地址、导航和照片。",
         },
         {
           question: "6) 墨尔本二手网站怎么选更安全？",
@@ -111,7 +113,7 @@ function getCopy(locale: string): FaqCopy {
         {
           question: "5) PopOut 只能買賣二手嗎？",
           answer:
-            "不只。社群（Community）版塊專門用來看附近發生的事：在地折扣、關於你所在區域的提問、生活推薦，以及想收二手的人。還有一張在地商店地圖，鄰居會把逛到的折扣發上來，商品名與價格直接寫在照片上，並翻譯成 App 支援的每一種語言。",
+            "不只。「探索」裡的「社區」專門用來看附近發生的事：在地折扣、關於你所在區域的提問、生活推薦，以及想收二手的人。「地圖」分頁上有墨爾本 CBD 的店家，每家都能看到地址、導航和照片。",
         },
         {
           question: "6) 墨爾本二手網站怎麼選才更安全？",
@@ -166,7 +168,7 @@ function getCopy(locale: string): FaqCopy {
       {
         question: "5) Is PopOut only for buying and selling?",
         answer:
-          "No. The Community tab is for neighbourhood life: local deals at nearby shops, questions about your area, recommendations, and people looking to buy. There is also a map of local shops, where neighbours post what they have found with the product name and price written on the photo and translated into every language the app speaks.",
+          "No. Community, under Discover, is for neighbourhood life: local deals at nearby shops, questions about your area, recommendations, and people looking to buy. The Map tab shows shops in Melbourne CBD, each with its address, directions and photo.",
       },
       {
         question: "6) How can I choose a safer second-hand platform in Melbourne?",
@@ -215,6 +217,7 @@ export function FaqPageContent() {
             <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
               {t.faqTitle}
             </h1>
+            <UpdatedOn iso={dateModifiedFor("/faq")} locale={locale} />
             <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
               {t.faqIntro}
             </p>

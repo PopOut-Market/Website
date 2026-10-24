@@ -16,6 +16,8 @@ import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const HUB_PATH = "/melbourne-suburbs";
 
@@ -215,6 +217,7 @@ export default async function MelbourneRegionPage({ params }: RegionParams) {
     "@type": "CollectionPage",
     name: c.metaTitle(name),
     description: c.intro(name, count),
+    dateModified: dateModifiedFor(`/melbourne-suburbs/${region.slug}`),
     about: {
       "@type": "Place",
       name: `${region.names.en}, Melbourne`,
@@ -251,6 +254,7 @@ export default async function MelbourneRegionPage({ params }: RegionParams) {
         <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {c.h1(name)}
         </h1>
+        <UpdatedOn iso={dateModifiedFor(`/melbourne-suburbs/${region.slug}`)} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{c.intro(name, count)}</p>
 
         <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">

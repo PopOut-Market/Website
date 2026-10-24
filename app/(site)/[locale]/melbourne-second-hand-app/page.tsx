@@ -5,6 +5,8 @@ import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const PATH = "/melbourne-second-hand-app";
 
@@ -237,7 +239,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     description:
       "PopOut Market 是澳洲（Australia）墨爾本的二手 App 與同城二手平台：免費買賣二手家具、電器、數碼、單車等中古好物，按社區發現附近物品，支援多語言聊天與翻譯、更安全的當面交易，適合留學生搬家與畢業清倉，也是旋轉拍賣（Carousell）的在地替代。現已上線墨爾本。",
     h1: "澳洲墨爾本二手 App",
-    inLanguage: "zh-TW",
+    inLanguage: "zh-Hant",
     aboutThing: "墨爾本二手 App",
     sections: [
       {
@@ -432,7 +434,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
       "PopOut Market 是澳大利亚（Australia）墨尔本的二手交易 App（二手软件 / 二手应用）和同城二手平台：免费买卖二手家具、电器、数码、自行车等闲置，按社区发现身边好物，多语言沟通 + 更安全的当面交易，适合留学生搬家和毕业清仓。现已上线墨尔本。",
     h1: "澳洲墨尔本二手 App",
     aboutThing: "墨尔本二手App",
-    inLanguage: "zh-CN",
+    inLanguage: "zh-Hans",
     sections: [
       {
         heading: "为什么用本地的墨尔本二手 App",
@@ -593,6 +595,7 @@ export default async function MelbourneSecondHandAppPage({ params }: LocaleParam
         name: c.title,
         description: c.description,
         inLanguage: c.inLanguage,
+        dateModified: dateModifiedFor(PATH),
         about: { "@type": "Thing", name: c.aboutThing },
       },
       // Deliberately no FAQPage node. Google deprecated the rich result on
@@ -607,6 +610,7 @@ export default async function MelbourneSecondHandAppPage({ params }: LocaleParam
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {c.h1}
         </h1>
+        <UpdatedOn iso={dateModifiedFor(PATH)} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{c.description}</p>
 
         {c.sections.map((s) => (

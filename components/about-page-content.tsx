@@ -9,6 +9,8 @@ import { SITE_ORIGIN } from "@/lib/seo";
 import { mobileAppNode, organizationNode, webSiteNode } from "@/lib/jsonld";
 import { useSiteShell } from "@/components/site-chrome-context";
 import type { Locale } from "@/lib/site-i18n";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
 
@@ -127,6 +129,7 @@ export function AboutPageContent() {
         inLanguage: locale,
         isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
         about: { "@id": `${SITE_ORIGIN}/#organization` },
+        dateModified: dateModifiedFor("/about"),
       },
       // Deliberately absent:
       // - LocalBusiness. It asserts premises a customer can visit; this address is
@@ -161,6 +164,7 @@ export function AboutPageContent() {
               <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
                 {t.aboutMainHeading}
               </h1>
+              <UpdatedOn iso={dateModifiedFor("/about")} locale={locale} />
             </Reveal>
 
             <div className="mt-10 space-y-10 sm:mt-14 sm:space-y-12">

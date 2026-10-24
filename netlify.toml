@@ -2,8 +2,9 @@
 # findings in the Next.js client bundle. Those vars are intended for the browser; omit by name.
 # The SHARE_*/bare SUPABASE_* pair feeds the server-only /l/<token> share route and is never
 # inlined into the client bundle, but the anon key is public-by-design either way.
+# NEXT_PUBLIC_PLAUSIBLE_SCRIPT_SRC is Plausible's public script URL, written into every page's HTML.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "EXPO_PUBLIC_SUPABASE_URL,EXPO_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SHARE_SUPABASE_URL,SHARE_SUPABASE_ANON_KEY,SUPABASE_URL,SUPABASE_ANON_KEY"
+  SECRETS_SCAN_OMIT_KEYS = "EXPO_PUBLIC_SUPABASE_URL,EXPO_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SHARE_SUPABASE_URL,SHARE_SUPABASE_ANON_KEY,SUPABASE_URL,SUPABASE_ANON_KEY,NEXT_PUBLIC_PLAUSIBLE_SCRIPT_SRC"
 
 # ---------------------------------------------------------------------------
 # App-association files (/.well-known/*)
