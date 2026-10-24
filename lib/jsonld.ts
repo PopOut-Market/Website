@@ -98,7 +98,11 @@ export function mobileAppNode() {
   return {
     "@type": "MobileApplication",
     "@id": `${SITE_ORIGIN}/#app`,
-    name: "PopOut Market",
+    // The App Store and Google Play list the app as "PopOut" (checked 2026-10-24);
+    // the company, site and domain stay "PopOut Market". `alternateName` joins the
+    // two strings so the store listing and this site resolve to one app.
+    name: "PopOut",
+    alternateName: "PopOut Market",
     // "MarketplaceApplication" was not a valid value in either Google's list or
     // schema.org's vocabulary, so the property was silently discarded.
     applicationCategory: "ShoppingApplication",
@@ -121,7 +125,7 @@ export function mobileAppNode() {
       "Listing, chat and community-post translation across eight languages",
       "AI-drafted listings from photos, including bulk drafts from a whole room",
       "A public meetup spot chosen when a listing is created and shown to the buyer",
-      "Local shop specials posted on a neighbourhood map",
+      "A map of shops in Melbourne CBD, each with its address, directions and photo",
       "A neighbourhood feed for local deals, questions, recommendations and wanted posts",
       "Accounts verified by Australian mobile number and a one-time location check",
     ],

@@ -9,6 +9,7 @@ import { fetchFeedListings, formatPriceLabel } from "@/lib/supabase/server-feed"
 import type { MarketProduct } from "@/lib/market-product";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { dateModifiedFor } from "@/lib/content-dates";
 
 const PATH = "/market";
 // Must equal `PAGE_SIZE` in components/market-feed.tsx. The server render IS
@@ -53,6 +54,7 @@ export default async function MarketPage({ params }: LocaleParams) {
     description: intro,
     inLanguage: locale,
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+    dateModified: dateModifiedFor(PATH),
     ...(listings.length > 0
       ? {
           mainEntity: {

@@ -8,6 +8,8 @@ import { MARKET_SUBURBS, type MarketSuburb } from "@/lib/site-suburbs";
 import { suburbSeoPath } from "@/lib/suburb-seo-pages";
 import Link from "next/link";
 import { useMemo } from "react";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 type HubCopy = {
   title: string;
@@ -249,6 +251,7 @@ export function MelbourneSuburbsHubContent() {
       "@type": "CollectionPage",
       name: copy.title,
       description: copy.intro,
+      dateModified: dateModifiedFor("/melbourne-suburbs"),
       about: {
         "@type": "Place",
         name: "Melbourne, Victoria",
@@ -276,6 +279,7 @@ export function MelbourneSuburbsHubContent() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.title}
         </h1>
+        <UpdatedOn iso={dateModifiedFor("/melbourne-suburbs")} locale={locale} />
         <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-700">{copy.intro}</p>
 
         <div className="mt-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">

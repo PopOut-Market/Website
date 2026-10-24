@@ -5,6 +5,8 @@ import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import Link from "next/link";
 import { useMemo } from "react";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 type Section = { title: string; body: string };
 type Feature = { title: string; popout: string; other: string };
@@ -22,7 +24,7 @@ type Copy = {
 };
 
 export function ComparisonFacebookMarketplaceContent() {
-  const { localizePath, t } = useSiteShell();
+  const { locale, localizePath, t } = useSiteShell();
   const copy: Copy = {
     h1: t.comparisonFbH1,
     lead: t.comparisonFbLead,
@@ -73,6 +75,7 @@ export function ComparisonFacebookMarketplaceContent() {
       "@type": "WebPage",
       name: copy.h1,
       description: copy.lead,
+      dateModified: dateModifiedFor("/comparison/facebook-marketplace"),
       isPartOf: {
         "@type": "CollectionPage",
         name: t.comparisonHubTitle,
@@ -92,6 +95,7 @@ export function ComparisonFacebookMarketplaceContent() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.h1}
         </h1>
+        <UpdatedOn iso={dateModifiedFor("/comparison/facebook-marketplace")} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{copy.lead}</p>
 
         <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">

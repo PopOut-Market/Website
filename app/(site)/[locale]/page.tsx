@@ -13,6 +13,7 @@ import {
 } from "@/lib/supabase/server-feed";
 import { fetchGuideShops } from "@/lib/supabase/server-shops";
 import type { Metadata } from "next";
+import { dateModifiedFor } from "@/lib/content-dates";
 
 const HOME_LISTING_COUNT = 6;
 
@@ -61,6 +62,7 @@ export default async function HomePage({ params }: LocaleParams) {
         description: t.heroLead,
         inLanguage: locale,
         isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+        dateModified: dateModifiedFor("/"),
         about: { "@id": `${SITE_ORIGIN}/#app` },
         publisher: { "@id": `${SITE_ORIGIN}/#organization` },
       },

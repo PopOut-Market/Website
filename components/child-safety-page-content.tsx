@@ -3,6 +3,8 @@
 import { BackNavLink } from "@/components/back-nav-link";
 import { useSiteShell } from "@/components/site-chrome-context";
 import { INNER_MAX, SHELL_X } from "@/lib/site-config";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 function ChildSafetySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -28,7 +30,7 @@ export function ChildSafetyPageContent() {
             Child Safety Standards
           </h1>
           <div className="mt-3 space-y-1 text-sm text-gray-600">
-            <p>Last updated: 27 May 2026</p>
+            <UpdatedOn iso={dateModifiedFor("/child-safety")} locale="en" className="" />
           </div>
 
           <p className="mt-3 text-xs italic text-gray-600">{t.legalEnglishAuthoritative}</p>

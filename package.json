@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/check-upcoming-output.mjs",
     "start": "next start",
     "lint": "eslint .",
     "check:applinks": "node scripts/check-app-links.mjs",
+    "check:claims": "node --test scripts/check-claims.test.mjs && node scripts/check-claims.mjs",
     "lint:css": "stylelint \"**/*.css\"",
     "type-check": "tsc --noEmit"
   },

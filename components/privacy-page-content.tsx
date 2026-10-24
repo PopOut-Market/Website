@@ -30,8 +30,8 @@ export function PrivacyPageContent() {
           <div className="mt-3 space-y-1 text-sm text-gray-600">
             <p>POPOUT MARKET PTY LTD</p>
             <p>ACN 696 464 945</p>
-            <p>Effective Date: 16 June 2026</p>
-            <p>Version: 1.6</p>
+            <p>Effective Date: 24 October 2026</p>
+            <p>Version: 1.7</p>
           </div>
 
           <p className="mt-3 text-xs italic text-gray-600">{t.legalEnglishAuthoritative}</p>
@@ -45,8 +45,7 @@ export function PrivacyPageContent() {
               </p>
               <p>
                 This Privacy Policy explains how we collect, use, disclose and store your personal
-                information when you use the Popout Market application, this website, and related
-                services.
+                information when you use the PopOut app, this website, and related services.
               </p>
             </PrivacySection>
 
@@ -56,7 +55,7 @@ export function PrivacyPageContent() {
                 displayed on your public profile.
               </p>
               <p>
-                However, because Popout Market is designed as a secure local marketplace, we require
+                However, because PopOut is designed as a secure local marketplace, we require
                 certain identifying information, including a verified phone number and verified
                 suburb, to support user safety, fraud prevention and trusted transactions. For that
                 reason, full anonymity is not available when creating and using an account.
@@ -128,8 +127,17 @@ export function PrivacyPageContent() {
                 Our website uses a single functional cookie, &quot;popout_locale&quot;, which
                 remembers your preferred language for up to 12 months. It is strictly necessary for
                 the multilingual website to work and is not used for advertising, analytics or
-                tracking. We do not use third-party advertising or analytics trackers on the
-                website.
+                tracking.
+              </p>
+              <p>
+                We use Plausible Analytics to count visits to the website. It sets no cookies and
+                stores nothing on your device. When you open a page, Plausible receives your IP
+                address and browser details, uses them in the moment to estimate your country,
+                region and city and to count you as one visitor for that day, and does not store
+                them; one day&apos;s count cannot be linked to the next. We see only totals, such as
+                how many people viewed a page, which website or app they came from, and what kind of
+                device they used. Plausible processes this data in the European Union. We do not use
+                advertising trackers on the website.
               </p>
             </PrivacySection>
 
@@ -148,7 +156,7 @@ export function PrivacyPageContent() {
             <PrivacySection title="Why We Collect, Hold and Use Personal Information">
               <p>We collect, hold and use personal information for purposes including to:</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>provide and operate the Popout Market application;</li>
+                <li>provide and operate the PopOut app;</li>
                 <li>create and manage user accounts;</li>
                 <li>verify user identity and suburb location;</li>
                 <li>facilitate local transactions between users;</li>
@@ -211,7 +219,11 @@ export function PrivacyPageContent() {
                 </li>
                 <li>
                   OpenAI and Anthropic (United States), for processing listing content or chat
-                  content used in AI-supported generation, translation or moderation; and
+                  content used in AI-supported generation, translation or moderation;
+                </li>
+                <li>
+                  Plausible Analytics (European Union), for counting visits to our website, as
+                  described under &quot;Website, Contact Form and Cookies&quot;; and
                 </li>
                 <li>
                   Supabase, for hosting, database and related infrastructure services. While primary

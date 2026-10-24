@@ -41,11 +41,11 @@ export const LOGO_MARK_SRC = "/images/app-icon.png";
 export const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 export const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
-// Canonical Apple URL, confirmed against the iTunes Lookup API on 2026-08-21.
-// The old slug `popout-market-buy-sell` still 301s here, but it hard-codes the
-// retired "buy & sell" positioning into every link, share card and sameAs entry
-// the site emits. Apple now serves this listing as `popout-market`.
-export const APP_STORE_URL = "https://apps.apple.com/au/app/popout-market/id6761421626";
+// Canonical Apple URL, confirmed against the iTunes Lookup API on 2026-10-24: the
+// store listing is now named "PopOut" and Apple serves it at the `popout` slug.
+// The earlier slugs (`popout-market-buy-sell`, `popout-market`) 301 here; a
+// redirecting URL is a weak sameAs signal, so keep this on the live slug.
+export const APP_STORE_URL = "https://apps.apple.com/au/app/popout/id6761421626";
 export const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=au.com.popoutmarket";
 
 export const FOOTER_CONTACT_EMAIL = "contact@popoutmarket.com.au";

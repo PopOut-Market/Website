@@ -5,6 +5,8 @@ import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const PATH = "/melbourne-cbd-second-hand-marketplace";
 const ABOUT_NAME = "Melbourne CBD, Victoria, Australia";
@@ -222,7 +224,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     description:
       "PopOut Market 是免費的墨爾本CBD二手交易平台，讓市區住戶、留學生與搬家族就近買賣二手家具與生活用品。以社區配對、內建多語聊天，是旋轉拍賣(Carousell)的好替代，覆蓋整個墨爾本，不限市中心。",
     h1: "墨爾本CBD二手市場",
-    inLanguage: "zh-TW",
+    inLanguage: "zh-Hant",
     sections: [
       {
         heading: "市中心用戶最在意的事",
@@ -424,7 +426,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     description:
       "PopOut Market 是免费的墨尔本CBD二手交易平台，方便市区居民、留学生与搬家人群就近买卖二手家具与生活用品，覆盖整个墨尔本，不限于市中心。",
     h1: "墨尔本CBD二手市场",
-    inLanguage: "zh-CN",
+    inLanguage: "zh-Hans",
     sections: [
       {
         heading: "市中心用户最看重什么",
@@ -601,6 +603,7 @@ export default async function Page({ params }: LocaleParams) {
         name: c.title,
         description: c.description,
         inLanguage: c.inLanguage,
+        dateModified: dateModifiedFor(PATH),
         about: { "@type": "Place", name: ABOUT_NAME },
       },
       // Deliberately no FAQPage node. Google deprecated the rich result on
@@ -614,6 +617,7 @@ export default async function Page({ params }: LocaleParams) {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {c.h1}
         </h1>
+        <UpdatedOn iso={dateModifiedFor(PATH)} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{c.description}</p>
 
         {c.sections.map((s) => (

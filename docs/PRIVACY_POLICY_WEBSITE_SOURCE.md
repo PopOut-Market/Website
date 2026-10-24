@@ -6,8 +6,8 @@
 
 - POPOUT MARKET PTY LTD
 - ACN 696 464 945
-- Effective Date: 16 June 2026
-- Version: 1.6
+- Effective Date: 24 October 2026
+- Version: 1.7
 
 ---
 
@@ -15,7 +15,7 @@
 
 POPOUT MARKET PTY LTD ("we", "us", or "our") is committed to protecting your privacy and handling personal information in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs).
 
-This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the Popout Market application, this website, and related services.
+This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the PopOut app, this website, and related services.
 
 ---
 
@@ -23,7 +23,7 @@ This Privacy Policy explains how we collect, use, disclose and store your person
 
 Where practicable, you may interact with us using a pseudonym, such as a nickname displayed on your public profile.
 
-However, because Popout Market is designed as a secure local marketplace, we require certain identifying information, including a verified phone number and verified suburb, to support user safety, fraud prevention and trusted transactions. For that reason, full anonymity is not available when creating and using an account.
+However, because PopOut is designed as a secure local marketplace, we require certain identifying information, including a verified phone number and verified suburb, to support user safety, fraud prevention and trusted transactions. For that reason, full anonymity is not available when creating and using an account.
 
 ---
 
@@ -55,7 +55,9 @@ This Privacy Policy also applies to our website at www.popoutmarket.com.au.
 
 When you use the contact form on our website, we collect the message content you submit, together with your IP address, the page language and a timestamp. We use this information to receive, review and respond to your enquiry. The message is delivered to us by email through a third-party email (SMTP) provider, and we retain the resulting email for as long as reasonably necessary to handle your enquiry and keep records of our communications.
 
-Our website uses a single functional cookie, "popout_locale", which remembers your preferred language for up to 12 months. It is strictly necessary for the multilingual website to work and is not used for advertising, analytics or tracking. We do not use third-party advertising or analytics trackers on the website.
+Our website uses a single functional cookie, "popout_locale", which remembers your preferred language for up to 12 months. It is strictly necessary for the multilingual website to work and is not used for advertising, analytics or tracking.
+
+We use Plausible Analytics to count visits to the website. It sets no cookies and stores nothing on your device. When you open a page, Plausible receives your IP address and browser details, uses them in the moment to estimate your country, region and city and to count you as one visitor for that day, and does not store them; one day's count cannot be linked to the next. We see only totals, such as how many people viewed a page, which website or app they came from, and what kind of device they used. Plausible processes this data in the European Union. We do not use advertising trackers on the website.
 
 ---
 
@@ -71,7 +73,7 @@ The GPS coordinates collected for this purpose are used only for suburb verifica
 
 We collect, hold and use personal information for purposes including to:
 
-- provide and operate the Popout Market application;
+- provide and operate the PopOut app;
 - create and manage user accounts;
 - verify user identity and suburb location;
 - facilitate local transactions between users;
@@ -112,7 +114,8 @@ We may disclose personal information to third-party service providers who help u
 This may include the following overseas recipients:
 
 - Twilio (United States), for SMS one-time password verification using your phone number;
-- OpenAI and Anthropic (United States), for processing listing content or chat content used in AI-supported generation, translation or moderation; and
+- OpenAI and Anthropic (United States), for processing listing content or chat content used in AI-supported generation, translation or moderation;
+- Plausible Analytics (European Union), for counting visits to our website, as described under "Website, Contact Form and Cookies"; and
 - Supabase, for hosting, database and related infrastructure services. While primary data storage is intended to be located in Sydney, Australia, some support, administration or related service functions may involve overseas access or processing.
 
 We take reasonable steps to ensure overseas recipients handle personal information in a manner consistent with the APPs, including by implementing contractual protections and security safeguards such as encryption in transit and at rest.

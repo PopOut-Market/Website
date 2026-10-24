@@ -26,6 +26,8 @@ import { useRevealOnce } from "@/lib/use-reveal-once";
 import { useSectionVisible } from "@/lib/use-section-visible";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { fillStats } from "@/lib/site-stats";
+import { upcomingLine } from "@/lib/upcoming";
 
 /**
  * The homepage, rebuilt around the app's actual positioning.
@@ -147,6 +149,14 @@ export function HomePageContent({
   const { t, localizePath, locale } = useSiteShell();
 
   const trustLine = t.heroTrustLine.replace("{count}", String(suburbCount));
+  const statsLine = fillStats(t.statsLine, locale);
+  // Features the app does not ship yet: one dated sentence each, from
+  // lib/upcoming.ts (CLAUDE.md rule 1, exception of 2026-10-24). Empty in the
+  // four locales that do not carry them.
+  const shopUpcoming = [
+    upcomingLine("shop-offers", locale),
+    upcomingLine("merchants", locale),
+  ].filter((line): line is string => line !== null);
 
   // Split on the slot, keeping it, so each locale decides where the place name
   // sits — Chinese, Japanese and Korean all lead with it, English does not.
@@ -275,7 +285,7 @@ export function HomePageContent({
         </div>
       </ToneBand>
 
-      {/* 5 — Local deals on the map. NEW: App Store pillar 1. */}
+      {/* 5 — Local shops on the map (App Store pillar 1, Local Deals & Tips). */}
       <Section
         id="local-shops"
         tone="white"
@@ -285,6 +295,17 @@ export function HomePageContent({
         {(shown) => (
           <>
             <HomeShopWall shops={shops} show={shown} labelledBy="local-shops-title" />
+            {shopUpcoming.length ? (
+              <Reveal
+                show={shown}
+                delayMs={480}
+                className="mx-auto mt-8 max-w-2xl space-y-2 text-center text-sm leading-relaxed text-gray-600"
+              >
+                {shopUpcoming.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </Reveal>
+            ) : null}
             {/* The guide ships in four locales only, so the link is hidden in the
                 other four rather than pointing them at a 404. A missing link is a
                 smaller harm than a dead one — especially directly beneath
@@ -345,6 +366,14 @@ export function HomePageContent({
       >
         {(shown) => (
           <>
+            <Reveal
+              as="p"
+              show={shown}
+              delayMs={160}
+              className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-gray-600"
+            >
+              {statsLine}
+            </Reveal>
             <HomeSuburbField names={suburbNames} show={shown} />
             <Reveal show={shown} delayMs={580} className="mt-8 text-center">
               <Link

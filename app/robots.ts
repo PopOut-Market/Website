@@ -21,7 +21,17 @@ const AI_RETRIEVAL_CRAWLERS = [
   "PerplexityBot", // Perplexity index
   "Perplexity-User", // Perplexity user-initiated fetch
   "Applebot", // Siri / Spotlight / Apple Intelligence
+  "meta-webindexer", // Meta AI search — citation surface
 ] as const;
+
+/**
+ * SEARCH-ENGINE crawlers whose indexes the AI answers are built from: Google's
+ * AI Overviews, AI Mode and Gemini answer from Googlebot's index, and Copilot
+ * from Bingbot's. Brave Search, which Claude's web search uses, follows the
+ * rules written for Googlebot. Blocking either one costs those AI answers as
+ * well as the classic results.
+ */
+const SEARCH_INDEX_CRAWLERS = ["Googlebot", "Bingbot"] as const;
 
 const AI_TRAINING_CRAWLERS = [
   "GPTBot",
@@ -50,6 +60,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow },
+      { userAgent: [...SEARCH_INDEX_CRAWLERS], allow: "/", disallow },
       { userAgent: [...AI_RETRIEVAL_CRAWLERS], allow: "/", disallow },
       { userAgent: [...AI_TRAINING_CRAWLERS], allow: "/", disallow },
     ],

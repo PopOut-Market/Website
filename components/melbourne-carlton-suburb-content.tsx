@@ -7,6 +7,8 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { MARKET_SUBURBS } from "@/lib/site-suburbs";
 import { suburbSeoPath } from "@/lib/suburb-seo-pages";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 type CarltonCopy = {
   h1: string;
@@ -119,6 +121,7 @@ export function MelbourneCarltonSuburbContent() {
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {copy.h1}
         </h1>
+        <UpdatedOn iso={dateModifiedFor("/melbourne-suburbs/carlton")} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{copy.lead}</p>
 
         <div className="mt-6 space-y-6 rounded-2xl border border-black/5 bg-white p-5 shadow-soft">

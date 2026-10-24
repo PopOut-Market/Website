@@ -69,8 +69,8 @@ export function isLocale(value: string | null | undefined): value is Locale {
 // BCP47 language tag for the <html lang> attribute, per locale.
 const LOCALE_TO_HTML_LANG: Record<Locale, string> = {
   en: "en",
-  "zh-Hans": "zh-CN",
-  "zh-Hant": "zh-TW",
+  "zh-Hans": "zh-Hans",
+  "zh-Hant": "zh-Hant",
   ko: "ko",
   ja: "ja",
   vi: "vi",

@@ -5,6 +5,10 @@ import { INNER_MAX, SHELL_X } from "@/lib/site-config";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
+
+const PATH = "/melbourne-graduation-move-out-guide-2026";
 
 const title = "2026 墨尔本留学生毕业季回血指南 | 墨大/RMIT/Monash 卖闲置攻略 - PopOut Market";
 const description =
@@ -26,13 +30,13 @@ export const metadata: Metadata = {
     "graduate moving out Melbourne",
   ],
   // This guide's body is Simplified Chinese only. Canonicalise every locale
-  // variant to the zh-cn URL and only advertise zh-CN/zh-TW hreflang, so Google
+  // variant to the zh-cn URL and only advertise the Simplified Chinese hreflang, so Google
   // consolidates to the Chinese page instead of treating /en, /ko, … (which
   // serve Chinese) as separate language versions.
   alternates: {
     canonical: "/zh-cn/melbourne-graduation-move-out-guide-2026",
     languages: {
-      "zh-CN": "/zh-cn/melbourne-graduation-move-out-guide-2026",
+      "zh-Hans": "/zh-cn/melbourne-graduation-move-out-guide-2026",
       "x-default": "/zh-cn/melbourne-graduation-move-out-guide-2026",
     },
   },
@@ -71,9 +75,9 @@ const jsonLd = {
       "@type": "Article",
       headline: title,
       description,
-      inLanguage: "zh-CN",
+      inLanguage: "zh-Hans",
       datePublished: "2026-04-01",
-      dateModified: "2026-09-07",
+      dateModified: dateModifiedFor(PATH),
       author: { "@id": "https://www.popoutmarket.com.au/#organization" },
       publisher: { "@id": "https://www.popoutmarket.com.au/#organization" },
       about: [
@@ -100,13 +104,13 @@ const jsonLd = {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.popoutmarket.com.au/",
+          item: "https://www.popoutmarket.com.au/zh-cn",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Melbourne Graduation Move-out Guide 2026",
-          item: "https://www.popoutmarket.com.au/melbourne-graduation-move-out-guide-2026",
+          item: "https://www.popoutmarket.com.au/zh-cn/melbourne-graduation-move-out-guide-2026",
         },
       ],
     },
@@ -123,6 +127,7 @@ export default async function GraduationMoveOutGuidePage({ params }: LocaleParam
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {title}
         </h1>
+        <UpdatedOn iso={dateModifiedFor(PATH)} locale={"zh-Hans"} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{description}</p>
 
         <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">

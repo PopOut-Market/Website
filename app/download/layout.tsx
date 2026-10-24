@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import { Analytics } from "@/components/analytics";
 import { baseMetadata } from "@/lib/root-metadata";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 export default function DownloadRootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

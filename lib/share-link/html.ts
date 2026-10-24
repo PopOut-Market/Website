@@ -128,7 +128,7 @@ export function renderShareCrawlerHtml(preview: SharePreview | null, canonicalUr
     <main style="max-width:640px;margin:0 auto;padding:48px 24px;text-align:center;">
       <h1 style="font-size:20px;font-weight:700;margin:0 0 8px;">${escapeHtml(fields.title)}</h1>
       <p style="font-size:15px;color:#4b5563;margin:0 0 24px;">${escapeHtml(fields.description)}</p>
-      <p style="font-size:14px;"><a href="/download" style="color:#cc3200;font-weight:600;">Get the PopOut Market app</a></p>
+      <p style="font-size:14px;"><a href="/download" style="color:#cc3200;font-weight:600;">Get the PopOut app</a></p>
     </main>
   </body>
 </html>`;
@@ -223,7 +223,7 @@ export function renderShareInAppBrowserHtml(
     ? `      <a href="${escapeHtml(launch.buttonUrl)}" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 32px;border-radius:14px;background:#cc3200;color:#fff;font-size:16px;font-weight:700;text-decoration:none;">Open in the app</a>
       <p style="margin:20px 0 12px;font-size:13px;color:#6b7280;">Don&#39;t have the app yet?</p>
 `
-    : `      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Open this listing in the PopOut Market app</p>
+    : `      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Open this listing in the PopOut app</p>
 `;
 
   return `<!doctype html>

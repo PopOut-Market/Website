@@ -5,6 +5,8 @@ import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const PATH = "/melbourne-second-hand-market";
 
@@ -206,7 +208,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     description:
       "了解墨爾本二手市場如何運作：墨爾本二手交易、同城二手買賣、二手拍賣與本地刊登，依社區發現身邊的二手家具、電器與中古好物，搭配多語言聊天與更安全的當面交易，適合留學生與公寓生活。",
     h1: "墨爾本二手市場",
-    inLanguage: "zh-TW",
+    inLanguage: "zh-Hant",
     sections: [
       {
         heading: "墨爾本本地二手交易是怎麼運作的",
@@ -368,7 +370,7 @@ const CONTENT: Partial<Record<Locale, PageContent>> & { en: PageContent } = {
     description:
       "了解墨尔本二手市场怎么运作：墨尔本二手交易、同城二手买卖、二手市集与本地挂牌，按社区发现身边的二手家具、电器与闲置，多语言沟通 + 更安全的当面交易，适合留学生与公寓生活。",
     h1: "墨尔本二手市场",
-    inLanguage: "zh-CN",
+    inLanguage: "zh-Hans",
     sections: [
       {
         heading: "墨尔本本地二手交易是怎么运作的",
@@ -514,6 +516,7 @@ export default async function MelbourneSecondHandMarketPage({ params }: LocalePa
         name: c.title,
         description: c.description,
         inLanguage: c.inLanguage,
+        dateModified: dateModifiedFor(PATH),
         about: { "@type": "Place", name: "Melbourne, Victoria, Australia" },
       },
       // Deliberately no FAQPage node. Google deprecated the rich result on
@@ -528,6 +531,7 @@ export default async function MelbourneSecondHandMarketPage({ params }: LocalePa
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
           {c.h1}
         </h1>
+        <UpdatedOn iso={dateModifiedFor(PATH)} locale={locale} />
         <p className="mt-4 text-base leading-relaxed text-gray-700">{c.description}</p>
 
         {c.sections.map((s) => (

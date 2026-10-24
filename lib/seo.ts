@@ -4,8 +4,8 @@ export function localizedAlternates(path: string): Record<string, string> {
   const normalized = path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
   return {
     en: `/en${normalized}`,
-    "zh-CN": `/zh-cn${normalized}`,
-    "zh-TW": `/zh-tw${normalized}`,
+    "zh-Hans": `/zh-cn${normalized}`,
+    "zh-Hant": `/zh-tw${normalized}`,
     ko: `/ko${normalized}`,
     ja: `/ja${normalized}`,
     vi: `/vi${normalized}`,
@@ -45,8 +45,8 @@ export type SeoLocale = "en" | "zh-Hans" | "zh-Hant" | "ko" | "ja" | "vi" | "fr"
 
 const HREFLANG_BY_LOCALE: Record<SeoLocale, string> = {
   en: "en",
-  "zh-Hans": "zh-CN",
-  "zh-Hant": "zh-TW",
+  "zh-Hans": "zh-Hans",
+  "zh-Hant": "zh-Hant",
   ko: "ko",
   ja: "ja",
   vi: "vi",

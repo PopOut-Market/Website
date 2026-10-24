@@ -6,8 +6,13 @@ import Link from "next/link";
 import { useRevealOnce } from "@/lib/use-reveal-once";
 import { INNER_MAX, POPOUT_BRAND_GRADIENT_TEXT_CLASS, SHELL_X } from "@/lib/site-config";
 import { SITE_ORIGIN } from "@/lib/seo";
+import { mobileAppNode, organizationNode, webSiteNode } from "@/lib/jsonld";
 import { useSiteShell } from "@/components/site-chrome-context";
 import type { Locale } from "@/lib/site-i18n";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
+import { fillStats } from "@/lib/site-stats";
+import { upcomingHeading, upcomingLine } from "@/lib/upcoming";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
 
@@ -107,73 +112,26 @@ export function AboutPageContent() {
   const { ref: shellRef, shown } = useRevealOnce<HTMLDivElement>();
   const extra = aboutSeoCopy(locale);
 
+  // The site's one entity graph (lib/jsonld.ts). This page used to declare its own
+  // SoftwareApplication under the shared `#app` @id, with a shorter feature list
+  // than the homepage's — two different descriptions of one app.
+  const pageUrl = `${SITE_ORIGIN}${localizePath("/about")}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      webSiteNode(locale),
+      organizationNode(),
+      mobileAppNode(),
       {
-        "@type": "WebPage",
+        "@type": "AboutPage",
+        "@id": pageUrl,
+        url: pageUrl,
         name: `${t.aboutPageTitle} | PopOut Market`,
         description: t.aboutMainHeading,
         inLanguage: locale,
-        isPartOf: {
-          "@type": "WebSite",
-          name: "PopOut Market",
-          url: "https://www.popoutmarket.com.au",
-        },
-      },
-      {
-        "@type": "SoftwareApplication",
-        "@id": `${SITE_ORIGIN}/#app`,
-        name: "PopOut Market",
-        // "MarketplaceApplication" is not in Google's supported applicationCategory
-        // list and is not a schema.org value either — it was silently ignored.
-        applicationCategory: "ShoppingApplication",
-        operatingSystem: "iOS 17.0+, Android",
-        availableLanguage: ["en", "zh-Hans", "zh-Hant", "ko", "ja", "vi", "fr", "es"],
-        areaServed: {
-          "@type": "City",
-          name: "Melbourne",
-        },
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "AUD",
-        },
-        // Shipped features only. "Student verification support" was here and no
-        // such feature has ever existed in the app — grep for "student" in the
-        // app repo's src/ returns nothing. Do not re-add a feature to this list
-        // without confirming it against the app.
-        featureList: [
-          "Suburb-first discovery across Melbourne",
-          "Listing and chat translation across eight languages",
-          "AI-drafted listings from photos, including bulk drafts from a whole room",
-          "Public meetup spot chosen when a listing is created",
-          "Accounts verified by Australian mobile number and a one-time location check",
-        ],
-      },
-      {
-        "@type": "Organization",
-        "@id": `${SITE_ORIGIN}/#organization`,
-        name: "PopOut Market",
-        // Matches the ASIC register and the homepage graph exactly. A one-character
-        // difference in the name across sources splits the entity into two nodes.
-        legalName: "POPOUT MARKET PTY LTD",
-        email: t.aboutSupportEmail,
-        // `taxID` in Australia means the ABN, not the ACN, and the previous value
-        // baked the label inside the value ("ACN 696 464 945"). Both identifiers
-        // are carried properly here instead.
-        identifier: [
-          { "@type": "PropertyValue", propertyID: "ABN", value: "76696464945" },
-          { "@type": "PropertyValue", propertyID: "ACN", value: "696464945" },
-        ],
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "1003/151 City Rd",
-          addressLocality: "Southbank",
-          addressRegion: "VIC",
-          postalCode: "3006",
-          addressCountry: "AU",
-        },
+        isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+        about: { "@id": `${SITE_ORIGIN}/#organization` },
+        dateModified: dateModifiedFor("/about"),
       },
       // Deliberately absent:
       // - LocalBusiness. It asserts premises a customer can visit; this address is
@@ -208,6 +166,7 @@ export function AboutPageContent() {
               <h1 className="mt-3 text-balance text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl md:text-[2rem] md:leading-snug">
                 {t.aboutMainHeading}
               </h1>
+              <UpdatedOn iso={dateModifiedFor("/about")} locale={locale} />
             </Reveal>
 
             <div className="mt-10 space-y-10 sm:mt-14 sm:space-y-12">
@@ -224,6 +183,12 @@ export function AboutPageContent() {
                   </p>
                   <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
                     {t.aboutOurStoryP2}
+                  </p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {t.aboutAppNameNote}
+                  </p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {fillStats(t.statsLine, locale)}
                   </p>
                 </section>
               </Reveal>
@@ -368,6 +333,27 @@ export function AboutPageContent() {
                   </p>
                 </section>
               </Reveal>
+
+              {/* Features the app does not ship yet, one dated sentence each, from
+                  lib/upcoming.ts (CLAUDE.md rule 1, exception of 2026-10-24). Shown in
+                  en, zh-Hans, zh-Hant and ko only. */}
+              {upcomingHeading(locale) ? (
+                <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={275}>
+                  <section>
+                    <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
+                      {upcomingHeading(locale)}
+                    </h2>
+                    {(["housing", "shop-offers", "merchants"] as const).map((id, i) => (
+                      <p
+                        key={id}
+                        className={`${i === 0 ? "mt-3" : "mt-4"} text-[15px] leading-relaxed text-gray-600 sm:text-base`}
+                      >
+                        {upcomingLine(id, locale)}
+                      </p>
+                    ))}
+                  </section>
+                </Reveal>
+              ) : null}
 
               <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={300}>
                 <section>

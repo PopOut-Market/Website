@@ -1,4 +1,5 @@
 import "@/app/globals.css";
+import { Analytics } from "@/components/analytics";
 import { SiteChrome } from "@/components/site-chrome";
 import { baseMetadata } from "@/lib/root-metadata";
 import { OG_IMAGE } from "@/lib/seo";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | PopOut Market",
   },
   description:
-    "PopOut Market is the neighbourhood app for Melbourne: buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything, in eight languages.",
+    "PopOut Market is the neighbourhood app for Melbourne: buy and sell second-hand with verified neighbours nearby, find local shops and deals, and ask your neighbours anything, in eight languages.",
   openGraph: {
     type: "website",
     siteName: "PopOut Market",
@@ -29,14 +30,14 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
     title: "PopOut Market",
     description:
-      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",
+      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shops and deals, and neighbourhood questions answered in eight languages.",
   },
   twitter: {
     card: "summary_large_image",
     images: [OG_IMAGE.url],
     title: "PopOut Market",
     description:
-      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shop specials on the map, and neighbourhood questions answered in eight languages.",
+      "The neighbourhood app for Melbourne — second-hand from verified neighbours nearby, local shops and deals, and neighbourhood questions answered in eight languages.",
   },
 };
 
@@ -55,6 +56,7 @@ export default async function SiteLocaleLayout({
     <html lang={htmlLang(locale)}>
       <body>
         <SiteChrome initialLocale={locale}>{children}</SiteChrome>
+        <Analytics />
       </body>
     </html>
   );

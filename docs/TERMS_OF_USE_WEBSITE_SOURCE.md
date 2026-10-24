@@ -13,11 +13,11 @@
 
 ## 1. About the Application
 
-Welcome to Popout Market (Application). The Application is an online platform that enables parties providing services or goods (Provider) and parties receiving services or goods (Receiver) to discover listings, communicate with each other, and independently arrange the inspection, payment, collection, and delivery of goods or services.
+Welcome to PopOut (Application). The Application is an online platform that enables parties providing services or goods (Provider) and parties receiving services or goods (Receiver) to discover listings, communicate with each other, and independently arrange the inspection, payment, collection, and delivery of goods or services.
 
-The Application is operated by POPOUT MARKET Pty Ltd. We provide the Application as an intermediary technology platform only. We are not a buyer, seller, reseller, agent, broker, auctioneer, carrier, or financial services provider in relation to any transaction between Members.
+The Application is operated by POPOUT MARKET PTY LTD. We provide the Application as an intermediary technology platform only. We are not a buyer, seller, reseller, agent, broker, auctioneer, carrier, or financial services provider in relation to any transaction between Members.
 
-Any contract for the sale or exchange of goods is formed solely between the Provider and the Receiver. POPOUT MARKET Pty Ltd is not a party to such contracts. Services may include AI-powered listing generation, real-time translation, and safety moderation tools.
+Any contract for the sale or exchange of goods is formed solely between the Provider and the Receiver. POPOUT MARKET PTY LTD is not a party to such contracts. Services may include AI-powered listing generation, real-time translation, and safety moderation tools.
 
 By using, browsing, or reading the Application, you signify that you have read, understood, and agree to be bound by these Terms. If you do not agree, you must stop using the Application and Services immediately.
 
@@ -27,7 +27,7 @@ By using, browsing, or reading the Application, you signify that you have read, 
 
 You accept the Terms by accessing, browsing, or using the Application.
 
-Where available, you may also accept the Terms by clicking to "accept" or "agree" in the user interface. By doing so, you warrant that you have legal capacity to enter into a binding contract with POPOUT MARKET Pty Ltd.
+Where available, you may also accept the Terms by clicking to "accept" or "agree" in the user interface. By doing so, you warrant that you have legal capacity to enter into a binding contract with POPOUT MARKET PTY LTD.
 
 ---
 
@@ -45,7 +45,7 @@ To provide a secure and local marketplace, registration and usage may require pe
 - Communication data and chat history, including AI-assisted translation/moderation; and
 - Member activity data (ratings, reviews, transaction history).
 
-You warrant all provided information is accurate, complete, and up to date. POPOUT MARKET Pty Ltd may verify identity, conduct fraud screening, and request additional information. Failure to comply may lead to suspension or termination.
+You warrant all provided information is accurate, complete, and up to date. POPOUT MARKET PTY LTD may verify identity, conduct fraud screening, and request additional information. Failure to comply may lead to suspension or termination.
 
 You may not use the Services if you are under 18 years old or otherwise barred by applicable law.
 
@@ -81,7 +81,7 @@ Receivers (Buyers) must:
 - arrange collection/delivery directly with Provider; and
 - leave rating and review based on transaction experience.
 
-Popout Market does not facilitate, process, hold, escrow, remit, or settle payments between Members.
+PopOut does not facilitate, process, hold, escrow, remit, or settle payments between Members.
 
 ---
 
@@ -102,7 +102,7 @@ Providers are solely responsible for their listings and must avoid prohibited it
 
 ## 7. Refund Policy
 
-POPOUT MARKET Pty Ltd is an intermediary platform only and is not a party to transactions between Members. We do not process or control payments and do not provide refunds for transactions arranged through the Application.
+POPOUT MARKET PTY LTD is an intermediary platform only and is not a party to transactions between Members. We do not process or control payments and do not provide refunds for transactions arranged through the Application.
 
 Refunds/returns are matters between Receiver and Provider, subject to Australian Consumer Law (ACL). If unresolved after 14 days, the Receiver may report through the Contact Us channel for platform-level review.
 
@@ -110,11 +110,11 @@ Refunds/returns are matters between Receiver and Provider, subject to Australian
 
 ## 8. Copyright and Intellectual Property
 
-The Application and Services are protected by intellectual property laws. All rights in platform materials are owned or controlled by POPOUT MARKET Pty Ltd or its contributors.
+The Application and Services are protected by intellectual property laws. All rights in platform materials are owned or controlled by POPOUT MARKET PTY LTD or its contributors.
 
 You are granted a limited, non-exclusive, revocable licence to use the Application for personal, non-commercial purposes while you are a Member.
 
-By posting Your Content, you grant POPOUT MARKET Pty Ltd a non-exclusive, transferable, perpetual, royalty-free, irrevocable, worldwide licence to use, display, distribute, adapt and process that content, including for AI-assisted listing generation and translation.
+By posting Your Content, you grant POPOUT MARKET PTY LTD a non-exclusive, transferable, perpetual, royalty-free, irrevocable, worldwide licence to use, display, distribute, adapt and process that content, including for AI-assisted listing generation and translation.
 
 ---
 
@@ -144,13 +144,13 @@ If you provide competing services for commercial gain, you are a competitor and 
 
 Nothing in these Terms excludes rights that cannot lawfully be excluded under Australian law.
 
-Subject to applicable law, POPOUT MARKET Pty Ltd's aggregate liability is limited to resupply of Services and excludes indirect/consequential loss, loss of profits, revenue, data, goodwill, and similar losses.
+Subject to applicable law, POPOUT MARKET PTY LTD's aggregate liability is limited to resupply of Services and excludes indirect/consequential loss, loss of profits, revenue, data, goodwill, and similar losses.
 
 ---
 
 ## 13. Termination of Contract
 
-You may terminate these Terms by giving 7 days' notice via Contact Us. POPOUT MARKET Pty Ltd may suspend or terminate access where Terms or laws are breached, or where platform safety/integrity requires it.
+You may terminate these Terms by giving 7 days' notice via Contact Us. POPOUT MARKET PTY LTD may suspend or terminate access where Terms or laws are breached, or where platform safety/integrity requires it.
 
 For specified suspensions, written grounds are provided and Members are given an opportunity to respond.
 
@@ -158,7 +158,7 @@ For specified suspensions, written grounds are provided and Members are given an
 
 ## 14. Indemnity
 
-You indemnify POPOUT MARKET Pty Ltd and its personnel against losses arising from your content, your legal/terms breaches, your unlawful conduct, and disputes caused by your acts or omissions, subject to limits set by law.
+You indemnify POPOUT MARKET PTY LTD and its personnel against losses arising from your content, your legal/terms breaches, your unlawful conduct, and disputes caused by your acts or omissions, subject to limits set by law.
 
 ---
 
@@ -190,19 +190,19 @@ If any part of these Terms is unenforceable, that part is severed and the remain
 
 ## 19. Feedback
 
-By providing feedback, ideas or suggestions, you grant POPOUT MARKET Pty Ltd a perpetual, irrevocable, royalty-free licence to use them without compensation.
+By providing feedback, ideas or suggestions, you grant POPOUT MARKET PTY LTD a perpetual, irrevocable, royalty-free licence to use them without compensation.
 
 ---
 
 ## 20. Relationship of Parties
 
-Nothing in these Terms creates partnership, agency, employment, fiduciary or representative relationship between you and POPOUT MARKET Pty Ltd.
+Nothing in these Terms creates partnership, agency, employment, fiduciary or representative relationship between you and POPOUT MARKET PTY LTD.
 
 ---
 
 ## 21. Entire Agreement
 
-These Terms are the entire agreement between you and POPOUT MARKET Pty Ltd in relation to the Application and Services.
+These Terms are the entire agreement between you and POPOUT MARKET PTY LTD in relation to the Application and Services.
 
 ---
 

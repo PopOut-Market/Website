@@ -75,14 +75,14 @@ export const GUIDE_COPY: Record<GuideLocale, GuideCopy> = {
     correctionsBody:
       "Names and addresses are read live from PopOut Market's shop directory. If something here is wrong, or you run one of these shops and would rather not be listed, email {email} and we will correct or remove it.",
     inAppBody:
-      "Inside PopOut Market these shops appear as pins on a map you open from the Community feed. Neighbours walk them, post what they find, and the product name and price are written on the photo and translated into every language the app speaks. Those posts stay in the app.",
+      "In the PopOut app these shops are pins on the Map tab; tap one for its address, directions and photo. The PopOut team posts specials from CBD Asian grocers in Community, under Local deals, and each post is translated into all eight of the app's languages. Those posts stay in the app.",
     headings: {
       shopList: "The shops, street by street",
       elsewhere: "Elsewhere in the CBD",
       whatsMissing: "What this page doesn’t have, and why",
       aboutThisList: "About this list",
       shopOwners: "If you own or run one of these shops",
-      inApp: "These shops on the map in PopOut Market",
+      inApp: "These shops on the map in PopOut",
       relatedLinks: "Related pages",
     },
     related: {
@@ -107,7 +107,7 @@ export const GUIDE_COPY: Record<GuideLocale, GuideCopy> = {
     correctionsBody:
       "店名和地址实时读取自 PopOut Market 的商铺名录。如果这里有错误，或者你是其中一家店的经营者、不希望被列出，请发邮件到 {email}，我们会更正或移除。",
     inAppBody:
-      "在 PopOut Market 里，这些店铺是社区（Community）版块里那张地图上的一个个图钉。邻居们逛完店把发现发上来，商品名和价格直接写在照片上，并翻译成 App 支持的每一种语言。那些帖子只在 App 内。",
+      "在 PopOut App 里，这些店是「地图」页签上的图钉，点开能看到地址、导航和照片。CBD 亚洲超市的特价由 PopOut 团队发在「社区」的「邻里优惠」话题里，每条帖子都会自动翻译成 App 的 8 种语言。那些帖子只在 App 内。",
     headings: {
       shopList: "店铺列表（按街道分组）",
       elsewhere: "CBD 内的其他街道",
@@ -139,7 +139,7 @@ export const GUIDE_COPY: Record<GuideLocale, GuideCopy> = {
     correctionsBody:
       "店名與地址即時讀取自 PopOut Market 的店家名錄。如果這裡有任何錯誤，或你經營其中一家店、不希望被列出，請寄信到 {email}，我們會更正或移除。",
     inAppBody:
-      "在 PopOut Market 裡，這些店家是社群（Community）版塊那張地圖上的一個個圖釘。鄰居逛完店把發現發上來，商品名與價格直接寫在照片上，並翻譯成 App 支援的每一種語言。那些貼文只留在 App 內。",
+      "在 PopOut App 裡，這些店家是「地圖」分頁上的圖釘，點開就能看到地址、導航和照片。CBD 亞洲超市的特價由 PopOut 團隊發在「社區」的「鄰里優惠」話題裡，每則貼文都會自動翻譯成 App 的 8 種語言。那些貼文只留在 App 內。",
     headings: {
       shopList: "名錄中的店家，依街道排列",
       elsewhere: "CBD 其他地點",
@@ -171,7 +171,7 @@ export const GUIDE_COPY: Record<GuideLocale, GuideCopy> = {
     correctionsBody:
       "가게 이름과 주소는 PopOut Market 가게 목록에서 실시간으로 가져옵니다. 잘못된 내용이 있거나, 이 가게들 중 한 곳을 운영하시면서 목록에 실리기를 원하지 않으시면 {email}로 메일을 보내 주세요. 수정하거나 삭제하겠습니다.",
     inAppBody:
-      "PopOut Market 안에서는 이 가게들이 커뮤니티 피드에서 여는 지도 위의 핀으로 나타납니다. 이웃들이 직접 다녀와서 발견한 것을 올리고, 상품 이름과 가격은 사진 위에 적혀 앱이 지원하는 모든 언어로 번역됩니다. 그 글들은 앱 안에만 있습니다.",
+      "PopOut 앱에서는 이 가게들이 '지도' 탭의 핀으로 나옵니다. 핀을 누르면 주소, 길찾기, 사진을 볼 수 있습니다. CBD 아시안 마트의 할인 정보는 PopOut 팀이 '동네 생활'의 '동네 할인' 주제에 올리고, 모든 글은 앱의 8개 언어로 자동 번역됩니다. 그 글들은 앱 안에만 있습니다.",
     headings: {
       shopList: "거리별 가게 목록",
       elsewhere: "그 밖의 CBD 주소",

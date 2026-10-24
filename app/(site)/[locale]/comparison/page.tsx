@@ -5,6 +5,8 @@ import { localizedAlternates, siteUrl, OG_IMAGE } from "@/lib/seo";
 import { toLocalePath } from "@/lib/site-locale-routing";
 import type { Locale } from "@/lib/site-i18n";
 import type { Metadata } from "next";
+import { dateModifiedFor } from "@/lib/content-dates";
+import { UpdatedOn } from "@/components/updated-on";
 
 const PATH = "/comparison";
 
@@ -254,7 +256,7 @@ const CONTENT: Partial<Record<Locale, Content>> & { en: Content } = {
     h1: "墨爾本二手 App 比較",
     intro:
       "在墨爾本不知道該用哪個 App 做二手買賣?以下把 PopOut Market 與主要替代品——Gumtree、Facebook Marketplace、Carousell(旋轉拍賣)——按幾個決定同城二手交易能否順利成交的關鍵維度並排比較,涵蓋墨爾本二手家具、二手電器與留學生轉手的常見需求。",
-    inLanguage: "zh-TW",
+    inLanguage: "zh-Hant",
     featureHeader: "比較項目",
     rows: [
       {
@@ -443,7 +445,7 @@ const CONTENT: Partial<Record<Locale, Content>> & { en: Content } = {
     h1: "墨尔本二手 App 对比",
     intro:
       "在墨尔本不知道用哪个二手 App 买卖?下面把 PopOut Market 和主要替代品——Gumtree、Facebook Marketplace、Carousell——按几个决定能否顺利完成同城交易的关键维度并排对比一下。",
-    inLanguage: "zh-CN",
+    inLanguage: "zh-Hans",
     featureHeader: "对比项",
     rows: [
       {
@@ -574,6 +576,7 @@ export default async function ComparisonHubPage({ params }: LocaleParams) {
         name: c.title,
         description: c.description,
         inLanguage: c.inLanguage,
+        dateModified: dateModifiedFor(PATH),
         about: { "@type": "Thing", name: "Melbourne second-hand apps comparison" },
       },
       // Deliberately no FAQPage node. Google deprecated the rich result on
@@ -589,6 +592,7 @@ export default async function ComparisonHubPage({ params }: LocaleParams) {
           <h1 className="text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
             {c.h1}
           </h1>
+          <UpdatedOn iso={dateModifiedFor(PATH)} locale={locale} />
           <p className="mt-4 text-base leading-relaxed text-gray-700">{c.intro}</p>
 
           <div className="mt-8 overflow-x-auto rounded-2xl border border-black/5 bg-white shadow-sm">

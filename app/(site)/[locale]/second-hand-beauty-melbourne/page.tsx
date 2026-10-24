@@ -8,6 +8,7 @@ import { fetchFeedListings, formatPriceLabel } from "@/lib/supabase/server-feed"
 import { COPY } from "@/lib/site-i18n";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { dateModifiedFor } from "@/lib/content-dates";
 
 const PATH = "/second-hand-beauty-melbourne";
 const LISTING_COUNT = 24;
@@ -60,6 +61,7 @@ export default async function Page({ params }: LocaleParams) {
     description: copy.description,
     inLanguage: locale,
     isPartOf: { "@id": `${SITE_ORIGIN}/#website` },
+    dateModified: dateModifiedFor(PATH),
     // Emitted only when there is real inventory behind it.
     ...(listings.length > 0
       ? {
