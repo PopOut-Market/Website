@@ -12,6 +12,15 @@ Marketing + market-browsing website for **PopOut Market**, the neighbourhood app
 1. **Never describe a feature the app does not ship.** Copy drifts out of sync with the product faster than anyone expects, and on this site a claim can end up inside JSON-LD or a competitor comparison, where it is much harder to spot. Verify every product claim against `app-v2/docs/features/` before you write it, and re-verify when you touch a page you did not write. Specifically: there is no auto-reply, no student verification, no "Safety Zone" concept, and no condition / negotiable / delivery field on a listing — the handover is always in person.
 2. **Verification is phrased exactly one way:** "an Australian mobile number and a one-time location check", re-checked every 30 days, confirming the suburb only, GPS not stored. Never "identity check", "ID check", "background check", "age check", and never a scam statistic.
 
+**Rule 1 has one narrow exception** (Eric, 2026-10-24). A feature that exists in a staging build, or that the production app itself already shows as coming (the map's "Offers from local shops are on the way", Housing's "Coming soon!" page), may get one dated sentence saying it is not in the app yet:
+
+- The sentence lives in `lib/upcoming.ts`, with its evidence, owner, as-of month and a `reviewBy` date, and nowhere else. `npm run check:claims` fails on announcement phrases ("coming soon", "即将推出", "곧 출시"…) in any other file, on an import of `lib/upcoming.ts` outside the page bodies it lists, and on any entry past its `reviewBy`.
+- It states the month and that the feature is not in the app yet. No launch date or window, no named partner, shop or building, no price, no count of anything pre-launch (shops joining, homes at launch), and never "free forever".
+- Never in a `<title>`, meta description, H1, JSON-LD (including `featureList`), the sitemap or a comparison page: answer engines quote those verbatim.
+- en, zh-Hans, zh-Hant and ko only, written by hand; the other four locales show nothing.
+- On launch day, or by `reviewBy`, rewrite it as a description of the shipped feature or delete it.
+- A whole page about an unshipped feature is not covered. Build it on its own branch and merge it on launch day (the Housing page, decided 2026-10-24).
+
 ## Commands
 
 ```bash
@@ -19,9 +28,10 @@ npm run dev      # next dev — local dev server
 npm run build    # next build — production build (run before claiming a build works)
 npm run start    # next start — serve production build
 npm run lint     # eslint .
+npm run check:claims  # node:test cases, then banned and pre-announcement phrases in all 8 languages
 ```
 
-There is no test suite. "Verifying a change" means `npm run build` succeeds and/or manual check in `npm run dev`. The `@/*` path alias maps to the repo root (e.g. `@/lib/...`, `@/components/...`).
+The only tests are the claims checker's (`scripts/check-claims.test.mjs`). Otherwise "verifying a change" means `npm run check:claims` and `npm run build` succeed, and/or a manual check in `npm run dev`. The `@/*` path alias maps to the repo root (e.g. `@/lib/...`, `@/components/...`).
 
 ## Environment variables
 
@@ -71,7 +81,8 @@ Tailwind v4 (`@import "tailwindcss"` in `app/globals.css`, PostCSS plugin). Shar
 ## Conventions
 
 - Page files stay thin (metadata + render a content component); put markup/logic in `components/*-content.tsx` marked `"use client"`.
-- New indexable routes must be added to `app/sitemap.ts` (`INDEXABLE_PATHS`) and given `canonical` + `localizedAlternates(path)` in their `metadata`. Mark each entry `live` or `static` so its `lastModified` is honest — do not stamp build time on authored pages.
+- New indexable routes must be added to `INDEXABLE_PATHS` in `lib/content-dates.ts` (read by `app/sitemap.ts`) and given `canonical` + `localizedAlternates(path)` in their `metadata`. Mark each entry `live` or `static` so its `lastModified` is honest — do not stamp build time on authored pages. The same date feeds JSON-LD `dateModified` (`dateModifiedFor`) and the visible "Updated" line (`components/updated-on.tsx`), so bump `contentUpdated` whenever you change a page's copy.
+- Counts the site states about itself (neighbours, items listed) live in `lib/site-stats.ts` with their as-of month and source, never as literals in `lib/site-i18n.ts`. Format dates and numbers with `lib/locale-format.ts`, not `Intl`, in anything a client component renders: browser and server date data differ and hydration fails.
 - **A page that renders data must render it on the server.** Every page body is `"use client"`, and no AI retrieval crawler executes JavaScript, so a `useEffect` fetch is invisible to them. Use `lib/supabase/server-feed.ts`, and read its header comment first: the RPC must be called over **GET** and the route needs **`export const dynamic = "force-static"`** alongside `revalidate`, or the page silently becomes on-demand SSR.
 - **JSON-LD comes from `lib/jsonld.ts`.** One `Organization`/`WebSite`/`MobileApplication` node, referenced by `@id`. Do not declare a second one — a one-character difference in `legalName` splits the entity. Never emit `FAQPage` (rich result deprecated 2026-05-07), `LocalBusiness` (no visitable premises), `aggregateRating` on our own product, or `Event` for any promotion or discount.
 - `eslint.config.mjs` disables several `react-hooks` rules (`exhaustive-deps`, `immutability`, `set-state-in-effect`) — don't rely on them firing.

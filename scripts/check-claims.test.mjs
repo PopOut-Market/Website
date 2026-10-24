@@ -46,3 +46,29 @@ test("joins JSX text across lines but not across interpolations", () => {
 test("legal pages may describe identity checks on privacy requests", () => {
   assert.ok(!flagged('const a = "we may need to verify your identity";', "components/privacy-page-content.tsx"));
 });
+
+test("announcements of unshipped features live only in lib/upcoming.ts", () => {
+  assert.ok(flagged('const a = "Housing is coming soon";'));
+  assert.ok(flagged('const a = "找房功能即将上线";'));
+  assert.ok(flagged('const a = "집 구하기 곧 출시";'));
+  assert.ok(flagged('const a = "We’re testing shop sign-up";'));
+  assert.ok(flagged('const a = "Próximamente: alquileres";'));
+  assert.ok(!flagged('const a = "Housing is coming soon";', "lib/upcoming.ts"));
+  assert.ok(!flagged('const a = "Sent successfully. We will get back to you soon.";'));
+  assert.ok(!flagged('const a = "Esta página se actualizará pronto.";'));
+});
+
+test("upcoming lines render only in the listed page bodies", () => {
+  const imp = 'import { upcomingLine } from "@/lib/upcoming";';
+  assert.ok(flagged(imp, "app/(site)/[locale]/page.tsx"));
+  assert.ok(flagged(imp, "lib/jsonld.ts"));
+  assert.ok(flagged(imp, "components/comparison-gumtree-content.tsx"));
+  assert.ok(!flagged(imp, "components/about-page-content.tsx"));
+  assert.ok(!flagged('import { formatMonth } from "@/lib/locale-format";', "lib/jsonld.ts"));
+});
+
+test("an upcoming line past its review date fails", () => {
+  const src = 'const u = { reviewBy: "2026-12-31" };';
+  assert.ok(findProblems("lib/upcoming.ts", src, "2027-01-01").length > 0);
+  assert.equal(findProblems("lib/upcoming.ts", src, "2026-12-31").length, 0);
+});

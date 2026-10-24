@@ -105,6 +105,8 @@ export type SiteCopy = {
   aboutOurStoryTitle: string;
   aboutOurStoryP1: string;
   aboutAppNameNote: string;
+  /** Template: {asOf}, {neighbours}, {items} — filled by fillStats() in lib/site-stats.ts. */
+  statsLine: string;
   aboutOurStoryP2: string;
   aboutWhyTitle: string;
   aboutWhyNeighbourhoodTitle: string;
@@ -350,6 +352,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "Everyone who crosses the ocean to Australia carries a heart full of hope for the future — and perhaps a touch of loneliness from being far from home. We understand that, as an international student or someone building a new life overseas, buying everyday essentials and dealing with second-hand items should be easy. But language barriers, distance, and concerns about transaction safety often make it anything but.",
     aboutAppNameNote: "On the App Store and Google Play the app is called PopOut. It is made in Melbourne by PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    statsLine:
+      "As of {asOf}, more than {neighbours} Melbourne neighbours have joined PopOut, and more than {items} items have been listed on it since launch.",
     aboutOurStoryP2:
       'PopOut was born from this. We are more than a second-hand marketplace — we want to be your "first stop" when you arrive in Melbourne.',
     aboutWhyTitle: "Why PopOut?",
@@ -532,11 +536,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Add a whole room's photos at once — PopOut sorts them into separate drafts.",
     homeShopsTitle: "Local shops on the *map*",
     homeShopsSubtitle:
-      "The Map tab pins shops across Melbourne CBD; tap one for its address, directions and photo. Specials from the Asian grocers are posted by the PopOut team in Community and translated into every language the app speaks.",
+      "The Map tab pins shops across Melbourne CBD. Tap one for its address, directions and photo.",
     homeShopsCta: "See the Melbourne CBD Asian grocery guide",
     homeCommunityTitle: "Ask your neighbours *anything*",
     homeCommunitySubtitle:
-      "The Community tab is where neighbourhood life happens: local deals, questions about your area, recommendations, and people looking to buy. Write in your language, they read it in theirs.",
+      "Community, under Discover, is where neighbourhood life happens: local deals, questions about your area, recommendations, and people looking to buy. The PopOut team keeps posting specials from CBD Asian grocers under Local deals. Write in your language, they read it in theirs.",
     homeCommunityTopics: "Local deals · Ask & News · Local life · Looking to buy · Other",
     homeTrustTitle: "Real neighbours, *not anonymous accounts*",
     homeTrustSubtitle:
@@ -636,6 +640,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "每一个跨越大洋来到澳洲的人，心中都带着对未来的憧憬，也难免藏着身处异乡的孤独。我们深知，作为留学生或海外奋斗者，置办生活所需、处理闲置物品本该是一件轻松的事，但不熟悉的语言、距离的隔阂以及对交易安全的担忧，往往让这件事变得复杂。",
     aboutAppNameNote: "这款 app 在 App Store 和 Google Play 上的名字是 PopOut，由墨尔本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）开发。",
+    statsLine:
+      "截至{asOf}，已有超过 {neighbours} 位墨尔本邻居加入 PopOut，上线以来挂出的物品超过 {items} 件。",
     aboutOurStoryP2:
       "PopOut 由此诞生。我们不仅仅是一个二手交易平台，我们希望成为你来到墨尔本后的「第一站」。",
     aboutWhyTitle: "为什么选择 PopOut？",
@@ -806,11 +812,11 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次性上传整间房的照片——PopOut 会自动帮你拆成一条条商品草稿。",
     homeShopsTitle: "本地商铺，都在*地图*上",
     homeShopsSubtitle:
-      "「地图」页签上标着墨尔本 CBD 的店铺，点开能看到地址、导航和照片。亚洲超市的特价由 PopOut 团队发在「社区」里，并翻译成 App 支持的每一种语言。",
+      "「地图」页签上标着墨尔本 CBD 的店铺，点开能看到地址、导航和照片。",
     homeShopsCta: "查看墨尔本 CBD 亚洲超市指南",
     homeCommunityTitle: "邻里之间，*什么都能问*",
     homeCommunitySubtitle:
-      "「社区」页汇集了邻里生活的一切：本地优惠、关于你所在城区的提问、生活推荐，还有正在求购的邻居。你用你的语言写，他们用自己的语言读。",
+      "「发现」里的「社区」汇集了邻里生活的一切：本地优惠、关于你所在城区的提问、生活推荐，还有正在求购的邻居。PopOut 团队会在「邻里优惠」里持续更新 CBD 亚洲超市的特价。你用你的语言写，他们用自己的语言读。",
     homeCommunityTopics: "本地优惠 · 提问与资讯 · 本地生活 · 求购 · 其他",
     homeTrustTitle: "真实的邻居，*不是匿名账号*",
     homeTrustSubtitle:
@@ -909,6 +915,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "每一個跨越大洋來到澳洲的人，心中都帶著對未來的憧憬，也難免藏著一絲身處異鄉的孤獨。我們深知，作為留學生或海外奮鬥者，置辦生活所需、處理閒置物品本該是一件輕鬆的事，但不熟悉的語言、距離的隔閡以及對交易安全的擔憂，往往讓這件事變得複雜。",
     aboutAppNameNote: "這款 app 在 App Store 和 Google Play 上的名稱是 PopOut，由墨爾本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）開發。",
+    statsLine:
+      "截至{asOf}，已有超過 {neighbours} 位墨爾本鄰居加入 PopOut，上線以來刊登的物品超過 {items} 件。",
     aboutOurStoryP2:
       "PopOut 由此誕生。我們不僅僅是一個二手交易平台，我們希望成為你來到墨爾本後的「第一站」。",
     aboutWhyTitle: "為什麼選擇 PopOut？",
@@ -1077,11 +1085,11 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeBulkListingLine: "一次上傳整個房間的照片——PopOut 會自動整理成一則則刊登初稿。",
     homeShopsTitle: "在地店家，就在*地圖上*",
     homeShopsSubtitle:
-      "「地圖」分頁上標著墨爾本 CBD 的店家，點開就能看到地址、導航和照片。亞洲超市的特價由 PopOut 團隊發在「社區」裡，並翻譯成 App 支援的每一種語言。",
+      "「地圖」分頁上標著墨爾本 CBD 的店家，點開就能看到地址、導航和照片。",
     homeShopsCta: "查看墨爾本 CBD 亞洲超市指南",
     homeCommunityTitle: "有問題，*儘管問鄰居*",
     homeCommunitySubtitle:
-      "社群分頁就是鄰里生活的所在：在地優惠、社區大小事、私房推薦，還有正在徵求物品的鄰居。你用你的語言寫，他們用自己的語言讀。",
+      "「探索」裡的「社區」就是鄰里生活的所在：在地優惠、社區大小事、私房推薦，還有正在徵求物品的鄰居。PopOut 團隊會在「鄰里優惠」持續更新 CBD 亞洲超市的特價。你用你的語言寫，他們用自己的語言讀。",
     homeCommunityTopics: "在地優惠 · 提問與消息 · 在地生活 · 徵求物品 · 其他",
     homeTrustTitle: "真實的鄰居，*不是匿名帳號*",
     homeTrustSubtitle:
@@ -1183,6 +1191,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "바다를 건너 호주에 온 모든 이는 미래에 대한 희망을 품고, 고향에서 멀리 떨어진 외로움도 조금은 안고 옵니다. 유학생이든 새 삶을 시작하는 분이든, 생활용품을 사고 중고 물건을 다루는 일은 쉬워야 합니다. 하지만 언어 장벽, 거리, 거래 안전에 대한 걱정은 그렇게 쉽지 않게 만듭니다.",
     aboutAppNameNote: "App Store와 Google Play에서 앱 이름은 PopOut입니다. 멜버른의 PopOut Market(POPOUT MARKET PTY LTD, ABN 76 696 464 945)이 만들었습니다.",
+    statsLine:
+      "{asOf} 기준, 멜버른 이웃 {neighbours}명 넘게 PopOut에 가입했고, 출시 이후 올라온 물건은 {items}개가 넘습니다.",
     aboutOurStoryP2:
       "PopOut은 이런 고민에서 시작했습니다. 우리는 단순한 중고 마켓이 아니라, 멜버른에 도착했을 때 당신의 ‘첫 번째 정거장’이 되고 싶습니다.",
     aboutWhyTitle: "왜 PopOut인가요?",
@@ -1358,11 +1368,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "방 안 물건을 한꺼번에 찍어 올려 보세요 — PopOut이 물건별 등록 초안으로 나눠 줍니다.",
     homeShopsTitle: "*지도*로 보는 동네 가게",
     homeShopsSubtitle:
-      "'지도' 탭에 멜버른 CBD 가게들이 표시됩니다. 가게를 누르면 주소, 길찾기, 사진을 볼 수 있습니다. 아시안 마트 할인 정보는 PopOut 팀이 '동네 생활'에 올리고, 앱이 지원하는 모든 언어로 번역됩니다.",
+      "'지도' 탭에 멜버른 CBD 가게들이 표시됩니다. 가게를 누르면 주소, 길찾기, 사진을 볼 수 있습니다.",
     homeShopsCta: "멜버른 CBD 아시안 식료품점 가이드 보기",
     homeCommunityTitle: "이웃에게 *무엇이든* 물어보세요",
     homeCommunitySubtitle:
-      "커뮤니티 탭에는 동네 생활이 모입니다. 동네 할인 정보, 우리 동네에 대한 궁금증, 추천, 그리고 물건을 구하는 사람들까지. 내 언어로 쓰면 상대는 자기 언어로 읽습니다.",
+      "'둘러보기' 안의 '동네 생활'에는 동네 할인 정보, 우리 동네에 대한 궁금증, 추천, 그리고 물건을 구하는 사람들이 모입니다. PopOut 팀은 '동네 할인'에 CBD 아시안 마트 할인 정보를 꾸준히 올립니다. 내 언어로 쓰면 상대는 자기 언어로 읽습니다.",
     homeCommunityTopics: "동네 할인 · 질문과 소식 · 동네 생활 · 삽니다 · 기타",
     homeTrustTitle: "익명 계정이 아니라 *진짜 이웃*입니다",
     homeTrustSubtitle:
@@ -1466,6 +1476,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "海を渡ってオーストラリアに来る人には、未来への希望と、故郷から離れた寂しさの両方があるかもしれません。留学生や新しい生活を築く方にとって、日用品の購入や中古取引は簡単であるべきです。しかし言葉の壁、距離、安全性への不安が、それを難しくすることがよくあります。",
     aboutAppNameNote: "App Store と Google Play でのアプリ名は PopOut です。メルボルンの PopOut Market（POPOUT MARKET PTY LTD、ABN 76 696 464 945）が開発しています。",
+    statsLine:
+      "{asOf}時点で、PopOut に参加したメルボルンのご近所さんは {neighbours} 人を超え、リリース以来出品された品物は {items} 点を超えています。",
     aboutOurStoryP2:
       "PopOutはそこから生まれました。私たちは単なる中古マーケットではなく、メルボルンに着いたときの「最初の立ち寄り先」でありたいと考えています。",
     aboutWhyTitle: "なぜ PopOut？",
@@ -1645,11 +1657,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "部屋全体の写真をまとめて追加すれば、PopOut がそれぞれ別の下書きに振り分けます。",
     homeShopsTitle: "近くのお店が*地図*でわかる",
     homeShopsSubtitle:
-      "「マップ」タブにはメルボルン CBD のお店が並んでいます。タップすると住所、道案内、写真が見られます。アジア食材店のお買い得情報は PopOut チームが「ご近所」に投稿し、アプリが対応するすべての言語に翻訳されます。",
+      "「マップ」タブにはメルボルン CBD のお店が並んでいます。タップすると住所、道案内、写真が見られます。",
     homeShopsCta: "メルボルン CBD のアジア食材店ガイドを見る",
     homeCommunityTitle: "ご近所さんに*なんでも*聞いてみよう",
     homeCommunitySubtitle:
-      "コミュニティタブは、ご近所の暮らしが集まる場所。お買い得情報、エリアについての質問やお知らせ、暮らしの話題、そして「探しています」の投稿まで。あなたは自分の言語で書き、相手は自分の言語で読みます。",
+      "「見つける」の中の「ご近所」は、ご近所の暮らしが集まる場所。お買い得情報、エリアについての質問やお知らせ、暮らしの話題、そして「探しています」の投稿まで。PopOut チームは「ご近所のお得情報」に CBD のアジア食材店のお買い得情報を続けて投稿しています。あなたは自分の言語で書き、相手は自分の言語で読みます。",
     homeCommunityTopics: "お買い得情報 · 質問・お知らせ · 暮らしの話題 · 探しています · その他",
     homeTrustTitle: "*匿名アカウントではなく*、本物のご近所さん",
     homeTrustSubtitle:
@@ -1752,6 +1764,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "Ai vượt đại dương đến Úc cũng mang trong lòng hy vọng về tương lai — và có lẽ chút cô đơn khi xa nhà. Chúng tôi hiểu rằng, với du học sinh hay người đang xây dựng cuộc sống mới, mua đồ dùng hằng ngày và xử lý đồ cũ lẽ ra phải dễ dàng. Nhưng rào cản ngôn ngữ, khoảng cách và lo ngại về an toàn giao dịch thường khiến mọi thứ phức tạp hơn.",
     aboutAppNameNote: "Trên App Store và Google Play, ứng dụng có tên là PopOut, do PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945) tại Melbourne phát triển.",
+    statsLine:
+      "Tính đến {asOf}, đã có hơn {neighbours} hàng xóm ở Melbourne tham gia PopOut, và hơn {items} món đồ đã được đăng kể từ khi ra mắt.",
     aboutOurStoryP2:
       'PopOut ra đời từ đó. Chúng tôi không chỉ là chợ đồ cũ — chúng tôi muốn là "điểm dừng đầu tiên" của bạn khi đến Melbourne.',
     aboutWhyTitle: "Vì sao chọn PopOut?",
@@ -1936,11 +1950,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Tải ảnh cả căn phòng lên một lượt — PopOut tự tách thành từng tin đăng nháp riêng.",
     homeShopsTitle: "Cửa hàng địa phương ngay trên *bản đồ*",
     homeShopsSubtitle:
-      "Tab Bản đồ ghim các cửa hàng ở Melbourne CBD; chạm vào một cửa hàng để xem địa chỉ, chỉ đường và ảnh. Ưu đãi ở các tiệm tạp hóa châu Á do đội ngũ PopOut đăng trong mục Cộng đồng, được dịch sang mọi ngôn ngữ mà ứng dụng hỗ trợ.",
+      "Tab Bản đồ ghim các cửa hàng ở Melbourne CBD. Chạm vào một cửa hàng để xem địa chỉ, chỉ đường và ảnh.",
     homeShopsCta: "Xem cẩm nang tiệm tạp hóa châu Á ở Melbourne CBD",
     homeCommunityTitle: "Hỏi hàng xóm *bất cứ điều gì*",
     homeCommunitySubtitle:
-      "Tab Cộng đồng là nơi đời sống khu phố diễn ra: ưu đãi địa phương, câu hỏi về khu bạn ở, gợi ý hay ho và cả những người đang cần mua. Bạn viết bằng ngôn ngữ của mình, họ đọc bằng ngôn ngữ của họ.",
+      "Mục Cộng đồng trong Khám phá là nơi đời sống khu phố diễn ra: ưu đãi địa phương, câu hỏi về khu bạn ở, gợi ý hay ho và cả những người đang cần mua. Đội ngũ PopOut thường xuyên đăng ưu đãi của các tiệm tạp hóa châu Á ở CBD trong mục Ưu đãi khu phố. Bạn viết bằng ngôn ngữ của mình, họ đọc bằng ngôn ngữ của họ.",
     homeCommunityTopics:
       "Ưu đãi địa phương · Hỏi đáp & Tin tức · Đời sống khu phố · Cần mua · Khác",
     homeTrustTitle: "Hàng xóm thật, *không phải tài khoản ẩn danh*",
@@ -2047,6 +2061,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "Tous ceux qui traversent l’océan pour venir en Australie portent en eux l’espoir d’un avenir — et peut‑être une pointe de solitude loin du pays. Nous savons qu’en tant qu’étudiant international ou nouvel arrivant, acheter l’essentiel et gérer l’occasion devrait être simple. Mais la barrière de la langue, la distance et les craintes pour la sécurité compliquent souvent les choses.",
     aboutAppNameNote: "Sur l'App Store et Google Play, l'application s'appelle PopOut. Elle est développée à Melbourne par PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    statsLine:
+      "En {asOf}, plus de {neighbours} voisins de Melbourne ont rejoint PopOut, et plus de {items} objets y ont été publiés depuis son lancement.",
     aboutOurStoryP2:
       "PopOut est né de ce constat. Nous sommes plus qu’une place de marché d’occasion — nous voulons être votre « premier arrêt » à votre arrivée à Melbourne.",
     aboutWhyTitle: "Pourquoi PopOut ?",
@@ -2236,11 +2252,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Ajoutez d'un coup les photos de toute une pièce — PopOut les répartit en brouillons distincts.",
     homeShopsTitle: "Les commerces du quartier, sur la *carte*",
     homeShopsSubtitle:
-      "L'onglet Carte situe les commerces du CBD de Melbourne : touchez-en un pour voir son adresse, l'itinéraire et une photo. Les promos des épiceries asiatiques sont publiées par l'équipe PopOut dans la rubrique Quartier et traduites dans toutes les langues de l'appli.",
+      "L'onglet Carte situe les commerces du CBD de Melbourne : touchez-en un pour voir son adresse, l'itinéraire et une photo.",
     homeShopsCta: "Voir le guide des épiceries asiatiques du CBD de Melbourne",
     homeCommunityTitle: "Demandez *tout ce que vous voulez* à vos voisins",
     homeCommunitySubtitle:
-      "L'onglet Communauté, c'est là que se passe la vie du quartier : bons plans, questions sur votre secteur, recommandations et objets recherchés. Écrivez dans votre langue, chacun vous lit dans la sienne.",
+      "La rubrique Quartier, dans Découvrir, c'est là que se passe la vie du quartier : bons plans, questions sur votre secteur, recommandations et objets recherchés. L'équipe PopOut y publie régulièrement les promos des épiceries asiatiques du CBD, dans Bons plans du quartier. Écrivez dans votre langue, chacun vous lit dans la sienne.",
     homeCommunityTopics: "Bons plans · Questions & actus · Vie du quartier · Je recherche · Autre",
     homeTrustTitle: "De vrais voisins, *pas des comptes anonymes*",
     homeTrustSubtitle:
@@ -2346,6 +2362,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryP1:
       "Quien cruza el océano hacia Australia lleva esperanza en el futuro — y quizá un poco de soledad lejos de casa. Entendemos que, como estudiante internacional o persona que construye una vida nueva, comprar lo esencial y gestionar lo de segunda mano debería ser fácil. Pero la barrera del idioma, la distancia y la preocupación por la seguridad a menudo lo complican.",
     aboutAppNameNote: "En App Store y Google Play, la app se llama PopOut. La desarrolla en Melbourne PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    statsLine:
+      "Hasta {asOf}, más de {neighbours} vecinos de Melbourne se han unido a PopOut y se han publicado más de {items} artículos desde su lanzamiento.",
     aboutOurStoryP2:
       "PopOut nació de ahí. Somos más que un mercado de segunda mano — queremos ser tu «primera parada» al llegar a Melbourne.",
     aboutWhyTitle: "¿Por qué PopOut?",
@@ -2536,11 +2554,11 @@ export const COPY: Record<Locale, SiteCopy> = {
       "Añade de una vez las fotos de toda una habitación — PopOut las separa en borradores distintos.",
     homeShopsTitle: "Las tiendas del barrio, en el *mapa*",
     homeShopsSubtitle:
-      "La pestaña Mapa marca las tiendas del CBD de Melbourne: toca una para ver su dirección, cómo llegar y una foto. Las ofertas de los supermercados asiáticos las publica el equipo de PopOut en la sección Barrio, traducidas a todos los idiomas de la app.",
+      "La pestaña Mapa marca las tiendas del CBD de Melbourne: toca una para ver su dirección, cómo llegar y una foto.",
     homeShopsCta: "Ver la guía de supermercados asiáticos del CBD de Melbourne",
     homeCommunityTitle: "Pregunta a tus vecinos *lo que quieras*",
     homeCommunitySubtitle:
-      "La pestaña Comunidad es donde ocurre la vida del barrio: ofertas locales, preguntas sobre tu zona, recomendaciones y gente que busca comprar. Tú escribes en tu idioma y ellos lo leen en el suyo.",
+      "La sección Barrio, dentro de Descubrir, es donde ocurre la vida del barrio: ofertas locales, preguntas sobre tu zona, recomendaciones y gente que busca comprar. El equipo de PopOut publica con frecuencia las ofertas de los supermercados asiáticos del CBD en Ofertas del barrio. Tú escribes en tu idioma y ellos lo leen en el suyo.",
     homeCommunityTopics:
       "Ofertas locales · Preguntas y noticias · Vida local · Busco comprar · Otros",
     homeTrustTitle: "Vecinos de verdad, *no cuentas anónimas*",

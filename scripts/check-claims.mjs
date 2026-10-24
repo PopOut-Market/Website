@@ -19,6 +19,13 @@
  *
  * Add a phrase here whenever a new rule lands in CLAUDE.md, in every language
  * the site ships: en, zh-Hans, zh-Hant, ko, ja, vi, fr, es.
+ *
+ * Rule 1's one exception (2026-10-24) is checked here too: a feature the app does
+ * not ship yet may get one dated sentence, and that sentence lives in
+ * lib/upcoming.ts. So announcement phrases ("coming soon", "即将推出", "곧 출시"…)
+ * fail anywhere else, lib/upcoming.ts may be imported only by the page bodies in
+ * UPCOMING_IMPORTERS (never metadata, JSON-LD, the sitemap or a comparison page),
+ * and an entry past its `reviewBy` date fails until someone re-checks it.
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -34,6 +41,10 @@ const SKIP = [/^components\/admin/, /^lib\/supabase\/admin/, /^lib\/shop-review\
 
 /** Pages whose legal duty is to describe identity checks on privacy requests, not the product. */
 const LEGAL_PAGES = [/^components\/privacy-page-content\.tsx$/, /^components\/terms-page-content\.tsx$/];
+
+/** The one home of sentences about unshipped features, and the page bodies allowed to render them. */
+const UPCOMING_FILE = "lib/upcoming.ts";
+const UPCOMING_IMPORTERS = ["components/home-page-content.tsx", "components/about-page-content.tsx"];
 
 const SCAM_WORDS =
   "scams?|scammers?|fraud|诈骗|骗局|詐騙|騙局|사기|詐欺|lừa đảo|arnaques?|escroqueries?|fraudes?|estafas?";
@@ -70,6 +81,13 @@ const RULES = [
     why: 'There is no "Safety Zone" concept in the app.',
     pattern:
       /\bsafety zones?\b|安全区|安全區|안전 ?구역|セーフティゾーン|安全ゾーン|vùng an toàn|zones? de sécurité|zonas? segura|zonas? de seguridad/i,
+  },
+  {
+    id: "pre-announcement",
+    why: "A feature the app does not ship is described only in lib/upcoming.ts (CLAUDE.md rule 1).",
+    pattern:
+      /\bcoming soon\b|\bon the way\b|\b(?:in|under) development\b|\bwe(?:['’]re| are) (?:building|testing)\b|\bbeing tested\b|\blaunch(?:ing|es) soon\b|\bstay tuned\b|即将推出|即将上线|敬请期待|正在开发|正在测试|开发中|筹备中|即將推出|即將上線|敬請期待|正在開發|正在測試|開發中|籌備中|곧 출시|출시 예정|오픈 예정|개발 중|테스트 중|近日公開|近日リリース|リリース予定|開発中|まもなく登場|sắp ra mắt|đang phát triển|đang thử nghiệm|bientôt disponible|en cours de développement|arrive bientôt|próximamente|en desarrollo|en pruebas|llegará pronto|disponible pronto/i,
+    allowIn: [/^lib\/upcoming\.ts$/],
   },
   {
     id: "scam-statistic",
@@ -111,7 +129,48 @@ export function extractCopy(fileName, source) {
   return pieces;
 }
 
-export function findProblems(rel, source) {
+/**
+ * `import … from "@/lib/upcoming"` outside the allowed page bodies, and, in
+ * lib/upcoming.ts itself, any `reviewBy: "YYYY-MM-DD"` earlier than `today`.
+ */
+function upcomingProblems(rel, source, today) {
+  const kind = rel.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const sf = ts.createSourceFile(rel, source, ts.ScriptTarget.Latest, true, kind);
+  const lineOf = (node) => sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
+  const problems = [];
+  if (rel !== UPCOMING_FILE && !UPCOMING_IMPORTERS.includes(rel)) {
+    for (const stmt of sf.statements) {
+      if (
+        ts.isImportDeclaration(stmt) &&
+        ts.isStringLiteral(stmt.moduleSpecifier) &&
+        /(?:^@\/lib|\/lib|^\.)\/upcoming$/.test(stmt.moduleSpecifier.text)
+      ) {
+        problems.push(
+          `${rel}:${lineOf(stmt)} [upcoming-import] lib/upcoming.ts may only be rendered by ${UPCOMING_IMPORTERS.join(", ")} — never in metadata, JSON-LD, the sitemap or a comparison page.`,
+        );
+      }
+    }
+  }
+  if (rel === UPCOMING_FILE) {
+    const visit = (node) => {
+      if (
+        ts.isPropertyAssignment(node) &&
+        node.name.getText(sf) === "reviewBy" &&
+        ts.isStringLiteral(node.initializer) &&
+        node.initializer.text < today
+      ) {
+        problems.push(
+          `${rel}:${lineOf(node)} [upcoming-review] reviewBy ${node.initializer.text} has passed. Re-check the sentence against the app: rewrite it for the shipped feature, delete it, or set a new reviewBy.`,
+        );
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(sf);
+  }
+  return problems;
+}
+
+export function findProblems(rel, source, today = new Date().toISOString().slice(0, 10)) {
   const problems = [];
   for (const { text, line } of extractCopy(rel, source)) {
     for (const rule of RULES) {
@@ -120,6 +179,7 @@ export function findProblems(rel, source) {
       if (match) problems.push(`${rel}:${line} [${rule.id}] "${match[0]}" — ${rule.why}`);
     }
   }
+  problems.push(...upcomingProblems(rel, source, today));
   return problems;
 }
 

@@ -11,6 +11,8 @@ import { useSiteShell } from "@/components/site-chrome-context";
 import type { Locale } from "@/lib/site-i18n";
 import { dateModifiedFor } from "@/lib/content-dates";
 import { UpdatedOn } from "@/components/updated-on";
+import { fillStats } from "@/lib/site-stats";
+import { upcomingHeading, upcomingLine } from "@/lib/upcoming";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
 
@@ -185,6 +187,9 @@ export function AboutPageContent() {
                   <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
                     {t.aboutAppNameNote}
                   </p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-gray-600 sm:text-base">
+                    {fillStats(t.statsLine, locale)}
+                  </p>
                 </section>
               </Reveal>
 
@@ -328,6 +333,27 @@ export function AboutPageContent() {
                   </p>
                 </section>
               </Reveal>
+
+              {/* Features the app does not ship yet, one dated sentence each, from
+                  lib/upcoming.ts (CLAUDE.md rule 1, exception of 2026-10-24). Shown in
+                  en, zh-Hans, zh-Hant and ko only. */}
+              {upcomingHeading(locale) ? (
+                <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={275}>
+                  <section>
+                    <h2 className="text-lg font-semibold tracking-tight text-gray-900 sm:text-xl">
+                      {upcomingHeading(locale)}
+                    </h2>
+                    {(["housing", "shop-offers", "merchants"] as const).map((id, i) => (
+                      <p
+                        key={id}
+                        className={`${i === 0 ? "mt-3" : "mt-4"} text-[15px] leading-relaxed text-gray-600 sm:text-base`}
+                      >
+                        {upcomingLine(id, locale)}
+                      </p>
+                    ))}
+                  </section>
+                </Reveal>
+              ) : null}
 
               <Reveal show={shown} distance="lg" durationMs={400} easing={ease} delayMs={300}>
                 <section>

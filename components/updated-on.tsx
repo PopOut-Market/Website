@@ -1,57 +1,15 @@
+import { formatDay } from "@/lib/locale-format";
 import type { Locale } from "@/lib/site-i18n";
 
-const MONTHS_EN = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const MONTHS_FR = [
-  "janvier",
-  "février",
-  "mars",
-  "avril",
-  "mai",
-  "juin",
-  "juillet",
-  "août",
-  "septembre",
-  "octobre",
-  "novembre",
-  "décembre",
-];
-const MONTHS_ES = [
-  "enero",
-  "febrero",
-  "marzo",
-  "abril",
-  "mayo",
-  "junio",
-  "julio",
-  "agosto",
-  "septiembre",
-  "octubre",
-  "noviembre",
-  "diciembre",
-];
-
-const FORMAT: Record<Locale, (y: number, m: number, d: number) => string> = {
-  en: (y, m, d) => `Updated ${d} ${MONTHS_EN[m - 1]} ${y}`,
-  "zh-Hans": (y, m, d) => `更新于 ${y}年${m}月${d}日`,
-  "zh-Hant": (y, m, d) => `更新於 ${y}年${m}月${d}日`,
-  ko: (y, m, d) => `최종 업데이트 ${y}년 ${m}월 ${d}일`,
-  ja: (y, m, d) => `更新日 ${y}年${m}月${d}日`,
-  vi: (y, m, d) => `Cập nhật ngày ${d} tháng ${m} năm ${y}`,
-  fr: (y, m, d) => `Mis à jour le ${d === 1 ? "1er" : d} ${MONTHS_FR[m - 1]} ${y}`,
-  es: (y, m, d) => `Actualizado el ${d} de ${MONTHS_ES[m - 1]} de ${y}`,
+const LABEL: Record<Locale, string> = {
+  en: "Updated",
+  "zh-Hans": "更新于",
+  "zh-Hant": "更新於",
+  ko: "최종 업데이트",
+  ja: "更新日",
+  vi: "Cập nhật",
+  fr: "Mis à jour le",
+  es: "Actualizado el",
 };
 
 /**
@@ -59,9 +17,9 @@ const FORMAT: Record<Locale, (y: number, m: number, d: number) => string> = {
  * lib/content-dates.ts, the same source as the page's JSON-LD `dateModified` and
  * the sitemap's `lastmod`.
  *
- * Formatted by hand rather than with Intl: several pages render this inside a
- * client component, and the browser's date data can differ from the server's
- * ("Sep" against "Sept"), which fails hydration. Takes a date only (YYYY-MM-DD);
+ * Formatted by hand (lib/locale-format.ts) rather than with Intl: several pages
+ * render this inside a client component, where the browser's date data can
+ * differ from the server's and fail hydration. Takes a date only (YYYY-MM-DD);
  * live pages carry a timestamp and show no visible date.
  */
 export function UpdatedOn({
@@ -78,7 +36,7 @@ export function UpdatedOn({
   const [y, m, d] = match.slice(1).map(Number);
   return (
     <p className={className}>
-      <time dateTime={iso}>{FORMAT[locale](y, m, d)}</time>
+      <time dateTime={iso}>{`${LABEL[locale]} ${formatDay(y, m, d, locale)}`}</time>
     </p>
   );
 }
