@@ -9,9 +9,9 @@ import { OG_IMAGE } from "@/lib/seo";
 import type { Metadata } from "next";
 import Image from "next/image";
 
-const TITLE = "Download PopOut Market — iOS & Android";
+const TITLE = "Download PopOut — iOS & Android";
 const DESCRIPTION =
-  "Download the PopOut Market app — the neighbourhood app for Melbourne. Buy and sell second-hand with verified neighbours, see local shop specials on the map, and ask your neighbours anything. Free on the App Store and Google Play.";
+  "Download PopOut, the neighbourhood app for Melbourne from PopOut Market. Buy and sell second-hand with verified neighbours, see local shop specials on the map, and ask your neighbours anything. Free on the App Store and Google Play.";
 
 // Same share card as the homepage: the OG logo image + title/description, on
 // both Open Graph and Twitter.
@@ -62,7 +62,7 @@ export default function DownloadPage() {
           The neighbourhood app for Melbourne
         </p>
         <p className="mt-1 text-xs text-gray-600 sm:text-sm">
-          Download the PopOut Market app for iOS or Android
+          Download the PopOut app for iOS or Android
         </p>
 
         {/* Store buttons: like the footer, they sit in a centered row that wraps

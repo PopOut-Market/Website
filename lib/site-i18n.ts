@@ -104,6 +104,7 @@ export type SiteCopy = {
   aboutMainHeading: string;
   aboutOurStoryTitle: string;
   aboutOurStoryP1: string;
+  aboutAppNameNote: string;
   aboutOurStoryP2: string;
   aboutWhyTitle: string;
   aboutWhyNeighbourhoodTitle: string;
@@ -272,7 +273,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Language",
     languageModalTitle: "Choose your language",
     languageModalHint: "PopOut supports local communities in multiple languages.",
-    downloadLine: "Download the PopOut Market app for iOS or Android",
+    downloadLine: "Download the PopOut app for iOS or Android",
     slogan: "buy and sell with neighbours nearby",
     homeAria: "PopOut home",
     appStoreAlt: "Download on the App Store",
@@ -332,7 +333,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "Price",
     aiPostDemoYouFill: "You fill in",
     footerLegalNavAria: "Policies and contact",
-    footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
+    footerCopyright: "Copyright © 2026 POPOUT MARKET PTY LTD. All rights reserved.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "About PopOut Market",
     footerNavTerms: "Terms of Use",
@@ -348,6 +349,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Our Story",
     aboutOurStoryP1:
       "Everyone who crosses the ocean to Australia carries a heart full of hope for the future — and perhaps a touch of loneliness from being far from home. We understand that, as an international student or someone building a new life overseas, buying everyday essentials and dealing with second-hand items should be easy. But language barriers, distance, and concerns about transaction safety often make it anything but.",
+    aboutAppNameNote: "On the App Store and Google Play the app is called PopOut. It is made in Melbourne by PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     aboutOurStoryP2:
       'PopOut was born from this. We are more than a second-hand marketplace — we want to be your "first stop" when you arrive in Melbourne.',
     aboutWhyTitle: "Why PopOut?",
@@ -561,7 +563,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "语言",
     languageModalTitle: "选择你的语言",
     languageModalHint: "PopOut 以多语言连接本地社区。",
-    downloadLine: "下载 PopOut Market 应用，支持 iOS 和 Android",
+    downloadLine: "下载 PopOut 应用，支持 iOS 和 Android",
     slogan: "与身边的邻居轻松买卖",
     homeAria: "PopOut 首页",
     appStoreAlt: "在 App Store 下载",
@@ -617,7 +619,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "价格",
     aiPostDemoYouFill: "你来填",
     footerLegalNavAria: "条款与联系",
-    footerCopyright: "版权所有 © 2026 PopOut Market Pty Ltd。保留所有权利。",
+    footerCopyright: "版权所有 © 2026 POPOUT MARKET PTY LTD。保留所有权利。",
     footerAcn: "ACN：696 464 945",
     footerNavAbout: "关于 PopOut Market",
     footerNavTerms: "使用条款",
@@ -633,6 +635,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "我们的初衷",
     aboutOurStoryP1:
       "每一个跨越大洋来到澳洲的人，心中都带着对未来的憧憬，也难免藏着身处异乡的孤独。我们深知，作为留学生或海外奋斗者，置办生活所需、处理闲置物品本该是一件轻松的事，但不熟悉的语言、距离的隔阂以及对交易安全的担忧，往往让这件事变得复杂。",
+    aboutAppNameNote: "这款 app 在 App Store 和 Google Play 上的名字是 PopOut，由墨尔本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）开发。",
     aboutOurStoryP2:
       "PopOut 由此诞生。我们不仅仅是一个二手交易平台，我们希望成为你来到墨尔本后的「第一站」。",
     aboutWhyTitle: "为什么选择 PopOut？",
@@ -834,7 +837,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "語言",
     languageModalTitle: "選擇你的語言",
     languageModalHint: "PopOut 以多語言連結在地社群。",
-    downloadLine: "下載 PopOut Market 應用，支援 iOS 與 Android",
+    downloadLine: "下載 PopOut 應用，支援 iOS 與 Android",
     slogan: "與附近的鄰居輕鬆買賣二手",
     homeAria: "PopOut 首頁",
     appStoreAlt: "在 App Store 下載",
@@ -889,7 +892,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "價格",
     aiPostDemoYouFill: "你來填",
     footerLegalNavAria: "條款與聯絡",
-    footerCopyright: "版權所有 © 2026 PopOut Market Pty Ltd。保留所有權利。",
+    footerCopyright: "版權所有 © 2026 POPOUT MARKET PTY LTD。保留所有權利。",
     footerAcn: "ACN：696 464 945",
     footerNavAbout: "關於 PopOut Market",
     footerNavTerms: "使用條款",
@@ -905,6 +908,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "我們的初衷",
     aboutOurStoryP1:
       "每一個跨越大洋來到澳洲的人，心中都帶著對未來的憧憬，也難免藏著一絲身處異鄉的孤獨。我們深知，作為留學生或海外奮鬥者，置辦生活所需、處理閒置物品本該是一件輕鬆的事，但不熟悉的語言、距離的隔閡以及對交易安全的擔憂，往往讓這件事變得複雜。",
+    aboutAppNameNote: "這款 app 在 App Store 和 Google Play 上的名稱是 PopOut，由墨爾本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）開發。",
     aboutOurStoryP2:
       "PopOut 由此誕生。我們不僅僅是一個二手交易平台，我們希望成為你來到墨爾本後的「第一站」。",
     aboutWhyTitle: "為什麼選擇 PopOut？",
@@ -1104,7 +1108,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "언어",
     languageModalTitle: "언어 선택",
     languageModalHint: "PopOut은 다양한 언어로 지역 커뮤니티를 연결합니다.",
-    downloadLine: "iOS 및 Android용 PopOut Market 앱을 다운로드하세요",
+    downloadLine: "iOS 및 Android용 PopOut 앱을 다운로드하세요",
     slogan: "가까운 동네 이웃과 사고파세요",
     homeAria: "PopOut 홈",
     appStoreAlt: "App Store에서 다운로드",
@@ -1162,7 +1166,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "가격",
     aiPostDemoYouFill: "직접 입력",
     footerLegalNavAria: "약관 및 문의",
-    footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
+    footerCopyright: "Copyright © 2026 POPOUT MARKET PTY LTD. All rights reserved.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "PopOut Market 소개",
     footerNavTerms: "이용약관",
@@ -1178,6 +1182,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "우리의 이야기",
     aboutOurStoryP1:
       "바다를 건너 호주에 온 모든 이는 미래에 대한 희망을 품고, 고향에서 멀리 떨어진 외로움도 조금은 안고 옵니다. 유학생이든 새 삶을 시작하는 분이든, 생활용품을 사고 중고 물건을 다루는 일은 쉬워야 합니다. 하지만 언어 장벽, 거리, 거래 안전에 대한 걱정은 그렇게 쉽지 않게 만듭니다.",
+    aboutAppNameNote: "App Store와 Google Play에서 앱 이름은 PopOut입니다. 멜버른의 PopOut Market(POPOUT MARKET PTY LTD, ABN 76 696 464 945)이 만들었습니다.",
     aboutOurStoryP2:
       "PopOut은 이런 고민에서 시작했습니다. 우리는 단순한 중고 마켓이 아니라, 멜버른에 도착했을 때 당신의 ‘첫 번째 정거장’이 되고 싶습니다.",
     aboutWhyTitle: "왜 PopOut인가요?",
@@ -1384,7 +1389,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "言語",
     languageModalTitle: "言語を選択",
     languageModalHint: "PopOut は多言語で地域コミュニティをつなぎます。",
-    downloadLine: "iOS / Android 向け PopOut Market アプリをダウンロード",
+    downloadLine: "iOS / Android 向け PopOut アプリをダウンロード",
     slogan: "ご近所さんと手軽に売り買いしよう",
     homeAria: "PopOut ホーム",
     appStoreAlt: "App Storeでダウンロード",
@@ -1444,7 +1449,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "価格",
     aiPostDemoYouFill: "あなたが入力",
     footerLegalNavAria: "ポリシーとお問い合わせ",
-    footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. All rights reserved.",
+    footerCopyright: "Copyright © 2026 POPOUT MARKET PTY LTD. All rights reserved.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "PopOut Market について",
     footerNavTerms: "利用規約",
@@ -1460,6 +1465,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "私たちのストーリー",
     aboutOurStoryP1:
       "海を渡ってオーストラリアに来る人には、未来への希望と、故郷から離れた寂しさの両方があるかもしれません。留学生や新しい生活を築く方にとって、日用品の購入や中古取引は簡単であるべきです。しかし言葉の壁、距離、安全性への不安が、それを難しくすることがよくあります。",
+    aboutAppNameNote: "App Store と Google Play でのアプリ名は PopOut です。メルボルンの PopOut Market（POPOUT MARKET PTY LTD、ABN 76 696 464 945）が開発しています。",
     aboutOurStoryP2:
       "PopOutはそこから生まれました。私たちは単なる中古マーケットではなく、メルボルンに着いたときの「最初の立ち寄り先」でありたいと考えています。",
     aboutWhyTitle: "なぜ PopOut？",
@@ -1670,7 +1676,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Ngôn ngữ",
     languageModalTitle: "Chọn ngôn ngữ của bạn",
     languageModalHint: "PopOut hỗ trợ cộng đồng địa phương với nhiều ngôn ngữ.",
-    downloadLine: "Tải ứng dụng PopOut Market cho iOS và Android",
+    downloadLine: "Tải ứng dụng PopOut cho iOS và Android",
     slogan: "mua bán cùng hàng xóm quanh đây",
     homeAria: "Trang chủ PopOut",
     appStoreAlt: "Tải trên App Store",
@@ -1729,7 +1735,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "Giá",
     aiPostDemoYouFill: "Bạn nhập",
     footerLegalNavAria: "Điều khoản và liên hệ",
-    footerCopyright: "Bản quyền © 2026 PopOut Market Pty Ltd. Mọi quyền được bảo lưu.",
+    footerCopyright: "Bản quyền © 2026 POPOUT MARKET PTY LTD. Mọi quyền được bảo lưu.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "Giới thiệu PopOut Market",
     footerNavTerms: "Điều khoản sử dụng",
@@ -1745,6 +1751,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Câu chuyện của chúng tôi",
     aboutOurStoryP1:
       "Ai vượt đại dương đến Úc cũng mang trong lòng hy vọng về tương lai — và có lẽ chút cô đơn khi xa nhà. Chúng tôi hiểu rằng, với du học sinh hay người đang xây dựng cuộc sống mới, mua đồ dùng hằng ngày và xử lý đồ cũ lẽ ra phải dễ dàng. Nhưng rào cản ngôn ngữ, khoảng cách và lo ngại về an toàn giao dịch thường khiến mọi thứ phức tạp hơn.",
+    aboutAppNameNote: "Trên App Store và Google Play, ứng dụng có tên là PopOut, do PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945) tại Melbourne phát triển.",
     aboutOurStoryP2:
       'PopOut ra đời từ đó. Chúng tôi không chỉ là chợ đồ cũ — chúng tôi muốn là "điểm dừng đầu tiên" của bạn khi đến Melbourne.',
     aboutWhyTitle: "Vì sao chọn PopOut?",
@@ -1961,7 +1968,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Langue",
     languageModalTitle: "Choisissez votre langue",
     languageModalHint: "PopOut soutient les communautés locales en plusieurs langues.",
-    downloadLine: "Téléchargez l'application PopOut Market pour iOS et Android",
+    downloadLine: "Téléchargez l'application PopOut pour iOS et Android",
     slogan: "achetez et vendez entre voisins, près de chez vous",
     homeAria: "Accueil PopOut",
     appStoreAlt: "Télécharger sur l'App Store",
@@ -2023,7 +2030,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "Prix",
     aiPostDemoYouFill: "À vous",
     footerLegalNavAria: "Politiques et contact",
-    footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Tous droits réservés.",
+    footerCopyright: "Copyright © 2026 POPOUT MARKET PTY LTD. Tous droits réservés.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "À propos de PopOut Market",
     footerNavTerms: "Conditions d’utilisation",
@@ -2039,6 +2046,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Notre histoire",
     aboutOurStoryP1:
       "Tous ceux qui traversent l’océan pour venir en Australie portent en eux l’espoir d’un avenir — et peut‑être une pointe de solitude loin du pays. Nous savons qu’en tant qu’étudiant international ou nouvel arrivant, acheter l’essentiel et gérer l’occasion devrait être simple. Mais la barrière de la langue, la distance et les craintes pour la sécurité compliquent souvent les choses.",
+    aboutAppNameNote: "Sur l'App Store et Google Play, l'application s'appelle PopOut. Elle est développée à Melbourne par PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     aboutOurStoryP2:
       "PopOut est né de ce constat. Nous sommes plus qu’une place de marché d’occasion — nous voulons être votre « premier arrêt » à votre arrivée à Melbourne.",
     aboutWhyTitle: "Pourquoi PopOut ?",
@@ -2259,7 +2267,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     topLanguage: "Idioma",
     languageModalTitle: "Elige tu idioma",
     languageModalHint: "PopOut conecta comunidades locales en varios idiomas.",
-    downloadLine: "Descarga la app PopOut Market para iOS y Android",
+    downloadLine: "Descarga la app PopOut para iOS y Android",
     slogan: "compra y vende con vecinos cerca de ti",
     homeAria: "Inicio de PopOut",
     appStoreAlt: "Descargar en App Store",
@@ -2321,7 +2329,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aiPostDemoPrice: "Precio",
     aiPostDemoYouFill: "Tú rellenas",
     footerLegalNavAria: "Políticas y contacto",
-    footerCopyright: "Copyright © 2026 PopOut Market Pty Ltd. Todos los derechos reservados.",
+    footerCopyright: "Copyright © 2026 POPOUT MARKET PTY LTD. Todos los derechos reservados.",
     footerAcn: "ACN 696 464 945",
     footerNavAbout: "Acerca de PopOut Market",
     footerNavTerms: "Términos de uso",
@@ -2337,6 +2345,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Nuestra historia",
     aboutOurStoryP1:
       "Quien cruza el océano hacia Australia lleva esperanza en el futuro — y quizá un poco de soledad lejos de casa. Entendemos que, como estudiante internacional o persona que construye una vida nueva, comprar lo esencial y gestionar lo de segunda mano debería ser fácil. Pero la barrera del idioma, la distancia y la preocupación por la seguridad a menudo lo complican.",
+    aboutAppNameNote: "En App Store y Google Play, la app se llama PopOut. La desarrolla en Melbourne PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     aboutOurStoryP2:
       "PopOut nació de ahí. Somos más que un mercado de segunda mano — queremos ser tu «primera parada» al llegar a Melbourne.",
     aboutWhyTitle: "¿Por qué PopOut?",

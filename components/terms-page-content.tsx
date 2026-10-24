@@ -41,21 +41,21 @@ export function TermsPageContent() {
           <div className="mt-6 space-y-6">
             <TermsSection title="1. About the Application">
               <p>
-                Welcome to Popout Market (Application). The Application is an online platform that
+                Welcome to PopOut (Application). The Application is an online platform that
                 enables parties providing services or goods (Provider) and parties receiving
                 services or goods (Receiver) to discover listings, communicate with each other, and
                 independently arrange the inspection, payment, collection, and delivery of goods or
                 services.
               </p>
               <p>
-                The Application is operated by POPOUT MARKET Pty Ltd. We provide the Application as
+                The Application is operated by POPOUT MARKET PTY LTD. We provide the Application as
                 an intermediary technology platform only. We are not a buyer, seller, reseller,
                 agent, broker, auctioneer, carrier, or financial services provider in relation to
                 any transaction between Members.
               </p>
               <p>
                 Any contract for the sale or exchange of goods is formed solely between the Provider
-                and the Receiver. POPOUT MARKET Pty Ltd is not a party to such contracts. Services
+                and the Receiver. POPOUT MARKET PTY LTD is not a party to such contracts. Services
                 may include AI-powered listing generation, real-time translation, and safety
                 moderation tools.
               </p>
@@ -71,7 +71,7 @@ export function TermsPageContent() {
               <p>
                 Where available, you may also accept the Terms by clicking to &quot;accept&quot; or
                 &quot;agree&quot; in the user interface. By doing so, you warrant that you have
-                legal capacity to enter into a binding contract with POPOUT MARKET Pty Ltd.
+                legal capacity to enter into a binding contract with POPOUT MARKET PTY LTD.
               </p>
             </TermsSection>
 
@@ -141,7 +141,7 @@ export function TermsPageContent() {
                 <li>leave rating and review based on transaction experience.</li>
               </ul>
               <p>
-                Popout Market does not facilitate, process, hold, escrow, remit, or settle payments
+                PopOut does not facilitate, process, hold, escrow, remit, or settle payments
                 between Members.
               </p>
             </TermsSection>
@@ -166,7 +166,7 @@ export function TermsPageContent() {
 
             <TermsSection title="7. Refund Policy">
               <p>
-                POPOUT MARKET Pty Ltd is an intermediary platform only and is not a party to
+                POPOUT MARKET PTY LTD is an intermediary platform only and is not a party to
                 transactions between Members. We do not process or control payments and do not
                 provide refunds for transactions arranged through the Application.
               </p>
@@ -180,7 +180,7 @@ export function TermsPageContent() {
             <TermsSection title="8. Copyright and Intellectual Property">
               <p>
                 The Application and Services are protected by intellectual property laws. All rights
-                in platform materials are owned or controlled by POPOUT MARKET Pty Ltd or its
+                in platform materials are owned or controlled by POPOUT MARKET PTY LTD or its
                 contributors.
               </p>
               <p>
@@ -188,7 +188,7 @@ export function TermsPageContent() {
                 for personal, non-commercial purposes while you are a Member.
               </p>
               <p>
-                By posting Your Content, you grant POPOUT MARKET Pty Ltd a non-exclusive,
+                By posting Your Content, you grant POPOUT MARKET PTY LTD a non-exclusive,
                 transferable, perpetual, royalty-free, irrevocable, worldwide licence to use,
                 display, distribute, adapt and process that content, including for AI-assisted
                 listing generation and translation.
@@ -230,7 +230,7 @@ export function TermsPageContent() {
                 Australian law.
               </p>
               <p>
-                Subject to applicable law, POPOUT MARKET Pty Ltd&apos;s aggregate liability is
+                Subject to applicable law, POPOUT MARKET PTY LTD&apos;s aggregate liability is
                 limited to resupply of Services and excludes indirect/consequential loss, loss of
                 profits, revenue, data, goodwill, and similar losses.
               </p>
@@ -250,7 +250,7 @@ export function TermsPageContent() {
 
             <TermsSection title="14. Indemnity">
               <p>
-                You indemnify POPOUT MARKET Pty Ltd and its personnel against losses arising from
+                You indemnify POPOUT MARKET PTY LTD and its personnel against losses arising from
                 your content, your legal/terms breaches, your unlawful conduct, and disputes caused
                 by your acts or omissions, subject to limits set by law.
               </p>
@@ -286,7 +286,7 @@ export function TermsPageContent() {
 
             <TermsSection title="19. Feedback">
               <p>
-                By providing feedback, ideas or suggestions, you grant POPOUT MARKET Pty Ltd a
+                By providing feedback, ideas or suggestions, you grant POPOUT MARKET PTY LTD a
                 perpetual, irrevocable, royalty-free licence to use them without compensation.
               </p>
             </TermsSection>
@@ -294,13 +294,13 @@ export function TermsPageContent() {
             <TermsSection title="20. Relationship of Parties">
               <p>
                 Nothing in these Terms creates partnership, agency, employment, fiduciary or
-                representative relationship between you and POPOUT MARKET Pty Ltd.
+                representative relationship between you and POPOUT MARKET PTY LTD.
               </p>
             </TermsSection>
 
             <TermsSection title="21. Entire Agreement">
               <p>
-                These Terms are the entire agreement between you and POPOUT MARKET Pty Ltd in
+                These Terms are the entire agreement between you and POPOUT MARKET PTY LTD in
                 relation to the Application and Services.
               </p>
             </TermsSection>

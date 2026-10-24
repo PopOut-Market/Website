@@ -45,7 +45,7 @@ export function PrivacyPageContent() {
               </p>
               <p>
                 This Privacy Policy explains how we collect, use, disclose and store your personal
-                information when you use the Popout Market application, this website, and related
+                information when you use the PopOut app, this website, and related
                 services.
               </p>
             </PrivacySection>
@@ -56,7 +56,7 @@ export function PrivacyPageContent() {
                 displayed on your public profile.
               </p>
               <p>
-                However, because Popout Market is designed as a secure local marketplace, we require
+                However, because PopOut is designed as a secure local marketplace, we require
                 certain identifying information, including a verified phone number and verified
                 suburb, to support user safety, fraud prevention and trusted transactions. For that
                 reason, full anonymity is not available when creating and using an account.
@@ -148,7 +148,7 @@ export function PrivacyPageContent() {
             <PrivacySection title="Why We Collect, Hold and Use Personal Information">
               <p>We collect, hold and use personal information for purposes including to:</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>provide and operate the Popout Market application;</li>
+                <li>provide and operate the PopOut app;</li>
                 <li>create and manage user accounts;</li>
                 <li>verify user identity and suburb location;</li>
                 <li>facilitate local transactions between users;</li>

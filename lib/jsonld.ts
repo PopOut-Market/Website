@@ -98,7 +98,11 @@ export function mobileAppNode() {
   return {
     "@type": "MobileApplication",
     "@id": `${SITE_ORIGIN}/#app`,
-    name: "PopOut Market",
+    // The App Store and Google Play list the app as "PopOut" (checked 2026-10-24);
+    // the company, site and domain stay "PopOut Market". `alternateName` joins the
+    // two strings so the store listing and this site resolve to one app.
+    name: "PopOut",
+    alternateName: "PopOut Market",
     // "MarketplaceApplication" was not a valid value in either Google's list or
     // schema.org's vocabulary, so the property was silently discarded.
     applicationCategory: "ShoppingApplication",

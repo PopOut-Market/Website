@@ -87,10 +87,10 @@ const COPY: Record<Locale, RegionCopy> = {
   ko: {
     metaTitle: (r) => `${r} 멜버른 중고거래 앱 & 마켓 | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `PopOut Market로 호주 멜버른 ${r}에서 중고를 사고파세요 — ${examples} 등 ${count}개 suburb를 포함합니다. 지역별로 매물을 둘러보고, 다국어로 소통하며, 안전하게 직거래하세요. 현재 멜버른에서 운영 중이며, 호주 내 더 많은 도시로 확대될 예정입니다.`,
+      `PopOut Market로 호주 멜버른 ${r}에서 중고를 사고파세요 — ${examples} 등 ${count}개 suburb를 포함합니다. 지역별로 매물을 둘러보고, 다국어로 소통하며, 안전하게 직거래하세요. 현재 멜버른에서 운영 중입니다.`,
     h1: (r) => `${r} 멜버른 중고거래`,
     intro: (r, count) =>
-      `PopOut Market는 호주 멜버른 ${r}을(를) 위한 중고거래 앱이자 동네 중고마켓입니다. 멜버른 ${r}의 ${count}개 suburb를 다루며, 가까운 중고 가구·가전·자전거·생활용품을 찾고 다국어로 소통하며 안전하게 직거래할 수 있습니다. 현재 멜버른에서 운영 중이며, 호주 내 더 많은 도시로 확대될 예정입니다.`,
+      `PopOut Market는 호주 멜버른 ${r}을(를) 위한 중고거래 앱이자 동네 중고마켓입니다. 멜버른 ${r}의 ${count}개 suburb를 다루며, 가까운 중고 가구·가전·자전거·생활용품을 찾고 다국어로 소통하며 안전하게 직거래할 수 있습니다. 현재 멜버른에서 운영 중입니다.`,
     coveredHeading: (r) => `멜버른 ${r}에서 다루는 suburb`,
     coveredNote: "아래 모든 suburb는 현재 PopOut 서비스 지역입니다.",
     guideLinkedNote: "전용 안내 페이지가 있는 suburb는 링크되어 있습니다.",
@@ -147,10 +147,10 @@ const COPY: Record<Locale, RegionCopy> = {
   es: {
     metaTitle: (r) => `App de segunda mano ${r} Melbourne y mercado | PopOut Market`,
     metaDesc: (r, count, examples) =>
-      `Compra y vende de segunda mano en ${r} de Melbourne, Australia, con PopOut Market — ${count} barrios incluyendo ${examples}. Explora anuncios por zona, chatea en varios idiomas y queda de forma segura. Ya en Melbourne y pronto en más ciudades de Australia.`,
+      `Compra y vende de segunda mano en ${r} de Melbourne, Australia, con PopOut Market — ${count} barrios incluyendo ${examples}. Explora anuncios por zona, chatea en varios idiomas y queda de forma segura. Disponible en Melbourne.`,
     h1: (r) => `Segunda mano ${r} Melbourne`,
     intro: (r, count) =>
-      `PopOut Market es una app de segunda mano y un mercado de barrio para ${r} de Melbourne, Australia. Cubrimos ${count} barrios en esta parte de Melbourne — encuentra muebles, electrodomésticos, bicis y artículos cotidianos cerca de ti, chatea en varios idiomas y queda de forma segura. Ya en Melbourne y pronto en más ciudades de Australia.`,
+      `PopOut Market es una app de segunda mano y un mercado de barrio para ${r} de Melbourne, Australia. Cubrimos ${count} barrios en esta parte de Melbourne — encuentra muebles, electrodomésticos, bicis y artículos cotidianos cerca de ti, chatea en varios idiomas y queda de forma segura. Disponible en Melbourne.`,
     coveredHeading: (r) => `Barrios que cubrimos en ${r} de Melbourne`,
     coveredNote: "Cada barrio de abajo es una zona de servicio activa de PopOut.",
     guideLinkedNote: "Los barrios con su propia página están enlazados.",

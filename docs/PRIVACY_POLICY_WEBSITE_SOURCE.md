@@ -15,7 +15,7 @@
 
 POPOUT MARKET PTY LTD ("we", "us", or "our") is committed to protecting your privacy and handling personal information in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs).
 
-This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the Popout Market application, this website, and related services.
+This Privacy Policy explains how we collect, use, disclose and store your personal information when you use the PopOut app, this website, and related services.
 
 ---
 
@@ -23,7 +23,7 @@ This Privacy Policy explains how we collect, use, disclose and store your person
 
 Where practicable, you may interact with us using a pseudonym, such as a nickname displayed on your public profile.
 
-However, because Popout Market is designed as a secure local marketplace, we require certain identifying information, including a verified phone number and verified suburb, to support user safety, fraud prevention and trusted transactions. For that reason, full anonymity is not available when creating and using an account.
+However, because PopOut is designed as a secure local marketplace, we require certain identifying information, including a verified phone number and verified suburb, to support user safety, fraud prevention and trusted transactions. For that reason, full anonymity is not available when creating and using an account.
 
 ---
 
@@ -71,7 +71,7 @@ The GPS coordinates collected for this purpose are used only for suburb verifica
 
 We collect, hold and use personal information for purposes including to:
 
-- provide and operate the Popout Market application;
+- provide and operate the PopOut app;
 - create and manage user accounts;
 - verify user identity and suburb location;
 - facilitate local transactions between users;
