@@ -351,7 +351,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Our Story",
     aboutOurStoryP1:
       "Everyone who crosses the ocean to Australia carries a heart full of hope for the future — and perhaps a touch of loneliness from being far from home. We understand that, as an international student or someone building a new life overseas, buying everyday essentials and dealing with second-hand items should be easy. But language barriers, distance, and concerns about transaction safety often make it anything but.",
-    aboutAppNameNote: "On the App Store and Google Play the app is called PopOut. It is made in Melbourne by PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    aboutAppNameNote:
+      "On the App Store and Google Play the app is called PopOut. It is made in Melbourne by PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     statsLine:
       "As of {asOf}, more than {neighbours} Melbourne neighbours have joined PopOut, and more than {items} items have been listed on it since launch.",
     aboutOurStoryP2:
@@ -639,7 +640,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "我们的初衷",
     aboutOurStoryP1:
       "每一个跨越大洋来到澳洲的人，心中都带着对未来的憧憬，也难免藏着身处异乡的孤独。我们深知，作为留学生或海外奋斗者，置办生活所需、处理闲置物品本该是一件轻松的事，但不熟悉的语言、距离的隔阂以及对交易安全的担忧，往往让这件事变得复杂。",
-    aboutAppNameNote: "这款 app 在 App Store 和 Google Play 上的名字是 PopOut，由墨尔本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）开发。",
+    aboutAppNameNote:
+      "这款 app 在 App Store 和 Google Play 上的名字是 PopOut，由墨尔本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）开发。",
     statsLine:
       "截至{asOf}，已有超过 {neighbours} 位墨尔本邻居加入 PopOut，上线以来挂出的物品超过 {items} 件。",
     aboutOurStoryP2:
@@ -811,8 +813,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeMarketFilterUnder20: "$20 以内",
     homeBulkListingLine: "一次性上传整间房的照片——PopOut 会自动帮你拆成一条条商品草稿。",
     homeShopsTitle: "本地商铺，都在*地图*上",
-    homeShopsSubtitle:
-      "「地图」页签上标着墨尔本 CBD 的店铺，点开能看到地址、导航和照片。",
+    homeShopsSubtitle: "「地图」页签上标着墨尔本 CBD 的店铺，点开能看到地址、导航和照片。",
     homeShopsCta: "查看墨尔本 CBD 亚洲超市指南",
     homeCommunityTitle: "邻里之间，*什么都能问*",
     homeCommunitySubtitle:
@@ -914,7 +915,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "我們的初衷",
     aboutOurStoryP1:
       "每一個跨越大洋來到澳洲的人，心中都帶著對未來的憧憬，也難免藏著一絲身處異鄉的孤獨。我們深知，作為留學生或海外奮鬥者，置辦生活所需、處理閒置物品本該是一件輕鬆的事，但不熟悉的語言、距離的隔閡以及對交易安全的擔憂，往往讓這件事變得複雜。",
-    aboutAppNameNote: "這款 app 在 App Store 和 Google Play 上的名稱是 PopOut，由墨爾本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）開發。",
+    aboutAppNameNote:
+      "這款 app 在 App Store 和 Google Play 上的名稱是 PopOut，由墨爾本的 PopOut Market（POPOUT MARKET PTY LTD，ABN 76 696 464 945）開發。",
     statsLine:
       "截至{asOf}，已有超過 {neighbours} 位墨爾本鄰居加入 PopOut，上線以來刊登的物品超過 {items} 件。",
     aboutOurStoryP2:
@@ -1084,8 +1086,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     homeMarketFilterUnder20: "$20 以下",
     homeBulkListingLine: "一次上傳整個房間的照片——PopOut 會自動整理成一則則刊登初稿。",
     homeShopsTitle: "在地店家，就在*地圖上*",
-    homeShopsSubtitle:
-      "「地圖」分頁上標著墨爾本 CBD 的店家，點開就能看到地址、導航和照片。",
+    homeShopsSubtitle: "「地圖」分頁上標著墨爾本 CBD 的店家，點開就能看到地址、導航和照片。",
     homeShopsCta: "查看墨爾本 CBD 亞洲超市指南",
     homeCommunityTitle: "有問題，*儘管問鄰居*",
     homeCommunitySubtitle:
@@ -1190,7 +1191,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "우리의 이야기",
     aboutOurStoryP1:
       "바다를 건너 호주에 온 모든 이는 미래에 대한 희망을 품고, 고향에서 멀리 떨어진 외로움도 조금은 안고 옵니다. 유학생이든 새 삶을 시작하는 분이든, 생활용품을 사고 중고 물건을 다루는 일은 쉬워야 합니다. 하지만 언어 장벽, 거리, 거래 안전에 대한 걱정은 그렇게 쉽지 않게 만듭니다.",
-    aboutAppNameNote: "App Store와 Google Play에서 앱 이름은 PopOut입니다. 멜버른의 PopOut Market(POPOUT MARKET PTY LTD, ABN 76 696 464 945)이 만들었습니다.",
+    aboutAppNameNote:
+      "App Store와 Google Play에서 앱 이름은 PopOut입니다. 멜버른의 PopOut Market(POPOUT MARKET PTY LTD, ABN 76 696 464 945)이 만들었습니다.",
     statsLine:
       "{asOf} 기준, 멜버른 이웃 {neighbours}명 넘게 PopOut에 가입했고, 출시 이후 올라온 물건은 {items}개가 넘습니다.",
     aboutOurStoryP2:
@@ -1475,7 +1477,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "私たちのストーリー",
     aboutOurStoryP1:
       "海を渡ってオーストラリアに来る人には、未来への希望と、故郷から離れた寂しさの両方があるかもしれません。留学生や新しい生活を築く方にとって、日用品の購入や中古取引は簡単であるべきです。しかし言葉の壁、距離、安全性への不安が、それを難しくすることがよくあります。",
-    aboutAppNameNote: "App Store と Google Play でのアプリ名は PopOut です。メルボルンの PopOut Market（POPOUT MARKET PTY LTD、ABN 76 696 464 945）が開発しています。",
+    aboutAppNameNote:
+      "App Store と Google Play でのアプリ名は PopOut です。メルボルンの PopOut Market（POPOUT MARKET PTY LTD、ABN 76 696 464 945）が開発しています。",
     statsLine:
       "{asOf}時点で、PopOut に参加したメルボルンのご近所さんは {neighbours} 人を超え、リリース以来出品された品物は {items} 点を超えています。",
     aboutOurStoryP2:
@@ -1763,7 +1766,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Câu chuyện của chúng tôi",
     aboutOurStoryP1:
       "Ai vượt đại dương đến Úc cũng mang trong lòng hy vọng về tương lai — và có lẽ chút cô đơn khi xa nhà. Chúng tôi hiểu rằng, với du học sinh hay người đang xây dựng cuộc sống mới, mua đồ dùng hằng ngày và xử lý đồ cũ lẽ ra phải dễ dàng. Nhưng rào cản ngôn ngữ, khoảng cách và lo ngại về an toàn giao dịch thường khiến mọi thứ phức tạp hơn.",
-    aboutAppNameNote: "Trên App Store và Google Play, ứng dụng có tên là PopOut, do PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945) tại Melbourne phát triển.",
+    aboutAppNameNote:
+      "Trên App Store và Google Play, ứng dụng có tên là PopOut, do PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945) tại Melbourne phát triển.",
     statsLine:
       "Tính đến {asOf}, đã có hơn {neighbours} hàng xóm ở Melbourne tham gia PopOut, và hơn {items} món đồ đã được đăng kể từ khi ra mắt.",
     aboutOurStoryP2:
@@ -2060,9 +2064,10 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Notre histoire",
     aboutOurStoryP1:
       "Tous ceux qui traversent l’océan pour venir en Australie portent en eux l’espoir d’un avenir — et peut‑être une pointe de solitude loin du pays. Nous savons qu’en tant qu’étudiant international ou nouvel arrivant, acheter l’essentiel et gérer l’occasion devrait être simple. Mais la barrière de la langue, la distance et les craintes pour la sécurité compliquent souvent les choses.",
-    aboutAppNameNote: "Sur l'App Store et Google Play, l'application s'appelle PopOut. Elle est développée à Melbourne par PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    aboutAppNameNote:
+      "Sur l'App Store et Google Play, l'application s'appelle PopOut. Elle est développée à Melbourne par PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     statsLine:
-      "En {asOf}, plus de {neighbours} voisins de Melbourne ont rejoint PopOut, et plus de {items} objets y ont été publiés depuis son lancement.",
+      "En {asOf}, plus de {neighbours} voisins de Melbourne avaient déjà rejoint PopOut, et plus de {items} objets y avaient été publiés depuis son lancement.",
     aboutOurStoryP2:
       "PopOut est né de ce constat. Nous sommes plus qu’une place de marché d’occasion — nous voulons être votre « premier arrêt » à votre arrivée à Melbourne.",
     aboutWhyTitle: "Pourquoi PopOut ?",
@@ -2361,7 +2366,8 @@ export const COPY: Record<Locale, SiteCopy> = {
     aboutOurStoryTitle: "Nuestra historia",
     aboutOurStoryP1:
       "Quien cruza el océano hacia Australia lleva esperanza en el futuro — y quizá un poco de soledad lejos de casa. Entendemos que, como estudiante internacional o persona que construye una vida nueva, comprar lo esencial y gestionar lo de segunda mano debería ser fácil. Pero la barrera del idioma, la distancia y la preocupación por la seguridad a menudo lo complican.",
-    aboutAppNameNote: "En App Store y Google Play, la app se llama PopOut. La desarrolla en Melbourne PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
+    aboutAppNameNote:
+      "En App Store y Google Play, la app se llama PopOut. La desarrolla en Melbourne PopOut Market (POPOUT MARKET PTY LTD, ABN 76 696 464 945).",
     statsLine:
       "Hasta {asOf}, más de {neighbours} vecinos de Melbourne se han unido a PopOut y se han publicado más de {items} artículos desde su lanzamiento.",
     aboutOurStoryP2:

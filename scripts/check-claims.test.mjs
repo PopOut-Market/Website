@@ -44,7 +44,12 @@ test("joins JSX text across lines but not across interpolations", () => {
 });
 
 test("legal pages may describe identity checks on privacy requests", () => {
-  assert.ok(!flagged('const a = "we may need to verify your identity";', "components/privacy-page-content.tsx"));
+  assert.ok(
+    !flagged(
+      'const a = "we may need to verify your identity";',
+      "components/privacy-page-content.tsx",
+    ),
+  );
 });
 
 test("announcements of unshipped features live only in lib/upcoming.ts", () => {
@@ -53,6 +58,10 @@ test("announcements of unshipped features live only in lib/upcoming.ts", () => {
   assert.ok(flagged('const a = "집 구하기 곧 출시";'));
   assert.ok(flagged('const a = "We’re testing shop sign-up";'));
   assert.ok(flagged('const a = "Próximamente: alquileres";'));
+  // The app's own wording (Codex review of part 3, F2).
+  assert.ok(flagged('const a = "附近店铺的各种优惠正在准备中";'));
+  assert.ok(flagged('const a = "附近店家的各種優惠準備中";'));
+  assert.ok(flagged('const a = "동네 가게의 다양한 혜택을 준비하고 있어요";'));
   assert.ok(!flagged('const a = "Housing is coming soon";', "lib/upcoming.ts"));
   assert.ok(!flagged('const a = "Sent successfully. We will get back to you soon.";'));
   assert.ok(!flagged('const a = "Esta página se actualizará pronto.";'));
@@ -65,6 +74,21 @@ test("upcoming lines render only in the listed page bodies", () => {
   assert.ok(flagged(imp, "components/comparison-gumtree-content.tsx"));
   assert.ok(!flagged(imp, "components/about-page-content.tsx"));
   assert.ok(!flagged('import { formatMonth } from "@/lib/locale-format";', "lib/jsonld.ts"));
+  // Re-exports and dynamic imports count too (Codex review of part 3, F3).
+  assert.ok(flagged('export { upcomingLine } from "@/lib/upcoming";', "lib/seo.ts"));
+  assert.ok(flagged('const m = await import("@/lib/upcoming");', "app/sitemap.ts"));
+});
+
+test("each upcoming line is one sentence", () => {
+  const one =
+    'const u = { copy: { en: "As of {asOf}, it isn’t in the app yet, and “Coming soon!” is all it says." } };';
+  const two =
+    'const u = { copy: { en: "As of {asOf}, it isn’t in the app yet. Email us to hear more." } };';
+  const ko =
+    "const u = { copy: { ko: \"{asOf} 기준, 앱의 '집 구하기'는 아직 'Coming soon!' 페이지입니다.\" } };";
+  assert.equal(findProblems("lib/upcoming.ts", one, "2026-10-24").length, 0);
+  assert.ok(findProblems("lib/upcoming.ts", two, "2026-10-24").length > 0);
+  assert.equal(findProblems("lib/upcoming.ts", ko, "2026-10-24").length, 0);
 });
 
 test("an upcoming line past its review date fails", () => {

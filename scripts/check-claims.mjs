@@ -36,15 +36,36 @@ import ts from "typescript";
 const ROOT = process.cwd();
 
 /** Public, indexable copy only. Admin screens and API code are not shown to users. */
-const SCAN = ["app/(site)", "app/download", "components", "lib"];
-const SKIP = [/^components\/admin/, /^lib\/supabase\/admin/, /^lib\/shop-review\.ts$/, /^lib\/influencers\.ts$/];
+const SCAN = [
+  "app/(site)",
+  "app/download",
+  "app/sitemap.ts",
+  "app/robots.ts",
+  "app/opengraph-image.tsx",
+  "app/twitter-image.tsx",
+  "app/global-error.tsx",
+  "components",
+  "lib",
+];
+const SKIP = [
+  /^components\/admin/,
+  /^lib\/supabase\/admin/,
+  /^lib\/shop-review\.ts$/,
+  /^lib\/influencers\.ts$/,
+];
 
 /** Pages whose legal duty is to describe identity checks on privacy requests, not the product. */
-const LEGAL_PAGES = [/^components\/privacy-page-content\.tsx$/, /^components\/terms-page-content\.tsx$/];
+const LEGAL_PAGES = [
+  /^components\/privacy-page-content\.tsx$/,
+  /^components\/terms-page-content\.tsx$/,
+];
 
 /** The one home of sentences about unshipped features, and the page bodies allowed to render them. */
 const UPCOMING_FILE = "lib/upcoming.ts";
-const UPCOMING_IMPORTERS = ["components/home-page-content.tsx", "components/about-page-content.tsx"];
+const UPCOMING_IMPORTERS = [
+  "components/home-page-content.tsx",
+  "components/about-page-content.tsx",
+];
 
 const SCAM_WORDS =
   "scams?|scammers?|fraud|诈骗|骗局|詐騙|騙局|사기|詐欺|lừa đảo|arnaques?|escroqueries?|fraudes?|estafas?";
@@ -86,18 +107,25 @@ const RULES = [
     id: "pre-announcement",
     why: "A feature the app does not ship is described only in lib/upcoming.ts (CLAUDE.md rule 1).",
     pattern:
-      /\bcoming soon\b|\bon the way\b|\b(?:in|under) development\b|\bwe(?:['’]re| are) (?:building|testing)\b|\bbeing tested\b|\blaunch(?:ing|es) soon\b|\bstay tuned\b|即将推出|即将上线|敬请期待|正在开发|正在测试|开发中|筹备中|即將推出|即將上線|敬請期待|正在開發|正在測試|開發中|籌備中|곧 출시|출시 예정|오픈 예정|개발 중|테스트 중|近日公開|近日リリース|リリース予定|開発中|まもなく登場|sắp ra mắt|đang phát triển|đang thử nghiệm|bientôt disponible|en cours de développement|arrive bientôt|próximamente|en desarrollo|en pruebas|llegará pronto|disponible pronto/i,
+      /\bcoming soon\b|\bon the way\b|\b(?:in|under) development\b|\bwe(?:['’]re| are) (?:building|testing)\b|\bbeing tested\b|\blaunch(?:ing|es) soon\b|\bstay tuned\b|即将推出|即将上线|敬请期待|正在开发|正在测试|正在准备中|开发中|筹备中|即將推出|即將上線|敬請期待|正在開發|正在測試|準備中|開發中|籌備中|곧 출시|출시 예정|오픈 예정|개발 중|테스트 중|준비하고 있어요|준비하고 있습니다|준비 중입니다|近日公開|近日リリース|リリース予定|開発中|まもなく登場|sắp ra mắt|đang phát triển|đang thử nghiệm|bientôt disponible|en cours de développement|arrive bientôt|próximamente|en desarrollo|en pruebas|llegará pronto|disponible pronto/i,
     allowIn: [/^lib\/upcoming\.ts$/],
   },
   {
     id: "scam-statistic",
     why: "Never a scam or fraud statistic.",
-    pattern: new RegExp(`(?:${STAT})[^.!?。！？]{0,40}(?:${SCAM_WORDS})|(?:${SCAM_WORDS})[^.!?。！？]{0,40}(?:${STAT})`, "i"),
+    pattern: new RegExp(
+      `(?:${STAT})[^.!?。！？]{0,40}(?:${SCAM_WORDS})|(?:${SCAM_WORDS})[^.!?。！？]{0,40}(?:${STAT})`,
+      "i",
+    ),
   },
 ];
 
 function walk(dir, out = []) {
   if (!existsSync(dir)) return out;
+  if (!statSync(dir).isDirectory()) {
+    if (/\.(ts|tsx)$/.test(dir)) out.push(dir);
+    return out;
+  }
   for (const name of readdirSync(dir)) {
     const path = join(dir, name);
     if (statSync(path).isDirectory()) walk(path, out);
@@ -113,15 +141,26 @@ export function extractCopy(fileName, source) {
   const pieces = [];
   const add = (text, node) => {
     const value = text.replace(/\s+/g, " ").trim();
-    if (value) pieces.push({ text: value, line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1 });
+    if (value)
+      pieces.push({
+        text: value,
+        line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1,
+      });
   };
   const visit = (node) => {
-    if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) || ts.isJsxText(node)) {
+    if (
+      ts.isStringLiteral(node) ||
+      ts.isNoSubstitutionTemplateLiteral(node) ||
+      ts.isJsxText(node)
+    ) {
       add(node.text, node);
     } else if (ts.isTemplateExpression(node)) {
       // Join the literal parts around a placeholder, so words on either side of an
       // interpolation never fuse into one phrase.
-      add([node.head.text, ...node.templateSpans.map((span) => span.literal.text)].join(" … "), node);
+      add(
+        [node.head.text, ...node.templateSpans.map((span) => span.literal.text)].join(" … "),
+        node,
+      );
     }
     ts.forEachChild(node, visit);
   };
@@ -129,9 +168,18 @@ export function extractCopy(fileName, source) {
   return pieces;
 }
 
+const UPCOMING_SPEC = /(?:^@\/lib|\/lib|^\.)\/upcoming$/;
+
+/** Sentence-ending marks in a copy string, ignoring any inside quotes ("Coming soon!"). */
+function sentenceEnds(text) {
+  const unquoted = text.replace(/“[^”]*”|「[^」]*」|'[^']*'|"[^"]*"/g, "");
+  return (unquoted.match(/[.!?](?!\d)|[。！？]/g) ?? []).length;
+}
+
 /**
- * `import … from "@/lib/upcoming"` outside the allowed page bodies, and, in
- * lib/upcoming.ts itself, any `reviewBy: "YYYY-MM-DD"` earlier than `today`.
+ * Outside the allowed page bodies: any import, re-export or dynamic import of
+ * lib/upcoming. Inside lib/upcoming.ts: a copy string longer than one sentence,
+ * or a `reviewBy: "YYYY-MM-DD"` earlier than `today`.
  */
 function upcomingProblems(rel, source, today) {
   const kind = rel.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
@@ -139,29 +187,48 @@ function upcomingProblems(rel, source, today) {
   const lineOf = (node) => sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1;
   const problems = [];
   if (rel !== UPCOMING_FILE && !UPCOMING_IMPORTERS.includes(rel)) {
-    for (const stmt of sf.statements) {
-      if (
-        ts.isImportDeclaration(stmt) &&
-        ts.isStringLiteral(stmt.moduleSpecifier) &&
-        /(?:^@\/lib|\/lib|^\.)\/upcoming$/.test(stmt.moduleSpecifier.text)
-      ) {
+    const visit = (node) => {
+      const spec =
+        (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier
+          ? node.moduleSpecifier
+          : ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword
+            ? node.arguments[0]
+            : null;
+      if (spec && ts.isStringLiteralLike(spec) && UPCOMING_SPEC.test(spec.text)) {
         problems.push(
-          `${rel}:${lineOf(stmt)} [upcoming-import] lib/upcoming.ts may only be rendered by ${UPCOMING_IMPORTERS.join(", ")} — never in metadata, JSON-LD, the sitemap or a comparison page.`,
+          `${rel}:${lineOf(node)} [upcoming-import] lib/upcoming.ts may only be rendered by ${UPCOMING_IMPORTERS.join(", ")} — never in metadata, JSON-LD, the sitemap or a comparison page.`,
         );
       }
-    }
+      ts.forEachChild(node, visit);
+    };
+    visit(sf);
   }
   if (rel === UPCOMING_FILE) {
     const visit = (node) => {
-      if (
-        ts.isPropertyAssignment(node) &&
-        node.name.getText(sf) === "reviewBy" &&
-        ts.isStringLiteral(node.initializer) &&
-        node.initializer.text < today
-      ) {
-        problems.push(
-          `${rel}:${lineOf(node)} [upcoming-review] reviewBy ${node.initializer.text} has passed. Re-check the sentence against the app: rewrite it for the shipped feature, delete it, or set a new reviewBy.`,
-        );
+      if (ts.isPropertyAssignment(node)) {
+        const name = node.name.getText(sf);
+        if (
+          name === "reviewBy" &&
+          ts.isStringLiteral(node.initializer) &&
+          node.initializer.text < today
+        ) {
+          problems.push(
+            `${rel}:${lineOf(node)} [upcoming-review] reviewBy ${node.initializer.text} has passed. Re-check the sentence against the app: rewrite it for the shipped feature, delete it, or set a new reviewBy.`,
+          );
+        }
+        if (name === "copy" && ts.isObjectLiteralExpression(node.initializer)) {
+          for (const prop of node.initializer.properties) {
+            if (
+              ts.isPropertyAssignment(prop) &&
+              ts.isStringLiteralLike(prop.initializer) &&
+              sentenceEnds(prop.initializer.text) > 1
+            ) {
+              problems.push(
+                `${rel}:${lineOf(prop)} [upcoming-one-sentence] ${prop.name.getText(sf)} has ${sentenceEnds(prop.initializer.text)} sentences. The exception allows one dated sentence per feature (CLAUDE.md rule 1).`,
+              );
+            }
+          }
+        }
       }
       ts.forEachChild(node, visit);
     };

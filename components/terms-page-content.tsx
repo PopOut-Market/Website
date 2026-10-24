@@ -41,9 +41,9 @@ export function TermsPageContent() {
           <div className="mt-6 space-y-6">
             <TermsSection title="1. About the Application">
               <p>
-                Welcome to PopOut (Application). The Application is an online platform that
-                enables parties providing services or goods (Provider) and parties receiving
-                services or goods (Receiver) to discover listings, communicate with each other, and
+                Welcome to PopOut (Application). The Application is an online platform that enables
+                parties providing services or goods (Provider) and parties receiving services or
+                goods (Receiver) to discover listings, communicate with each other, and
                 independently arrange the inspection, payment, collection, and delivery of goods or
                 services.
               </p>
@@ -141,8 +141,8 @@ export function TermsPageContent() {
                 <li>leave rating and review based on transaction experience.</li>
               </ul>
               <p>
-                PopOut does not facilitate, process, hold, escrow, remit, or settle payments
-                between Members.
+                PopOut does not facilitate, process, hold, escrow, remit, or settle payments between
+                Members.
               </p>
             </TermsSection>
 
