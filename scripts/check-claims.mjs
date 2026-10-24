@@ -170,9 +170,18 @@ export function extractCopy(fileName, source) {
 
 const UPCOMING_SPEC = /(?:^@\/lib|\/lib|^\.)\/upcoming$/;
 
-/** Sentence-ending marks in a copy string, ignoring any inside quotes ("Coming soon!"). */
+/**
+ * Sentence-ending marks in a copy string, ignoring any inside quotes ("Coming
+ * soon!"). A straight single quote only counts as a quotation mark when no Latin
+ * letter or digit touches it on the outside, so the apostrophes in "isn't" and
+ * "we're" cannot pair up and hide a second sentence; Korean particles may follow
+ * a closing quote ('집 구하기'는).
+ */
 function sentenceEnds(text) {
-  const unquoted = text.replace(/“[^”]*”|「[^」]*」|'[^']*'|"[^"]*"/g, "");
+  const unquoted = text.replace(
+    /“[^”]*”|「[^」]*」|(?<![A-Za-z0-9])'[^']*'(?![A-Za-z0-9])|"[^"]*"/g,
+    "",
+  );
   return (unquoted.match(/[.!?](?!\d)|[。！？]/g) ?? []).length;
 }
 

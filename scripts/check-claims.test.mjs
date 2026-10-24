@@ -89,6 +89,10 @@ test("each upcoming line is one sentence", () => {
   assert.equal(findProblems("lib/upcoming.ts", one, "2026-10-24").length, 0);
   assert.ok(findProblems("lib/upcoming.ts", two, "2026-10-24").length > 0);
   assert.equal(findProblems("lib/upcoming.ts", ko, "2026-10-24").length, 0);
+  // Apostrophes are not quotation marks (Codex follow-up on part 3, F5).
+  const contractions =
+    "const u = { copy: { en: \"As of {asOf}, it isn't in the app yet. We're testing it.\" } };";
+  assert.ok(findProblems("lib/upcoming.ts", contractions, "2026-10-24").length > 0);
 });
 
 test("an upcoming line past its review date fails", () => {
