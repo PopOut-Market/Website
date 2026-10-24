@@ -69,7 +69,20 @@ function unescapeHtml(text) {
     return ENTITIES[code.toLowerCase()] ?? whole;
   });
 }
-const textOf = (html) => unescapeHtml(html.replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]+>/g, ""));
+/**
+ * The text outside tags (comments included, since they sit inside < >). A
+ * scanner, not a sanitizer: the result is only searched, never rendered.
+ */
+function textOf(html) {
+  let text = "";
+  let inTag = false;
+  for (const ch of html) {
+    if (ch === "<") inTag = true;
+    else if (ch === ">") inTag = false;
+    else if (!inTag) text += ch;
+  }
+  return unescapeHtml(text);
+}
 
 function jsonStrings(value, out = []) {
   if (typeof value === "string") out.push(value);
