@@ -37,7 +37,7 @@ const LEGAL_PAGES = [/^components\/privacy-page-content\.tsx$/, /^components\/te
 
 const SCAM_WORDS =
   "scams?|scammers?|fraud|诈骗|骗局|詐騙|騙局|사기|詐欺|lừa đảo|arnaques?|escroqueries?|fraudes?|estafas?";
-const STAT = "\\d[\\d,.]*\\s*(?:%|％|percent|per cent|퍼센트|倍|x\\b|times|fois|veces|lần)";
+const STAT = "\\d[\\d,.]*\\s*(?:%|％|percent|per cent|퍼센트|倍|×|x\\b|times|fois|veces|lần)";
 
 const RULES = [
   {

@@ -24,6 +24,8 @@ test("catches banned claims in every language that ships", () => {
 test("catches scam statistics", () => {
   assert.ok(flagged('const a = "99% fewer scams";'));
   assert.ok(flagged('const a = "诈骗减少 90%";'));
+  assert.ok(flagged('const a = "3× fewer scams";'));
+  assert.ok(flagged('const a = "Scams reduced 3×";'));
 });
 
 test("reads copy, not comments", () => {
