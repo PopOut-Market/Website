@@ -37,7 +37,8 @@ export const LAST_SEO_PASS = "2026-06-17";
  * 2026-09-06: the pass that removed advice naming filters the app does not have
  * (delivery, student-posted, condition, recency) from the eight suburb pages, the
  * unverifiable "more Australian cities coming soon" clause from the region and
- * app pages, and the banned "verify their identity" wording from /child-safety.
+ * app pages, the banned "verify their identity" wording from /child-safety, and
+ * the recovery-email and university-email clauses from /terms.
  * Body copy changed on every page carrying this date, so it is a real edit, not a
  * touch — the whole point of hand-maintaining these (see the header note).
  */
@@ -156,7 +157,7 @@ export const INDEXABLE_PATHS: IndexablePath[] = [
   // about an unfamiliar app. They were live and reachable but absent from the
   // sitemap, so nothing pointed a crawler at them.
   { path: "/privacy", freshness: "static", contentUpdated: OCTOBER_REFRESH_EDIT, priority: 0.4 },
-  { path: "/terms", freshness: "static", contentUpdated: LAST_SEO_PASS, priority: 0.4 },
+  { path: "/terms", freshness: "static", contentUpdated: CLAIM_CORRECTION_EDIT, priority: 0.4 },
   {
     path: "/child-safety",
     freshness: "static",

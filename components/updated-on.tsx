@@ -67,7 +67,7 @@ const FORMAT: Record<Locale, (y: number, m: number, d: number) => string> = {
 export function UpdatedOn({
   iso,
   locale,
-  className = "mt-2 text-sm text-gray-500",
+  className = "mt-2 text-sm text-gray-600",
 }: {
   iso: string;
   locale: Locale;
