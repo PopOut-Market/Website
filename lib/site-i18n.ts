@@ -516,7 +516,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Australian mobile number plus a one-time location check",
     heroTitle: "Everything happening in {suburb}",
     heroLead:
-      "PopOut Market is the neighbourhood app for Melbourne. Buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything — each of you writing in your own language.",
+      "PopOut is the neighbourhood app for Melbourne, made by PopOut Market. Buy and sell second-hand with verified neighbours nearby, see current specials at local shops on the map, and ask your neighbours anything — each of you writing in your own language.",
     heroTrustLine:
       "Verified by an Australian mobile number and a one-time location check. Free on iOS and Android. Live in {count} Melbourne suburbs.",
     heroGetAppCta: "Get the app",
@@ -791,7 +791,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "澳洲手机号 + 一次性定位核验",
     heroTitle: "{suburb} 的大小事",
     heroLead:
-      "PopOut Market 是墨尔本的邻里生活 App：和身边通过认证的邻居买卖二手好物，在地图上看到本地商铺正在打折的商品，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
+      "PopOut 是 PopOut Market 为墨尔本打造的邻里生活 App：和身边通过认证的邻居买卖二手好物，在地图上看到本地商铺正在打折的商品，还能随时向邻居提问——你用你的语言写，对方用他的语言读。",
     heroTrustLine:
       "澳洲手机号 + 一次性定位核验完成认证。iOS 与 Android 免费下载。已覆盖墨尔本 {count} 个城区。",
     heroGetAppCta: "下载 App",
@@ -1062,7 +1062,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "澳洲手機號碼加上一次性位置確認",
     heroTitle: "{suburb} 正在發生的事",
     heroLead:
-      "PopOut Market 是專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，在地圖上看見在地店家的最新優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
+      "PopOut 是 PopOut Market 專為墨爾本打造的社區生活 App。和附近經過驗證的鄰居買賣二手好物，在地圖上看見在地店家的最新優惠，還能向鄰居打聽任何事——各自用自己的語言就好。",
     heroTrustLine:
       "以澳洲手機號碼與一次性位置確認完成驗證。iOS 與 Android 免費下載。已上線墨爾本 {count} 個區域。",
     heroGetAppCta: "下載 App",
@@ -1342,7 +1342,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "호주 휴대폰 번호와 한 번의 위치 확인",
     heroTitle: "{suburb}에서 지금 일어나는 일",
     heroLead:
-      "PopOut Market은 멜버른을 위한 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 지도에서 동네 가게의 지금 할인 정보를 확인하고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
+      "PopOut은 PopOut Market이 만든 멜버른 동네 생활 앱입니다. 가까이 사는 인증된 이웃과 중고를 사고팔고, 지도에서 동네 가게의 지금 할인 정보를 확인하고, 이웃에게 무엇이든 물어보세요 — 각자 자기 언어로 쓰면 됩니다.",
     heroTrustLine:
       "호주 휴대폰 번호와 한 번의 위치 확인으로 인증합니다. iOS와 Android에서 무료. 멜버른 {count}개 지역에서 이용할 수 있습니다.",
     heroGetAppCta: "앱 다운로드",
@@ -1629,7 +1629,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "オーストラリアの携帯電話番号と一度きりの位置情報チェック",
     heroTitle: "{suburb}で、いま起きていること",
     heroLead:
-      "PopOut Market は、メルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店のいまのお買い得情報を地図で見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
+      "PopOut は、PopOut Market がつくったメルボルンのご近所アプリです。認証済みの近所の人と中古品を売り買いしたり、近くのお店のいまのお買い得情報を地図で見つけたり、ご近所さんに何でも聞いてみたり——しかも、それぞれが自分の言語で書けば伝わります。",
     heroTrustLine:
       "オーストラリアの携帯電話番号と一度きりの位置情報チェックで認証。iOS / Android で無料。メルボルンの{count}の地域で利用できます。",
     heroGetAppCta: "アプリを入手",
@@ -1920,7 +1920,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Số điện thoại di động Úc cùng một lần kiểm tra vị trí duy nhất",
     heroTitle: "Mọi chuyện ở {suburb}",
     heroLead:
-      "PopOut Market là ứng dụng khu phố dành cho Melbourne. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, xem ưu đãi đang có tại các cửa hàng địa phương ngay trên bản đồ, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
+      "PopOut là ứng dụng khu phố dành cho Melbourne do PopOut Market phát triển. Mua bán đồ cũ với hàng xóm đã xác minh quanh đây, xem ưu đãi đang có tại các cửa hàng địa phương ngay trên bản đồ, và hỏi hàng xóm bất cứ điều gì — mỗi người cứ viết bằng ngôn ngữ của mình.",
     heroTrustLine:
       "Xác minh bằng số điện thoại di động Úc và một lần kiểm tra vị trí duy nhất. Miễn phí trên iOS và Android. Đã có mặt tại {count} khu vực ở Melbourne.",
     heroGetAppCta: "Tải ứng dụng",
@@ -2220,7 +2220,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Numéro de mobile australien et contrôle de localisation ponctuel",
     heroTitle: "Tout ce qui se passe à {suburb}",
     heroLead:
-      "PopOut Market, c'est l'appli de quartier de Melbourne. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, repérez sur la carte les promos du moment dans les commerces du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
+      "PopOut, c'est l'appli de quartier de Melbourne, créée par PopOut Market. Achetez et vendez d'occasion avec des voisins vérifiés près de chez vous, repérez sur la carte les promos du moment dans les commerces du coin, et posez toutes vos questions à vos voisins — chacun écrivant dans sa propre langue.",
     heroTrustLine:
       "Vérification par numéro de mobile australien et contrôle de localisation ponctuel. Gratuit sur iOS et Android. Disponible dans {count} quartiers de Melbourne.",
     heroGetAppCta: "Télécharger l'appli",
@@ -2520,7 +2520,7 @@ export const COPY: Record<Locale, SiteCopy> = {
     comparisonFbCard3Body: "Número de móvil australiano y una única comprobación de ubicación",
     heroTitle: "Todo lo que pasa en {suburb}",
     heroLead:
-      "PopOut Market es la app de barrio de Melbourne. Compra y vende de segunda mano con vecinos verificados cerca de ti, mira en el mapa las ofertas del momento en las tiendas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
+      "PopOut es la app de barrio de Melbourne, creada por PopOut Market. Compra y vende de segunda mano con vecinos verificados cerca de ti, mira en el mapa las ofertas del momento en las tiendas del barrio y pregunta a tus vecinos lo que quieras — cada uno escribiendo en su propio idioma.",
     heroTrustLine:
       "Verificación con número de móvil australiano y una única comprobación de ubicación. Gratis en iOS y Android. Ya disponible en {count} barrios de Melbourne.",
     heroGetAppCta: "Descargar la app",

@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "check:applinks": "node scripts/check-app-links.mjs",
-    "check:claims": "node scripts/check-claims.mjs",
+    "check:claims": "node --test scripts/check-claims.test.mjs && node scripts/check-claims.mjs",
     "lint:css": "stylelint \"**/*.css\"",
     "type-check": "tsc --noEmit"
   },

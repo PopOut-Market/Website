@@ -11,13 +11,20 @@
  *
  *   npm run check:claims
  *
- * Comments are stripped before matching, so code may still explain what is
- * banned. Add a phrase here whenever a new rule lands in CLAUDE.md, in every
- * language the site ships.
+ * Only copy is checked: string literals, template literals and JSX text, read
+ * with the TypeScript parser, so comments never count and text containing "//"
+ * is never cut short. Whitespace inside a piece of copy is collapsed first, so a
+ * phrase broken across source lines is still caught. A phrase split across two
+ * separate pieces of copy (e.g. "identity <b>check</b>") is not.
+ *
+ * Add a phrase here whenever a new rule lands in CLAUDE.md, in every language
+ * the site ships: en, zh-Hans, zh-Hant, ko, ja, vi, fr, es.
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import ts from "typescript";
 
 const ROOT = process.cwd();
 
@@ -27,6 +34,10 @@ const SKIP = [/^components\/admin/, /^lib\/supabase\/admin/, /^lib\/shop-review\
 
 /** Pages whose legal duty is to describe identity checks on privacy requests, not the product. */
 const LEGAL_PAGES = [/^components\/privacy-page-content\.tsx$/, /^components\/terms-page-content\.tsx$/];
+
+const SCAM_WORDS =
+  "scams?|scammers?|fraud|诈骗|骗局|詐騙|騙局|사기|詐欺|lừa đảo|arnaques?|escroqueries?|fraudes?|estafas?";
+const STAT = "\\d[\\d,.]*\\s*(?:%|％|percent|per cent|퍼센트|倍|x\\b|times|fois|veces|lần)";
 
 const RULES = [
   {
@@ -51,12 +62,19 @@ const RULES = [
   {
     id: "student-verification",
     why: "There is no student verification in the app.",
-    pattern: /\bstudent verification\b|\bverified students?\b|学生认证|學生認證|학생 인증|学生認証/i,
+    pattern:
+      /\bstudent verification\b|\bverified students?\b|学生认证|學生認證|학생 ?인증|学生認証|xác (minh|thực) sinh viên|sinh viên (đã )?xác (minh|thực)|vérification (des |d['’])?étudiants?|étudiants? vérifiés?|verificación de estudiantes|estudiantes verificados/i,
   },
   {
     id: "safety-zone",
     why: 'There is no "Safety Zone" concept in the app.',
-    pattern: /\bsafety zones?\b|安全区|安全區|안전 구역|セーフティゾーン/i,
+    pattern:
+      /\bsafety zones?\b|安全区|安全區|안전 ?구역|セーフティゾーン|安全ゾーン|vùng an toàn|zones? de sécurité|zonas? segura|zonas? de seguridad/i,
+  },
+  {
+    id: "scam-statistic",
+    why: "Never a scam or fraud statistic.",
+    pattern: new RegExp(`(?:${STAT})[^.!?。！？]{0,40}(?:${SCAM_WORDS})|(?:${SCAM_WORDS})[^.!?。！？]{0,40}(?:${STAT})`, "i"),
   },
 ];
 
@@ -70,31 +88,53 @@ function walk(dir, out = []) {
   return out;
 }
 
-/** Blank out comments but keep line numbers, so code can still explain what is banned. */
-function stripComments(source) {
-  return source
-    .replace(/\/\*[\s\S]*?\*\//g, (block) => block.replace(/[^\n]/g, " "))
-    .replace(/(^|[^:"'`\\])\/\/.*$/gm, (_, lead) => lead);
+/** Every piece of copy in a file — string literals, template literals, JSX text — with its line. */
+export function extractCopy(fileName, source) {
+  const kind = fileName.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, kind);
+  const pieces = [];
+  const add = (text, node) => {
+    const value = text.replace(/\s+/g, " ").trim();
+    if (value) pieces.push({ text: value, line: sf.getLineAndCharacterOfPosition(node.getStart(sf)).line + 1 });
+  };
+  const visit = (node) => {
+    if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) || ts.isJsxText(node)) {
+      add(node.text, node);
+    } else if (ts.isTemplateExpression(node)) {
+      // Join the literal parts around a placeholder, so words on either side of an
+      // interpolation never fuse into one phrase.
+      add([node.head.text, ...node.templateSpans.map((span) => span.literal.text)].join(" … "), node);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
+  return pieces;
 }
 
-const problems = [];
-for (const base of SCAN) {
-  for (const file of walk(join(ROOT, base))) {
-    const rel = relative(ROOT, file);
-    if (SKIP.some((re) => re.test(rel))) continue;
-    const lines = stripComments(readFileSync(file, "utf8")).split("\n");
-    lines.forEach((line, i) => {
-      for (const rule of RULES) {
-        if (rule.allowIn?.some((re) => re.test(rel))) continue;
-        const match = line.match(rule.pattern);
-        if (match) problems.push(`${rel}:${i + 1} [${rule.id}] "${match[0]}" — ${rule.why}`);
-      }
-    });
+export function findProblems(rel, source) {
+  const problems = [];
+  for (const { text, line } of extractCopy(rel, source)) {
+    for (const rule of RULES) {
+      if (rule.allowIn?.some((re) => re.test(rel))) continue;
+      const match = text.match(rule.pattern);
+      if (match) problems.push(`${rel}:${line} [${rule.id}] "${match[0]}" — ${rule.why}`);
+    }
   }
+  return problems;
 }
 
-if (problems.length) {
-  console.error(`Banned product claims found (${problems.length}):\n${problems.join("\n")}`);
-  process.exit(1);
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  const problems = [];
+  for (const base of SCAN) {
+    for (const file of walk(join(ROOT, base))) {
+      const rel = relative(ROOT, file);
+      if (SKIP.some((re) => re.test(rel))) continue;
+      problems.push(...findProblems(rel, readFileSync(file, "utf8")));
+    }
+  }
+  if (problems.length) {
+    console.error(`Banned product claims found (${problems.length}):\n${problems.join("\n")}`);
+    process.exit(1);
+  }
+  console.log("check:claims — no banned claims in public copy.");
 }
-console.log("check:claims — no banned claims in public copy.");
