@@ -1,12 +1,7 @@
 import { classifyShareAudience, classifyShareLaunchPlatform } from "@/lib/share-link/user-agent";
 import { shareAppLaunch } from "@/lib/share-link/app-link";
-import {
-  fetchSharePreview,
-  isHousingShareToken,
-  shareCanonicalUrl,
-} from "@/lib/share-link/preview";
+import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
-import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
 import { siteUrl } from "@/lib/seo";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -20,7 +15,7 @@ import { NextResponse, type NextRequest } from "next/server";
  *   in-app browser   -> 200 html, card + "Open in the app" hand-off + install buttons
  *                       (WeChat/KakaoTalk/LINE/Pinterest, whose scraper and browser
  *                       share one UA)
- *   mobile browser   -> Housing hand-off or existing store redirect
+ *   mobile browser   -> same token-preserving hand-off
  *   desktop browser  -> 302 to /download
  *
  * Implemented as a Route Handler rather than a page because it needs exact
@@ -49,12 +44,6 @@ const SHARED_HEADERS: Record<string, string> = {
   "X-Robots-Tag": "noindex, nofollow",
 };
 
-function storeUrlFor(audience: "ios" | "android" | "desktop"): string {
-  if (audience === "ios") return APP_STORE_URL;
-  if (audience === "android") return GOOGLE_PLAY_URL;
-  return `${siteUrl().replace(/\/$/, "")}/download`;
-}
-
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ token: string }> },
@@ -63,14 +52,8 @@ export async function GET(
   const token = (rawToken ?? "").toLowerCase();
   const ua = request.headers.get("user-agent");
   const audience = classifyShareAudience(ua);
-  // WeChat users reopening the same URL in an external browser need a tappable
-  // hand-off there even when the OS did not intercept the HTTPS navigation.
-  const housingBrowser =
-    isHousingShareToken(token) && (audience === "ios" || audience === "android");
-
-  // Store redirects do not need a database read.
-  if (!housingBrowser && (audience === "ios" || audience === "android" || audience === "desktop")) {
-    return NextResponse.redirect(storeUrlFor(audience), {
+  if (audience === "desktop") {
+    return NextResponse.redirect(new URL("/download", siteUrl()), {
       status: 302,
       headers: SHARED_HEADERS,
     });
@@ -82,12 +65,12 @@ export async function GET(
   const canonicalUrl = shareCanonicalUrl(token);
 
   const html =
-    audience === "in-app-browser" || housingBrowser
+    audience !== "crawler"
       ? renderShareInAppBrowserHtml(
           preview,
           canonicalUrl,
           shareAppLaunch(token, classifyShareLaunchPlatform(ua)),
-          isHousingShareToken(token) && /MicroMessenger/i.test(ua ?? ""),
+          /MicroMessenger/i.test(ua ?? ""),
         )
       : renderShareCrawlerHtml(preview, canonicalUrl);
 
