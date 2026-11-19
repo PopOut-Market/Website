@@ -58,9 +58,9 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
     } else throw Error(path);
     return Response.json(data);
   });
-  async function request(token, ua = "Twitterbot", handler = landing) {
+  async function request(token, ua = "Twitterbot", handler = landing, query = "") {
     const result = await handler(
-      new Request("https://example.test/l/" + token, {
+      new Request("https://example.test/l/" + token + query, {
         headers: { "user-agent": ua },
       }),
       { params: Promise.resolve({ token }) },
@@ -90,9 +90,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
       } else if (ua.startsWith("KakaoTalk")) {
         assert.ok(
           html.includes(
-            ua.endsWith("iPhone")
-              ? `href="popout-market://l/${token}"`
-              : `href="intent://l/${token}#Intent;`,
+            ua.endsWith("iPhone") ? `/l/${token}?open=1"` : `href="intent://l/${token}#Intent;`,
           ),
         );
         assert.equal(html.includes("Download on the App Store"), ua.endsWith("iPhone"));
@@ -113,7 +111,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
           token === community ? "View post in PopOut</a>" : "View listing in PopOut</a>",
         ),
       );
-      assert.ok(html.includes(`://l/${token}`));
+      assert.ok(html.includes(`/l/${token}`) || html.includes(`://l/${token}`));
       assert.doesNotMatch(html, /<script\b|http-equiv=["']refresh/i);
     }
     for (const ua of [
@@ -123,14 +121,17 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
       "Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Mobile/15E148",
     ]) {
       const html = await (await request(token, ua)).text();
-      assert.match(html, /choose Open in browser/);
+      assert.ok(html.includes(`/l/${token}?open=1"`));
+      const blocked = await (await request(token, ua, landing, "?open=1")).text();
+      assert.match(blocked, /paste it into Safari/);
+      assert.doesNotMatch(blocked, /class="action" href=|popout-market:\/\//);
       assert.match(html, /Download on the App Store/);
       assert.doesNotMatch(html, /popout-market:\/\/|intent:\/\/|apple-itunes-app|<script\b/);
       assert.ok(html.includes(`/l/${token}`));
     }
     const wechat = await (await request(token, "iPhone MicroMessenger")).text();
     assert.ok(wechat.includes("Tap ··· and open in your browser"));
-    assert.ok(!wechat.includes('class="action" href='));
+    assert.ok(wechat.includes(`/l/${token}?open=1"`));
   }
   const safari = await (await request(community, "iPhone Version/18.0 Mobile Safari/605")).text();
   assert.ok(safari.includes("apple-itunes-app") && safari.includes(`/l/${community}`));
@@ -143,7 +144,11 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
     ["iPhone Safari/605", "popout-market"],
     ["Android Chrome/132", "intent"],
   ]) {
-    assert.ok((await (await request(share, ua)).text()).includes(`href="${scheme}://l/${share}`));
+    assert.ok(
+      (await (await request(share, ua, landing, "?open=1")).text()).includes(
+        `href="${scheme}://l/${share}`,
+      ),
+    );
   }
   for (const token of [share, rent]) {
     const signed = await request(token, "Twitterbot", photo);
@@ -194,9 +199,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   ]) {
     const html = await (await request(token, "KakaoTalk iPhone")).text();
     assert.match(html, /property="og:title" content="Legacy title"/);
-    assert.ok(
-      html.includes(`/public/${bucket}/cover.webp`) && html.includes(`popout-market://l/${token}`),
-    );
+    assert.ok(html.includes(`/public/${bucket}/cover.webp`) && html.includes(`/l/${token}?open=1`));
     assert.deepEqual(calls.slice(-2), ["/rest/v1/rpc/resolve_share_link", "/rest/v1/rpc/" + rpc]);
   }
 });
