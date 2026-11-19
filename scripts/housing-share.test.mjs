@@ -85,7 +85,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
       assert.ok(html.includes(`/l/${token}/photo"`));
       assert.ok(!html.includes("PRIVATE_SENTINEL"));
       if (ua.startsWith("MicroMessenger")) {
-        assert.match(html, /WeChat menu/);
+        assert.match(html, /Tap ··· and open in your browser/);
         assert.ok(!html.includes("intent://") && !html.includes("popout-market://"));
       } else if (ua.startsWith("KakaoTalk")) {
         assert.ok(
@@ -99,6 +99,21 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
         assert.match(html, /Get it on Google Play/);
       }
     }
+  }
+  for (const token of [share, rent, item, community]) {
+    for (const ua of [
+      "KakaoTalk Android",
+      "Android FB_IAB/FB4A",
+      "Android Chrome/132",
+      "iPhone Safari/605",
+    ]) {
+      const html = await (await request(token, ua)).text();
+      assert.ok(html.includes("Open in PopOut</a>"));
+      assert.ok(html.includes(`://l/${token}`));
+    }
+    const wechat = await (await request(token, "iPhone MicroMessenger")).text();
+    assert.ok(wechat.includes("Tap ··· and open in your browser"));
+    assert.ok(!wechat.includes("Open in PopOut</a>"));
   }
   for (const [ua, scheme] of [
     ["iPhone Safari/605", "popout-market"],
@@ -119,7 +134,10 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   assert.match(await (await request(share)).text(), /Taken · 2 bedrooms/);
   // Both a tombstone and a visibility denial yield SQL NULL in the public reader.
   enabled = false;
-  assert.match(await (await request(share)).text(), /property="og:title" content="PopOut Market"/);
+  assert.match(
+    await (await request(share)).text(),
+    /property="og:title" content="Shared on PopOut"/,
+  );
   assert.match(
     (await request(share, "Twitterbot", photo)).headers.get("location"),
     /\/opengraph-image$/,
@@ -128,7 +146,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   rows.clear();
   for (const token of [share, rent]) {
     const html = await (await request(token)).text();
-    assert.match(html, /property="og:title" content="PopOut Market"/);
+    assert.match(html, /property="og:title" content="Shared on PopOut"/);
     assert.ok(!html.includes("Carlton") && !html.includes("/cover.jpg"));
     const count = calls.length;
     assert.match(
@@ -143,7 +161,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   const count = calls.length;
   assert.match(
     await (await request("h-invalid", "KakaoTalk iPhone")).text(),
-    /property="og:title" content="PopOut Market"/,
+    /property="og:title" content="Shared on PopOut"/,
   );
   assert.equal(calls.length, count);
   for (const [token, bucket, rpc] of [
