@@ -70,14 +70,16 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-
 // PR 20 exercises Housing links against the mobile staging project.
 if (process.env.CONTEXT === "deploy-preview" && process.env.REVIEW_ID === "20") {
   const url = process.env.SHARE_SUPABASE_URL?.trim();
   const key = process.env.SHARE_SUPABASE_ANON_KEY?.trim();
   const site = process.env.DEPLOY_PRIME_URL;
-  if (url !== "https://yywerlbmbhckfvfoyfif.supabase.co" || !key ||
-      site !== "https://deploy-preview-20--glittery-queijadas-6dd48c.netlify.app") {
+  if (
+    url !== "https://yywerlbmbhckfvfoyfif.supabase.co" ||
+    !key ||
+    site !== "https://deploy-preview-20--glittery-queijadas-6dd48c.netlify.app"
+  ) {
     throw new Error("Missing PR 20 staging configuration");
   }
   const claims = JSON.parse(Buffer.from(key.split(".")[1] || "", "base64url").toString());
