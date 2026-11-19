@@ -42,15 +42,19 @@ jobs:
           assert key,'No production anon configuration in the public market page'
           def rpc(name,**args): return json.loads(read(db+'/rest/v1/rpc/'+name,body=args,headers={'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key})[0])
           rows=rpc('get_ranked_housing_feed',p_suburb_id=244,p_jitter_seed=1,p_cursor=None)
-          choices={}
-          for batch in range(6):
+          choices={}; counts={}; seen=set()
+          for batch in range(50):
               for row in rows['items']:
                   kind=row['kind']
-                  if kind in choices or not row.get('photos'): continue
+                  counts[kind]=counts.get(kind,0)+1
+                  if row['id'] in seen: continue
+                  seen.add(row['id'])
+                  if kind in choices and choices[kind].get('photos'): continue
                   detail=rpc('get_housing_detail_v13',p_id=row['id'])
-                  if detail and detail.get('photos'): choices[kind]=detail
-              if len(choices)==2 or not rows.get('next_cursor'):break
+                  if detail: choices[kind]=detail
+              if (len(choices)==2 and all(r.get('photos') for r in choices.values())) or not rows.get('next_cursor'):break
               rows=rpc('get_ranked_housing_feed',p_suburb_id=244,p_jitter_seed=1,p_cursor=rows['next_cursor'])
+          print('Public feed counts:',counts,'has next page:',bool(rows.get('next_cursor')))
           results={}; errors=[]
           def check(kind,token,title,summary,path):
               url=site+'/l/'+token
@@ -76,7 +80,7 @@ jobs:
                   r=choices[kind]; facts=['Taken'] if r['availability']=='taken' else []
                   for k in ['bedroom','bathroom']:
                       n=r.get(k+'s'); facts+=([str(n)+' '+k+('' if n==1 else 's')] if isinstance(n,int) and n>=0 else [])
-                  sub=r['suburb_name']; check(kind,'h-'+r['id'],('Share in ' if kind=='rooms' else 'Entire home for rent in ')+sub,' · '.join(facts) or sub,r['photos'][0]['path'])
+                  sub=r['suburb_name']; check(kind,'h-'+r['id'],('Share in ' if kind=='rooms' else 'Entire home for rent in ')+sub,' · '.join(facts) or sub,r['photos'][0]['path'] if r.get('photos') else None)
               except Exception as e:errors.append((kind,type(e).__name__,str(e)[:115] if isinstance(e,AssertionError) else ''))
           for kind in ('listing','community'):
               try:
@@ -91,7 +95,10 @@ jobs:
                       if kind=='listing' and r.get('price_cents') is not None:
                           n=r['price_cents'];facts.append('Free' if n<=0 else ('$'+format(n/100,',.2f') if n%100 else '$'+format(n//100,',')))
                       if r.get('suburb_name'):facts.append(r['suburb_name'])
-                      check(kind,token,r['title'].strip(),' · '.join(facts) or 'Open this post in PopOut.',r.get('photo_path'));break
+                      try: check(kind,token,r['title'].strip(),' · '.join(facts) or 'Open this post in PopOut.',r.get('photo_path'))
+                      except Exception as err:
+                          print('Candidate',kind,'validation:',type(err).__name__,getattr(err,'code',None),type(getattr(err,'reason',None)).__name__); continue
+                      break
                   assert kind in results,'No publicly readable shared post'
               except Exception as e:errors.append((kind,type(e).__name__,str(e)[:115] if isinstance(e,AssertionError) else ''))
           Path('readback.json').write_text(json.dumps(results,ensure_ascii=False));print('Verified categories:',','.join(results));assert not errors,errors
