@@ -51,16 +51,34 @@ export async function GET(
   const token = (rawToken ?? "").toLowerCase();
   const ua = request.headers.get("user-agent");
   const audience = classifyShareAudience(ua);
+  const guide = shareBrowserGuide(ua);
+  const url = new URL(request.url);
+  const attempted = url.searchParams.get("open") === "1";
+  // iOS normally treats a link to the current host as another web navigation.
+  // Serve the landing document on our production Netlify host so a real tap
+  // targets the already-associated www host. Leave preview crawlers untouched.
+  if (
+    (audience === "ios" || guide === "ios-browser") &&
+    !attempted &&
+    isValidShareToken(token) &&
+    (request.headers.get("host") ?? url.host) === "www.popoutmarket.com.au"
+  ) {
+    return new NextResponse(null, {
+      status: 307,
+      headers: {
+        ...SHARED_HEADERS,
+        Location: `https://glittery-queijadas-6dd48c.netlify.app/l/${token}`,
+      },
+    });
+  }
   // `fetchSharePreview` returns null for unknown tokens, removed listings,
   // malformed tokens and database errors alike — all render the generic card.
   const preview = await fetchSharePreview(token);
   const canonicalUrl = shareCanonicalUrl(token);
 
-  const guide = shareBrowserGuide(ua);
   const device = shareDevice(ua);
   // If iOS opens the native app, this second request never reaches the website.
   // Receiving it means the visitor stayed on the web; offer a non-looping fallback.
-  const attempted = new URL(request.url).searchParams.get("open") === "1";
   const useHttps = device !== "android" && !attempted && isValidShareToken(token);
   const launch = useHttps
     ? { buttonUrl: canonicalUrl + "?open=1" }
