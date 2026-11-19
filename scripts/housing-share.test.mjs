@@ -79,7 +79,11 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   assert.equal(document.status, 200);
   assert.ok((await document.text()).includes(`href="${canonical}?open=1"`));
   const recovery = await landing(new Request(canonical + "?open=1", messenger), ctx);
-  assert.equal(recovery.status, 200);
+  assert.equal(recovery.status, 302);
+  assert.equal(
+    recovery.headers.get("location"),
+    "https://apps.apple.com/au/app/popout/id6761421626",
+  );
   const crawler = await landing(
     new Request(canonical, { headers: { "user-agent": "facebookexternalhit" } }),
     ctx,
@@ -110,8 +114,8 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
             ua.endsWith("iPhone") ? `/l/${token}?open=1"` : `href="intent://l/${token}#Intent;`,
           ),
         );
-        assert.equal(html.includes("Download on the App Store"), ua.endsWith("iPhone"));
-        assert.equal(html.includes("Get it on Google Play"), ua.endsWith("Android"));
+        assert.doesNotMatch(html, /Download on the App Store/);
+        assert.doesNotMatch(html, /Get it on Google Play/);
       }
     }
   }
@@ -139,10 +143,13 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
     ]) {
       const html = await (await request(token, ua)).text();
       assert.ok(html.includes(`/l/${token}?open=1"`));
-      const blocked = await (await request(token, ua, landing, "?open=1")).text();
-      assert.match(blocked, /paste it into Safari/);
-      assert.doesNotMatch(blocked, /class="action" href=|popout-market:\/\//);
-      assert.match(html, /Download on the App Store/);
+      const fallback = await request(token, ua, landing, "?open=1");
+      assert.equal(fallback.status, 302);
+      assert.equal(
+        fallback.headers.get("location"),
+        "https://apps.apple.com/au/app/popout/id6761421626",
+      );
+      assert.doesNotMatch(html, /<footer>|Download on the App Store/);
       assert.doesNotMatch(html, /popout-market:\/\/|intent:\/\/|apple-itunes-app|<script\b/);
       assert.ok(html.includes(`/l/${token}`));
     }
@@ -152,15 +159,22 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   }
   const safari = await (await request(community, "iPhone Version/18.0 Mobile Safari/605")).text();
   assert.ok(safari.includes("apple-itunes-app") && safari.includes(`/l/${community}`));
+  const safariFallback = await request(
+    community,
+    "iPhone Version/18.0 Mobile Safari/605",
+    landing,
+    "?open=1",
+  );
+  assert.equal(
+    safariFallback.headers.get("location"),
+    "https://apps.apple.com/au/app/popout/id6761421626",
+  );
   const desktop = await (await request(item, "Mozilla/5.0 Macintosh")).text();
   assert.ok(desktop.includes('href="/download">Get PopOut</a>'));
   assert.ok(
     !desktop.includes("Download on the App Store") && !desktop.includes("Get it on Google Play"),
   );
-  for (const [ua, scheme] of [
-    ["iPhone Safari/605", "popout-market"],
-    ["Android Chrome/132", "intent"],
-  ]) {
+  for (const [ua, scheme] of [["Android Chrome/132", "intent"]]) {
     assert.ok(
       (await (await request(share, ua, landing, "?open=1")).text()).includes(
         `href="${scheme}://l/${share}`,

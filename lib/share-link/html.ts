@@ -231,7 +231,7 @@ export function renderShareInAppBrowserHtml(
       ${action}
       ${help}
       ${client.inApp && !client.guide && launch ? '<p class="guide">If the app doesn’t open, use the browser menu to open this page in Safari or Chrome.</p>' : ""}
-      <footer>${install}</footer>
+      ${launch && client.device !== "none" ? "" : `<footer>${install}</footer>`}
     </main>
   </body>
 </html>`;
