@@ -1,8 +1,11 @@
-import { classifyShareAudience, classifyShareLaunchPlatform } from "@/lib/share-link/user-agent";
+import {
+  classifyShareAudience,
+  classifyShareLaunchPlatform,
+  shareDevice,
+} from "@/lib/share-link/user-agent";
 import { shareAppLaunch } from "@/lib/share-link/app-link";
 import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
-import { siteUrl } from "@/lib/seo";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
@@ -16,7 +19,7 @@ import { NextResponse, type NextRequest } from "next/server";
  *                       (WeChat/KakaoTalk/LINE/Pinterest, whose scraper and browser
  *                       share one UA)
  *   mobile browser   -> same token-preserving hand-off
- *   desktop browser  -> 302 to /download
+ *   unknown device   -> shared card with a download-page link
  *
  * Implemented as a Route Handler rather than a page because it needs exact
  * status codes, per-request User-Agent branching, and response headers that the
@@ -52,13 +55,6 @@ export async function GET(
   const token = (rawToken ?? "").toLowerCase();
   const ua = request.headers.get("user-agent");
   const audience = classifyShareAudience(ua);
-  if (audience === "desktop") {
-    return NextResponse.redirect(new URL("/download", siteUrl()), {
-      status: 302,
-      headers: SHARED_HEADERS,
-    });
-  }
-
   // `fetchSharePreview` returns null for unknown tokens, removed listings,
   // malformed tokens and database errors alike — all render the generic card.
   const preview = await fetchSharePreview(token);
@@ -70,7 +66,12 @@ export async function GET(
           preview,
           canonicalUrl,
           shareAppLaunch(token, classifyShareLaunchPlatform(ua)),
-          /MicroMessenger/i.test(ua ?? ""),
+          {
+            device: shareDevice(ua),
+            wechat: /MicroMessenger/i.test(ua ?? ""),
+            safari: audience === "ios" && /Version\/[\d.]+.*Safari\//i.test(ua ?? ""),
+            inApp: audience === "in-app-browser",
+          },
         )
       : renderShareCrawlerHtml(preview, canonicalUrl);
 
