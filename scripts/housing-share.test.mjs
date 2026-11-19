@@ -95,8 +95,8 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
               : `href="intent://l/${token}#Intent;`,
           ),
         );
-        assert.match(html, /Download on the App Store/);
-        assert.match(html, /Get it on Google Play/);
+        assert.equal(html.includes("Download on the App Store"), ua.endsWith("iPhone"));
+        assert.equal(html.includes("Get it on Google Play"), ua.endsWith("Android"));
       }
     }
   }
@@ -108,13 +108,24 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
       "iPhone Safari/605",
     ]) {
       const html = await (await request(token, ua)).text();
-      assert.ok(html.includes("Open in PopOut</a>"));
+      assert.ok(
+        html.includes(
+          token === community ? "View post in PopOut</a>" : "View listing in PopOut</a>",
+        ),
+      );
       assert.ok(html.includes(`://l/${token}`));
     }
     const wechat = await (await request(token, "iPhone MicroMessenger")).text();
     assert.ok(wechat.includes("Tap ··· and open in your browser"));
-    assert.ok(!wechat.includes("Open in PopOut</a>"));
+    assert.ok(!wechat.includes('class="action" href='));
   }
+  const safari = await (await request(community, "iPhone Version/18.0 Mobile Safari/605")).text();
+  assert.ok(safari.includes("apple-itunes-app") && safari.includes(`/l/${community}`));
+  const desktop = await (await request(item, "Mozilla/5.0 Macintosh")).text();
+  assert.ok(desktop.includes('href="/download">Get PopOut</a>'));
+  assert.ok(
+    !desktop.includes("Download on the App Store") && !desktop.includes("Get it on Google Play"),
+  );
   for (const [ua, scheme] of [
     ["iPhone Safari/605", "popout-market"],
     ["Android Chrome/132", "intent"],
