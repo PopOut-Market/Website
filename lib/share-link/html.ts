@@ -27,7 +27,7 @@ import type { ShareAppLaunch } from "@/lib/share-link/app-link";
 const GENERIC_TITLE = "Shared on PopOut";
 const GENERIC_DESCRIPTION = "Open this post in PopOut.";
 
-const LOGO_SRC = "/images/app-icon.png";
+const LOGO_SRC = "/apple-touch-icon-180.png";
 const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
 const GOOGLE_PLAY_BADGE_SRC = "/images/Google_Play-black.svg";
 
@@ -130,40 +130,6 @@ export function renderShareCrawlerHtml(preview: SharePreview | null, canonicalUr
 }
 
 /**
- * The automatic hand-off attempt. iOS only — `ShareAppLaunch.autoUrl` explains
- * why Android must never get one.
- *
- * Deliberately JavaScript, and deliberately NOT a `<meta http-equiv="refresh">`
- * or a server-side redirect: KakaoTalk, LINE, WeChat and Pinterest send the same
- * UA from their scraper as from their browser, so this one document is read by
- * both. Scrapers do not execute JS, so a script cannot cost us a link preview,
- * whereas either redirect form would kill the card outright.
- *
- * `url` is built from a validated share token and compile-time constants (see
- * `lib/share-link/app-link.ts`), so nothing user- or seller-authored reaches
- * this script; `JSON.stringify` is belt-and-braces on top of that.
- *
- * The delay lets the page paint first, so the store badges are already on screen
- * when — as in Messenger — nothing happens at all.
- */
-function autoLaunchScript(url: string): string {
-  return `    <script>
-      (function () {
-        var target = ${JSON.stringify(url)};
-        var done = false;
-        function stop() { done = true; }
-        document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
-        window.addEventListener("pagehide", stop);
-        window.setTimeout(function () {
-          if (done || document.hidden) return;
-          try { window.location.href = target; } catch (error) { /* webview refused it — the badges are right there */ }
-        }, 400);
-      })();
-    </script>
-`;
-}
-
-/**
  * Messenger in-app browser response: the same Open Graph card PLUS a visible
  * app hand-off and the install buttons.
  *
@@ -235,6 +201,7 @@ export function renderShareInAppBrowserHtml(
           padding:8px 16px;border-radius:16px;background:#ff8c00;color:white;
           font-weight:700;text-decoration:none}
       a.action:active {transform:scale(.97)}
+      p.guide {text-align:center;font-size:14px;color:#52504d}
       footer {margin-top:8px;text-align:center}
       footer a {display:inline-flex;align-items:center;justify-content:center;min-height:48px;color:inherit}
       footer img {display:block}
@@ -248,8 +215,9 @@ export function renderShareInAppBrowserHtml(
         ${summary ? `<p class="summary">${escapeHtml(summary)}</p>` : ""}
       </div></article>
       ${action}
+      ${client.inApp && launch ? '<p class="guide">If the app doesn’t open, use the browser menu to open this page in Safari or Chrome.</p>' : ""}
       <footer>${install}</footer>
     </main>
-${client.inApp && launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
+  </body>
 </html>`;
 }

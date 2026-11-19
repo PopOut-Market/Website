@@ -72,23 +72,6 @@ export function androidIntentUrl(token: string): string | null {
 export type ShareAppLaunch = {
   /** href of the visible "Open in the app" button — a user gesture, the reliable path. */
   buttonUrl: string;
-  /**
-   * URL for the automatic on-load attempt, or null when there must not be one.
-   *
-   * **null on Android, always.** A top-level navigation to `intent://` in a
-   * webview that does not implement intent handling fails with
-   * `ERR_UNKNOWN_URL_SCHEME`, and the webview paints its own error page over
-   * ours — the visitor loses the store badges and the listing card both. That
-   * destroys the property this whole feature rests on: a hand-off that does not
-   * work must leave exactly the page that shipped before it. A user-tapped
-   * button carries the same risk in principle, but there the visitor asked for
-   * it, can see what happened and can go back; an automatic navigation gives
-   * them no such chance. So Android gets the button only.
-   *
-   * iOS has no such failure mode: an unhandled custom scheme in a WKWebView is
-   * dropped silently, which is exactly the no-op we want.
-   */
-  autoUrl: string | null;
 };
 
 /**
@@ -104,9 +87,9 @@ export function shareAppLaunch(
 
   if (platform === "android") {
     const buttonUrl = androidIntentUrl(token);
-    return buttonUrl ? { buttonUrl, autoUrl: null } : null;
+    return buttonUrl ? { buttonUrl } : null;
   }
 
   const schemeUrl = appSchemeUrl(token);
-  return schemeUrl ? { buttonUrl: schemeUrl, autoUrl: schemeUrl } : null;
+  return schemeUrl ? { buttonUrl: schemeUrl } : null;
 }
