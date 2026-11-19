@@ -2,6 +2,7 @@ import { classifyShareAudience, shareBrowserGuide, shareDevice } from "@/lib/sha
 import { shareAppLaunch } from "@/lib/share-link/app-link";
 import { fetchSharePreview, isValidShareToken, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
+import { APP_STORE_URL } from "@/lib/site-config";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
@@ -54,6 +55,14 @@ export async function GET(
   const guide = shareBrowserGuide(ua);
   const url = new URL(request.url);
   const attempted = url.searchParams.get("open") === "1";
+  const device = shareDevice(ua);
+  // An installed app can intercept the HTTPS tap before this request arrives.
+  if (attempted && device === "ios" && audience !== "crawler" && isValidShareToken(token)) {
+    return new NextResponse(null, {
+      status: 302,
+      headers: { ...SHARED_HEADERS, Location: APP_STORE_URL },
+    });
+  }
   // iOS normally treats a link to the current host as another web navigation.
   // Serve the landing document on our production Netlify host so a real tap
   // targets the already-associated www host. Leave preview crawlers untouched.
@@ -76,9 +85,6 @@ export async function GET(
   const preview = await fetchSharePreview(token);
   const canonicalUrl = shareCanonicalUrl(token);
 
-  const device = shareDevice(ua);
-  // If iOS opens the native app, this second request never reaches the website.
-  // Receiving it means the visitor stayed on the web; offer a non-looping fallback.
   const useHttps = device !== "android" && !attempted && isValidShareToken(token);
   const launch = useHttps
     ? { buttonUrl: canonicalUrl + "?open=1" }
