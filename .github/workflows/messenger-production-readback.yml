@@ -13,7 +13,7 @@ jobs:
         run: |
           from urllib.request import Request, urlopen
           from html.parser import HTMLParser
-          import time
+          import time, json
           token = 'h-d87dd17d-6be1-4347-af74-59888767fd35'
           url = 'https://www.popoutmarket.com.au/l/' + token
           class Card(HTMLParser):
@@ -26,14 +26,14 @@ jobs:
                   if tag == 'meta':
                       self.meta[a.get('property') or a.get('name')] = a.get('content')
                   if tag == 'a': self.links.append(a.get('href'))
-          def read(ua):
-              with urlopen(Request(url, headers={'User-Agent': ua}), timeout=20) as r:
-                  assert r.status == 200 and r.url == url
+          def read(ua, suffix=""):
+              with urlopen(Request(url+suffix, headers={'User-Agent': ua}), timeout=20) as r:
+                  assert r.status == 200 and r.url == url+suffix
                   return r.read().decode()
           ios = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148'
           messenger = ios + ' [FBAN/MessengerForiOS;FBAV/500]'
           for i in range(110):
-              if 'choose Open in browser' in read(messenger): break
+              if ('href="'+url+'?open=1"') in read(messenger): break
               time.sleep(10)
           else: raise AssertionError('Production has not switched to the new Messenger page')
           for name, ua in [('Messenger',messenger),('Unnamed iOS webview',ios),('Safari',ios+' Version/18.0 Safari/604.1'),('WeChat',ios+' MicroMessenger/8'),('Kakao',ios+' KAKAOTALK/11'),('Unknown','UnidentifiedClient'),('Facebook crawler','facebookexternalhit/1.1'),('Android Messenger','Android FB_IAB/MESSENGER')]:
@@ -46,13 +46,19 @@ jobs:
               scheme = 'popout-market://l/' + token
               apple = [x for x in card.links if 'apps.apple.com' in x]
               if name in ('Messenger','Unnamed iOS webview','WeChat','Kakao','Safari'): assert len(apple)==1
-              if name in ('Messenger','Unnamed iOS webview','WeChat','Unknown','Facebook crawler'):
-                  assert 'popout-market://' not in html and 'intent://' not in html
-              if name in ('Messenger','Unnamed iOS webview'): assert 'choose Open in browser' in html
-              if name == 'WeChat': assert 'Tap ··· and open in your browser' in html
-              if name in ('Kakao','Safari'): assert scheme in card.links
-              if name == 'Safari': assert scheme in m['apple-itunes-app']
+              if name not in ('Facebook crawler','Android Messenger'):
+                  assert url+'?open=1' in card.links and scheme not in card.links
+                  fallback = read(ua, '?open=1')
+                  extra = Card()
+                  extra.feed(fallback)
+                  assert extra.meta['og:url']==url and extra.meta['og:title']==m['og:title']
+                  assert url+'?open=1' not in extra.links
+                  if name in ('Messenger','Unnamed iOS webview','WeChat'):
+                      assert scheme not in extra.links and ('paste it into Safari' in fallback or 'Tap ···' in fallback)
+                  if name in ('Safari','Kakao'): assert scheme in extra.links
+              if name == 'Safari': assert 'app-argument='+url in m['apple-itunes-app']
               if name == 'Unknown': assert '/download' in card.links
+              if name == 'Facebook crawler': assert not card.links
               if name == 'Android Messenger': assert any(x.startswith('intent://l/'+token+'#Intent;') for x in card.links)
               print(name, '200 PASS', m['og:title'], m['og:description'], flush=True)
           with urlopen(m['og:image'], timeout=30) as r:
@@ -60,3 +66,10 @@ jobs:
               assert r.status == 200 and r.headers.get_content_type().startswith('image/') and len(data)>1000
               assert data.startswith((b'\xff\xd8\xff',b'RIFF',b'\x89PNG')) or data[4:8]==b'ftyp'
               print('Anonymous production photo',r.status,r.headers.get_content_type(),len(data),'bytes')
+
+          for aasa in ('https://www.popoutmarket.com.au/.well-known/apple-app-site-association','https://app-site-association.cdn-apple.com/a/v1/www.popoutmarket.com.au'):
+              with urlopen(aasa,timeout=20) as r:
+                  assert r.status==200 and r.url==aasa
+                  details=json.load(r)['applinks']['details']
+                  assert any(x.get('appID')=='YK76NYXM3M.au.com.popoutmarket' and '/l/*' in x['paths'] for x in details)
+                  print('AASA verified',aasa)
