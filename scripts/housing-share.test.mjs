@@ -104,6 +104,7 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
     for (const ua of [
       "KakaoTalk Android",
       "Android FB_IAB/FB4A",
+      "Mozilla/5.0 (iPhone) Mobile [FBAN/MessengerForiOS;FBAV/500]",
       "Android Chrome/132",
       "iPhone Safari/605",
     ]) {
@@ -114,6 +115,11 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
         ),
       );
       assert.ok(html.includes(`://l/${token}`));
+      assert.doesNotMatch(html, /<script\b|http-equiv=["']refresh/i);
+      if (ua.includes("MessengerForiOS")) {
+        assert.ok(html.includes(`href="popout-market://l/${token}"`));
+        assert.ok(html.includes("If the app doesn’t open"));
+      }
     }
     const wechat = await (await request(token, "iPhone MicroMessenger")).text();
     assert.ok(wechat.includes("Tap ··· and open in your browser"));

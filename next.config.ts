@@ -70,21 +70,25 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-// PR 20 exercises Housing links against the mobile staging project.
-if (process.env.CONTEXT === "deploy-preview" && process.env.REVIEW_ID === "20") {
+// Dedicated share-link previews use the mobile staging project.
+if (
+  process.env.CONTEXT === "deploy-preview" &&
+  ["20", "21"].includes(process.env.REVIEW_ID ?? "")
+) {
   const url = process.env.SHARE_SUPABASE_URL?.trim();
   const key = process.env.SHARE_SUPABASE_ANON_KEY?.trim();
   const site = process.env.DEPLOY_PRIME_URL;
   if (
     url !== "https://yywerlbmbhckfvfoyfif.supabase.co" ||
     !key ||
-    site !== "https://deploy-preview-20--glittery-queijadas-6dd48c.netlify.app"
+    site !==
+      `https://deploy-preview-${process.env.REVIEW_ID}--glittery-queijadas-6dd48c.netlify.app`
   ) {
-    throw new Error("Missing PR 20 staging configuration");
+    throw new Error("Missing share preview staging configuration");
   }
   const claims = JSON.parse(Buffer.from(key.split(".")[1] || "", "base64url").toString());
   if (claims.role !== "anon" || claims.ref !== "yywerlbmbhckfvfoyfif") {
-    throw new Error("PR 20 requires the staging anonymous key");
+    throw new Error("Share preview requires the staging anonymous key");
   }
   nextConfig.env = {
     ...nextConfig.env,

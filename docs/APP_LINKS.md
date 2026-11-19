@@ -157,45 +157,12 @@ app-side. Builders live in `lib/share-link/app-link.ts`:
 - Android:
   `intent://l/<token>#Intent;scheme=popout-market;package=au.com.popoutmarket;S.browser_fallback_url=<url-encoded Play URL>;end`
 
-Every in-app-browser visitor on a known platform gets a primary **"Open in the
-app"** button above the store badges — a user gesture, which Meta's browser
-honours far more consistently than an automatic navigation. **iOS additionally
-gets one automatic attempt** ~400 ms after paint, for the apps where that works
-at all (KakaoTalk, LINE, Instagram, WhatsApp-iOS). The badges stay on the page
-underneath the whole time, so a blocked attempt is a no-op that leaves exactly
-the page that shipped before.
-
-Five constraints, all load-bearing:
-
-- **WeChat (`MicroMessenger`) gets no hand-off at all** — not a button, not an
-  attempt. It blocks custom schemes and answers with an error dialog. Its page is
-  byte-identical to the pre-hand-off version.
-- **Android never gets the automatic attempt.** A top-level navigation to
-  `intent://` in a webview that does not implement intent handling fails with
-  `ERR_UNKNOWN_URL_SCHEME`, and the webview paints its own error page over ours —
-  costing the visitor the store badges and the listing card both. That is worse
-  than doing nothing, and "worse than doing nothing is impossible" is the entire
-  safety argument for shipping this without a device test. A tapped button
-  carries the same risk in principle, but there the visitor asked, can see what
-  happened, and can go back. Note that a `visibilitychange` guard does **not**
-  address this: there is only ever one navigation, so there is no subsequent
-  action for such a guard to suppress.
-- **The automatic attempt must stay JavaScript.** KakaoTalk, LINE, WeChat and
-  Pinterest send the same UA from their scraper as from their browser, so this
-  one document is read by both. Scrapers do not execute JS, so a script cannot
-  cost a preview card — a `<meta http-equiv="refresh">` or a server-side redirect
-  would kill it outright.
-- **The hand-off must not depend on whether the token resolved.** An unknown
-  token and a removed listing already render the same generic card; if the button
-  appeared only when the listing resolved, its presence would leak that something
-  used to be there. In `renderShareInAppBrowserHtml` the listing card is the only
-  block that reads `preview` — keep it that way.
-- **Only a valid 24-hex token produces any of these URLs.** The path segment is
-  attacker-controlled and ends up in markup _and_ in an inline script;
-  validating in `app-link.ts` means nothing else can reach either, so no
-  downstream escaping is load-bearing.
-
-The crawler response and both `302` branches are untouched.
+The sharing page loads its preview without navigating away. On a recognized
+platform, a tap on the app button requests the hand-off. Embedded browsers
+can decline it, so the page includes instructions for opening the same URL
+externally and a device-specific install link. WeChat displays the external
+browser instruction in place of the app button. Native targets are only built
+from validated share tokens, independently of whether the listing resolved.
 
 ## Two kinds behind one address
 
