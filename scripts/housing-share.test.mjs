@@ -78,6 +78,21 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
   const document = await landing(new Request(landingUrl, messenger), ctx);
   assert.equal(document.status, 200);
   assert.ok((await document.text()).includes(`href="${canonical}?open=1"`));
+  for (const ua of ["iPhone Instagram", "iPhone MicroMessenger", "iPhone KakaoTalk"]) {
+    const options = { headers: { "user-agent": ua } };
+    const first = await landing(new Request(canonical, options), ctx);
+    assert.equal(first.status, 200);
+    assert.ok((await first.text()).includes('property="og:title"'));
+    assert.equal(first.headers.get("refresh"), "0; url=" + landingUrl);
+    const moved = await landing(new Request(landingUrl, options), ctx);
+    assert.equal(moved.headers.get("refresh"), null);
+    assert.ok((await moved.text()).includes(`href="${canonical}?open=1"`));
+    const store = await landing(new Request(canonical + "?open=1", options), ctx);
+    assert.equal(
+      store.headers.get("location"),
+      "https://apps.apple.com/au/app/popout/id6761421626",
+    );
+  }
   const recovery = await landing(new Request(canonical + "?open=1", messenger), ctx);
   assert.equal(recovery.status, 302);
   assert.equal(
