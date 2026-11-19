@@ -205,7 +205,7 @@ export function renderShareInAppBrowserHtml(
         : '<a href="/download">Get PopOut</a>';
   const banner =
     client.safari && launch
-      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(canonicalUrl)}" />`
+      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(launch.buttonUrl)}" />`
       : "";
   const action = client.wechat
     ? '<p class="action guide">Tap ··· and open in your browser</p>'
