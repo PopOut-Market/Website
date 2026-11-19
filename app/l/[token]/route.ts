@@ -1,9 +1,11 @@
-import { classifyShareAudience, classifyShareLaunchPlatform } from "@/lib/share-link/user-agent";
+import {
+  classifyShareAudience,
+  classifyShareLaunchPlatform,
+  shareDevice,
+} from "@/lib/share-link/user-agent";
 import { shareAppLaunch } from "@/lib/share-link/app-link";
 import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
-import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
-import { siteUrl } from "@/lib/seo";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
@@ -16,7 +18,8 @@ import { NextResponse, type NextRequest } from "next/server";
  *   in-app browser   -> 200 html, card + "Open in the app" hand-off + install buttons
  *                       (WeChat/KakaoTalk/LINE/Pinterest, whose scraper and browser
  *                       share one UA)
- *   human            -> 302 to the App Store / Google Play / /download
+ *   mobile browser   -> same token-preserving hand-off
+ *   unknown device   -> shared card with a download-page link
  *
  * Implemented as a Route Handler rather than a page because it needs exact
  * status codes, per-request User-Agent branching, and response headers that the
@@ -44,45 +47,31 @@ const SHARED_HEADERS: Record<string, string> = {
   "X-Robots-Tag": "noindex, nofollow",
 };
 
-function storeUrlFor(audience: "ios" | "android" | "desktop"): string {
-  if (audience === "ios") return APP_STORE_URL;
-  if (audience === "android") return GOOGLE_PLAY_URL;
-  return `${siteUrl().replace(/\/$/, "")}/download`;
-}
-
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ token: string }> },
 ): Promise<NextResponse> {
   const { token: rawToken } = await context.params;
   const token = (rawToken ?? "").toLowerCase();
-  const audience = classifyShareAudience(request.headers.get("user-agent"));
-
-  // Humans go to the store regardless of whether the listing still exists, so
-  // skip the database entirely — nothing on the store page depends on it, and a
-  // removed listing must not behave differently from an unknown one.
-  if (audience === "ios" || audience === "android" || audience === "desktop") {
-    return NextResponse.redirect(storeUrlFor(audience), {
-      status: 302,
-      headers: SHARED_HEADERS,
-    });
-  }
-
+  const ua = request.headers.get("user-agent");
+  const audience = classifyShareAudience(ua);
   // `fetchSharePreview` returns null for unknown tokens, removed listings,
   // malformed tokens and database errors alike — all render the generic card.
   const preview = await fetchSharePreview(token);
   const canonicalUrl = shareCanonicalUrl(token);
 
-  // The in-app-browser page is the only response that can hand off to the app:
-  // an in-app browser is exactly where the OS refuses to do it for us. Which URL
-  // form to use comes off the same UA string (`none` for WeChat, which blocks
-  // custom schemes as well as the stores).
   const html =
-    audience === "in-app-browser"
+    audience !== "crawler"
       ? renderShareInAppBrowserHtml(
           preview,
           canonicalUrl,
-          shareAppLaunch(token, classifyShareLaunchPlatform(request.headers.get("user-agent"))),
+          shareAppLaunch(token, classifyShareLaunchPlatform(ua)),
+          {
+            device: shareDevice(ua),
+            wechat: /MicroMessenger/i.test(ua ?? ""),
+            safari: audience === "ios" && /Version\/[\d.]+.*Safari\//i.test(ua ?? ""),
+            inApp: audience === "in-app-browser",
+          },
         )
       : renderShareCrawlerHtml(preview, canonicalUrl);
 

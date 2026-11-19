@@ -5,6 +5,7 @@ import {
   type SharePreview,
 } from "@/lib/share-link/preview";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
+import type { ShareLaunchPlatform } from "@/lib/share-link/user-agent";
 import type { ShareAppLaunch } from "@/lib/share-link/app-link";
 
 /**
@@ -23,14 +24,8 @@ import type { ShareAppLaunch } from "@/lib/share-link/app-link";
  * that never existed: never render a title, a price, or any hint that something
  * used to be here.
  */
-const GENERIC_TITLE = "PopOut Market";
-// Keep this in step with the positioning used everywhere else the brand
-// describes itself — the site layout's openGraph description, `OG_IMAGE.alt`,
-// the text baked into app/opengraph-image.tsx, and /download. This one is the
-// easiest to forget and the most widely seen: it is what every shared link
-// falls back to in a chat thread when the preview cannot be read.
-const GENERIC_DESCRIPTION =
-  "The neighbourhood app for Melbourne — second-hand from neighbours nearby, local shop finds, and neighbourhood questions answered.";
+const GENERIC_TITLE = "Shared on PopOut";
+const GENERIC_DESCRIPTION = "Open this post in PopOut.";
 
 const LOGO_SRC = "/images/app-icon.png";
 const APP_STORE_BADGE_SRC = "/images/app_store_ios_black.svg";
@@ -144,7 +139,7 @@ export function renderShareCrawlerHtml(preview: SharePreview | null, canonicalUr
  * both. Scrapers do not execute JS, so a script cannot cost us a link preview,
  * whereas either redirect form would kill the card outright.
  *
- * `url` is built from a validated 24-hex token and compile-time constants (see
+ * `url` is built from a validated share token and compile-time constants (see
  * `lib/share-link/app-link.ts`), so nothing user- or seller-authored reaches
  * this script; `JSON.stringify` is belt-and-braces on top of that.
  *
@@ -187,71 +182,74 @@ function autoLaunchScript(url: string): string {
 export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
-  launch: ShareAppLaunch | null = null,
+  launch: ShareAppLaunch | null,
+  client: { device: ShareLaunchPlatform; wechat: boolean; safari: boolean; inApp: boolean },
 ): string {
   const fields = cardFields(preview);
 
-  // Only render details when the token resolved to something; a removed listing
-  // or an unpublished post must look exactly like a token that never existed.
-  //
-  // This block is the ONLY part of the page that depends on `preview`, and that
-  // is a requirement rather than an accident: the app hand-off below must render
-  // identically whether or not the token resolved, or its presence tells the
-  // visitor that something used to be here.
-  //
-  // One card serves both kinds, and that is what keeps the community privacy
-  // contract cheap to hold: it renders a title, a photo and
-  // `formatShareDescription`, so there is no slot for a body, a reply, a poll
-  // option or an author even if the data layer one day handed one over.
-  const previewBlock = preview
-    ? `      <div style="margin:0 auto 28px;max-width:340px;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;background:#f9fafb;text-align:left;">
-        <img src="${escapeHtml(sharePreviewImageUrl(preview))}" alt="${escapeHtml(preview.title)}" style="display:block;width:100%;height:180px;object-fit:cover;" />
-        <div style="padding:12px 14px;">
-          <p style="margin:0 0 4px;font-size:15px;font-weight:600;line-height:1.35;">${escapeHtml(preview.title)}</p>
-          <p style="margin:0;font-size:14px;color:#4b5563;">${escapeHtml(formatShareDescription(preview))}</p>
-        </div>
-      </div>
-`
+  const photo = preview?.photoPath
+    ? `<img class="cover" src="${escapeHtml(fields.imageUrl)}" alt="" />`
     : "";
-
-  /**
-   * With a hand-off available the store badges become the secondary path, so
-   * they get a "don't have it yet" heading. Without one the page is left exactly
-   * as it was — that is WeChat's page, and nothing here improves it.
-   */
-  const launchBlock = launch
-    ? `      <a href="${escapeHtml(launch.buttonUrl)}" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 32px;border-radius:14px;background:#cc3200;color:#fff;font-size:16px;font-weight:700;text-decoration:none;">Open in the app</a>
-      <p style="margin:20px 0 12px;font-size:13px;color:#6b7280;">Don&#39;t have the app yet?</p>
-`
-    : `      <p style="margin:0 0 16px;font-size:14px;color:#374151;">Open this listing in the PopOut app</p>
-`;
+  const summary = preview && formatShareDescription(preview);
+  const label =
+    preview?.kind === "community_post"
+      ? "View post in PopOut"
+      : preview
+        ? "View listing in PopOut"
+        : "Open in PopOut";
+  const install =
+    client.device === "ios"
+      ? `<a href="${escapeHtml(APP_STORE_URL)}"><img width="156" height="60" src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" /></a>`
+      : client.device === "android"
+        ? `<a href="${escapeHtml(GOOGLE_PLAY_URL)}"><img width="175" height="60" src="${GOOGLE_PLAY_BADGE_SRC}" alt="Get it on Google Play" /></a>`
+        : '<a href="/download">Get PopOut</a>';
+  const banner =
+    client.safari && launch
+      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(launch.buttonUrl)}" />`
+      : "";
+  const action = client.wechat
+    ? '<p class="action guide">Tap ··· and open in your browser</p>'
+    : launch
+      ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
+      : "";
 
   return `<!doctype html>
 <html lang="en">
   <head>
     ${metaTags(fields, canonicalUrl)}
+    ${banner}
+    <style>
+      * {box-sizing:border-box}
+      body {margin:0;background:#f3f3f3;color:#222222;font:16px/1.45 system-ui,sans-serif}
+      main {width:min(100%,440px);margin:auto;padding:clamp(12px,3vh,28px) 16px 24px}
+      header {display:flex;gap:8px;align-items:center;margin-bottom:16px;font-weight:700}
+      header img {border-radius:8px}
+      article {background:white;border-radius:20px;overflow:hidden}
+      .cover {display:block;width:100%;height:min(30vh,224px);height:min(30svh,224px);object-fit:cover}
+      .details {padding:14px 16px}
+      h1 {margin:0;font-size:clamp(20px,5vw,26px);line-height:1.2;overflow-wrap:anywhere;
+          display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+      .summary {margin:6px 0 0;color:#52504d;overflow-wrap:anywhere}
+      .action {margin:16px 0 0;text-align:center}
+      a.action {display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;
+          padding:8px 16px;border-radius:16px;background:#ff8c00;color:white;
+          font-weight:700;text-decoration:none}
+      a.action:active {transform:scale(.97)}
+      footer {margin-top:8px;text-align:center}
+      footer a {display:inline-flex;align-items:center;justify-content:center;min-height:48px;color:inherit}
+      footer img {display:block}
+    </style>
   </head>
-  <body style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#111827;">
-    <main style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;">
-      <img src="${LOGO_SRC}" alt="PopOut Market" width="72" height="72" style="width:64px;height:64px;border-radius:18px;border:1px solid rgba(0,0,0,0.1);object-fit:cover;" />
-      <h1 style="margin:20px 0 8px;font-size:22px;font-weight:800;letter-spacing:-0.01em;">PopOut Market</h1>
-      <p style="margin:0 0 28px;font-size:14px;color:#374151;">Melbourne&#39;s second-hand marketplace</p>
-${previewBlock}${launchBlock}      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
-        <a href="${escapeHtml(APP_STORE_URL)}" aria-label="Download on the App Store" style="display:block;">
-          <img src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" style="height:52px;width:auto;" />
-        </a>
-        <a href="${escapeHtml(GOOGLE_PLAY_URL)}" aria-label="Get it on Google Play" style="display:block;">
-          <img src="${GOOGLE_PLAY_BADGE_SRC}" alt="Get it on Google Play" style="height:52px;width:auto;" />
-        </a>
-      </div>
-      <p style="margin:32px 0 0;max-width:320px;font-size:12px;line-height:1.6;color:#9ca3af;">
-        ${
-          launch
-            ? "If the app button doesn&#39;t open the app, or a store button doesn&#39;t open the store, use the menu at the top right to open this page in your browser (such as Safari or Chrome), then tap it again."
-            : "If a button doesn&#39;t open the store, use the menu at the top right to open this page in your browser (such as Safari or Chrome), then tap it again."
-        }
-      </p>
+  <body>
+    <main>
+      <header><img src="${LOGO_SRC}" width="30" height="30" alt="" />PopOut</header>
+      <article>${photo}<div class="details">
+        <h1>${escapeHtml(fields.title)}</h1>
+        ${summary ? `<p class="summary">${escapeHtml(summary)}</p>` : ""}
+      </div></article>
+      ${action}
+      <footer>${install}</footer>
     </main>
-${launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
+${client.inApp && launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
 </html>`;
 }
