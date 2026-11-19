@@ -28,14 +28,7 @@ const APP_SCHEME = "popout-market";
 /** Android applicationId. Pins the intent to our app so a rogue handler cannot claim it. */
 const ANDROID_PACKAGE = "au.com.popoutmarket";
 
-/**
- * Every builder returns null unless the token is a real 24-hex share token.
- *
- * This is a security boundary, not tidiness: the path segment is attacker
- * controlled, and these URLs are interpolated into markup AND into an inline
- * script. Validating here means nothing but `[0-9a-f]{24}` can ever reach
- * either, so no amount of escaping downstream is load-bearing.
- */
+/** Only app-recognized tokens may enter the inline script or intent URL. */
 function normalizeToken(token: string): string | null {
   const normalized = (token ?? "").toLowerCase();
   return isValidShareToken(normalized) ? normalized : null;

@@ -9,7 +9,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 /**
  * Data layer for the `/l/<token>` share landing route.
  *
- * One address family, two kinds of thing behind it: a marketplace listing or a
+ * Housing h-UUID tokens use the app’s anonymous detail RPC directly.
+ * Legacy opaque tokens address a marketplace listing or a
  * community post. Three anon-callable STABLE SECURITY DEFINER RPCs, read in a
  * fixed order:
  *
@@ -39,7 +40,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * something existed or why it went away.
  */
 
-/** Share tokens are 24 lowercase hex chars, generated app-side. */
+/** Legacy opaque tokens and the separate mobile Housing namespace. */
+const HOUSING_TOKEN_PATTERN =
+  /^h-[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const SHARE_TOKEN_PATTERN = /^[0-9a-f]{24}$/;
 
 /**
@@ -86,7 +89,15 @@ export type CommunitySharePreview = {
   photoPath: string | null;
 };
 
-export type SharePreview = ListingSharePreview | CommunitySharePreview;
+type HousingSharePreview = {
+  kind: "housing";
+  token: string;
+  title: string;
+  summary: string;
+  photoPath: string | null;
+};
+
+export type SharePreview = ListingSharePreview | CommunitySharePreview | HousingSharePreview;
 
 /**
  * Storage bucket per kind. **This is the trap in this file.** Listing photos
@@ -101,8 +112,12 @@ const PHOTO_BUCKETS: Record<ShareKind, string> = {
   community_post: "community_post_images",
 };
 
+export function isHousingShareToken(token: string): boolean {
+  return HOUSING_TOKEN_PATTERN.test(token);
+}
+
 export function isValidShareToken(token: string): boolean {
-  return SHARE_TOKEN_PATTERN.test(token);
+  return SHARE_TOKEN_PATTERN.test(token) || isHousingShareToken(token);
 }
 
 type SharePreviewRow = {
@@ -207,6 +222,42 @@ async function fetchCommunityPreview(
   };
 }
 
+async function fetchHousingPreview(
+  supabase: SupabaseClient,
+  token: string,
+  deadline: AbortSignal,
+): Promise<HousingSharePreview | null> {
+  // HousingDetailScreen also gates direct links on the remote Housing switch.
+  const enabled = await supabase.rpc("housing_enabled").abortSignal(deadline);
+  if (enabled.error || enabled.data !== true) return null;
+
+  const id = token.slice(2);
+  const { data, error } = await supabase
+    .rpc("get_housing_detail_v13", { p_id: id })
+    .abortSignal(deadline);
+  if (error || data?.id !== id || (data.kind !== "rooms" && data.kind !== "entire")) return null;
+
+  const suburb = data.suburb_name?.trim();
+  if (!suburb) return null;
+  const title = data.kind === "rooms" ? `Share in ${suburb}` : `Entire home for rent in ${suburb}`;
+  const facts: string[] = [];
+  if (data.availability === "taken") facts.push("Taken");
+  for (const [count, label] of [
+    [data.bedrooms, "bedroom"],
+    [data.bathrooms, "bathroom"],
+  ] as const) {
+    if (Number.isSafeInteger(count) && count >= 0)
+      facts.push(`${count} ${label}${count === 1 ? "" : "s"}`);
+  }
+  return {
+    kind: "housing",
+    token,
+    title,
+    summary: facts.join(" · ") || suburb,
+    photoPath: data.photos?.[0]?.path?.trim() || null,
+  };
+}
+
 /**
  * Returns whatever a share token addresses — a listing or a community post — or
  * `null` for every "no card" case: unknown token, removed listing, unpublished
@@ -222,6 +273,8 @@ export async function fetchSharePreview(token: string): Promise<SharePreview | n
     // One deadline for the pair, so adding the resolver did not double the time
     // a crawler can be made to wait.
     const deadline = AbortSignal.timeout(RPC_TIMEOUT_MS);
+
+    if (isHousingShareToken(token)) return await fetchHousingPreview(supabase, token, deadline);
 
     const kind = await resolveShareKind(supabase, token, deadline);
     if (!kind) return null;
@@ -276,6 +329,7 @@ export function formatSharePrice(cents: number): string {
  * tagline rather than emitting a blank description.
  */
 export function formatShareDescription(preview: SharePreview): string {
+  if (preview.kind === "housing") return preview.summary;
   const parts: string[] = [];
   if (preview.kind === "listing" && preview.priceCents !== null) {
     parts.push(formatSharePrice(preview.priceCents));
@@ -311,6 +365,8 @@ export function fallbackShareImageUrl(): string {
 export function sharePreviewImageUrl(preview: SharePreview): string {
   const { photoPath } = preview;
   if (!photoPath) return fallbackShareImageUrl();
+
+  if (preview.kind === "housing") return `${shareCanonicalUrl(preview.token)}/photo`;
 
   const origin = sharePreviewSupabaseUrl();
   if (!origin) return fallbackShareImageUrl();

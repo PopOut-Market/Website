@@ -144,7 +144,7 @@ export function renderShareCrawlerHtml(preview: SharePreview | null, canonicalUr
  * both. Scrapers do not execute JS, so a script cannot cost us a link preview,
  * whereas either redirect form would kill the card outright.
  *
- * `url` is built from a validated 24-hex token and compile-time constants (see
+ * `url` is built from a validated share token and compile-time constants (see
  * `lib/share-link/app-link.ts`), so nothing user- or seller-authored reaches
  * this script; `JSON.stringify` is belt-and-braces on top of that.
  *
@@ -188,6 +188,7 @@ export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
   launch: ShareAppLaunch | null = null,
+  openExternally = false,
 ): string {
   const fields = cardFields(preview);
 
@@ -219,7 +220,9 @@ export function renderShareInAppBrowserHtml(
    * they get a "don't have it yet" heading. Without one the page is left exactly
    * as it was — that is WeChat's page, and nothing here improves it.
    */
-  const launchBlock = launch
+  const launchBlock = openExternally
+    ? `      <p>To open this listing in PopOut, use the WeChat menu to open this page in Safari or your Android browser, then tap <strong>Open in the app</strong>.</p>`
+    : launch
     ? `      <a href="${escapeHtml(launch.buttonUrl)}" style="display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 32px;border-radius:14px;background:#cc3200;color:#fff;font-size:16px;font-weight:700;text-decoration:none;">Open in the app</a>
       <p style="margin:20px 0 12px;font-size:13px;color:#6b7280;">Don&#39;t have the app yet?</p>
 `
@@ -235,7 +238,7 @@ export function renderShareInAppBrowserHtml(
     <main style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;">
       <img src="${LOGO_SRC}" alt="PopOut Market" width="72" height="72" style="width:64px;height:64px;border-radius:18px;border:1px solid rgba(0,0,0,0.1);object-fit:cover;" />
       <h1 style="margin:20px 0 8px;font-size:22px;font-weight:800;letter-spacing:-0.01em;">PopOut Market</h1>
-      <p style="margin:0 0 28px;font-size:14px;color:#374151;">Melbourne&#39;s second-hand marketplace</p>
+      <p style="margin:0 0 28px;font-size:14px;color:#374151;">${preview?.kind === "housing" ? "Rooms &amp; rentals in Melbourne" : "Melbourne&#39;s second-hand marketplace"}</p>
 ${previewBlock}${launchBlock}      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
         <a href="${escapeHtml(APP_STORE_URL)}" aria-label="Download on the App Store" style="display:block;">
           <img src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" style="height:52px;width:auto;" />
