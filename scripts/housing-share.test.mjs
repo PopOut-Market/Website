@@ -68,6 +68,23 @@ test("share handler HTML, native targets and anonymous photo access", async (t) 
     assert.match(result.headers.get("cache-control"), /no-store/);
     return result;
   }
+  const canonical = "https://www.popoutmarket.com.au/l/" + share;
+  const messenger = { headers: { "user-agent": "iPhone FBAN/MessengerForiOS" } };
+  const ctx = { params: Promise.resolve({ token: share }) };
+  const entry = await landing(new Request(canonical, messenger), ctx);
+  assert.equal(entry.status, 307);
+  const landingUrl = entry.headers.get("location");
+  assert.equal(new URL(landingUrl).hostname, "glittery-queijadas-6dd48c.netlify.app");
+  const document = await landing(new Request(landingUrl, messenger), ctx);
+  assert.equal(document.status, 200);
+  assert.ok((await document.text()).includes(`href="${canonical}?open=1"`));
+  const recovery = await landing(new Request(canonical + "?open=1", messenger), ctx);
+  assert.equal(recovery.status, 200);
+  const crawler = await landing(
+    new Request(canonical, { headers: { "user-agent": "facebookexternalhit" } }),
+    ctx,
+  );
+  assert.equal(crawler.status, 200);
   for (const token of [share, rent]) {
     for (const ua of [
       "Twitterbot",
