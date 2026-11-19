@@ -66,17 +66,20 @@ export async function GET(
   // iOS normally treats a link to the current host as another web navigation.
   // Serve the landing document on our production Netlify host so a real tap
   // targets the already-associated www host. Leave preview crawlers untouched.
-  if (
-    (audience === "ios" || guide === "ios-browser") &&
+  const landingUrl =
+    device === "ios" &&
+    audience !== "crawler" &&
     !attempted &&
     isValidShareToken(token) &&
     (request.headers.get("host") ?? url.host) === "www.popoutmarket.com.au"
-  ) {
+      ? `https://glittery-queijadas-6dd48c.netlify.app/l/${token}`
+      : null;
+  if (landingUrl && (audience === "ios" || guide === "ios-browser")) {
     return new NextResponse(null, {
       status: 307,
       headers: {
         ...SHARED_HEADERS,
-        Location: `https://glittery-queijadas-6dd48c.netlify.app/l/${token}`,
+        Location: landingUrl,
       },
     });
   }
@@ -104,6 +107,12 @@ export async function GET(
 
   return new NextResponse(html, {
     status: 200,
-    headers: { ...SHARED_HEADERS, "Content-Type": "text/html; charset=utf-8" },
+    headers: {
+      ...SHARED_HEADERS,
+      "Content-Type": "text/html; charset=utf-8",
+      // Some chat browsers and their preview fetchers share a user agent.
+      // Keep OG in a 200 response while moving the rendered page off www.
+      ...(landingUrl ? { Refresh: `0; url=${landingUrl}` } : {}),
+    },
   });
 }
