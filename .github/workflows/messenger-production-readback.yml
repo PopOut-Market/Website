@@ -1,0 +1,62 @@
+name: Southbank production response verification
+on:
+  push:
+    branches: [verify/ios-messenger-production]
+permissions: {}
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check anonymous production responses
+        shell: python
+        run: |
+          from urllib.request import Request, urlopen
+          from html.parser import HTMLParser
+          import time
+          token = 'h-d87dd17d-6be1-4347-af74-59888767fd35'
+          url = 'https://www.popoutmarket.com.au/l/' + token
+          class Card(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.meta = {}
+                  self.links = []
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == 'meta':
+                      self.meta[a.get('property') or a.get('name')] = a.get('content')
+                  if tag == 'a': self.links.append(a.get('href'))
+          def read(ua):
+              with urlopen(Request(url, headers={'User-Agent': ua}), timeout=20) as r:
+                  assert r.status == 200 and r.url == url
+                  return r.read().decode()
+          ios = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148'
+          messenger = ios + ' [FBAN/MessengerForiOS;FBAV/500]'
+          for i in range(110):
+              if 'choose Open in browser' in read(messenger): break
+              time.sleep(10)
+          else: raise AssertionError('Production has not switched to the new Messenger page')
+          for name, ua in [('Messenger',messenger),('Unnamed iOS webview',ios),('Safari',ios+' Version/18.0 Safari/604.1'),('WeChat',ios+' MicroMessenger/8'),('Kakao',ios+' KAKAOTALK/11'),('Unknown','UnidentifiedClient'),('Facebook crawler','facebookexternalhit/1.1'),('Android Messenger','Android FB_IAB/MESSENGER')]:
+              html = read(ua)
+              card = Card()
+              card.feed(html)
+              m = card.meta
+              assert 'Southbank' in m['og:title'] and m['og:url'] == url
+              assert m['og:image'] == url + '/photo' and m['og:description']
+              scheme = 'popout-market://l/' + token
+              apple = [x for x in card.links if 'apps.apple.com' in x]
+              if name in ('Messenger','Unnamed iOS webview','WeChat','Kakao','Safari'): assert len(apple)==1
+              if name in ('Messenger','Unnamed iOS webview','WeChat','Unknown','Facebook crawler'):
+                  assert 'popout-market://' not in html and 'intent://' not in html
+              if name in ('Messenger','Unnamed iOS webview'): assert 'choose Open in browser' in html
+              if name == 'WeChat': assert 'Tap ··· and open in your browser' in html
+              if name in ('Kakao','Safari'): assert scheme in card.links
+              if name == 'Safari': assert scheme in m['apple-itunes-app']
+              if name == 'Unknown': assert '/download' in card.links
+              if name == 'Android Messenger': assert any(x.startswith('intent://l/'+token+'#Intent;') for x in card.links)
+              print(name, '200 PASS', m['og:title'], m['og:description'], flush=True)
+          with urlopen(m['og:image'], timeout=30) as r:
+              data = r.read()
+              assert r.status == 200 and r.headers.get_content_type().startswith('image/') and len(data)>1000
+              assert data.startswith((b'\xff\xd8\xff',b'RIFF',b'\x89PNG')) or data[4:8]==b'ftyp'
+              print('Anonymous production photo',r.status,r.headers.get_content_type(),len(data),'bytes')
