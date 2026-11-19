@@ -5,6 +5,7 @@ import {
   type SharePreview,
 } from "@/lib/share-link/preview";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
+import type { ShareLaunchPlatform } from "@/lib/share-link/user-agent";
 import type { ShareAppLaunch } from "@/lib/share-link/app-link";
 
 /**
@@ -181,8 +182,8 @@ function autoLaunchScript(url: string): string {
 export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
-  launch: ShareAppLaunch | null = null,
-  openExternally = false,
+  launch: ShareAppLaunch | null,
+  client: { device: ShareLaunchPlatform; wechat: boolean; safari: boolean; inApp: boolean },
 ): string {
   const fields = cardFields(preview);
 
@@ -190,35 +191,53 @@ export function renderShareInAppBrowserHtml(
     ? `<img class="cover" src="${escapeHtml(fields.imageUrl)}" alt="" />`
     : "";
   const summary = preview && formatShareDescription(preview);
-  const action = openExternally
+  const label =
+    preview?.kind === "community_post"
+      ? "View post in PopOut"
+      : preview
+        ? "View listing in PopOut"
+        : "Open in PopOut";
+  const install =
+    client.device === "ios"
+      ? `<a href="${escapeHtml(APP_STORE_URL)}"><img width="156" height="60" src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" /></a>`
+      : client.device === "android"
+        ? `<a href="${escapeHtml(GOOGLE_PLAY_URL)}"><img width="175" height="60" src="${GOOGLE_PLAY_BADGE_SRC}" alt="Get it on Google Play" /></a>`
+        : '<a href="/download">Get PopOut</a>';
+  const banner =
+    client.safari && launch
+      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(canonicalUrl)}" />`
+      : "";
+  const action = client.wechat
     ? '<p class="action guide">Tap ··· and open in your browser</p>'
     : launch
-      ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">Open in PopOut</a>`
+      ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
       : "";
 
   return `<!doctype html>
 <html lang="en">
   <head>
     ${metaTags(fields, canonicalUrl)}
+    ${banner}
     <style>
       * {box-sizing:border-box}
-      body {margin:0;background:#fff;color:#20201f;font:16px/1.45 system-ui,sans-serif}
-      main {width:min(100%,440px);margin:auto;padding:clamp(12px,3vh,28px) 18px 24px}
+      body {margin:0;background:#f3f3f3;color:#222222;font:16px/1.45 system-ui,sans-serif}
+      main {width:min(100%,440px);margin:auto;padding:clamp(12px,3vh,28px) 16px 24px}
       header {display:flex;gap:8px;align-items:center;margin-bottom:16px;font-weight:700}
       header img {border-radius:8px}
-      article {border:1px solid #e5e3df;border-radius:16px;overflow:hidden}
-      .cover {display:block;width:100%;height:min(30vh,224px);object-fit:cover}
+      article {background:white;border-radius:20px;overflow:hidden}
+      .cover {display:block;width:100%;height:min(30vh,224px);height:min(30svh,224px);object-fit:cover}
       .details {padding:14px 16px}
       h1 {margin:0;font-size:clamp(20px,5vw,26px);line-height:1.2;overflow-wrap:anywhere;
-          display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+          display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
       .summary {margin:6px 0 0;color:#52504d;overflow-wrap:anywhere}
-      .action {display:block;margin:14px 0 0;padding:14px;border-radius:12px;text-align:center;
-          background:#242321;color:#fff;font-weight:700;text-decoration:none}
-      .guide {background:#fff3de;color:#513614}
-      footer {margin-top:20px;text-align:center;font-size:13px;color:#595752}
-      footer p {margin:0 0 8px}
-      footer div {display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-      footer img {display:block;height:34px;width:auto}
+      .action {margin:16px 0 0;text-align:center}
+      a.action {display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;
+          padding:8px 16px;border-radius:16px;background:#ff8c00;color:white;
+          font-weight:700;text-decoration:none}
+      a.action:active {transform:scale(.97)}
+      footer {margin-top:8px;text-align:center}
+      footer a {display:inline-flex;align-items:center;justify-content:center;min-height:48px;color:inherit}
+      footer img {display:block}
     </style>
   </head>
   <body>
@@ -229,11 +248,8 @@ export function renderShareInAppBrowserHtml(
         ${summary ? `<p class="summary">${escapeHtml(summary)}</p>` : ""}
       </div></article>
       ${action}
-      <footer><p>Get the PopOut app</p><div>
-        <a href="${escapeHtml(APP_STORE_URL)}"><img src="${APP_STORE_BADGE_SRC}" alt="Download on the App Store" /></a>
-        <a href="${escapeHtml(GOOGLE_PLAY_URL)}"><img src="${GOOGLE_PLAY_BADGE_SRC}" alt="Get it on Google Play" /></a>
-      </div></footer>
+      <footer>${install}</footer>
     </main>
-${launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
+${client.inApp && launch?.autoUrl ? autoLaunchScript(launch.autoUrl) : ""}  </body>
 </html>`;
 }
