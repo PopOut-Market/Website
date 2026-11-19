@@ -5,7 +5,7 @@ import {
   type SharePreview,
 } from "@/lib/share-link/preview";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
-import type { ShareLaunchPlatform } from "@/lib/share-link/user-agent";
+import type { BrowserGuide, ShareLaunchPlatform } from "@/lib/share-link/user-agent";
 import type { ShareAppLaunch } from "@/lib/share-link/app-link";
 
 /**
@@ -149,7 +149,7 @@ export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
   launch: ShareAppLaunch | null,
-  client: { device: ShareLaunchPlatform; wechat: boolean; safari: boolean; inApp: boolean },
+  client: { device: ShareLaunchPlatform; guide: BrowserGuide; safari: boolean; inApp: boolean },
 ): string {
   const fields = cardFields(preview);
 
@@ -173,11 +173,14 @@ export function renderShareInAppBrowserHtml(
     client.safari && launch
       ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(launch.buttonUrl)}" />`
       : "";
-  const action = client.wechat
-    ? '<p class="action guide">Tap ··· and open in your browser</p>'
-    : launch
-      ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
-      : "";
+  const action =
+    client.guide === "wechat"
+      ? '<p class="action guide">Tap ··· and open in your browser</p>'
+      : client.guide === "ios-browser"
+        ? '<p class="action guide">Tap the menu (···) and choose Open in browser. In Safari, tap the PopOut button to open this post.</p>'
+        : launch
+          ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
+          : "";
 
   return `<!doctype html>
 <html lang="en">
