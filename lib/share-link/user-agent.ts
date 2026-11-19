@@ -143,9 +143,11 @@ export function classifyShareLaunchPlatform(
 ): ShareLaunchPlatform {
   const ua = userAgent ?? "";
   if (SCHEME_BLOCKING_PATTERN.test(ua)) return "none";
-  // iOS first: an iPad-on-Android UA does not exist, but LINE and KakaoTalk
-  // append their token to a full Safari UA, so check the device before anything
-  // structural.
+  return shareDevice(ua);
+}
+
+export function shareDevice(userAgent: string | null | undefined): ShareLaunchPlatform {
+  const ua = userAgent ?? "";
   if (IOS_PATTERN.test(ua)) return "ios";
   if (ANDROID_PATTERN.test(ua)) return "android";
   return "none";
