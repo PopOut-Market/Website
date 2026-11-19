@@ -58,7 +58,7 @@ jobs:
                   if name in ('Safari','Kakao'): assert scheme in extra.links
               if name == 'Safari': assert 'app-argument='+url in m['apple-itunes-app']
               if name == 'Unknown': assert '/download' in card.links
-              if name == 'Facebook crawler': assert not card.links
+              if name == 'Facebook crawler': assert scheme not in card.links and url+'?open=1' not in card.links and 'intent://' not in html and '<script' not in html
               if name == 'Android Messenger': assert any(x.startswith('intent://l/'+token+'#Intent;') for x in card.links)
               print(name, '200 PASS', m['og:title'], m['og:description'], flush=True)
           with urlopen(m['og:image'], timeout=30) as r:
