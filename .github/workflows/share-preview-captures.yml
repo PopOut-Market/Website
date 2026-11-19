@@ -1,0 +1,64 @@
+name: Capture PR 20 share pages
+on:
+  push:
+    branches: [staging/housing-share-preview]
+    paths: ['.github/workflows/share-preview-captures.yml']
+permissions: {}
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - run: python -m pip install selenium==4.38.0
+      - name: Check anonymous cards and capture mobile layouts
+        shell: python
+        run: |
+          import os, time, pathlib, urllib.request
+          from html.parser import HTMLParser
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.common.by import By
+          host = 'https://deploy-preview-20--glittery-queijadas-6dd48c.netlify.app'
+          share = 'h-3ed35508-e6cc-4c1d-b566-219af5a9b62b'
+          rent = 'h-04854991-62a5-49f1-ab05-a754929814d2'
+          mobile = 'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 Chrome/139.0 Mobile Safari/537.36'
+          def read(url, ua):
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':ua}),timeout=25) as response:
+                  assert response.status == 200
+                  return response.read()
+          class Meta(HTMLParser):
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == 'meta' and 'property' in a: self.values[a['property']] = a.get('content')
+          for attempt in range(36):
+              if b'Open in PopOut</a>' in read(host+'/l/'+share,mobile): break
+              time.sleep(8)
+          else: raise RuntimeError('Updated page not yet published')
+          out = pathlib.Path('captures'); out.mkdir()
+          options = Options(); options.add_argument('--headless=new'); options.add_argument('--no-sandbox')
+          with webdriver.Chrome(options=options) as driver:
+              driver.execute_cdp_cmd('Emulation.setDeviceMetricsOverride',dict(width=390,height=700,deviceScaleFactor=1,mobile=True))
+              for name,token,ua in [('01-share-kakao',share,mobile+' KAKAOTALK'),('02-share-wechat-simulated',share,mobile+' MicroMessenger/8.0'),('03-share-external',share,mobile),('04-rent-external',rent,mobile)]:
+                  url = host+'/l/'+token
+                  meta = Meta(); meta.values={}; meta.feed(read(url,'facebookexternalhit/1.1').decode()); m=meta.values
+                  assert m['og:url']==url and m['og:image']==url+'/photo'
+                  assert m['og:title'].startswith('Share in ' if token==share else 'Entire home for rent in ')
+                  assert len(read(m['og:image'], 'facebookexternalhit/1.1'))>10000
+                  driver.execute_cdp_cmd('Network.setUserAgentOverride',{'userAgent':ua}); driver.get(url)
+                  driver.find_element(By.TAG_NAME,'h1'); find=lambda css:driver.find_element(By.CSS_SELECTOR,css)
+                  assert find('h1').text==m['og:title'] and find('.summary').text==m['og:description']
+                  assert find('.cover').get_attribute('src')==m['og:image']
+                  WebDriverWait(driver,20).until(lambda d:d.execute_script('return document.querySelector(".cover").naturalWidth>0'))
+                  action=find('.action'); assert action.rect['y']+action.rect['height']<=700
+                  if 'wechat' in name:
+                      assert action.text=='Tap ··· and open in your browser' and not action.get_attribute('href')
+                  else:
+                      assert action.text=='Open in PopOut' and action.get_attribute('href').startswith('intent://l/'+token+'#Intent;')
+                  driver.save_screenshot(str(out/(name+'.png')))
+                  with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as report: print(name,m['og:title'],m['og:description'],action.text,sep=' | ',end='\n\n',file=report)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PR20-mobile-captures
+          path: captures/*.png
+          retention-days: 7
