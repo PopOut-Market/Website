@@ -1,8 +1,4 @@
-import {
-  classifyShareAudience,
-  classifyShareLaunchPlatform,
-  shareDevice,
-} from "@/lib/share-link/user-agent";
+import { classifyShareAudience, shareBrowserGuide, shareDevice } from "@/lib/share-link/user-agent";
 import { shareAppLaunch } from "@/lib/share-link/app-link";
 import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
@@ -60,15 +56,17 @@ export async function GET(
   const preview = await fetchSharePreview(token);
   const canonicalUrl = shareCanonicalUrl(token);
 
+  const guide = shareBrowserGuide(ua);
+  const device = shareDevice(ua);
   const html =
     audience !== "crawler"
       ? renderShareInAppBrowserHtml(
           preview,
           canonicalUrl,
-          shareAppLaunch(token, classifyShareLaunchPlatform(ua)),
+          guide ? null : shareAppLaunch(token, device),
           {
-            device: shareDevice(ua),
-            wechat: /MicroMessenger/i.test(ua ?? ""),
+            device,
+            guide,
             safari: audience === "ios" && /Version\/[\d.]+.*Safari\//i.test(ua ?? ""),
             inApp: audience === "in-app-browser",
           },
