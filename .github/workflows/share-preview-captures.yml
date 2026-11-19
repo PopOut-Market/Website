@@ -2,7 +2,7 @@ name: Capture PR 20 share pages
 on:
   push:
     branches: [staging/housing-share-preview]
-    paths: ['.github/workflows/share-preview-captures.yml']
+    paths: [".github/workflows/share-preview-captures.yml"]
 permissions: {}
 jobs:
   capture:
