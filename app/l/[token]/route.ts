@@ -1,6 +1,6 @@
 import { classifyShareAudience, shareBrowserGuide, shareDevice } from "@/lib/share-link/user-agent";
 import { shareAppLaunch } from "@/lib/share-link/app-link";
-import { fetchSharePreview, shareCanonicalUrl } from "@/lib/share-link/preview";
+import { fetchSharePreview, isValidShareToken, shareCanonicalUrl } from "@/lib/share-link/preview";
 import { renderShareCrawlerHtml, renderShareInAppBrowserHtml } from "@/lib/share-link/html";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -58,19 +58,24 @@ export async function GET(
 
   const guide = shareBrowserGuide(ua);
   const device = shareDevice(ua);
+  // If iOS opens the native app, this second request never reaches the website.
+  // Receiving it means the visitor stayed on the web; offer a non-looping fallback.
+  const attempted = new URL(request.url).searchParams.get("open") === "1";
+  const useHttps = device !== "android" && !attempted && isValidShareToken(token);
+  const launch = useHttps
+    ? { buttonUrl: canonicalUrl + "?open=1" }
+    : guide
+      ? null
+      : shareAppLaunch(token, device);
   const html =
     audience !== "crawler"
-      ? renderShareInAppBrowserHtml(
-          preview,
-          canonicalUrl,
-          guide ? null : shareAppLaunch(token, device),
-          {
-            device,
-            guide,
-            safari: audience === "ios" && /Version\/[\d.]+.*Safari\//i.test(ua ?? ""),
-            inApp: audience === "in-app-browser",
-          },
-        )
+      ? renderShareInAppBrowserHtml(preview, canonicalUrl, launch, {
+          device,
+          guide,
+          attempted,
+          safari: audience === "ios" && /Version\/[\d.]+.*Safari\//i.test(ua ?? ""),
+          inApp: audience === "in-app-browser",
+        })
       : renderShareCrawlerHtml(preview, canonicalUrl);
 
   return new NextResponse(html, {

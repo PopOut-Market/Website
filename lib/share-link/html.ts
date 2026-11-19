@@ -149,7 +149,13 @@ export function renderShareInAppBrowserHtml(
   preview: SharePreview | null,
   canonicalUrl: string,
   launch: ShareAppLaunch | null,
-  client: { device: ShareLaunchPlatform; guide: BrowserGuide; safari: boolean; inApp: boolean },
+  client: {
+    device: ShareLaunchPlatform;
+    guide: BrowserGuide;
+    attempted: boolean;
+    safari: boolean;
+    inApp: boolean;
+  },
 ): string {
   const fields = cardFields(preview);
 
@@ -171,16 +177,21 @@ export function renderShareInAppBrowserHtml(
         : '<a href="/download">Get PopOut</a>';
   const banner =
     client.safari && launch
-      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(launch.buttonUrl)}" />`
+      ? `<meta name="apple-itunes-app" content="app-id=6761421626, app-argument=${escapeHtml(canonicalUrl)}" />`
       : "";
-  const action =
+  const action = launch
+    ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
+    : "";
+  const guidance =
     client.guide === "wechat"
-      ? '<p class="action guide">Tap ··· and open in your browser</p>'
-      : client.guide === "ios-browser"
-        ? '<p class="action guide">Tap the menu (···) and choose Open in browser. In Safari, tap the PopOut button to open this post.</p>'
-        : launch
-          ? `<a class="action" href="${escapeHtml(launch.buttonUrl)}">${label}</a>`
-          : "";
+      ? "Tap ··· and open in your browser"
+      : "Use the menu (···) to open this page in Safari, then tap the PopOut button. You can also copy the link and paste it into Safari.";
+  const help =
+    client.guide || (client.device === "none" && client.attempted)
+      ? launch
+        ? `<details><summary>App didn’t open?</summary><p>${guidance}</p></details>`
+        : `<p class="action guide">${guidance}</p>`
+      : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -218,7 +229,8 @@ export function renderShareInAppBrowserHtml(
         ${summary ? `<p class="summary">${escapeHtml(summary)}</p>` : ""}
       </div></article>
       ${action}
-      ${client.inApp && launch ? '<p class="guide">If the app doesn’t open, use the browser menu to open this page in Safari or Chrome.</p>' : ""}
+      ${help}
+      ${client.inApp && !client.guide && launch ? '<p class="guide">If the app doesn’t open, use the browser menu to open this page in Safari or Chrome.</p>' : ""}
       <footer>${install}</footer>
     </main>
   </body>
