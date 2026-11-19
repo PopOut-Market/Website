@@ -1,0 +1,103 @@
+name: Verify published PR 20
+on:
+  push:
+    branches: [staging/housing-share-preview]
+    paths: [".github/workflows/pr20-published-readback.yml"]
+permissions: {}
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Verify production public share links
+        shell: python
+        run: |
+          import base64, hashlib, json, re, urllib.request as http
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit, unquote, urljoin
+          from pathlib import Path
+          site='https://www.popoutmarket.com.au'; ref='qyqshyezyxjkyjaiksim'; db='https://'+ref+'.supabase.co'
+          class Page(HTMLParser):
+              def __init__(self, text):
+                  super().__init__(); self.meta={}; self.links=[]; self.scripts=[]; self.cover=''; self.feed(text); self.text=text
+              def handle_starttag(self,tag,attrs):
+                  a=dict(attrs)
+                  if tag=='meta': self.meta[a.get('property',a.get('name',''))]=a.get('content','')
+                  if tag=='a': self.links.append(a.get('href',''))
+                  if tag=='script' and a.get('src'): self.scripts.append(a['src'])
+                  if tag=='img' and a.get('class')=='cover': self.cover=a['src']
+          def read(url,ua='Mozilla/5.0',body=None,headers=None):
+              req=http.Request(url,data=json.dumps(body).encode() if body is not None else None,headers={'User-Agent':ua,**(headers or {})})
+              with http.urlopen(req,timeout=25) as resp: return resp.read(),resp.geturl(),resp.headers.get_content_type()
+          def page(url,ua='Mozilla/5.0'): return Page(read(url,ua)[0].decode())
+          # Use only the public web client's production anon configuration.
+          market=page(site+'/en/market'); key=None
+          for path in market.scripts:
+              if not path.startswith('/_next/static/'): continue
+              js=read(site+path)[0].decode()
+              for token in re.findall(r'eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+',js):
+                  claims=json.loads(base64.urlsafe_b64decode(token.split('.')[1]+'==='))
+                  if claims.get('role')=='anon' and claims.get('ref')==ref: key=token; break
+              if key: break
+          assert key,'No production anon configuration in the public market page'
+          def rpc(name,**args): return json.loads(read(db+'/rest/v1/rpc/'+name,body=args,headers={'Content-Type':'application/json','apikey':key,'Authorization':'Bearer '+key})[0])
+          rows=rpc('get_ranked_housing_feed',p_suburb_id=244,p_jitter_seed=1,p_cursor=None)
+          choices={}
+          for batch in range(6):
+              for row in rows['items']:
+                  kind=row['kind']
+                  if kind in choices or not row.get('photos'): continue
+                  detail=rpc('get_housing_detail_v13',p_id=row['id'])
+                  if detail and detail.get('photos'): choices[kind]=detail
+              if len(choices)==2 or not rows.get('next_cursor'):break
+              rows=rpc('get_ranked_housing_feed',p_suburb_id=244,p_jitter_seed=1,p_cursor=rows['next_cursor'])
+          results={}; errors=[]
+          def check(kind,token,title,summary,path):
+              url=site+'/l/'+token
+              assert re.fullmatch(r'h-[0-9a-f-]{36}|[0-9a-f]{24}',token)
+              og=page(url,'facebookexternalhit/1.1').meta
+              assert og['og:url']==url and og['og:title']==title and og['og:description']==summary,(kind,'OG metadata')
+              if path:
+                  raw,dest,mime=read(og['og:image']); assert mime.startswith('image/') and len(raw)>100
+                  dest=urlsplit(dest); assert dest.hostname==ref+'.supabase.co' and unquote(dest.path).endswith('/'+path),(kind,'image object')
+                  if token.startswith('h-'):assert og['og:image']==url+'/photo' and '/housing_upload_images/' in dest.path
+              for ua in ('iPhone Version/18.0 Mobile Safari/605','Android Chrome/132 Mobile','MicroMessenger Android'):
+                  p=page(url,ua); assert p.meta['og:title']==title and p.meta['og:url']==url
+                  if path:assert p.cover==og['og:image']
+                  installs=[h for h in p.links if 'apps.apple.com' in h or h.startswith('https://play.google.com/')]; assert len(installs)==1 and ('apps.apple.com' if ua.startswith('iPhone') else 'play.google.com') in installs[0]
+                  native=[h for h in p.links if h.startswith(('intent://','popout-market://'))]
+                  if 'MicroMessenger' in ua:assert not native and 'Tap ··· and open in your browser' in p.text
+                  else:
+                      assert len(native)==1 and (native[0]=='popout-market://l/'+token or native[0].startswith('intent://l/'+token+'#Intent;'))
+                      assert ('View post in PopOut</a>' if kind=='community' else 'View listing in PopOut</a>') in p.text
+              results[kind]=dict(url=url,title=title,summary=summary,photoBytes=len(raw) if path else 0)
+          for kind in ('rooms','entire'):
+              try:
+                  r=choices[kind]; facts=['Taken'] if r['availability']=='taken' else []
+                  for k in ['bedroom','bathroom']:
+                      n=r.get(k+'s'); facts+=([str(n)+' '+k+('' if n==1 else 's')] if isinstance(n,int) and n>=0 else [])
+                  sub=r['suburb_name']; check(kind,'h-'+r['id'],('Share in ' if kind=='rooms' else 'Entire home for rent in ')+sub,' · '.join(facts) or sub,r['photos'][0]['path'])
+              except Exception as e:errors.append((kind,type(e).__name__,str(e)[:115] if isinstance(e,AssertionError) else ''))
+          for kind in ('listing','community'):
+              try:
+                  if kind=='listing':ids=[int(h.rsplit('/',1)[1]) for h in market.links if re.fullmatch('/en/market/p/[0-9]+',h)]
+                  else:ids=[r['id'] for r in rpc('get_community_feed_v3',p_suburb_id=244,p_locale='en',p_topic='all',p_offset=0,p_limit=8)]
+                  for id in ids[:8]:
+                      rows=rpc('get_post_detail' if kind=='listing' else 'get_community_post',p_post_id=id,p_locale='en'); row=rows[0] if isinstance(rows,list) and rows else rows
+                      if not row or not row.get('share_token'):continue
+                      token=row['share_token']; data=rpc('get_share_preview' if kind=='listing' else 'get_community_share_preview',p_share_token=token)
+                      if not data:continue
+                      r=data[0]; facts=[]
+                      if kind=='listing' and r.get('price_cents') is not None:
+                          n=r['price_cents'];facts.append('Free' if n<=0 else ('$'+format(n/100,',.2f') if n%100 else '$'+format(n//100,',')))
+                      if r.get('suburb_name'):facts.append(r['suburb_name'])
+                      check(kind,token,r['title'].strip(),' · '.join(facts) or 'Open this post in PopOut.',r.get('photo_path'));break
+                  assert kind in results,'No publicly readable shared post'
+              except Exception as e:errors.append((kind,type(e).__name__,str(e)[:115] if isinstance(e,AssertionError) else ''))
+          Path('readback.json').write_text(json.dumps(results,ensure_ascii=False));print('Verified categories:',','.join(results));assert not errors,errors
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: published-share-results
+          path: readback.json
+          retention-days: 1
