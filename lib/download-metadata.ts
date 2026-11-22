@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE, localeFromSegment, localeSegment } from "./site-locale-
 
 export const DOWNLOAD_PATH = "/download";
 export const WECHAT_DOWNLOAD_PATH = "/download/wechat";
-export const WIDE_ART = "/images/download/popout-route-v3.png";
+export const WIDE_ART = "/images/download/popout-dm-map-tag-v4.jpg";
 export const APP_ICON = "/images/download/popout-app-icon.png";
 const ogLocale: Record<Locale, string> = {
   en: "en_AU",

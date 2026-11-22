@@ -26,6 +26,7 @@ export default async function DownloadLayout({
     <html lang={view.locale}>
       <body>
         {children}
+        <script src="/download-language-menu.js" defer />
         <Analytics />
       </body>
     </html>
