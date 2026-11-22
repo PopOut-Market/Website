@@ -72,15 +72,15 @@ export default function DownloadPageContent({ locale }: { locale: Locale }) {
           <div className="dl-stores">
             <a href={APP_STORE_URL}>
               <img
-                src="/images/download/badge-app-store.svg"
+                src="/images/download/badge-app-store.svg?v=5"
                 alt={copy.iphone}
-                width="192"
+                width="216"
                 height="64"
               />
             </a>
             <a href={GOOGLE_PLAY_URL}>
               <img
-                src="/images/download/badge-google-play.svg"
+                src="/images/download/badge-google-play.svg?v=5"
                 alt={copy.android}
                 width="216"
                 height="64"
