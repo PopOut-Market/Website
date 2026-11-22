@@ -29,7 +29,9 @@ const CODE_TO_SEGMENT: Record<Locale, LocaleSegment> = {
 export function localeFromSegment(segment: string | null | undefined): Locale | null {
   if (!segment) return null;
   const normalized = segment.toLowerCase();
-  return LOCALE_SEGMENT_TO_CODE[normalized as LocaleSegment] ?? null;
+  return Object.hasOwn(LOCALE_SEGMENT_TO_CODE, normalized)
+    ? LOCALE_SEGMENT_TO_CODE[normalized as LocaleSegment]
+    : null;
 }
 
 export function localeSegment(locale: Locale): LocaleSegment {
