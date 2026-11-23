@@ -1,0 +1,351 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #1e2523;
+  background: #fff;
+  font:
+    1rem/1.5 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "PingFang SC",
+    "Apple SD Gothic Neo",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dl-page {
+  min-block-size: 100vh;
+  min-block-size: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.dl-header {
+  width: min(100%, 81rem);
+  margin-inline: auto;
+  padding: max(1rem, env(safe-area-inset-top)) clamp(1.1rem, 4.5vw, 4rem) 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.dl-languages {
+  position: relative;
+}
+
+.dl-languages summary,
+.dl-help summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.dl-languages summary::-webkit-details-marker,
+.dl-help summary::-webkit-details-marker {
+  display: none;
+}
+
+.dl-languages summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid #dce0dd;
+  border-radius: 12px;
+  padding: 0.55rem 0.8rem;
+  background: white;
+  font-size: 0.9375rem;
+  font-weight: 550;
+}
+
+.dl-chevron {
+  transition: transform 0.15s ease;
+}
+
+.dl-languages[open] .dl-chevron {
+  transform: rotate(180deg);
+}
+
+.dl-languages nav {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 0.4rem);
+  width: max-content;
+  min-width: 10.8rem;
+  max-height: min(60vh, 26rem);
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #dce0dd;
+  border-radius: 13px;
+  padding: 0.34rem;
+  box-shadow: 0 8px 28px #1c28231a;
+}
+
+.dl-languages a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.65rem;
+  min-height: 44px;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dl-languages a[aria-current]::after {
+  content: "✓";
+  color: #353d35;
+  margin-inline-start: 1.5rem;
+}
+
+.dl-page :is(a, summary):focus-visible {
+  outline: 3px solid #994a0a;
+  outline-offset: 3px;
+}
+
+.dl-grid {
+  width: min(100% - 2.5rem, 29rem);
+  margin: auto;
+  padding-block: clamp(1.8rem, 7svh, 4.7rem) clamp(2.6rem, 11svh, 7rem);
+  text-align: center;
+}
+
+.dl-main {
+  min-width: 0;
+}
+
+.dl-icon {
+  display: block;
+  width: clamp(6.6rem, 30vw, 7.5rem);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 22%;
+}
+
+.dl-main h1 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: clamp(2.2rem, 9.2vw, 3rem);
+  font-weight: 720;
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+:lang(zh) .dl-main h1,
+:lang(ja) .dl-main h1,
+:lang(ko) .dl-main h1 {
+  letter-spacing: -0.045em;
+  line-height: 1.25;
+}
+
+:lang(ko) .dl-main {
+  word-break: keep-all;
+}
+
+.dl-intro {
+  max-width: 34ch;
+  margin: 0 auto;
+  color: #4c5651;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-wrap: balance;
+}
+
+:lang(zh) .dl-intro,
+:lang(ja) .dl-intro {
+  max-width: 21em;
+}
+
+.dl-phrase {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.dl-mobile {
+  display: var(--store-display);
+  margin-top: 2rem;
+}
+
+.dl-stores {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+}
+
+.dl-stores a {
+  display: block;
+  width: min(100%, 13.5rem);
+  border-radius: 0.65rem;
+  transition: opacity 0.15s ease;
+}
+
+.dl-stores a:hover {
+  opacity: 0.84;
+}
+
+.dl-stores img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dl-help {
+  margin: 1.15rem auto 0;
+  max-width: 23rem;
+  color: #606863;
+}
+
+.dl-help summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-decoration-color: #aab0ab;
+  text-underline-offset: 0.22em;
+}
+
+.dl-help p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.dl-languages:not([open]) nav {
+  display: none;
+}
+
+.dl-languages summary:hover,
+.dl-languages[open] summary {
+  background: #f5f6f4;
+}
+
+.dl-languages a:hover,
+.dl-languages a:focus-visible,
+.dl-languages a[aria-current] {
+  background: #f2f4f1;
+}
+
+:root {
+  --store-display: block;
+  --scan-display: none;
+}
+
+@media (hover: hover) and (pointer: fine), (width >= 48rem) and (pointer: none) {
+  :root {
+    --store-display: none;
+    --scan-display: grid;
+  }
+}
+
+:root[data-download-device="mobile"] {
+  --store-display: block;
+  --scan-display: none;
+}
+
+:root[data-download-device="desktop"] {
+  --store-display: none;
+  --scan-display: grid;
+}
+
+.dl-scan {
+  display: var(--scan-display);
+  justify-items: center;
+  text-align: center;
+  margin: 2rem 0 0;
+}
+
+.dl-scan img {
+  width: min(100%, 13.25rem);
+  height: auto;
+  display: block;
+  border: 1px solid #d9dfd9;
+  border-radius: 1.25rem;
+  background: white;
+}
+
+.dl-scan h2 {
+  margin: 1.05rem 0 0.32rem;
+  font-size: 1.25rem;
+  line-height: 1.28;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+}
+
+.dl-scan p {
+  margin: 0 auto;
+  max-width: 30ch;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: #58615c;
+  text-wrap: balance;
+}
+
+@media (width >= 48rem) and (hover: hover),
+  (width >= 48rem) and (pointer: fine),
+  (width >= 48rem) and (pointer: none) {
+  :root:not([data-download-device="mobile"]) .dl-header {
+    padding-top: clamp(1.5rem, 3.6vh, 2.7rem);
+  }
+
+  :root:not([data-download-device="mobile"]) .dl-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+    align-items: center;
+    gap: clamp(3rem, 7vw, 7.4rem);
+    width: min(calc(100% - 7.5rem), 58rem);
+    text-align: start;
+    padding-block: 4.25rem clamp(5rem, 11vh, 8rem);
+  }
+
+  :root:not([data-download-device="mobile"]) .dl-icon {
+    width: 8rem;
+    margin-inline: 0;
+  }
+
+  :root:not([data-download-device="mobile"]) .dl-main h1 {
+    margin: 1.9rem 0 1rem;
+    max-width: 13ch;
+    font-size: clamp(2.85rem, 5.2vw, 4.25rem);
+    line-height: 1.05;
+  }
+
+  :root:not([data-download-device="mobile"]):lang(zh) .dl-main h1,
+  :root:not([data-download-device="mobile"]):lang(ja) .dl-main h1,
+  :root:not([data-download-device="mobile"]):lang(ko) .dl-main h1 {
+    max-width: 12em;
+    line-height: 1.16;
+  }
+
+  :root:not([data-download-device="mobile"]) .dl-intro {
+    max-width: 40ch;
+    margin-inline: 0;
+    font-size: clamp(1.08rem, 1.55vw, 1.23rem);
+    line-height: 1.65;
+  }
+
+  .dl-scan {
+    margin: 0;
+  }
+
+  .dl-scan img {
+    width: min(100%, 15.5rem);
+  }
+}
+
+@media (height <= 40rem) {
+  .dl-grid {
+    padding-block: 1.5rem 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dl-page * {
+    transition: none;
+  }
+}

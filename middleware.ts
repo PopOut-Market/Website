@@ -1,10 +1,13 @@
 import {
   DEFAULT_LOCALE,
   LOCALE_SEGMENT_TO_CODE,
+  isLocale,
   localeFromSegment,
   localeSegment,
   stripLocalePrefix,
 } from "@/lib/site-locale-routing";
+import { DOWNLOAD_PATH, WECHAT_DOWNLOAD_PATH } from "@/lib/download-metadata";
+import { shareBrowserGuide } from "@/lib/share-link/user-agent";
 import type { Locale } from "@/lib/site-i18n";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -40,7 +43,7 @@ function localeFromAcceptLanguageHeader(headerValue: string | null): Locale | nu
       }
       return { tag: (rawTag ?? "").toLowerCase().replaceAll("_", "-"), q, index };
     })
-    .filter((x) => x.tag.length > 0)
+    .filter((x) => x.tag.length > 0 && x.q > 0)
     .sort((a, b) => (b.q === a.q ? a.index - b.index : b.q - a.q));
 
   for (const { tag } of ranked) {
@@ -49,7 +52,7 @@ function localeFromAcceptLanguageHeader(headerValue: string | null): Locale | nu
     if (exact) return exact;
 
     // Handle script/region variants like zh-Hans, zh-Hant, zh-HK, en-US, etc.
-    if (tag.startsWith("zh-")) {
+    if (tag === "zh" || tag.startsWith("zh-")) {
       if (tag.includes("hant") || tag.endsWith("-tw") || tag.endsWith("-hk")) return "zh-Hant";
       if (tag.includes("hans") || tag.endsWith("-cn") || tag.endsWith("-sg")) return "zh-Hans";
       // Generic Chinese defaults to Simplified Chinese for first-visit routing.
@@ -88,9 +91,29 @@ function localeFromReferer(referer: string | null): Locale | null {
 function resolveLocaleRouting(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
-  // Keep API, Next internals, admin routes, static assets, and the standalone
-  // /download page untouched (the latter must stay un-prefixed so the clean
-  // /download URL serves directly instead of 308-ing to /en/download).
+  const downloadPath = pathname.replace(/\/$/, "");
+  if (downloadPath === DOWNLOAD_PATH || downloadPath === WECHAT_DOWNLOAD_PATH) {
+    const hint = request.nextUrl.searchParams.get("lang");
+    const locale =
+      (hint && isLocale(hint) ? hint : localeFromSegment(hint)) ??
+      (hint ? localeFromAcceptLanguageHeader(hint) : null) ??
+      localeFromSegment(request.cookies.get("popout_locale")?.value) ??
+      localeFromAcceptLanguageHeader(request.headers.get("accept-language")) ??
+      DEFAULT_LOCALE;
+    const square =
+      downloadPath === WECHAT_DOWNLOAD_PATH ||
+      shareBrowserGuide(request.headers.get("user-agent")) === "wechat";
+    const target = request.nextUrl.clone();
+    target.pathname = `/download/${localeSegment(locale)}${square ? "/wechat" : ""}`;
+    const response = NextResponse.rewrite(target);
+    response.headers.set("Cache-Control", "private, no-store");
+    response.headers.set("Netlify-CDN-Cache-Control", "no-store");
+    response.headers.set("Vary", "Accept-Language, Cookie, User-Agent");
+    return response;
+  }
+
+  // Keep API, Next internals, admin routes, static assets and the explicit
+  // square download variant out of locale routing.
   //
   // `/l/<token>` (listing share links from the mobile app) and `/.well-known/*`
   // (the Apple/Google app-association files) must be excluded for the same
@@ -113,8 +136,7 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
     pathname.startsWith("/twitter-image") ||
     pathname.startsWith("/.well-known") ||
     pathname.startsWith("/l/") ||
-    pathname === "/download" ||
-    pathname === "/download/" ||
+    pathname.startsWith("/download/") ||
     isStaticAsset(pathname)
   ) {
     return NextResponse.next();
