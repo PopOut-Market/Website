@@ -5,16 +5,16 @@ import { notFound } from "next/navigation";
 type Props = { params: Promise<{ view?: string[] }> };
 export const dynamic = "force-static";
 export const dynamicParams = false;
-export const generateStaticParams = () => [{ view: [] }, { view: ["wechat"] }, ...downloadPaths];
+export const generateStaticParams = () => downloadPaths;
 
 export async function generateMetadata({ params }: Props) {
   const view = downloadView((await params).view);
   if (!view) notFound();
-  return downloadMetadata(view.locale, view.square);
+  return downloadMetadata(view.locale, view.channel);
 }
 
 export default async function DownloadPage({ params }: Props) {
   const view = downloadView((await params).view);
   if (!view) notFound();
-  return <DownloadPageContent locale={view.locale} />;
+  return <DownloadPageContent locale={view.locale} channel={view.channel} />;
 }

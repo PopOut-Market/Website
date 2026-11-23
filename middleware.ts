@@ -6,8 +6,7 @@ import {
   localeSegment,
   stripLocalePrefix,
 } from "@/lib/site-locale-routing";
-import { DOWNLOAD_PATH, WECHAT_DOWNLOAD_PATH } from "@/lib/download-metadata";
-import { shareBrowserGuide } from "@/lib/share-link/user-agent";
+import { DOWNLOAD_PATH, downloadChannel, downloadChannelForAgent } from "@/lib/download-metadata";
 import type { Locale } from "@/lib/site-i18n";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -92,7 +91,10 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
   const downloadPath = pathname.replace(/\/$/, "");
-  if (downloadPath === DOWNLOAD_PATH || downloadPath === WECHAT_DOWNLOAD_PATH) {
+  const explicitChannel = downloadPath.startsWith(DOWNLOAD_PATH + "/")
+    ? downloadChannel(downloadPath.slice(DOWNLOAD_PATH.length + 1))
+    : null;
+  if (downloadPath === DOWNLOAD_PATH || explicitChannel) {
     const hint = request.nextUrl.searchParams.get("lang");
     const locale =
       (hint && isLocale(hint) ? hint : localeFromSegment(hint)) ??
@@ -100,11 +102,10 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
       localeFromSegment(request.cookies.get("popout_locale")?.value) ??
       localeFromAcceptLanguageHeader(request.headers.get("accept-language")) ??
       DEFAULT_LOCALE;
-    const square =
-      downloadPath === WECHAT_DOWNLOAD_PATH ||
-      shareBrowserGuide(request.headers.get("user-agent")) === "wechat";
+    const channel =
+      explicitChannel ?? downloadChannelForAgent(request.headers.get("user-agent") ?? "");
     const target = request.nextUrl.clone();
-    target.pathname = `/download/${localeSegment(locale)}${square ? "/wechat" : ""}`;
+    target.pathname = `/download/${localeSegment(locale)}${channel ? "/" + channel : ""}`;
     const response = NextResponse.rewrite(target);
     response.headers.set("Cache-Control", "private, no-store");
     response.headers.set("Netlify-CDN-Cache-Control", "no-store");
@@ -112,8 +113,7 @@ function resolveLocaleRouting(request: NextRequest): NextResponse {
     return response;
   }
 
-  // Keep API, Next internals, admin routes, static assets and the explicit
-  // square download variant out of locale routing.
+  // Keep API, Next internals, admin routes, static assets and download variants out of locale routing.
   //
   // `/l/<token>` (listing share links from the mobile app) and `/.well-known/*`
   // (the Apple/Google app-association files) must be excluded for the same
