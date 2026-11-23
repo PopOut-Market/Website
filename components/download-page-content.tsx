@@ -1,10 +1,16 @@
 import { downloadCopy } from "@/lib/download-copy";
-import { APP_ICON, downloadUrl } from "@/lib/download-metadata";
+import { APP_ICON, downloadUrl, type DownloadChannel } from "@/lib/download-metadata";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/site-config";
 import { LOCALES, type Locale } from "@/lib/site-i18n";
 import { localeSegment } from "@/lib/site-locale-routing";
 
-export default function DownloadPageContent({ locale }: { locale: Locale }) {
+export default function DownloadPageContent({
+  locale,
+  channel,
+}: {
+  locale: Locale;
+  channel: DownloadChannel | null;
+}) {
   const copy = downloadCopy[locale];
   const currentLanguage = LOCALES.find((language) => language.code === locale)?.label;
   return (
@@ -43,7 +49,7 @@ export default function DownloadPageContent({ locale }: { locale: Locale }) {
             {LOCALES.map((language) => (
               <a
                 key={language.code}
-                href={downloadUrl(language.code)}
+                href={downloadUrl(language.code, channel)}
                 hrefLang={language.code}
                 lang={language.code}
                 aria-current={locale === language.code ? "page" : undefined}
